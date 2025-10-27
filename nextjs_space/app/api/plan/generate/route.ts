@@ -39,10 +39,23 @@ export async function POST(request: NextRequest) {
 
     console.log('[AI PLAN] Iniciando geração de plano com IA para:', session.user.email);
 
+    // Buscar corridas cadastradas (RaceGoals)
+    const raceGoals = await prisma.raceGoal.findMany({
+      where: {
+        athleteId: profile.id,
+        status: 'active'
+      },
+      orderBy: {
+        raceDate: 'asc'
+      }
+    });
+
+    console.log('[AI PLAN] Corridas encontradas:', raceGoals.length);
+
     // Preparar perfil para a IA
     const rawPaces = profile.usualPaces as any;
     let usualPaces: Record<string, string> | undefined = undefined;
-    
+
     if (rawPaces) {
       if (rawPaces['5k'] || rawPaces['10k']) {
         usualPaces = rawPaces;
@@ -50,6 +63,15 @@ export async function POST(request: NextRequest) {
         usualPaces = rawPaces.paces;
       }
     }
+
+    // Detectar acesso a piscina baseado nas atividades configuradas
+    const activities = (profile.trainingActivities as any) || [];
+    const hasPoolAccess = activities.some((a: any) =>
+      a.id === 'swimming' || a.id === 'natação' || a.id === 'natacao'
+    );
+    const hasGymAccess = activities.some((a: any) =>
+      a.id === 'strength' || a.id === 'musculação' || a.id === 'musculacao'
+    );
 
     const aiProfile: AIUserProfile = {
       runningLevel: profile.runningLevel,
@@ -63,11 +85,19 @@ export async function POST(request: NextRequest) {
       height: profile.height || undefined,
       age: profile.age || undefined,
       gender: profile.gender || undefined,
-      trainingActivities: (profile.trainingActivities as any) || [],
+      trainingActivities: activities,
       longRunDay: profile.longRunDay ?? undefined,
       usualPaces: usualPaces,
-      hasGymAccess: true, // Assumir que sim por enquanto
-      hasPoolAccess: false, // Assumir que não por enquanto
+      hasGymAccess: hasGymAccess,
+      hasPoolAccess: hasPoolAccess,
+      raceGoals: raceGoals.map(race => ({
+        id: race.id,
+        name: race.raceName,
+        distance: race.distance,
+        date: race.raceDate,
+        targetTime: race.targetTime || undefined,
+        priority: race.priority as 'A' | 'B' | 'C'
+      }))
     };
 
     console.log('[AI PLAN] Gerando plano com IA...');
