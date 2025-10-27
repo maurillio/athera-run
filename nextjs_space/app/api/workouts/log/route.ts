@@ -30,12 +30,20 @@ export async function POST(request: NextRequest) {
       pace = `${paceMin}:${paceSec.toString().padStart(2, '0')}/km`;
     }
 
+    // Corrigir timezone: se receber apenas data (YYYY-MM-DD), adicionar horário meio-dia UTC
+    // para evitar problemas de fuso horário
+    let workoutDate = new Date(date);
+    if (date && typeof date === 'string' && date.length === 10) {
+      // Data no formato YYYY-MM-DD, adicionar horário 12:00:00 UTC
+      workoutDate = new Date(date + 'T12:00:00Z');
+    }
+
     // Criar treino completado
     const workout = await prisma.completedWorkout.create({
       data: {
         athleteId,
         source: 'manual',
-        date: new Date(date),
+        date: workoutDate,
         type,
         subtype,
         distance,
