@@ -34,6 +34,8 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
   const [isAddingRace, setIsAddingRace] = useState(false);
   const [isClassifying, setIsClassifying] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingRaceId, setEditingRaceId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     raceName: '',
     distance: '10k',
@@ -113,6 +115,57 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
     } catch (error) {
       console.error('Error deleting race:', error);
       alert('Erro ao excluir corrida');
+    }
+  };
+
+  const handleEditRace = (race: Race) => {
+    setEditingRaceId(race.id);
+    setFormData({
+      raceName: race.raceName,
+      distance: race.distance,
+      raceDate: race.raceDate.split('T')[0], // Converter para formato YYYY-MM-DD
+      targetTime: race.targetTime || '',
+      location: '',
+      isPrimary: race.priority === 'A'
+    });
+    setShowEditDialog(true);
+  };
+
+  const handleUpdateRace = async () => {
+    if (!editingRaceId) return;
+
+    setIsAddingRace(true);
+    try {
+      const response = await fetch(`/api/race-goals/${editingRaceId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setShowEditDialog(false);
+        setEditingRaceId(null);
+        setFormData({
+          raceName: '',
+          distance: '10k',
+          raceDate: '',
+          targetTime: '',
+          location: '',
+          isPrimary: false
+        });
+
+        // Classificar automaticamente após editar
+        await handleClassifyRaces();
+        onRacesUpdated();
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Erro ao atualizar corrida');
+      }
+    } catch (error) {
+      console.error('Error updating race:', error);
+      alert('Erro ao atualizar corrida');
+    } finally {
+      setIsAddingRace(false);
     }
   };
 
@@ -298,6 +351,121 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                 </div>
               </DialogContent>
             </Dialog>
+
+            {/* Dialog de Edição */}
+            <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Editar Corrida</DialogTitle>
+                  <DialogDescription>
+                    Altere os dados da corrida e o sistema reclassificará automaticamente
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="editRaceName">Nome da Corrida *</Label>
+                    <Input
+                      id="editRaceName"
+                      value={formData.raceName}
+                      onChange={(e) => setFormData({...formData, raceName: e.target.value})}
+                      placeholder="Ex: Maratona de São Paulo 2026"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="editDistance">Distância *</Label>
+                      <Select
+                        value={formData.distance}
+                        onValueChange={(value) => setFormData({...formData, distance: value})}
+                      >
+                        <SelectTrigger id="editDistance">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="5k">5km</SelectItem>
+                          <SelectItem value="10k">10km</SelectItem>
+                          <SelectItem value="15k">15km</SelectItem>
+                          <SelectItem value="10mile">10 Milhas</SelectItem>
+                          <SelectItem value="half_marathon">Meia-Maratona</SelectItem>
+                          <SelectItem value="30k">30km</SelectItem>
+                          <SelectItem value="marathon">Maratona</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="editRaceDate">Data da Corrida *</Label>
+                      <Input
+                        id="editRaceDate"
+                        type="date"
+                        value={formData.raceDate}
+                        onChange={(e) => setFormData({...formData, raceDate: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="editTargetTime">Tempo Alvo (opcional)</Label>
+                      <Input
+                        id="editTargetTime"
+                        value={formData.targetTime}
+                        onChange={(e) => setFormData({...formData, targetTime: e.target.value})}
+                        placeholder="Ex: 3:30:00"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="editLocation">Local (opcional)</Label>
+                      <Input
+                        id="editLocation"
+                        value={formData.location}
+                        onChange={(e) => setFormData({...formData, location: e.target.value})}
+                        placeholder="Ex: São Paulo, SP"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="editIsPrimary"
+                      checked={formData.isPrimary}
+                      onChange={(e) => setFormData({...formData, isPrimary: e.target.checked})}
+                      className="rounded"
+                    />
+                    <Label htmlFor="editIsPrimary" className="cursor-pointer">
+                      Esta é minha corrida objetivo principal (Corrida A)
+                    </Label>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button
+                      onClick={handleUpdateRace}
+                      disabled={isAddingRace || !formData.raceName || !formData.raceDate}
+                      className="flex-1"
+                    >
+                      {isAddingRace ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Atualizando...
+                        </>
+                      ) : (
+                        <>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Atualizar Corrida
+                        </>
+                      )}
+                    </Button>
+                    <Button onClick={() => setShowEditDialog(false)} variant="outline">
+                      Cancelar
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </CardHeader>
@@ -329,8 +497,18 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                     <Button
                       variant="ghost"
                       size="sm"
+                      onClick={() => handleEditRace(race)}
+                      className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      title="Editar corrida"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleDeleteRace(race.id)}
                       className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      title="Excluir corrida"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
