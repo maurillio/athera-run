@@ -524,19 +524,33 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
     
     for (let phaseWeek = 0; phaseWeek < phaseWeeks; phaseWeek++) {
       const weekProgress = phaseWeek / phaseWeeks;
-      
+
       // Calcular volume da semana com progressão
       let weeklyKm = phase.weeklyKmStart + (weeklyKmRange * weekProgress);
-      
-      // Aplicar cutback weeks (cada 4ª semana)
-      const isCutbackWeek = weekNumber % 4 === 0;
+
+      // DETECTAR CORRIDAS B/C nesta semana
+      const weekEnd = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+      const raceThisWeek = profile.raceGoals?.find(race => {
+        const raceDate = new Date(race.date);
+        return raceDate >= currentWeekStart && raceDate <= weekEnd;
+      });
+
+      // Aplicar cutback weeks (cada 4ª semana) - MAS não se for semana de corrida B/C
+      const isCutbackWeek = !raceThisWeek && (weekNumber % 4 === 0);
       if (isCutbackWeek) {
         weeklyKm *= 0.75; // Reduzir 25%
       }
-      
+
+      // Aplicar mini-taper para CORRIDAS B (preparatórias)
+      if (raceThisWeek && raceThisWeek.priority === 'B') {
+        weeklyKm *= 0.75; // Reduzir 25% (mini-taper)
+        console.log(`[AI PLAN] Semana ${weekNumber}: Corrida B "${raceThisWeek.name}" detectada - aplicando mini-taper (75% volume)`);
+      }
+      // Corridas C mantém volume normal (substitui apenas o longão)
+
       // Calcular distância do longão (30% do volume semanal)
       const longRunKm = Math.min(weeklyKm * 0.3, 32); // Max 32km para evitar excesso
-      
+
       // Gerar treinos da semana
       const workouts = generateWeekWorkouts({
         weekNumber,
@@ -549,6 +563,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         availability,
         isCutbackWeek,
         currentWeekStart,
+        raceThisWeek, // Passar corrida B/C se houver
       });
       
       const week = {
@@ -671,6 +686,14 @@ function generateWeekWorkouts(params: {
   };
   isCutbackWeek: boolean;
   currentWeekStart: Date;
+  raceThisWeek?: {
+    id: number;
+    name: string;
+    distance: string;
+    date: Date;
+    targetTime?: string;
+    priority: 'A' | 'B' | 'C';
+  };
 }): any[] {
   const workouts: any[] = [];
   const { availability } = params;
@@ -747,8 +770,25 @@ function generateWeekWorkouts(params: {
 
   // ALOCAR TODAS AS ATIVIDADES CONFIGURADAS (sem prioridades - respeitar disponibilidade do usuário)
 
-  // 1. LONGÃO no dia configurado
-  addActivity(availability.longRunDay, 'long_run');
+  // 1. LONGÃO no dia configurado (OU CORRIDA B/C se houver nesta semana)
+  if (params.raceThisWeek) {
+    // Detectar dia da semana da corrida
+    const raceDate = new Date(params.raceThisWeek.date);
+    const raceDayOfWeek = raceDate.getDay();
+
+    console.log(`[WORKOUT GEN] Corrida ${params.raceThisWeek.priority} "${params.raceThisWeek.name}" (${params.raceThisWeek.distance}) no dia ${raceDayOfWeek} - substituindo treino planejado`);
+
+    // Adicionar a corrida no dia correto
+    addActivity(raceDayOfWeek, 'race', params.raceThisWeek);
+
+    // Se a corrida NÃO for no dia do longão, ainda adicionar um longão menor (50%)
+    if (raceDayOfWeek !== availability.longRunDay && params.raceThisWeek.priority === 'C') {
+      addActivity(availability.longRunDay, 'long_run');
+    }
+  } else {
+    // Sem corrida esta semana - longão normal
+    addActivity(availability.longRunDay, 'long_run');
+  }
 
   // 2. TREINOS DE QUALIDADE (apenas em dias de corrida e não em cutback weeks)
   if (!params.isCutbackWeek) {
@@ -917,6 +957,37 @@ function generateWeekWorkouts(params: {
           distance: Math.round(easyRunKm * 10) / 10,
           duration: null,
           targetPace: params.paces.easy,
+        };
+      }
+      else if (activityType === 'race') {
+        // Corrida B ou C cadastrada
+        const raceInfo = activity.details;
+        const isRaceB = raceInfo.priority === 'B';
+        const isRaceC = raceInfo.priority === 'C';
+
+        let raceDescription = '';
+        if (isRaceB) {
+          raceDescription = `🏁 CORRIDA B (Preparatória) - Use como teste de ritmo e simulado para sua corrida principal. Aquecimento de 15-20 min fácil, corra no ritmo planejado, e desacelere nos últimos 2-3km se necessário. Objetivo: testar estratégia de prova sem comprometer o treinamento.`;
+        } else if (isRaceC) {
+          raceDescription = `🏁 CORRIDA C (Volume) - Use como treino longo intenso. Sem taper, esta corrida faz parte do volume semanal normal. Corra no ritmo confortável, aproveite a experiência e o ambiente de prova. Não force - o objetivo é acumular km.`;
+        }
+
+        workout = {
+          dayOfWeek,
+          date,
+          type: 'race',
+          subtype: raceInfo.priority.toLowerCase(),
+          title: `🏁 ${raceInfo.name} - ${raceInfo.distance}${timeInfoShort}`,
+          description: raceDescription,
+          distance: null, // Distância vem da corrida cadastrada
+          duration: null,
+          targetPace: raceInfo.targetTime || null,
+          raceInfo: {
+            name: raceInfo.name,
+            distance: raceInfo.distance,
+            targetTime: raceInfo.targetTime,
+            priority: raceInfo.priority
+          }
         };
       }
       else if (activityType === 'swimming') {
