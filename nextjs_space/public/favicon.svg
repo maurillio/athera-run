@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" fill="#1a1a1a"/>
+  <path d="M 50 80 L 50 200 L 80 200 L 80 120 L 128 180 L 176 120 L 176 200 L 206 200 L 206 80 L 170 80 L 128 140 L 86 80 Z" fill="url(#orangeGrad)"/>
+  <path d="M 60 90 L 60 190 L 70 190 L 70 125 L 128 175 L 186 125 L 186 190 L 196 190 L 196 90 L 175 90 L 128 145 L 81 90 Z" fill="none" stroke="#fff" stroke-width="2" opacity="0.3"/>
+</svg>

@@ -1,0 +1,750 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import prisma from '@/lib/db';
+import {
+  generateAIPlan,
+  validateAIPlan,
+  type AIUserProfile,
+} from '@/lib/ai-plan-generator';
+
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: { athleteProfile: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    if (!user.athleteProfile) {
+      return NextResponse.json({ 
+        error: 'Perfil de atleta não encontrado',
+        message: 'Por favor, complete seu perfil no onboarding antes de gerar o plano.',
+        redirectTo: '/onboarding'
+      }, { status: 400 });
+    }
+
+    const profile = user.athleteProfile;
+    const currentWeeklyKm = profile.currentWeeklyKm || 0;
+
+    // Extrair paces usuais do perfil (se existirem)
+    // Suportar ambos formatos: { "5k": "...", "10k": "..." } e { paces: { "5k": "...", "10k": "..." } }
+    let usualPaces: Record<string, string> | null = null;
+    const rawPaces = profile.usualPaces as any;
+    
+    if (rawPaces) {
+      // Formato novo: direto { "5k": "...", "10k": "..." }
+      if (rawPaces['5k'] || rawPaces['10k']) {
+        usualPaces = rawPaces;
+      }
+      // Formato antigo: { paces: { "5k": "...", "10k": "..." } }
+      else if (rawPaces.paces) {
+        usualPaces = rawPaces.paces;
+      }
+    }
+
+    // Gerar estrutura do plano
+    const planStructure = generatePlanStructure({
+      runningLevel: profile.runningLevel,
+      goalDistance: profile.goalDistance,
+      targetRaceDate: profile.targetRaceDate || new Date(),
+      currentWeeklyKm: currentWeeklyKm,
+      longestRun: profile.longestRun || 0,
+      currentVDOT: profile.currentVDOT || undefined,
+      targetTime: profile.targetTime || undefined,
+      weight: profile.weight,
+      age: profile.age || undefined,
+      gender: profile.gender || undefined,
+      usualPaces: usualPaces || undefined,
+    });
+
+    // Estimar VDOT (agora usando os paces usuais como prioridade!)
+    const vdot = estimateVDOT({
+      runningLevel: profile.runningLevel,
+      goalDistance: profile.goalDistance,
+      targetRaceDate: profile.targetRaceDate || new Date(),
+      currentWeeklyKm: currentWeeklyKm,
+      longestRun: profile.longestRun || 0,
+      currentVDOT: profile.currentVDOT || undefined,
+      targetTime: profile.targetTime || undefined,
+      weight: profile.weight,
+      age: profile.age || undefined,
+      gender: profile.gender || undefined,
+      usualPaces: usualPaces || undefined,
+    });
+
+    const paces = calculatePaces(vdot);
+    
+    // Verificar se é iniciante absoluto (para walk/run)
+    const isBeginnerWalkRun = profile.runningLevel === 'beginner' && currentWeeklyKm < 10;
+
+    // Calcular data de início e data alvo
+    // IMPORTANTE: Ao criar um plano NOVO, a data de início deve ser HOJE (ou próxima segunda)
+    // e a data da prova é calculada para frente
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Começar na próxima segunda-feira
+    const startDate = new Date(today);
+    const dayOfWeek = startDate.getDay();
+    const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek) % 7;
+    if (daysUntilMonday > 0) {
+      startDate.setDate(startDate.getDate() + daysUntilMonday);
+    }
+    
+    // Calcular data alvo da prova baseada na data de início + duração do plano
+    const targetDate = new Date(startDate);
+    targetDate.setDate(targetDate.getDate() + (planStructure.totalWeeks * 7));
+    
+    // Se o usuário forneceu uma data de prova específica, usar ela (mas avisar se for muito cedo/tarde)
+    const userProvidedDate = profile.targetRaceDate;
+    if (userProvidedDate) {
+      const userDate = new Date(userProvidedDate);
+      userDate.setHours(0, 0, 0, 0);
+      // Usar a data fornecida pelo usuário
+      targetDate.setTime(userDate.getTime());
+    }
+
+    // Criar plano no banco
+    const customPlan = await prisma.customTrainingPlan.create({
+      data: {
+        goalDistance: profile.goalDistance,
+        runningLevel: profile.runningLevel,
+        targetRaceDate: targetDate,
+        startDate: startDate,
+        totalWeeks: planStructure.totalWeeks,
+        baseVDOT: vdot,
+        targetPace: paces.marathon,
+      },
+    });
+
+    // Gerar semanas e treinos
+    let weekNumber = 1;
+    let currentDate = new Date(startDate);
+    let cumulativeVolumeIncrease = 0;
+
+    for (const phase of planStructure.phases) {
+      for (let phaseWeek = 0; phaseWeek < phase.weeks; phaseWeek++) {
+        const weekStartDate = new Date(currentDate);
+        const weekEndDate = new Date(currentDate);
+        weekEndDate.setDate(weekEndDate.getDate() + 6);
+
+        // Calcular volume da semana com progressão de 10% e cutback weeks
+        const weekProgress = phaseWeek / phase.weeks;
+        let weekVolume =
+          phase.weeklyVolume.min +
+          (phase.weeklyVolume.max - phase.weeklyVolume.min) * weekProgress;
+
+        // Aplicar cutback week a cada 3-4 semanas (reduzir 20%)
+        const isCutbackWeek = weekNumber % 4 === 0;
+        if (isCutbackWeek && weekNumber > 2) {
+          weekVolume = weekVolume * 0.80;
+        }
+
+        // Calcular distribuição dos treinos
+        const longRunDistance = Math.max(weekVolume * phase.longRunPercentage, isBeginnerWalkRun ? 2 : 5);
+        const totalRunningWorkouts = phase.workoutsPerWeek.easy + phase.workoutsPerWeek.quality + 1;
+        const remainingDistance = weekVolume - longRunDistance;
+        const avgRunDistance = totalRunningWorkouts > 1 ? remainingDistance / (totalRunningWorkouts - 1) : 5;
+
+        // Para iniciantes walk/run, ajustar distâncias para durações
+        const easyRunDistance = isBeginnerWalkRun 
+          ? Math.max(1.5, Math.min(avgRunDistance, 4))  // 1.5-4km no walk/run
+          : Math.max(3, avgRunDistance);
+
+        // Criar semana
+        const week = await prisma.customWeek.create({
+          data: {
+            planId: customPlan.id,
+            weekNumber: weekNumber,
+            startDate: weekStartDate,
+            endDate: weekEndDate,
+            totalDistance: Math.round(weekVolume * 10) / 10,
+            totalWorkouts: 7, // 7 dias = treinos + descansos
+            phase: phase.name,
+            focus: isCutbackWeek 
+              ? `Semana ${weekNumber} - ${phase.name} (Recuperação)` 
+              : `Semana ${weekNumber} - ${phase.name}`,
+          },
+        });
+
+        // Obter disponibilidade do usuário do novo formato flexível
+        const trainingActivities = (profile.trainingActivities as any) || [];
+        
+        // Extrair disponibilidade por tipo de atividade com busca mais flexível
+        const getActivityInfo = (searchTerms: string[]) => {
+          const activity = trainingActivities.find((a: any) => {
+            const activityName = (a.name || '').toLowerCase();
+            const activityId = (a.id || '').toLowerCase();
+            return searchTerms.some(term => 
+              activityId === term.toLowerCase() ||
+              activityName.includes(term.toLowerCase()) ||
+              term.toLowerCase().includes(activityName)
+            );
+          });
+          return activity;
+        };
+        
+        // Mapear atividades do usuário para tipos de treino
+        const runningActivity = getActivityInfo(['running', 'corrida', 'run']);
+        const strengthActivity = getActivityInfo(['strength', 'musculação', 'musculacao', 'força', 'forca', 'gym', 'academia']);
+        const pilatesActivity = getActivityInfo(['pilates']);
+        const swimmingActivity = getActivityInfo(['swimming', 'natação', 'nata��ao', 'swim']);
+        const yogaActivity = getActivityInfo(['yoga']);
+        const cyclingActivity = getActivityInfo(['cycling', 'ciclismo', 'bike', 'bicicleta']);
+        const crossfitActivity = getActivityInfo(['crossfit', 'cross fit', 'funcional']);
+        
+        // Coletar todas as atividades customizadas não mapeadas
+        const mappedActivityIds = [
+          runningActivity?.id,
+          strengthActivity?.id,
+          pilatesActivity?.id,
+          swimmingActivity?.id,
+          yogaActivity?.id,
+          cyclingActivity?.id,
+          crossfitActivity?.id,
+        ].filter(Boolean);
+        
+        const customActivities = trainingActivities.filter((a: any) => 
+          !mappedActivityIds.includes(a.id) && a.availableDays?.length > 0
+        );
+        
+        let availableDaysRunning = runningActivity?.availableDays || [];
+        const availableDaysStrength = strengthActivity?.availableDays || [];
+        const availableDaysPilates = pilatesActivity?.availableDays || [];
+        const availableDaysSwimming = swimmingActivity?.availableDays || [];
+        const availableDaysYoga = yogaActivity?.availableDays || [];
+        const availableDaysCycling = cyclingActivity?.availableDays || [];
+        const availableDaysCrossfit = crossfitActivity?.availableDays || [];
+        
+        // Se não há dias disponíveis para corrida especificados, considerar todos os dias
+        // (assumindo que o usuário pode correr qualquer dia)
+        if (availableDaysRunning.length === 0 && trainingActivities.length > 0) {
+          availableDaysRunning = [0, 1, 2, 3, 4, 5, 6]; // Todos os dias
+        }
+        
+        // Se não há nenhuma atividade configurada, usar distribuição padrão
+        const useDefaultSchedule = trainingActivities.length === 0;
+        
+        // Gerar treinos da semana
+        const workouts = [];
+        
+        // Encontrar melhor dia para o longão
+        // PRIORIDADE 1: Respeitar SEMPRE os dias disponíveis para corrida
+        // PRIORIDADE 2: Se o usuário configurou um dia preferido E ele está disponível, usar
+        // PRIORIDADE 3: Se não, usar Sábado/Domingo se disponível
+        // PRIORIDADE 4: Usar qualquer dia disponível para corrida
+        let longRunDay = 0; // Domingo por padrão (fallback)
+        
+        if (!useDefaultSchedule && availableDaysRunning.length > 0) {
+          // Há disponibilidade configurada - SEMPRE respeitar
+          
+          // Se o usuário configurou um dia preferido E ele está disponível para corrida, usar
+          if (profile.longRunDay !== null && 
+              profile.longRunDay !== undefined && 
+              availableDaysRunning.includes(profile.longRunDay)) {
+            longRunDay = profile.longRunDay;
+          } 
+          // Se não, tentar Sábado (melhor dia para longão)
+          else if (availableDaysRunning.includes(6)) {
+            longRunDay = 6; // Sábado
+          } 
+          // Se não tem Sábado, tentar Domingo
+          else if (availableDaysRunning.includes(0)) {
+            longRunDay = 0; // Domingo
+          } 
+          // Se não tem fim de semana, usar o último dia disponível da semana
+          else {
+            longRunDay = Math.max(...availableDaysRunning);
+          }
+        } else if (useDefaultSchedule) {
+          // Não há disponibilidade configurada - usar lógica padrão
+          if (profile.longRunDay !== null && profile.longRunDay !== undefined) {
+            longRunDay = profile.longRunDay;
+          } else {
+            longRunDay = 0; // Domingo por padrão
+          }
+        }
+        
+        // DOMINGO (ou dia disponível) - Long Run ou Walk/Run Longo
+        if (phase.workoutsPerWeek.long > 0) {
+          const longType = isBeginnerWalkRun && weekNumber <= 6 ? 'walk_run' : 'running';
+          const longPace = calculateTargetPace(vdot, 'long');
+          
+          const longRunDate = new Date(weekStartDate);
+          longRunDate.setDate(longRunDate.getDate() + longRunDay);
+          
+          workouts.push({
+            weekId: week.id,
+            dayOfWeek: longRunDay,
+            date: longRunDate,
+            type: longType,
+            subtype: isBeginnerWalkRun && weekNumber <= 6 ? 'walk_run' : 'long',
+            title: isBeginnerWalkRun && weekNumber <= 6 ? 'Treino Longo (Walk/Run)' : 'Longão',
+            description: generateWorkoutDescription(
+              longType, 
+              'long', 
+              longRunDistance, 
+              longPace,
+              isBeginnerWalkRun && weekNumber <= 6
+            ),
+            distance: Math.round(longRunDistance * 10) / 10,
+            targetPace: longPace,
+          });
+        }
+
+        // Distribuir os treinos restantes baseado na disponibilidade
+        if (useDefaultSchedule) {
+          // Usar distribuição padrão (código antigo)
+          // SEGUNDA - Descanso ou Cross Training
+          if (isBeginnerWalkRun || profile.runningLevel === 'beginner') {
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: 1,
+              date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 1)),
+              type: 'rest',
+              subtype: null,
+              title: 'Descanso',
+              description: generateWorkoutDescription('rest', null, null, null),
+              duration: null,
+            });
+          } else {
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: 1,
+              date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 1)),
+              type: 'cross_training',
+              subtype: null,
+              title: 'Cross Training',
+              description: generateWorkoutDescription('cross_training', null, null, null),
+              duration: 30,
+            });
+          }
+
+          // TERÇA - Treino de Corrida
+          if (phase.workoutsPerWeek.easy > 0 || phase.workoutsPerWeek.quality > 0) {
+            const tuesdayType = phase.workoutsPerWeek.quality > 0 ? 'tempo' : 'easy';
+            const tuesdayIsWalkRun = isBeginnerWalkRun && weekNumber <= 6;
+            const tuesdayPace = calculateTargetPace(vdot, tuesdayType);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: 2,
+              date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 2)),
+              type: tuesdayIsWalkRun ? 'walk_run' : 'running',
+              subtype: tuesdayIsWalkRun ? 'walk_run' : tuesdayType,
+              title: tuesdayIsWalkRun 
+                ? 'Walk/Run' 
+                : (tuesdayType === 'tempo' ? 'Treino de Ritmo' : 'Corrida Fácil'),
+              description: generateWorkoutDescription(
+                'running',
+                tuesdayType,
+                easyRunDistance,
+                tuesdayPace,
+                tuesdayIsWalkRun
+              ),
+              distance: Math.round(easyRunDistance * 10) / 10,
+              targetPace: tuesdayPace,
+            });
+          }
+
+          // QUARTA - Força ou Descanso
+          workouts.push({
+            weekId: week.id,
+            dayOfWeek: 3,
+            date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 3)),
+            type: isBeginnerWalkRun ? 'rest' : 'strength',
+            subtype: null,
+            title: isBeginnerWalkRun ? 'Descanso' : 'Treino de Força',
+            description: generateWorkoutDescription(
+              isBeginnerWalkRun ? 'rest' : 'strength', 
+              null, 
+              null, 
+              null
+            ),
+            duration: isBeginnerWalkRun ? null : 45,
+          });
+
+          // QUINTA - Treino de Corrida
+          if (phase.workoutsPerWeek.easy > 1 || phase.workoutsPerWeek.quality > 1) {
+            const thursdayType = phase.workoutsPerWeek.quality > 1 ? 'intervals' : 'easy';
+            const thursdayIsWalkRun = isBeginnerWalkRun && weekNumber <= 6;
+            const thursdayPace = calculateTargetPace(vdot, thursdayType);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: 4,
+              date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 4)),
+              type: thursdayIsWalkRun ? 'walk_run' : 'running',
+              subtype: thursdayIsWalkRun ? 'walk_run' : thursdayType,
+              title: thursdayIsWalkRun 
+                ? 'Walk/Run' 
+                : (thursdayType === 'intervals' ? 'Treino Intervalado' : 'Corrida Fácil'),
+              description: generateWorkoutDescription(
+                'running',
+                thursdayType,
+                easyRunDistance,
+                thursdayPace,
+                thursdayIsWalkRun
+              ),
+              distance: Math.round(easyRunDistance * 10) / 10,
+              targetPace: thursdayPace,
+            });
+          }
+
+          // SEXTA - Descanso
+          workouts.push({
+            weekId: week.id,
+            dayOfWeek: 5,
+            date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 5)),
+            type: 'rest',
+            subtype: null,
+            title: 'Descanso',
+            description: generateWorkoutDescription('rest', null, null, null),
+            duration: null,
+          });
+
+          // SÁBADO - Corrida Fácil ou Força
+          if (phase.workoutsPerWeek.easy > 2) {
+            const saturdayIsWalkRun = isBeginnerWalkRun && weekNumber <= 6;
+            const saturdayPace = calculateTargetPace(vdot, 'easy');
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: 6,
+              date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 6)),
+              type: saturdayIsWalkRun ? 'walk_run' : 'running',
+              subtype: saturdayIsWalkRun ? 'walk_run' : 'easy',
+              title: saturdayIsWalkRun ? 'Walk/Run' : 'Corrida Fácil',
+              description: generateWorkoutDescription(
+                'running', 
+                'easy', 
+                easyRunDistance, 
+                saturdayPace,
+                saturdayIsWalkRun
+              ),
+              distance: Math.round(easyRunDistance * 10) / 10,
+              targetPace: saturdayPace,
+            });
+          } else {
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: 6,
+              date: new Date(new Date(weekStartDate).setDate(weekStartDate.getDate() + 6)),
+              type: isBeginnerWalkRun ? 'rest' : 'strength',
+              subtype: null,
+              title: isBeginnerWalkRun ? 'Descanso' : 'Força ou Cross Training',
+              description: generateWorkoutDescription(
+                isBeginnerWalkRun ? 'rest' : 'strength', 
+                null, 
+                null, 
+                null
+              ),
+              duration: isBeginnerWalkRun ? null : 30,
+            });
+          }
+        } else {
+          // Distribuição baseada na disponibilidade do usuário
+          // Agora usamos um Map para permitir múltiplas atividades no mesmo dia
+          // Estrutura: Map<dayOfWeek, Array<{type, time}>>
+          const daySchedule = new Map<number, Array<{type: string, time: string}>>();
+          
+          // Marcar o dia do longão
+          daySchedule.set(longRunDay, [{ type: 'running_long', time: runningActivity?.preferredTime || 'morning' }]);
+          
+          // Função helper para verificar se uma atividade pode ser adicionada em um dia
+          const canAddActivity = (day: number, activityTime: string) => {
+            const existingActivities = daySchedule.get(day) || [];
+            
+            // Se não há nenhuma atividade neste dia, pode adicionar
+            if (existingActivities.length === 0) return true;
+            
+            // Se há atividades, verificar se os horários são diferentes
+            const hasSameTime = existingActivities.some(a => a.time === activityTime);
+            
+            // Pode adicionar se:
+            // 1. Não há atividade no mesmo horário OU
+            // 2. O horário é "flexible" (pode acontecer em qualquer momento)
+            return !hasSameTime || activityTime === 'flexible';
+          };
+          
+          // Função para adicionar uma atividade ao schedule
+          const addActivityToSchedule = (day: number, type: string, time: string) => {
+            const existing = daySchedule.get(day) || [];
+            existing.push({ type, time });
+            daySchedule.set(day, existing);
+          };
+          
+          // Filtrar dias disponíveis considerando os horários
+          const getAvailableDays = (activityDays: number[], activityTime: string = 'flexible') => {
+            return activityDays.filter(day => canAddActivity(day, activityTime)).sort();
+          };
+          
+          // Calcular quantos treinos de corrida ainda precisamos (além do longão)
+          const totalRunningWorkouts = phase.workoutsPerWeek.easy + phase.workoutsPerWeek.quality;
+          const runningTime = runningActivity?.preferredTime || 'morning';
+          const runningDaysNeeded = getAvailableDays(availableDaysRunning, runningTime).slice(0, totalRunningWorkouts);
+          
+          // Distribuir treinos de corrida nos dias disponíveis
+          let qualityWorkoutsAdded = 0;
+          let easyWorkoutsAdded = 0;
+          
+          runningDaysNeeded.forEach((day, index) => {
+            const needsQuality = qualityWorkoutsAdded < phase.workoutsPerWeek.quality;
+            const workoutType = needsQuality ? (qualityWorkoutsAdded === 0 ? 'tempo' : 'intervals') : 'easy';
+            const isWalkRun = isBeginnerWalkRun && weekNumber <= 6;
+            const pace = calculateTargetPace(vdot, workoutType);
+            
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: isWalkRun ? 'walk_run' : 'running',
+              subtype: isWalkRun ? 'walk_run' : workoutType,
+              title: isWalkRun 
+                ? 'Walk/Run'
+                : (workoutType === 'tempo' ? 'Treino de Ritmo' : workoutType === 'intervals' ? 'Treino Intervalado' : 'Corrida Fácil'),
+              description: generateWorkoutDescription('running', workoutType, easyRunDistance, pace, isWalkRun),
+              distance: Math.round(easyRunDistance * 10) / 10,
+              targetPace: pace,
+            });
+            
+            addActivityToSchedule(day, 'running', runningTime);
+            if (needsQuality) qualityWorkoutsAdded++;
+            else easyWorkoutsAdded++;
+          });
+          
+          // Adicionar treinos de força nos dias disponíveis
+          const strengthTime = strengthActivity?.preferredTime || 'afternoon';
+          
+          // Usar TODOS os dias disponíveis que o usuário configurou para musculação
+          // Limitar a no máximo 4 dias por semana para evitar overtraining
+          const maxStrengthDays = 4;
+          const strengthDaysNeeded = getAvailableDays(availableDaysStrength, strengthTime).slice(0, maxStrengthDays);
+          
+          strengthDaysNeeded.forEach(day => {
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: 'strength',
+              subtype: null,
+              title: strengthActivity?.name || 'Treino de Força',
+              description: generateWorkoutDescription('strength', null, null, null),
+              duration: 45,
+            });
+            
+            addActivityToSchedule(day, 'strength', strengthTime);
+          });
+          
+          // Adicionar natação se disponível
+          const swimmingTime = swimmingActivity?.preferredTime || 'morning';
+          const swimmingDaysNeeded = getAvailableDays(availableDaysSwimming, swimmingTime).slice(0, 1);
+          swimmingDaysNeeded.forEach(day => {
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: 'swimming',
+              subtype: null,
+              title: swimmingActivity?.name || 'Natação',
+              description: generateWorkoutDescription('swimming', null, null, null),
+              duration: 45,
+            });
+            
+            addActivityToSchedule(day, 'swimming', swimmingTime);
+          });
+          
+          // Adicionar pilates se disponível
+          const pilatesTime = pilatesActivity?.preferredTime || 'evening';
+          const pilatesDaysNeeded = getAvailableDays(availableDaysPilates, pilatesTime).slice(0, 1);
+          pilatesDaysNeeded.forEach(day => {
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: 'pilates',
+              subtype: null,
+              title: pilatesActivity?.name || 'Pilates',
+              description: 'Sessão de Pilates focada em core, flexibilidade e equilíbrio. Excelente complemento ao treinamento de corrida.',
+              duration: 60,
+            });
+            
+            addActivityToSchedule(day, 'pilates', pilatesTime);
+          });
+          
+          // Adicionar yoga se disponível
+          const yogaTime = yogaActivity?.preferredTime || 'evening';
+          const yogaDaysNeeded = getAvailableDays(availableDaysYoga, yogaTime).slice(0, 1);
+          yogaDaysNeeded.forEach(day => {
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: 'cross_training',
+              subtype: null,
+              title: yogaActivity?.name || 'Yoga',
+              description: 'Sessão de Yoga para flexibilidade, equilíbrio e recuperação ativa.',
+              duration: 60,
+            });
+            
+            addActivityToSchedule(day, 'yoga', yogaTime);
+          });
+          
+          // Adicionar ciclismo se disponível
+          const cyclingTime = cyclingActivity?.preferredTime || 'morning';
+          const cyclingDaysNeeded = getAvailableDays(availableDaysCycling, cyclingTime).slice(0, 1);
+          cyclingDaysNeeded.forEach(day => {
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: 'cross_training',
+              subtype: null,
+              title: cyclingActivity?.name || 'Ciclismo',
+              description: 'Treino de ciclismo para condicionamento cardiovascular com baixo impacto.',
+              duration: 60,
+            });
+            
+            addActivityToSchedule(day, 'cycling', cyclingTime);
+          });
+          
+          // Adicionar crossfit se disponível
+          const crossfitTime = crossfitActivity?.preferredTime || 'afternoon';
+          const crossfitDaysNeeded = getAvailableDays(availableDaysCrossfit, crossfitTime).slice(0, 1);
+          crossfitDaysNeeded.forEach(day => {
+            const workoutDate = new Date(weekStartDate);
+            workoutDate.setDate(workoutDate.getDate() + day);
+            
+            workouts.push({
+              weekId: week.id,
+              dayOfWeek: day,
+              date: workoutDate,
+              type: 'cross_training',
+              subtype: null,
+              title: crossfitActivity?.name || 'CrossFit',
+              description: 'Treino funcional de alta intensidade para força e condicionamento.',
+              duration: 60,
+            });
+            
+            addActivityToSchedule(day, 'crossfit', crossfitTime);
+          });
+          
+          // Adicionar atividades customizadas
+          customActivities.forEach((activity: any) => {
+            const activityTime = activity.preferredTime || 'flexible';
+            const activityDays = getAvailableDays(activity.availableDays, activityTime).slice(0, 1);
+            
+            activityDays.forEach(day => {
+              const workoutDate = new Date(weekStartDate);
+              workoutDate.setDate(workoutDate.getDate() + day);
+              
+              workouts.push({
+                weekId: week.id,
+                dayOfWeek: day,
+                date: workoutDate,
+                type: 'cross_training',
+                subtype: null,
+                title: activity.name,
+                description: `Treino de ${activity.name} conforme sua disponibilidade.`,
+                duration: 60,
+              });
+              
+              addActivityToSchedule(day, activity.id, activityTime);
+            });
+          });
+          
+          // Preencher dias restantes com descanso
+          for (let day = 0; day < 7; day++) {
+            const dayActivities = daySchedule.get(day) || [];
+            if (dayActivities.length === 0) {
+              const workoutDate = new Date(weekStartDate);
+              workoutDate.setDate(workoutDate.getDate() + day);
+              
+              workouts.push({
+                weekId: week.id,
+                dayOfWeek: day,
+                date: workoutDate,
+                type: 'rest',
+                subtype: null,
+                title: 'Descanso',
+                description: generateWorkoutDescription('rest', null, null, null),
+                duration: null,
+              });
+            }
+          }
+        }
+
+        // Criar todos os treinos
+        await prisma.customWorkout.createMany({
+          data: workouts,
+        });
+
+        weekNumber++;
+        currentDate.setDate(currentDate.getDate() + 7);
+      }
+    }
+
+    // Atualizar perfil do atleta
+    await prisma.athleteProfile.update({
+      where: { id: profile.id },
+      data: {
+        hasCustomPlan: true,
+        customPlanId: customPlan.id,
+        currentVDOT: vdot,
+      },
+    });
+
+    // Determinar de onde o VDOT foi calculado para feedback ao usuário
+    let vdotSource = 'nível de experiência';
+    if (usualPaces && Object.keys(usualPaces).length > 0) {
+      vdotSource = 'seus paces informados (dados reais de corridas)';
+    } else if (profile.currentVDOT) {
+      vdotSource = 'VDOT anterior';
+    } else if (profile.targetTime && profile.targetTime !== '0:00:00') {
+      vdotSource = 'tempo alvo da prova';
+    }
+
+    return NextResponse.json({
+      success: true,
+      plan: customPlan,
+      vdot: vdot,
+      paces: paces,
+      vdotSource: vdotSource,
+      message: isBeginnerWalkRun 
+        ? `Plano gerado com sucesso! Como você está começando, suas primeiras 6 semanas incluem treinos alternando caminhada e corrida para adaptação segura. VDOT calculado (${vdot}) baseado em ${vdotSource}.` 
+        : `Plano gerado com sucesso! VDOT calculado (${vdot}) baseado em ${vdotSource}. Todos os treinos foram personalizados para o seu ritmo atual.`
+    });
+  } catch (error) {
+    console.error('Error generating plan:', error);
+    return NextResponse.json({ error: 'Erro ao gerar plano' }, { status: 500 });
+  }
+}

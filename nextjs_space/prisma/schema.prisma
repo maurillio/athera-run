@@ -1,0 +1,623 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/app_maratona/nextjs_space/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// ===== AUTHENTICATION & USERS =====
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  password      String?   // For email/password auth
+  image         String?
+  
+  // Subscription & Premium
+  isPremium     Boolean   @default(false)
+  isAdmin       Boolean   @default(false)
+  stripeCustomerId String? @unique
+  stripeSubscriptionId String? @unique
+  subscriptionStatus String? // "active", "canceled", "past_due"
+  subscriptionEndDate DateTime?
+  
+  // Metadata
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  accounts      Account[]
+  sessions      Session[]
+  athleteProfile AthleteProfile?
+  
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Fases macro do plano (5 fases de 40 semanas)
+model Phase {
+  id          Int     @id @default(autoincrement())
+  phaseNumber Int     @unique
+  name        String
+  description String
+  duration    String  // "4 semanas", "10 semanas", etc
+  objectives  String  // Objetivos principais da fase
+  focus       String  // Foco principal (corrida, musculacao, etc)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  weeks       Week[]
+  nutrition   PhaseNutrition?
+  
+  @@map("phases")
+}
+
+// Semanas individuais (40 semanas total)
+model Week {
+  id          Int     @id @default(autoincrement())
+  weekNumber  Int     @unique
+  phaseId     Int
+  title       String  // "Semana 1: Início da Base Aeróbica"
+  volume      Float   // Volume total semanal em km
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  phase       Phase   @relation(fields: [phaseId], references: [id])
+  workouts    Workout[]
+  
+  @@map("weeks")
+}
+
+// Treinos individuais
+model Workout {
+  id          Int     @id @default(autoincrement())
+  weekId      Int
+  dayOfWeek   Int     // 0=Domingo, 1=Segunda, etc
+  dayName     String  // "Domingo", "Segunda", etc
+  type        String  // "running", "strength", "swimming", "rest"
+  subtype     String? // "easy", "long", "tempo", "intervals", etc
+  distance    Float?  // Distância em km (para corrida)
+  duration    Int?    // Duração em minutos
+  pace        String? // Pace alvo (ex: "6:15-6:45/km")
+  description String
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  week        Week    @relation(fields: [weekId], references: [id])
+  completedWorkouts CompletedWorkout[]
+  
+  @@map("workouts")
+}
+
+// Tabela VDOT para calculadora de paces
+model VdotTable {
+  id                Int     @id @default(autoincrement())
+  vdot              Float   @unique
+  easy_pace_min     String  // Ex: "6:15"
+  easy_pace_max     String  // Ex: "6:45"
+  marathon_pace_min String
+  marathon_pace_max String
+  threshold_pace_min String
+  threshold_pace_max String
+  interval_pace_min String
+  interval_pace_max String
+  repetition_pace_min String
+  repetition_pace_max String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("vdot_table")
+}
+
+// Nutrição específica por fase
+model PhaseNutrition {
+  id              Int     @id @default(autoincrement())
+  phaseId         Int     @unique
+  carbohydrates   String  // Ex: "5-7 g/kg/dia"
+  protein         String  // Ex: "1.6-1.8 g/kg/dia"
+  fats            String  // Ex: "20-30% do VET"
+  calories        String  // Ex: "Manutenção/Déficit modesto"
+  hydration       String  // Estratégias de hidratação
+  supplements     String? // Suplementação recomendada
+  timing          String? // Timing das refeições
+  special_notes   String? // Notas especiais (carb loading, etc)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  phase           Phase   @relation(fields: [phaseId], references: [id])
+  
+  @@map("phase_nutrition")
+}
+
+// Exercícios de prevenção de lesões
+model InjuryPrevention {
+  id          Int     @id @default(autoincrement())
+  category    String  // "canelite", "fascite_plantar", "core", "mobilidade"
+  name        String
+  description String
+  duration    String? // "20-30 segundos", "10-15 repetições"
+  frequency   String  // "Diária", "2-3x/semana"
+  instructions String
+  benefits    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("injury_prevention")
+}
+
+// Glossário de termos
+model Glossary {
+  id          Int     @id @default(autoincrement())
+  term        String  @unique
+  definition  String
+  category    String  // "treino", "nutricao", "fisiologia", etc
+  examples    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("glossary")
+}
+
+// Sinais de overtraining
+model OvertrainingSign {
+  id          Int     @id @default(autoincrement())
+  category    String  // "physical", "performance", "psychological"
+  sign        String
+  description String
+  severity    String  // "mild", "moderate", "severe"
+  action      String  // Ação recomendada
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("overtraining_signs")
+}
+
+// ===== TRACKING DE TREINOS DO USUÁRIO =====
+
+// Perfil do atleta (cada usuário tem um perfil)
+model AthleteProfile {
+  id                Int      @id @default(autoincrement())
+  userId            String   @unique // Relação 1:1 com User
+  
+  // Dados físicos
+  weight            Float    // Peso em kg
+  height            Float    // Altura em cm
+  age               Int?     // Idade
+  gender            String?  // "male", "female", "other"
+  
+  // Nível e experiência
+  runningLevel      String   // "beginner", "intermediate", "advanced"
+  currentWeeklyKm   Float?   // Volume semanal atual em km
+  longestRun        Float?   // Maior distância já corrida em km
+  
+  // Experiências e histórico (analisado por IA)
+  experienceDescription String? @db.Text // Descrição livre das experiências do corredor
+  experienceAnalysis    String? @db.Text // Análise gerada pela IA
+  
+  // Objetivos principais (mantido para compatibilidade)
+  goalDistance      String   // "10k", "half_marathon", "marathon"
+  targetRaceDate    DateTime? // Data da prova objetivo
+  targetTime        String?  // Meta de tempo (ex: "4:00:00")
+  currentVDOT       Float?   // VDOT atual (calculado ou estimado)
+  
+  // Integração Strava
+  stravaConnected   Boolean  @default(false)
+  stravaAthleteId   String?  @unique
+  stravaAccessToken String?  // Encrypted
+  stravaRefreshToken String? // Encrypted
+  stravaTokenExpiry DateTime?
+  
+  // Histórico de lesões e informações médicas
+  injuries          Json?    // Array de lesões detalhadas
+  medicalConditions String?  @db.Text // Condições médicas relevantes
+  medications       String?  @db.Text // Medicamentos em uso
+  physicalRestrictions String? @db.Text // Restrições físicas
+  weeklyAvailability Int?    @default(5) // Dias disponíveis por semana para treinar
+  
+  // Disponibilidade por modalidade e horários (sistema flexível)
+  // Formato: [
+  //   { "id": "running", "name": "Corrida", "availableDays": [0, 2, 4, 6], "preferredTime": "morning", "icon": "Activity" },
+  //   { "id": "strength", "name": "Musculação", "availableDays": [1, 3, 5], "preferredTime": "afternoon", "icon": "Dumbbell" },
+  //   { "id": "yoga", "name": "Yoga", "availableDays": [3], "preferredTime": "evening", "icon": "Activity" },
+  //   { "id": "swimming", "name": "Natação", "availableDays": [1], "preferredTime": "morning", "icon": "Waves" }
+  // ]
+  // dayOfWeek: 0=Domingo, 1=Segunda, 2=Terça, 3=Quarta, 4=Quinta, 5=Sexta, 6=Sábado
+  // preferredTime: "early_morning" (5-7h), "morning" (7-10h), "afternoon" (12-15h), "evening" (17-20h), "night" (20-22h), "flexible"
+  trainingActivities Json? // Array de atividades/modalidades com seus horários
+  
+  // Ajuste Inteligente Automático
+  autoAdjustEnabled Boolean  @default(false) // Ajusta o plano automaticamente baseado na evolução
+  lastAutoAdjustDate DateTime? // Última vez que o ajuste automático foi executado
+  
+  // Dia preferido para o treino longo semanal
+  longRunDay        Int?     // 0=Domingo, 1=Segunda, 2=Terça, 3=Quarta, 4=Quinta, 5=Sexta, 6=Sábado
+  
+  // Paces habituais por distância para personalização do plano
+  // Formato: { "hasRunBefore": true, "paces": { "5k": "5:00-5:30", "10k": "never", ... } }
+  usualPaces        Json?    // Paces habituais em diferentes distâncias
+  
+  // Histórico de lesões (legacy - mantido para compatibilidade)
+  injuryHistory     String?  // JSON ou texto livre
+  
+  // Plano de treinamento personalizado
+  hasCustomPlan     Boolean  @default(false)
+  customPlanId      Int?     @unique
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  completedWorkouts CompletedWorkout[]
+  aiAnalyses        AIAnalysis[]
+  customPlan        CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
+  raceGoals         RaceGoal[] // Múltiplas corridas
+  trainingLogs      TrainingLog[] // Relatos diários
+  
+  @@map("athlete_profiles")
+}
+
+// Corridas/Objetivos do atleta (múltiplas corridas com sistema de classificação)
+model RaceGoal {
+  id              Int      @id @default(autoincrement())
+  athleteId       Int
+  
+  // Detalhes da corrida
+  raceName        String   // Nome da corrida (ex: "Maratona de São Paulo")
+  distance        String   // "5k", "10k", "half_marathon", "marathon"
+  raceDate        DateTime
+  targetTime      String?  // Meta de tempo
+  location        String?  // Local da prova
+  
+  // Sistema de Classificação Automática (A, B, C)
+  // A = Objetivo principal (prova alvo)
+  // B = Provas preparatórias importantes (testes de ritmo, simulados)
+  // C = Provas de volume/experiência (treinos longos com chip)
+  priority        String   @default("C") // "A", "B", "C"
+  autoClassified  Boolean  @default(true) // Se foi classificada automaticamente
+  
+  // Status
+  status          String   @default("active") // "active", "completed", "cancelled"
+  isPrimary       Boolean  @default(false) // DEPRECATED: usar priority === "A"
+  
+  // Integração com Plano (nova feature)
+  weeksBeforeA    Int?     // Semanas antes da corrida A (calculado automaticamente)
+  trainingSuggest String?  @db.Text // Sugestão de como usar essa corrida no treino
+  periodPhase     String?  // Em qual fase do plano essa corrida está ("base", "build", "peak", "taper")
+  
+  // Resultados (após a corrida)
+  actualTime      String?  // Tempo real alcançado
+  placement       Int?     // Colocação geral
+  notes           String?  @db.Text
+  
+  // Análise Pós-Corrida (nova feature)
+  postRaceAnalysis String? @db.Text // Análise gerada pela IA após a corrida
+  lessonsLearned   Json?   // Lições aprendidas: { "positives": [], "improvements": [], "adjustments": [] }
+  impactOnPlan     String? @db.Text // Como essa corrida impactou o plano de treinamento
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  athlete         AthleteProfile @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  
+  @@index([athleteId, status])
+  @@index([athleteId, priority])
+  @@index([athleteId, raceDate])
+  @@map("race_goals")
+}
+
+// Plano de treinamento personalizado para cada usuário (Sistema de Múltiplas Corridas)
+model CustomTrainingPlan {
+  id                Int      @id @default(autoincrement())
+  
+  // Configuração base do plano (DEPRECATED: usar raceGoalId)
+  goalDistance      String   // "10k", "half_marathon", "marathon"
+  runningLevel      String   // "beginner", "intermediate", "advanced"
+  targetRaceDate    DateTime
+  startDate         DateTime
+  totalWeeks        Int      // Duração total do plano
+  currentWeek       Int      @default(1) // Semana atual do plano
+  
+  // Nova Integração com Sistema de Múltiplas Corridas
+  primaryRaceGoalId Int?     // Corrida A (objetivo principal)
+  includesRaces     Json?    // Array de IDs das corridas B e C incluídas no plano
+  lastRegenerated   DateTime? // Última vez que o plano foi re-gerado
+  autoAdjustEnabled Boolean  @default(true) // Ajustar automaticamente quando corridas mudarem
+  
+  // Métricas base
+  baseVDOT          Float?   // VDOT inicial
+  targetPace        String?  // Pace objetivo na prova
+  
+  // Status do plano
+  isActive          Boolean  @default(true)
+  completionRate    Float    @default(0) // Porcentagem de treinos completados
+  needsRegeneration Boolean  @default(false) // Plano precisa ser re-gerado?
+  
+  // Periodização (nova feature)
+  periodization     Json?    // Estrutura completa da periodização
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  athleteProfile    AthleteProfile?
+  weeks             CustomWeek[]
+  planRevisions     PlanRevision[] // Histórico de revisões
+  
+  @@map("custom_training_plans")
+}
+
+// Histórico de Revisões do Plano (nova tabela)
+model PlanRevision {
+  id                Int      @id @default(autoincrement())
+  planId            Int
+  
+  // Motivo da revisão
+  reason            String   // "race_added", "race_removed", "race_date_changed", "manual_adjustment", "auto_adjustment"
+  description       String   @db.Text // Descrição detalhada da revisão
+  
+  // Mudanças realizadas
+  changes           Json     // Detalhes das mudanças: { "before": {...}, "after": {...}, "affected_weeks": [...] }
+  
+  // Status
+  appliedAt         DateTime @default(now())
+  appliedBy         String?  // "auto" ou ID do usuário
+  
+  plan              CustomTrainingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  
+  @@index([planId, appliedAt])
+  @@map("plan_revisions")
+}
+
+// Semanas personalizadas do plano
+model CustomWeek {
+  id                Int      @id @default(autoincrement())
+  planId            Int
+  weekNumber        Int      // Número da semana (1-N)
+  startDate         DateTime
+  endDate           DateTime
+  
+  // Métricas da semana
+  totalDistance     Float    // km totais planejados
+  totalWorkouts     Int      // número de treinos
+  completedWorkouts Int      @default(0)
+  
+  // Fase e foco
+  phase             String   // "base", "build", "peak", "taper", "race"
+  focus             String   // Descrição do foco da semana
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  plan              CustomTrainingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  workouts          CustomWorkout[]
+  
+  @@unique([planId, weekNumber])
+  @@map("custom_weeks")
+}
+
+// Treinos personalizados
+model CustomWorkout {
+  id                Int      @id @default(autoincrement())
+  weekId            Int
+  dayOfWeek         Int      // 0-6 (Domingo-Sábado)
+  date              DateTime
+  
+  // Tipo de treino
+  type              String   // "running", "strength", "swimming", "rest", "cross_training"
+  subtype           String?  // "easy", "long", "tempo", "intervals", "recovery"
+  
+  // Detalhes do treino
+  title             String   // Ex: "Corrida Fácil"
+  description       String   @db.Text // Descrição detalhada
+  distance          Float?   // km
+  duration          Int?     // minutos
+  targetPace        String?  // pace alvo
+  
+  // Detalhamento adicional para treinos complexos (gerados por IA)
+  warmup            String?  @db.Text // Aquecimento específico
+  mainSet           String?  @db.Text // Série principal detalhada
+  cooldown          String?  @db.Text // Volta à calma
+  
+  // Status
+  isCompleted       Boolean  @default(false)
+  completedWorkoutId Int?    @unique // Referência ao treino completado
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  week              CustomWeek @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  completedWorkout  CompletedWorkout? @relation(fields: [completedWorkoutId], references: [id])
+  
+  @@map("custom_workouts")
+}
+
+// Treinos completados (registrados manualmente ou via Strava)
+model CompletedWorkout {
+  id              Int      @id @default(autoincrement())
+  athleteId       Int
+  plannedWorkoutId Int?    // Referência ao treino planejado (se houver)
+  source          String   // "manual" ou "strava"
+  stravaActivityId String? @unique
+  
+  // Data do treino
+  date            DateTime
+  
+  // Tipo de treino
+  type            String   // "running", "strength", "swimming", "rest"
+  subtype         String?  // "easy", "long", "tempo", "intervals", etc
+  
+  // Métricas de corrida
+  distance        Float?   // km
+  duration        Int?     // minutos
+  pace            String?  // pace médio (ex: "5:45/km")
+  elevation       Float?   // elevação em metros
+  
+  // Métricas fisiológicas
+  avgHeartRate    Int?
+  maxHeartRate    Int?
+  calories        Int?
+  
+  // Percepção do atleta
+  perceivedEffort Int?     // 1-10
+  feeling         String?  // "great", "good", "ok", "tired", "bad"
+  notes           String?
+  
+  // Alertas
+  hasInjuryAlert  Boolean  @default(false)
+  injuryNotes     String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  athlete         AthleteProfile @relation(fields: [athleteId], references: [id])
+  plannedWorkout  Workout?       @relation(fields: [plannedWorkoutId], references: [id])
+  customWorkout   CustomWorkout?
+  
+  @@index([athleteId, date])
+  @@index([stravaActivityId])
+  @@map("completed_workouts")
+}
+
+// Análises por IA
+model AIAnalysis {
+  id            Int      @id @default(autoincrement())
+  athleteId     Int
+  analysisType  String   // "weekly", "monthly", "phase", "injury_risk", "performance_trend"
+  
+  // Período analisado
+  startDate     DateTime
+  endDate       DateTime
+  
+  // Conteúdo da análise
+  summary       String   // Resumo curto
+  insights      String   // Insights detalhados (markdown)
+  recommendations String // Recomendações (markdown)
+  
+  // Métricas calculadas
+  metrics       Json     // Métricas variadas em JSON
+  
+  // Alertas
+  hasAlerts     Boolean  @default(false)
+  alerts        String?  // Alertas importantes (markdown)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  athlete       AthleteProfile @relation(fields: [athleteId], references: [id])
+  
+  @@index([athleteId, createdAt])
+  @@map("ai_analyses")
+}
+
+// Integração Strava - Webhooks
+model StravaWebhook {
+  id              Int      @id @default(autoincrement())
+  subscriptionId  Int      @unique
+  callbackUrl     String
+  verifyToken     String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("strava_webhooks")
+}
+
+// Relatos diários do atleta (diário de treinos)
+model TrainingLog {
+  id                Int      @id @default(autoincrement())
+  athleteId         Int
+  date              DateTime // Data do relato
+  
+  // Informações sobre o treino planejado (se houver)
+  plannedWorkoutId  Int?
+  workoutCompleted  Boolean  @default(false) // Conseguiu fazer o treino planejado?
+  
+  // Percepção geral do dia
+  overallFeeling    String?  // "excellent", "good", "ok", "tired", "bad", "exhausted"
+  energyLevel       Int?     // 1-10
+  sleepQuality      Int?     // 1-10 (qualidade do sono da noite anterior)
+  stressLevel       Int?     // 1-10 (nível de estresse)
+  motivationLevel   Int?     // 1-10
+  
+  // Feedback sobre o treino
+  trainingDifficulty String? // "too_easy", "perfect", "hard", "too_hard", "impossible"
+  difficultyRating  Int?     // 1-10
+  perceivedEffort   Int?     // 1-10 (RPE - Rate of Perceived Exertion)
+  
+  // Dores e desconfortos
+  hasPain           Boolean  @default(false)
+  painDescription   String?  @db.Text // Descrição detalhada das dores
+  painLocations     Json?    // Array de localizações: ["knee_left", "ankle_right", etc]
+  painIntensity     Int?     // 1-10
+  
+  // Lesões ou doenças
+  hasInjury         Boolean  @default(false)
+  injuryDescription String?  @db.Text
+  hasIllness        Boolean  @default(false)
+  illnessDescription String? @db.Text
+  
+  // Relato livre
+  notes             String?  @db.Text // Notas abertas do atleta
+  
+  // Análise por IA
+  analyzed          Boolean  @default(false)
+  aiAnalysis        String?  @db.Text // Análise e recomendações da IA
+  aiAlerts          Json?    // Array de alertas: [{"type": "overtraining", "severity": "high", "message": "..."}]
+  requiresAttention Boolean  @default(false) // Se true, sistema deve ajustar plano
+  
+  // Ajustes feitos no plano baseado neste relato
+  planAdjusted      Boolean  @default(false)
+  adjustmentDescription String? @db.Text
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  athlete           AthleteProfile @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  
+  @@index([athleteId, date])
+  @@map("training_logs")
+}
