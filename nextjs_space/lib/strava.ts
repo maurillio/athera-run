@@ -116,7 +116,7 @@ export async function importStravaActivity(activity: any, profileId: number) {
   }
 
   // Criar treino
-  return prisma.completedWorkout.create({
+  const completedWorkout = await prisma.completedWorkout.create({
     data: {
       athleteId: profileId,
       source: 'strava',
@@ -132,4 +132,106 @@ export async function importStravaActivity(activity: any, profileId: number) {
       calories: activity.calories
     }
   });
+
+  // NOVO: Vincular automaticamente ao treino planejado, se houver
+  await linkToPlannedWorkout(completedWorkout, profileId);
+
+  return completedWorkout;
+}
+
+// Nova função: Vincular atividade do Strava ao treino planejado
+async function linkToPlannedWorkout(completedWorkout: any, profileId: number) {
+  try {
+    // Buscar o plano ativo do atleta
+    const profile = await prisma.athleteProfile.findUnique({
+      where: { id: profileId },
+      include: {
+        customPlan: {
+          include: {
+            weeks: {
+              include: {
+                workouts: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!profile?.customPlan || !profile.customPlan.isActive) {
+      return; // Sem plano ativo
+    }
+
+    // Buscar treino planejado para o mesmo dia
+    const workoutDate = new Date(completedWorkout.date);
+    workoutDate.setHours(0, 0, 0, 0);
+
+    const plannedWorkout = await prisma.customWorkout.findFirst({
+      where: {
+        weekId: {
+          in: profile.customPlan.weeks.map(w => w.id)
+        },
+        date: {
+          gte: workoutDate,
+          lt: new Date(workoutDate.getTime() + 24 * 60 * 60 * 1000)
+        },
+        type: completedWorkout.type,
+        isCompleted: false
+      },
+      include: {
+        week: true
+      }
+    });
+
+    if (plannedWorkout) {
+      // Vincular e marcar como completo
+      await prisma.customWorkout.update({
+        where: { id: plannedWorkout.id },
+        data: {
+          isCompleted: true,
+          completedWorkoutId: completedWorkout.id
+        }
+      });
+
+      // Atualizar contagem da semana
+      await prisma.customWeek.update({
+        where: { id: plannedWorkout.weekId },
+        data: {
+          completedWorkouts: {
+            increment: 1
+          }
+        }
+      });
+
+      // Recalcular taxa de conclusão do plano
+      const plan = await prisma.customTrainingPlan.findUnique({
+        where: { id: profile.customPlan.id },
+        include: {
+          weeks: {
+            include: {
+              workouts: true
+            }
+          }
+        }
+      });
+
+      if (plan) {
+        const totalWorkouts = plan.weeks.reduce((sum, week) => sum + week.totalWorkouts, 0);
+        const completedWorkoutsCount = plan.weeks.reduce((sum, week) => sum + week.completedWorkouts, 0);
+        const completionRate = totalWorkouts > 0 ? (completedWorkoutsCount / totalWorkouts) * 100 : 0;
+
+        await prisma.customTrainingPlan.update({
+          where: { id: plan.id },
+          data: {
+            completionRate
+          }
+        });
+      }
+
+      console.log(`✅ Treino planejado ${plannedWorkout.id} vinculado à atividade Strava ${completedWorkout.stravaActivityId}`);
+    }
+  } catch (error) {
+    console.error('Erro ao vincular treino planejado:', error);
+    // Não lançar erro para não quebrar a importação
+  }
 }
