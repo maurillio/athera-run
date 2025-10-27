@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Calendar, Target, RefreshCw, Loader2, Info } from 'lucide-react';
+import { Plus, Calendar, Target, RefreshCw, Loader2, Info, Pencil, Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface Race {
@@ -94,6 +94,25 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
       console.error('Error classifying races:', error);
     } finally {
       setIsClassifying(false);
+    }
+  };
+
+  const handleDeleteRace = async (raceId: number) => {
+    if (!confirm('Tem certeza que deseja excluir esta corrida?')) return;
+
+    try {
+      const response = await fetch(`/api/race-goals/${raceId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        onRacesUpdated();
+      } else {
+        alert('Erro ao excluir corrida');
+      }
+    } catch (error) {
+      console.error('Error deleting race:', error);
+      alert('Erro ao excluir corrida');
     }
   };
 
@@ -303,9 +322,19 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                     </Badge>
                     <span className="font-semibold">{race.raceName}</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {new Date(race.raceDate).toLocaleDateString('pt-BR')}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      {new Date(race.raceDate).toLocaleDateString('pt-BR')}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteRace(race.id)}
+                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 
                 <div className="flex flex-wrap gap-2 text-sm mb-2">
