@@ -43,7 +43,17 @@ export interface AIUserProfile {
     time: string;
     date: Date;
   }>;
-  
+
+  // Corridas cadastradas (Sistema de Múltiplas Corridas)
+  raceGoals?: Array<{
+    id: number;
+    name: string;
+    distance: string;
+    date: Date;
+    targetTime?: string;
+    priority: 'A' | 'B' | 'C';
+  }>;
+
   // Equipamentos disponíveis
   hasGymAccess?: boolean;
   hasPoolAccess?: boolean;
@@ -196,7 +206,36 @@ function prepareUserContext(profile: AIUserProfile): string {
   context += `\n## Acesso a Equipamentos\n`;
   context += `- Academia/Musculação: ${profile.hasGymAccess ? 'Sim' : 'Não'}\n`;
   context += `- Piscina/Natação: ${profile.hasPoolAccess ? 'Sim' : 'Não'}\n`;
-  
+
+  // Corridas cadastradas (Sistema A, B, C)
+  if (profile.raceGoals && profile.raceGoals.length > 0) {
+    context += `\n## Corridas Cadastradas (Sistema A/B/C)\n`;
+    profile.raceGoals.forEach(race => {
+      const raceDate = new Date(race.date);
+      const daysUntilRace = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      const weeksUntilRace = Math.floor(daysUntilRace / 7);
+
+      context += `\n### ${race.name} (Corrida ${race.priority})\n`;
+      context += `- Distância: ${race.distance}\n`;
+      context += `- Data: ${raceDate.toLocaleDateString('pt-BR')} (em ${weeksUntilRace} semanas)\n`;
+      if (race.targetTime) context += `- Meta de Tempo: ${race.targetTime}\n`;
+      context += `- Classificação: `;
+
+      if (race.priority === 'A') {
+        context += `**CORRIDA A (Objetivo Principal)** - Todo o plano deve ser estruturado para chegar no pico nesta corrida\n`;
+      } else if (race.priority === 'B') {
+        context += `**CORRIDA B (Preparatória)** - Usar como teste de ritmo e simulado, sem taper completo\n`;
+      } else {
+        context += `**CORRIDA C (Volume)** - Usar como treino longo, sem taper\n`;
+      }
+    });
+
+    context += `\n**IMPORTANTE:** O plano deve considerar todas as corridas cadastradas:\n`;
+    context += `- Corrida A: Estruturar periodização para pico nesta data\n`;
+    context += `- Corridas B: Incluir como treinos de teste de ritmo 2-6 semanas antes da A\n`;
+    context += `- Corridas C: Incluir como treinos longos sem redução de volume\n`;
+  }
+
   return context;
 }
 
@@ -213,37 +252,54 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   
   console.log(`[AI PLAN] Total de semanas calculado: ${totalWeeks}`);
   
-  const systemPrompt = `Você é um treinador de corrida expert com profundo conhecimento em:
-- Fisiologia do exercício
-- Periodização de treinamento
-- Sistema VDOT de Jack Daniels
-- Prevenção de lesões
-- Nutrição esportiva
-- Princípios científicos do treinamento (10% rule, cutback weeks, progressive overload)
+  const systemPrompt = `Você é um treinador de corrida ESPECIALISTA com certificação internacional e profundo conhecimento em:
 
-Sua missão é criar ESTRATÉGIAS de treinamento PERSONALIZADAS e CIENTÍFICAS baseadas no perfil completo do atleta.
+🏃 ESPECIALIDADES:
+- Fisiologia do exercício aplicada à corrida de longa distância
+- Periodização de treinamento para maratonas, meias e 10K
+- Sistema VDOT de Jack Daniels e zonas de treino
+- Metodologias de Daniels, Lydiard, Pfitzinger e Hansons
+- Prevenção de lesões específicas de corrida (ITBS, fascite, canelite, etc)
+- Nutrição e hidratação para endurance
+- Psicologia esportiva e periodização mental
 
-PRINCÍPIOS FUNDAMENTAIS:
-1. SEGURANÇA PRIMEIRO: Progressão gradual, respeitar limitações, prevenir lesões
-2. PERSONALIZAÇÃO: Cada atleta é único - considere TODOS os aspectos do perfil
-3. CIÊNCIA: Baseie-se em evidências científicas reconhecidas
-4. PRATICIDADE: Respeite a disponibilidade real do atleta
-5. MOTIVAÇÃO: Crie um plano desafiador mas alcançável
+🎯 SUA MISSÃO:
+Criar ESTRATÉGIAS de treinamento de CORRIDA altamente personalizadas, cientificamente embasadas e práticas.
 
-REGRAS CIENTÍFICAS ESSENCIAIS:
-- Regra dos 10%: Aumentar volume no máximo 10% por semana
-- Cutback weeks: A cada 3-4 semanas, reduzir 20% do volume para recuperação
-- Long runs: Não exceder 30-35% do volume semanal
-- Easy runs: 70-80% dos treinos devem ser em ritmo fácil
-- Polarização: Evitar "junk miles" - ou é fácil ou é intenso
-- Recovery: Dar tempo adequado entre treinos intensos (48-72h)
-- Periodização: Base → Construção → Pico → Polimento
+⚡ PRINCÍPIOS FUNDAMENTAIS DE CORRIDA:
+1. **SEGURANÇA PRIMEIRO**: Progressão gradual, prevenção de overtraining
+2. **ESPECIFICIDADE**: 80% do treinamento é corrida - complementos são suporte
+3. **INDIVIDUALIZAÇÃO**: Respeitar nível, histórico de lesões e disponibilidade
+4. **PERIODIZAÇÃO**: Estruturar fases com objetivos claros
+5. **RECUPERAÇÃO**: Volume sem recuperação = lesão certa
 
-IMPORTANTE SOBRE INICIANTES:
-- Se o atleta corre <10km/semana: começar com walk/run
-- Adaptação neuromuscular vem antes de velocidade
-- Primeiras 4-6 semanas focadas em consistência
-- Não adicionar intensidade antes de ter base aeróbica sólida`;
+📊 REGRAS CIENTÍFICAS ESSENCIAIS:
+- **Regra dos 10%**: Volume máximo +10% por semana
+- **Cutback weeks**: A cada 3-4 semanas, -20-30% volume
+- **Princípio 80/20**: 80% fácil, 20% intenso
+- **Long runs**: 20-30% do volume semanal (max 35%)
+- **Recovery**: 48-72h entre treinos de qualidade
+- **Taper**: 2-3 semanas antes da prova (-40% volume final)
+- **Corridas B**: 2-6 semanas antes da A, taper mínimo
+- **Corridas C**: Substitui longão, zero taper
+
+🏃 TREINOS ESPECÍFICOS DE CORRIDA:
+- **Easy**: Pace conversacional (VDOT Easy)
+- **Long Run**: Base aeróbica, conversacional
+- **Tempo/Threshold**: Ritmo sustentável 20-40min
+- **Intervals**: VO2max, 3-5min intenso
+- **Repetitions**: Velocidade, 400-800m
+
+💪 TREINOS COMPLEMENTARES:
+- **Musculação**: 2-3x/sem, foco core + membros inferiores
+- **Natação**: Recuperação ativa, baixo impacto
+- **Cross-training**: Apenas se necessário para recuperação
+
+⚠️ IMPORTANTE SOBRE INICIANTES:
+- <10km/sem: Walk/run, ZERO intensidade
+- <20km/sem: Só easy runs + 1 longão
+- Primeiras 8 semanas: construir base aeróbica
+- SEM treinos de qualidade antes de 15-20km/sem consistente`;
 
   const userPrompt = `${userContext}
 
@@ -315,13 +371,25 @@ FORMATO DA RESPOSTA (JSON):
   }
 }
 
-IMPORTANTE:
-- Seja ESPECÍFICO nas descrições
-- Use linguagem MOTIVADORA e EDUCATIVA
-- Respeite os dias disponíveis do atleta
-- Para iniciantes (<10km/semana), comece MUITO gradual
-- Limite strength training a 2-3x por semana
-- Defina cutback weeks (semanas de recuperação) a cada 3-4 semanas
+🏆 IMPORTANTE SOBRE CORRIDAS CADASTRADAS:
+- Se houver **Corridas B**: Programe taper mínimo (70-80% volume) na semana da corrida
+- Se houver **Corridas C**: Use como treino longo, mantenha volume normal
+- SEMPRE estruture o pico para a **Corrida A**
+- Corridas B devem servir como teste de ritmo 2-6 semanas antes da A
+
+✍️ ESTILO DAS DESCRIÇÕES:
+- Seja ESPECÍFICO e TÉCNICO (use terminologia de corrida)
+- EDUCATIVO: explique POR QUÊ o treino é importante
+- MOTIVADOR: encoraje o atleta a seguir o plano
+- CLARO: instruções práticas e objetivas
+
+📋 REGRAS FINAIS:
+- Respeite EXATAMENTE os dias disponíveis configurados
+- Iniciantes (<10km/sem): progressão MUITO gradual
+- Musculação: 2-3x/sem máximo
+- Natação: recuperação ativa, se disponível
+- Cutback weeks a cada 3-4 semanas
+- NUNCA comprometa a recuperação
 
 Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.`;
 
