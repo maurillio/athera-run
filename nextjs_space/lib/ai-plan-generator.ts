@@ -657,21 +657,28 @@ function generateWeekWorkouts(params: {
       dayAllocation.set(day, 'easy');
     }
   });
-  
-  // PRIORIDADE 4: MUSCULAÇÃO - usar TODOS os dias configurados
-  strengthDaysToUse.forEach(day => {
+
+  // PRIORIDADE 4: NATAÇÃO (atividade complementar importante para corrida)
+  availability.swimmingDays.forEach(day => {
     if (!dayAllocation.has(day)) {
-      dayAllocation.set(day, 'strength');
+      dayAllocation.set(day, 'swimming');
     }
   });
-  
-  // PRIORIDADE 5: OUTRAS ATIVIDADES (natação, muay-thai, etc)
+
+  // PRIORIDADE 5: OUTRAS ATIVIDADES (yoga, muay-thai, etc)
   availability.otherActivityDays.forEach((days, activityId) => {
     days.forEach(day => {
       if (!dayAllocation.has(day)) {
         dayAllocation.set(day, `other:${activityId}`);
       }
     });
+  });
+
+  // PRIORIDADE 6: MUSCULAÇÃO - usar dias disponíveis que não conflitam
+  strengthDaysToUse.forEach(day => {
+    if (!dayAllocation.has(day)) {
+      dayAllocation.set(day, 'strength');
+    }
   });
   
   console.log('[WORKOUT GEN] Mapa de alocação final:', Array.from(dayAllocation.entries()));
@@ -762,6 +769,20 @@ function generateWeekWorkouts(params: {
         distance: Math.round(easyRunKm * 10) / 10,
         duration: null,
         targetPace: params.paces.easy,
+      };
+    }
+    else if (allocation === 'swimming') {
+      const swimmingTimeText = params.availability.preferredTimes.get('swimming');
+      const timeInfo = swimmingTimeText ? ` • ${swimmingTimeText === 'morning' ? 'Manhã' : swimmingTimeText === 'afternoon' ? 'Tarde' : swimmingTimeText === 'evening' ? 'Noite' : 'Flexível'}` : '';
+      workout = {
+        dayOfWeek,
+        date,
+        type: 'swimming',
+        title: `Natação${timeInfo}`,
+        description: `Treino de natação para recuperação ativa e trabalho cardiovascular complementar. Excelente para dar descanso às articulações.${timeInfo ? ` Horário preferido: ${timeInfo.replace(' • ', '')}.` : ''}`,
+        distance: null,
+        duration: 45,
+        targetPace: null,
       };
     }
     else if (allocation === 'strength') {
