@@ -37,13 +37,13 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between px-4">
           <Link href="/dashboard" className="flex items-center space-x-3">
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-orange-500 to-blue-600 rounded-lg shadow-lg">
-              <span className="text-white font-bold text-lg">M</span>
+              <span className="text-white font-bold text-base">AR</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
-                Marathon Training
+                Athera Run
               </h1>
-              <p className="text-xs text-muted-foreground -mt-1">Rumo aos 42km</p>
+              <p className="text-xs text-muted-foreground -mt-1">Treinamento Inteligente</p>
             </div>
           </Link>
 

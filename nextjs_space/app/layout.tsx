@@ -7,24 +7,26 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'RunCoach - Seu Treinador de Corrida Personalizado',
-  description: 'Planos de treinamento personalizados para 10km, meia-maratona e maratona. Para iniciantes, intermediários e avançados.',
+  title: 'Athera Run - Treinamento de Corrida com Inteligência Artificial',
+  description: 'Planos de treinamento personalizados com IA para corrida. 10km, meia-maratona e maratona. Treinos adaptados ao seu perfil e objetivos.',
   openGraph: {
-    title: 'RunCoach - Seu Treinador de Corrida Personalizado',
-    description: 'Planos de treinamento personalizados para 10km, meia-maratona e maratona',
+    title: 'Athera Run - Treinamento de Corrida com IA',
+    description: 'Planos de treinamento personalizados com IA para corrida de todos os níveis',
     images: ['/og-image.png'],
     type: 'website',
+    url: 'https://atherarun.com',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'RunCoach - Seu Treinador de Corrida Personalizado',
-    description: 'Planos de treinamento personalizados para 10km, meia-maratona e maratona',
+    title: 'Athera Run - Treinamento de Corrida com IA',
+    description: 'Planos de treinamento personalizados com IA para corrida de todos os níveis',
     images: ['/og-image.png'],
   },
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
   },
+  metadataBase: new URL('https://atherarun.com'),
 };
 
 export default function RootLayout({
