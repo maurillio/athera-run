@@ -252,54 +252,81 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   
   console.log(`[AI PLAN] Total de semanas calculado: ${totalWeeks}`);
   
-  const systemPrompt = `Você é um treinador de corrida ESPECIALISTA com certificação internacional e profundo conhecimento em:
+  const systemPrompt = `Você é um treinador de corrida de rua ESPECIALISTA com certificação internacional e experiência com atletas de TODOS OS NÍVEIS (iniciante absoluto ao ultra-avançado) e TODAS AS DISTÂNCIAS (5K, 10K, meia-maratona, maratona e ultramaratona).
 
 🏃 ESPECIALIDADES:
-- Fisiologia do exercício aplicada à corrida de longa distância
-- Periodização de treinamento para maratonas, meias e 10K
-- Sistema VDOT de Jack Daniels e zonas de treino
-- Metodologias de Daniels, Lydiard, Pfitzinger e Hansons
-- Prevenção de lesões específicas de corrida (ITBS, fascite, canelite, etc)
-- Nutrição e hidratação para endurance
-- Psicologia esportiva e periodização mental
+- Corrida de rua: do 5K (velocidade) até ultramaratona (endurance extremo)
+- Treino de iniciantes (walk/run) até atletas de elite
+- Sistema VDOT e periodização para cada distância
+- Metodologias: Daniels, Lydiard, Pfitzinger, Hansons, Pete Magill
+- Prevenção de lesões (ITBS, fascite, canelite, tendinites)
+- Integração harmoniosa: corrida + musculação + natação + yoga + outras
 
 🎯 SUA MISSÃO:
-Criar ESTRATÉGIAS de treinamento de CORRIDA altamente personalizadas, cientificamente embasadas e práticas.
+Criar planos TOTALMENTE PERSONALIZADOS respeitando:
+- Nível real do atleta (zero até avançado)
+- Distância objetivo (5K até ultra)
+- Disponibilidade EXATA configurada (dias, horários, modalidades)
+- Histórico de lesões
+- Preferências pessoais
 
-⚡ PRINCÍPIOS FUNDAMENTAIS DE CORRIDA:
-1. **SEGURANÇA PRIMEIRO**: Progressão gradual, prevenção de overtraining
-2. **ESPECIFICIDADE**: 80% do treinamento é corrida - complementos são suporte
-3. **INDIVIDUALIZAÇÃO**: Respeitar nível, histórico de lesões e disponibilidade
-4. **PERIODIZAÇÃO**: Estruturar fases com objetivos claros
-5. **RECUPERAÇÃO**: Volume sem recuperação = lesão certa
+⚡ PRINCÍPIOS FUNDAMENTAIS:
+1. **RESPEITO TOTAL À DISPONIBILIDADE**: Use EXATAMENTE os dias/horários/atividades configuradas
+2. **INDIVIDUALIZAÇÃO**: Cada atleta é único
+3. **SEGURANÇA**: Progressão gradual
+4. **INTEGRAÇÃO**: Corrida + complementos trabalham juntos
+5. **REALISMO**: Planos executáveis na vida real
 
-📊 REGRAS CIENTÍFICAS ESSENCIAIS:
-- **Regra dos 10%**: Volume máximo +10% por semana
-- **Cutback weeks**: A cada 3-4 semanas, -20-30% volume
-- **Princípio 80/20**: 80% fácil, 20% intenso
-- **Long runs**: 20-30% do volume semanal (max 35%)
-- **Recovery**: 48-72h entre treinos de qualidade
-- **Taper**: 2-3 semanas antes da prova (-40% volume final)
-- **Corridas B**: 2-6 semanas antes da A, taper mínimo
-- **Corridas C**: Substitui longão, zero taper
+📊 REGRAS POR DISTÂNCIA:
+**5K** (Velocidade):
+- Volume: 30-60km/sem (inter), até 100km (avanç)
+- 70% fácil, 30% intenso
+- Treinos: Easy, Tempo, Intervals 400-1200m, Reps
+- Taper: 1 semana
 
-🏃 TREINOS ESPECÍFICOS DE CORRIDA:
-- **Easy**: Pace conversacional (VDOT Easy)
-- **Long Run**: Base aeróbica, conversacional
-- **Tempo/Threshold**: Ritmo sustentável 20-40min
-- **Intervals**: VO2max, 3-5min intenso
-- **Repetitions**: Velocidade, 400-800m
+**10K** (Misto):
+- Volume: 35-70km/sem (inter), até 110km (avanç)
+- 75% fácil, 25% intenso
+- Treinos: Easy, Long, Tempo, Intervals 800-2000m
+- Taper: 1-2 semanas
 
-💪 TREINOS COMPLEMENTARES:
-- **Musculação**: 2-3x/sem, foco core + membros inferiores
-- **Natação**: Recuperação ativa, baixo impacto
-- **Cross-training**: Apenas se necessário para recuperação
+**Meia-Maratona**:
+- Volume: 40-80km/sem (inter), até 120km (avanç)
+- 80% fácil, 20% intenso
+- Treinos: Easy, Long 15-20km, Tempo, Intervals
+- Taper: 2 semanas
 
-⚠️ IMPORTANTE SOBRE INICIANTES:
-- <10km/sem: Walk/run, ZERO intensidade
-- <20km/sem: Só easy runs + 1 longão
-- Primeiras 8 semanas: construir base aeróbica
-- SEM treinos de qualidade antes de 15-20km/sem consistente`;
+**Maratona** (Endurance):
+- Volume: 50-100km/sem (inter), até 150km (avanç)
+- 80% fácil, 20% intenso
+- Treinos: Easy, Long 25-35km, Tempo, Intervals
+- Taper: 3 semanas
+
+**Ultramaratona** (Endurance extremo):
+- Volume: 80-150km/sem+
+- 85% fácil, 15% intenso
+- Treinos: Easy, Ultra-long 4-6h, Back-to-backs, Vertical
+- Taper: 2-3 semanas
+
+💪 ATIVIDADES CONFIGURADAS:
+IMPORTANTE: Se o atleta configurou musculação, natação, yoga ou qualquer outra atividade, você DEVE incluir no plano respeitando os dias e horários configurados! Complementos são ESSENCIAIS para atletas completos.
+
+⚠️ POR NÍVEL:
+**Iniciante Absoluto** (<10km/sem):
+- Walk/run, ZERO intensidade 8 semanas
+- 3x/sem inicial
+
+**Iniciante** (10-30km/sem):
+- Base aeróbica + 1 longão
+- SEM qualidade até 20km/sem
+
+**Intermediário** (30-60km/sem):
+- Base + qualidade 1-2x/sem
+- Complementos integrados
+
+**Avançado** (>60km/sem):
+- Periodização sofisticada
+- Qualidade 2-3x/sem`;
 
   const userPrompt = `${userContext}
 
@@ -703,196 +730,87 @@ function generateWeekWorkouts(params: {
     easyDays,
     strengthDays: strengthDaysToUse,
   });
-  
-  // Mapa de alocação de dias: rastrear o que foi alocado para cada dia
-  const dayAllocation = new Map<number, string>();
-  
-  // PRIORIDADE 1: LONGÃO no dia configurado
-  dayAllocation.set(availability.longRunDay, 'long_run');
-  
-  // PRIORIDADE 2: TREINOS DE QUALIDADE (apenas em dias de corrida e não em cutback weeks)
+
+  // NOVA ESTRUTURA: Múltiplas atividades por dia com horários específicos
+  // Map<dayOfWeek, Array<{type: string, time: string, details?: any}>>
+  const dayActivities = new Map<number, Array<{type: string, time: string, details?: any}>>();
+
+  // Função auxiliar para adicionar atividade em um dia
+  const addActivity = (day: number, type: string, details?: any) => {
+    if (!dayActivities.has(day)) {
+      dayActivities.set(day, []);
+    }
+
+    const time = availability.preferredTimes.get(type) || 'flexible';
+    dayActivities.get(day)!.push({ type, time, details });
+  };
+
+  // ALOCAR TODAS AS ATIVIDADES CONFIGURADAS (sem prioridades - respeitar disponibilidade do usuário)
+
+  // 1. LONGÃO no dia configurado
+  addActivity(availability.longRunDay, 'long_run');
+
+  // 2. TREINOS DE QUALIDADE (apenas em dias de corrida e não em cutback weeks)
   if (!params.isCutbackWeek) {
     qualityDays.forEach(day => {
-      if (!dayAllocation.has(day)) {
-        dayAllocation.set(day, 'quality');
-      }
+      addActivity(day, 'quality');
     });
   }
-  
-  // PRIORIDADE 3: TREINOS FÁCEIS (apenas em dias de corrida)
+
+  // 3. TREINOS FÁCEIS (apenas em dias de corrida)
   easyDays.forEach(day => {
-    if (!dayAllocation.has(day)) {
-      dayAllocation.set(day, 'easy');
-    }
+    addActivity(day, 'easy');
   });
 
-  // PRIORIDADE 4: NATAÇÃO (atividade complementar importante para corrida)
+  // 4. NATAÇÃO - adicionar em TODOS os dias configurados pelo usuário
   availability.swimmingDays.forEach(day => {
-    if (!dayAllocation.has(day)) {
-      dayAllocation.set(day, 'swimming');
-    }
+    addActivity(day, 'swimming');
   });
 
-  // PRIORIDADE 5: OUTRAS ATIVIDADES (yoga, muay-thai, etc)
+  // 5. MUSCULAÇÃO - adicionar em TODOS os dias configurados pelo usuário
+  strengthDaysToUse.forEach(day => {
+    addActivity(day, 'strength');
+  });
+
+  // 6. OUTRAS ATIVIDADES - adicionar em TODOS os dias configurados
   availability.otherActivityDays.forEach((days, activityId) => {
     days.forEach(day => {
-      if (!dayAllocation.has(day)) {
-        dayAllocation.set(day, `other:${activityId}`);
-      }
+      addActivity(day, activityId);
     });
   });
 
-  // PRIORIDADE 6: MUSCULAÇÃO - usar dias disponíveis que não conflitam
-  strengthDaysToUse.forEach(day => {
-    if (!dayAllocation.has(day)) {
-      dayAllocation.set(day, 'strength');
-    }
+  // Ordenar atividades de cada dia por horário preferido
+  const timeOrder = {
+    'early_morning': 1,
+    'morning': 2,
+    'afternoon': 3,
+    'evening': 4,
+    'night': 5,
+    'flexible': 6,
+  };
+
+  dayActivities.forEach((activities, day) => {
+    activities.sort((a, b) => {
+      return (timeOrder[a.time as keyof typeof timeOrder] || 6) - (timeOrder[b.time as keyof typeof timeOrder] || 6);
+    });
   });
+
+  console.log('[WORKOUT GEN] Mapa de atividades por dia (múltiplas permitidas):',
+    Array.from(dayActivities.entries()).map(([day, acts]) => ({
+      day,
+      activities: acts.map(a => `${a.type} (${a.time})`)
+    })));
   
-  console.log('[WORKOUT GEN] Mapa de alocação final:', Array.from(dayAllocation.entries()));
-  
-  // Gerar treino para cada dia da semana
+  // NOVA LÓGICA: Gerar MÚLTIPLOS treinos por dia (respeitando horários configurados)
   for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
     const date = new Date(params.currentWeekStart);
     date.setDate(date.getDate() + dayOfWeek);
-    
-    let workout: any = null;
-    const allocation = dayAllocation.get(dayOfWeek);
-    
-    if (allocation === 'long_run') {
-      const timeInfo = runningTimeText ? ` • ${runningTimeText}` : '';
-      workout = {
-        dayOfWeek,
-        date,
-        type: 'running',
-        subtype: 'long',
-        title: `Longão - ${Math.round(params.longRunKm)}km${timeInfo}`,
-        description: params.keyWorkouts.long.description || `Treino longo semanal em ritmo confortável. O mais importante da semana!${runningTimeText ? ` Horário preferido: ${runningTimeText}.` : ''}`,
-        distance: Math.round(params.longRunKm * 10) / 10,
-        duration: null,
-        targetPace: params.paces.easy,
-        warmup: null,
-        mainSet: `${Math.round(params.longRunKm)}km em ritmo fácil (${params.paces.easy})`,
-        cooldown: null,
-      };
-    }
-    else if (allocation === 'quality') {
-      const qualityType = params.keyWorkouts.quality.type;
-      const timeInfo = runningTimeText ? ` • ${runningTimeText}` : '';
-      
-      if (qualityType === 'tempo') {
-        workout = {
-          dayOfWeek,
-          date,
-          type: 'running',
-          subtype: 'tempo',
-          title: `Treino de Ritmo (Tempo Run)${timeInfo}`,
-          description: params.keyWorkouts.quality.description || `Treino em ritmo controlado e sustentado.${runningTimeText ? ` Horário preferido: ${runningTimeText}.` : ''}`,
-          distance: Math.round(easyRunKm * 10) / 10,
-          duration: null,
-          targetPace: params.paces.threshold,
-          warmup: '10 min fácil',
-          mainSet: `20-30 min em ritmo threshold (${params.paces.threshold})`,
-          cooldown: '10 min fácil',
-        };
-      } else if (qualityType === 'intervals') {
-        workout = {
-          dayOfWeek,
-          date,
-          type: 'running',
-          subtype: 'intervals',
-          title: `Treino Intervalado${timeInfo}`,
-          description: params.keyWorkouts.quality.description || `Treino de velocidade com recuperação.${runningTimeText ? ` Horário preferido: ${runningTimeText}.` : ''}`,
-          distance: Math.round(easyRunKm * 10) / 10,
-          duration: null,
-          targetPace: params.paces.interval,
-          warmup: '15 min fácil',
-          mainSet: `6-8 x 800m em ${params.paces.interval} (recuperação 2 min)`,
-          cooldown: '10 min fácil',
-        };
-      } else {
-        // Fartlek ou treino fácil
-        workout = {
-          dayOfWeek,
-          date,
-          type: 'running',
-          subtype: 'easy',
-          title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfo}`,
-          description: `Corrida em ritmo confortável para construir base aeróbica.${runningTimeText ? ` Horário preferido: ${runningTimeText}.` : ''}`,
-          distance: Math.round(easyRunKm * 10) / 10,
-          duration: null,
-          targetPace: params.paces.easy,
-        };
-      }
-    }
-    else if (allocation === 'easy') {
-      const timeInfo = runningTimeText ? ` • ${runningTimeText}` : '';
-      workout = {
-        dayOfWeek,
-        date,
-        type: 'running',
-        subtype: 'easy',
-        title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfo}`,
-        description: `Corrida em ritmo confortável. Foque em manter o ritmo fácil e respiração controlada.${runningTimeText ? ` Horário preferido: ${runningTimeText}.` : ''}`,
-        distance: Math.round(easyRunKm * 10) / 10,
-        duration: null,
-        targetPace: params.paces.easy,
-      };
-    }
-    else if (allocation === 'swimming') {
-      const swimmingTimeText = params.availability.preferredTimes.get('swimming');
-      const timeInfo = swimmingTimeText ? ` • ${swimmingTimeText === 'morning' ? 'Manhã' : swimmingTimeText === 'afternoon' ? 'Tarde' : swimmingTimeText === 'evening' ? 'Noite' : 'Flexível'}` : '';
-      workout = {
-        dayOfWeek,
-        date,
-        type: 'swimming',
-        title: `Natação${timeInfo}`,
-        description: `Treino de natação para recuperação ativa e trabalho cardiovascular complementar. Excelente para dar descanso às articulações.${timeInfo ? ` Horário preferido: ${timeInfo.replace(' • ', '')}.` : ''}`,
-        distance: null,
-        duration: 45,
-        targetPace: null,
-      };
-    }
-    else if (allocation === 'strength') {
-      const timeInfo = strengthTimeText ? ` • ${strengthTimeText}` : '';
-      workout = {
-        dayOfWeek,
-        date,
-        type: 'strength',
-        title: `Musculação${timeInfo}`,
-        description: params.keyWorkouts.strength.description || `Treino de força para corrida. Foque em membros inferiores e core.${strengthTimeText ? ` Horário preferido: ${strengthTimeText}.` : ''}`,
-        distance: null,
-        duration: 45,
-        targetPace: null,
-      };
-    }
-    else if (allocation && allocation.startsWith('other:')) {
-      const activityId = allocation.replace('other:', '');
-      const timeInfo = getPreferredTimeText(activityId);
-      const timeInfoShort = timeInfo ? ` • ${timeInfo}` : '';
-      
-      // Mapear ID da atividade para nome amigável
-      let activityName = activityId;
-      if (activityId.includes('swim')) activityName = 'Natação';
-      else if (activityId.includes('muay') || activityId.includes('thai')) activityName = 'Muay-Thai';
-      else if (activityId.includes('yoga')) activityName = 'Yoga';
-      else if (activityId.includes('bike') || activityId.includes('cycling')) activityName = 'Ciclismo';
-      
-      workout = {
-        dayOfWeek,
-        date,
-        type: 'cross-training',
-        subtype: activityId,
-        title: `${activityName}${timeInfoShort}`,
-        description: `Treino complementar de ${activityName.toLowerCase()}.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''} Aproveite para trabalhar outros grupos musculares e dar uma pausa da corrida.`,
-        distance: null,
-        duration: 45,
-        targetPace: null,
-      };
-    }
-    else {
-      // Dia de descanso (não configurado pelo usuário)
-      workout = {
+
+    const activitiesForDay = dayActivities.get(dayOfWeek) || [];
+
+    // Se não há atividades configuradas para este dia, adicionar descanso
+    if (activitiesForDay.length === 0) {
+      workouts.push({
         dayOfWeek,
         date,
         type: 'rest',
@@ -901,21 +819,167 @@ function generateWeekWorkouts(params: {
         distance: null,
         duration: null,
         targetPace: null,
-      };
+      });
+      continue;
     }
-    
-    workouts.push(workout);
+
+    // Gerar um treino para cada atividade configurada neste dia
+    activitiesForDay.forEach(activity => {
+      const activityType = activity.type;
+      const activityTime = activity.time;
+
+      // Formatar horário preferido
+      const timeMap: Record<string, string> = {
+        'early_morning': 'Manhã Cedo (5-7h)',
+        'morning': 'Manhã (7-12h)',
+        'afternoon': 'Tarde (12-18h)',
+        'evening': 'Noite (18-21h)',
+        'night': 'Noite (após 21h)',
+        'flexible': '',
+      };
+      const timeInfo = timeMap[activityTime] || '';
+      const timeInfoShort = timeInfo ? ` • ${timeInfo}` : '';
+
+      let workout: any = null;
+
+      if (activityType === 'long_run') {
+        workout = {
+          dayOfWeek,
+          date,
+          type: 'running',
+          subtype: 'long',
+          title: `Longão - ${Math.round(params.longRunKm)}km${timeInfoShort}`,
+          description: params.keyWorkouts.long.description || `Treino longo semanal em ritmo confortável. O mais importante da semana!${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          distance: Math.round(params.longRunKm * 10) / 10,
+          duration: null,
+          targetPace: params.paces.easy,
+          warmup: null,
+          mainSet: `${Math.round(params.longRunKm)}km em ritmo fácil (${params.paces.easy})`,
+          cooldown: null,
+        };
+      }
+      else if (activityType === 'quality') {
+        const qualityType = params.keyWorkouts.quality.type;
+
+        if (qualityType === 'tempo') {
+          workout = {
+            dayOfWeek,
+            date,
+            type: 'running',
+            subtype: 'tempo',
+            title: `Treino de Ritmo (Tempo Run)${timeInfoShort}`,
+            description: params.keyWorkouts.quality.description || `Treino em ritmo controlado e sustentado.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            distance: Math.round(easyRunKm * 10) / 10,
+            duration: null,
+            targetPace: params.paces.threshold,
+            warmup: '10 min fácil',
+            mainSet: `20-30 min em ritmo threshold (${params.paces.threshold})`,
+            cooldown: '10 min fácil',
+          };
+        } else if (qualityType === 'intervals') {
+          workout = {
+            dayOfWeek,
+            date,
+            type: 'running',
+            subtype: 'intervals',
+            title: `Treino Intervalado${timeInfoShort}`,
+            description: params.keyWorkouts.quality.description || `Treino de velocidade com recuperação.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            distance: Math.round(easyRunKm * 10) / 10,
+            duration: null,
+            targetPace: params.paces.interval,
+            warmup: '15 min fácil',
+            mainSet: `6-8 x 800m em ${params.paces.interval} (recuperação 2 min)`,
+            cooldown: '10 min fácil',
+          };
+        } else {
+          // Fartlek ou treino fácil
+          workout = {
+            dayOfWeek,
+            date,
+            type: 'running',
+            subtype: 'easy',
+            title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfoShort}`,
+            description: `Corrida em ritmo confortável para construir base aeróbica.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            distance: Math.round(easyRunKm * 10) / 10,
+            duration: null,
+            targetPace: params.paces.easy,
+          };
+        }
+      }
+      else if (activityType === 'easy') {
+        workout = {
+          dayOfWeek,
+          date,
+          type: 'running',
+          subtype: 'easy',
+          title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfoShort}`,
+          description: `Corrida em ritmo confortável. Foque em manter o ritmo fácil e respiração controlada.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          distance: Math.round(easyRunKm * 10) / 10,
+          duration: null,
+          targetPace: params.paces.easy,
+        };
+      }
+      else if (activityType === 'swimming') {
+        workout = {
+          dayOfWeek,
+          date,
+          type: 'swimming',
+          title: `Natação${timeInfoShort}`,
+          description: `Treino de natação para recuperação ativa e trabalho cardiovascular complementar. Excelente para dar descanso às articulações.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          distance: null,
+          duration: 45,
+          targetPace: null,
+        };
+      }
+      else if (activityType === 'strength') {
+        workout = {
+          dayOfWeek,
+          date,
+          type: 'strength',
+          title: `Musculação${timeInfoShort}`,
+          description: params.keyWorkouts.strength.description || `Treino de força para corrida. Foque em membros inferiores e core.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          distance: null,
+          duration: 45,
+          targetPace: null,
+        };
+      }
+      else {
+        // Outras atividades (yoga, muay-thai, etc)
+        let activityName = activityType;
+        if (activityType.includes('swim')) activityName = 'Natação';
+        else if (activityType.includes('muay') || activityType.includes('thai')) activityName = 'Muay-Thai';
+        else if (activityType.includes('yoga')) activityName = 'Yoga';
+        else if (activityType.includes('bike') || activityType.includes('cycling')) activityName = 'Ciclismo';
+
+        workout = {
+          dayOfWeek,
+          date,
+          type: 'cross-training',
+          subtype: activityType,
+          title: `${activityName}${timeInfoShort}`,
+          description: `Treino complementar de ${activityName.toLowerCase()}.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''} Aproveite para trabalhar outros grupos musculares e dar uma pausa da corrida.`,
+          distance: null,
+          duration: 45,
+          targetPace: null,
+        };
+      }
+
+      if (workout) {
+        workouts.push(workout);
+      }
+    });
   }
   
   // Log de resumo
   const summary = {
     running: workouts.filter(w => w.type === 'running').length,
+    swimming: workouts.filter(w => w.type === 'swimming').length,
     strength: workouts.filter(w => w.type === 'strength').length,
     crossTraining: workouts.filter(w => w.type === 'cross-training').length,
     rest: workouts.filter(w => w.type === 'rest').length,
   };
-  
-  console.log(`[WORKOUT GEN] Semana ${params.weekNumber}: Resumo - Running: ${summary.running}, Strength: ${summary.strength}, Cross: ${summary.crossTraining}, Rest: ${summary.rest}`);
+
+  console.log(`[WORKOUT GEN] Semana ${params.weekNumber}: Resumo - Running: ${summary.running}, Swimming: ${summary.swimming}, Strength: ${summary.strength}, Cross: ${summary.crossTraining}, Rest: ${summary.rest}`);
   
   return workouts;
 }
