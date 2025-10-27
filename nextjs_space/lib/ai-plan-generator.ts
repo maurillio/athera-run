@@ -57,6 +57,25 @@ export interface AIUserProfile {
   // Equipamentos disponíveis
   hasGymAccess?: boolean;
   hasPoolAccess?: boolean;
+
+  // Contexto de Execução (para ajustes/regeneração)
+  recentWorkoutCompletion?: {
+    completedCount: number;
+    totalCount: number;
+    percentage: number;
+    period: string; // Ex: "últimas 4 semanas"
+  };
+  athleteFeedback?: Array<{
+    date: Date;
+    type: 'fatiga' | 'dor' | 'motivacao' | 'desempenho' | 'outro';
+    message: string;
+  }>;
+  currentPhysicalState?: {
+    energyLevel?: 'alto' | 'normal' | 'baixo' | 'exausto';
+    soreness?: 'nenhuma' | 'leve' | 'moderada' | 'intensa';
+    motivation?: 'alta' | 'normal' | 'baixa';
+    sleepQuality?: 'otimo' | 'bom' | 'regular' | 'ruim';
+  };
 }
 
 export interface AIGeneratedPlan {
@@ -236,6 +255,65 @@ function prepareUserContext(profile: AIUserProfile): string {
     context += `- Corridas C: Incluir como treinos longos sem redução de volume\n`;
   }
 
+  // Contexto de Execução Recente (SE DISPONÍVEL)
+  if (profile.recentWorkoutCompletion) {
+    context += `\n## 📊 Execução Recente do Plano\n`;
+    context += `- Período analisado: ${profile.recentWorkoutCompletion.period}\n`;
+    context += `- Taxa de conclusão: ${profile.recentWorkoutCompletion.percentage}% (${profile.recentWorkoutCompletion.completedCount}/${profile.recentWorkoutCompletion.totalCount} treinos)\n`;
+
+    if (profile.recentWorkoutCompletion.percentage >= 90) {
+      context += `- **Análise**: Atleta muito consistente! Está aderindo excelentemente ao plano.\n`;
+    } else if (profile.recentWorkoutCompletion.percentage >= 70) {
+      context += `- **Análise**: Boa aderência. Considere manter volume atual ou aumentar gradualmente.\n`;
+    } else if (profile.recentWorkoutCompletion.percentage >= 50) {
+      context += `- **Análise**: Aderência moderada. Pode indicar volume excessivo ou falta de tempo. Considere ajustar.\n`;
+    } else {
+      context += `- **Análise**: Baixa aderência. ATENÇÃO: Volume ou intensidade podem estar inadequados. Revise o plano!\n`;
+    }
+  }
+
+  if (profile.athleteFeedback && profile.athleteFeedback.length > 0) {
+    context += `\n## 💬 Relatos Recentes do Atleta\n`;
+    profile.athleteFeedback.slice(0, 5).forEach(feedback => {
+      const dateStr = new Date(feedback.date).toLocaleDateString('pt-BR');
+      const typeEmoji = {
+        'fatiga': '😫',
+        'dor': '🤕',
+        'motivacao': '💪',
+        'desempenho': '📈',
+        'outro': '💭'
+      }[feedback.type] || '💭';
+      context += `- ${typeEmoji} ${dateStr}: "${feedback.message}"\n`;
+    });
+    context += `**IMPORTANTE**: Considere esses relatos ao ajustar volume/intensidade!\n`;
+  }
+
+  if (profile.currentPhysicalState) {
+    context += `\n## 🏃 Estado Físico Atual\n`;
+    if (profile.currentPhysicalState.energyLevel) {
+      context += `- Nível de energia: ${profile.currentPhysicalState.energyLevel}\n`;
+    }
+    if (profile.currentPhysicalState.soreness) {
+      context += `- Dores musculares: ${profile.currentPhysicalState.soreness}\n`;
+    }
+    if (profile.currentPhysicalState.motivation) {
+      context += `- Motivação: ${profile.currentPhysicalState.motivation}\n`;
+    }
+    if (profile.currentPhysicalState.sleepQuality) {
+      context += `- Qualidade do sono: ${profile.currentPhysicalState.sleepQuality}\n`;
+    }
+
+    // Análise contextual
+    const isOvertraining =
+      profile.currentPhysicalState.energyLevel === 'baixo' ||
+      profile.currentPhysicalState.energyLevel === 'exausto' ||
+      profile.currentPhysicalState.soreness === 'intensa';
+
+    if (isOvertraining) {
+      context += `\n⚠️ **ALERTA DE OVERTRAINING POTENCIAL**: Atleta mostra sinais de fadiga excessiva. Priorize recuperação!\n`;
+    }
+  }
+
   return context;
 }
 
@@ -398,11 +476,37 @@ FORMATO DA RESPOSTA (JSON):
   }
 }
 
-🏆 IMPORTANTE SOBRE CORRIDAS CADASTRADAS:
-- Se houver **Corridas B**: Programe taper mínimo (70-80% volume) na semana da corrida
-- Se houver **Corridas C**: Use como treino longo, mantenha volume normal
-- SEMPRE estruture o pico para a **Corrida A**
-- Corridas B devem servir como teste de ritmo 2-6 semanas antes da A
+🏆 CORRIDAS B/C - PENSE COMO UM SUPER TREINADOR:
+
+**ANÁLISE CONTEXTUAL OBRIGATÓRIA:**
+Antes de decidir o volume da semana de uma corrida B ou C, você DEVE analisar:
+
+1. **Histórico de Execução Recente** (se disponível):
+   - Atleta completou 100% dos treinos? → Pode manter volume alto
+   - Atleta pulou treinos ou relatou fadiga? → Reduzir volume mais agressivamente
+   - Relatos de dor/desconforto? → Priorizar recuperação
+
+2. **Objetivo do Atleta na Corrida B/C**:
+   - Quer fazer tempo competitivo? → Taper adequado (65-75% volume)
+   - Quer só testar ritmo/estratégia? → Taper mínimo (80-85% volume)
+   - Quer só completar/curtir? → Pode manter volume normal
+
+3. **Relação com Corrida A**:
+   - Corrida B muito próxima da A (<4 semanas)? → Taper mais conservador
+   - Corrida B longe da A (>8 semanas)? → Pode usar como treino intenso
+   - Distância da B similar à A? → Taper adequado
+   - Distância da B muito menor que A? → Pode tratar como qualidade
+
+4. **Nível de Preparação**:
+   - Atleta avançado, vem treinando forte? → Taper mínimo pode bastar
+   - Atleta iniciante ou com volume baixo? → Taper mais generoso
+
+**DIRETRIZES FLEXÍVEIS (NÃO RÍGIDAS):**
+- **Corrida B**: Taper entre 60-90% dependendo do contexto acima
+- **Corrida C**: Entre 85-110% dependendo se quer usar como treino intenso ou volume
+- **Corrida A**: Taper progressivo de 2-3 semanas (100% → 75% → 50%)
+
+**VOCÊ É O ESPECIALISTA**: Use seu conhecimento para decidir caso a caso. Não siga regras cegas!
 
 ✍️ ESTILO DAS DESCRIÇÕES:
 - Seja ESPECÍFICO e TÉCNICO (use terminologia de corrida)
@@ -417,6 +521,26 @@ FORMATO DA RESPOSTA (JSON):
 - Natação: recuperação ativa, se disponível
 - Cutback weeks a cada 3-4 semanas
 - NUNCA comprometa a recuperação
+
+🧠 PENSE COMO UM SUPER TREINADOR:
+
+Você NÃO é um algoritmo que segue regras rígidas. Você é um ESPECIALISTA que:
+
+1. **ANALISA O TODO**: Contexto completo (execução recente + relatos + estado atual + objetivos + corridas)
+2. **PERSONALIZA DE VERDADE**: Cada atleta é único - ajuste TUDO baseado no perfil individual
+3. **PRIORIZA SUSTENTABILIDADE**: Plano bom é o que o atleta CONSEGUE seguir na vida real
+4. **AJUSTA DINAMICAMENTE**: Se há sinais de fadiga/overtraining, REDUZA. Se está indo bem, pode progredir.
+5. **USA INTUIÇÃO EXPERIENTE**: Combine ciência + experiência prática + bom senso
+
+**EXEMPLOS DE RACIOCÍNIO:**
+- "Atleta completou 95% dos treinos e sem queixas? → Pode aumentar volume 5-10%"
+- "Atleta com 50% conclusão e relatando fadiga? → Reduzir 20-30% e simplificar"
+- "Corrida B daqui 2 semanas mas atleta relata cansaço? → Taper mais agressivo (65%)"
+- "Corrida B daqui 2 semanas e atleta super animado? → Taper leve (85-90%)"
+- "Atleta trabalha 12h/dia? → Volume conservador, menos qualidade, mais recuperação"
+
+**VOCÊ TEM LIBERDADE TOTAL** para ajustar volumes, intensidades e estruturas baseado no CONTEXTO REAL.
+NÃO siga fórmulas prontas se o contexto indicar outro caminho!
 
 Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.`;
 
@@ -528,25 +652,23 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
       // Calcular volume da semana com progressão
       let weeklyKm = phase.weeklyKmStart + (weeklyKmRange * weekProgress);
 
-      // DETECTAR CORRIDAS B/C nesta semana
+      // DETECTAR CORRIDAS B/C nesta semana (para passar contexto ao generateWeekWorkouts)
       const weekEnd = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
       const raceThisWeek = profile.raceGoals?.find(race => {
         const raceDate = new Date(race.date);
         return raceDate >= currentWeekStart && raceDate <= weekEnd;
       });
 
-      // Aplicar cutback weeks (cada 4ª semana) - MAS não se for semana de corrida B/C
+      if (raceThisWeek) {
+        console.log(`[AI PLAN] Semana ${weekNumber}: Corrida ${raceThisWeek.priority} "${raceThisWeek.name}" (${raceThisWeek.distance}) detectada - IA já considerou no volume da fase`);
+      }
+
+      // Aplicar cutback weeks (cada 4ª semana) - MAS não se for semana de corrida
+      // A IA já deve ter considerado corridas B/C no planejamento das fases
       const isCutbackWeek = !raceThisWeek && (weekNumber % 4 === 0);
       if (isCutbackWeek) {
         weeklyKm *= 0.75; // Reduzir 25%
       }
-
-      // Aplicar mini-taper para CORRIDAS B (preparatórias)
-      if (raceThisWeek && raceThisWeek.priority === 'B') {
-        weeklyKm *= 0.75; // Reduzir 25% (mini-taper)
-        console.log(`[AI PLAN] Semana ${weekNumber}: Corrida B "${raceThisWeek.name}" detectada - aplicando mini-taper (75% volume)`);
-      }
-      // Corridas C mantém volume normal (substitui apenas o longão)
 
       // Calcular distância do longão (30% do volume semanal)
       const longRunKm = Math.min(weeklyKm * 0.3, 32); // Max 32km para evitar excesso
