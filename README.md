@@ -3,12 +3,6 @@
 
 > Plataforma de treinamento de corrida com geração de planos personalizados usando IA
 
-[![Deploy](https://repository-images.githubusercontent.com/728428101/43bf5fdd-c155-4aa7-b86c-91fe176c131e)
-[![Next.js](https://i.ytimg.com/vi/uUalQbg-TGA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDCyUJjd8iTH-USqdXz5eOCIY3KfA)
-[![TypeScript](https://i.ytimg.com/vi/4cgpu9L2AE8/maxresdefault.jpg)
-[![Prisma](https://user-images.githubusercontent.com/66284362/159115513-3ae48dd6-3d9c-416f-83d4-db48de23fac8.png)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-
 ---
 
 ## 📖 Sobre o Projeto
