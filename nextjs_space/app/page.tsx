@@ -24,11 +24,11 @@ export default function LandingPage() {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-orange-500 to-blue-600 rounded-lg">
-                <span className="text-white font-bold text-lg">R</span>
+                <span className="text-white font-bold text-base">AR</span>
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
-                  RunCoach
+                  Athera Run
                 </h1>
               </div>
             </div>
@@ -318,7 +318,7 @@ export default function LandingPage() {
       <footer className="border-t py-12">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="text-center text-muted-foreground">
-            <p>&copy; 2025 RunCoach. Todos os direitos reservados.</p>
+            <p>&copy; 2025 Athera Run. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

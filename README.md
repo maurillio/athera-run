@@ -1,13 +1,13 @@
 
-# 🏃 Maratona Training
+# 🏃 Athera Run
 
-> Plataforma de treinamento de corrida com geração de planos personalizados usando IA
+> Plataforma inteligente de treinamento de corrida com IA
 
 ---
 
 ## 📖 Sobre o Projeto
 
-**Maratona Training** é uma plataforma completa de treinamento de corrida que utiliza inteligência artificial para gerar planos de treino verdadeiramente personalizados. Ao contrário de templates genéricos, cada plano é gerado dinamicamente considerando:
+**Athera Run** é uma plataforma completa de treinamento de corrida que utiliza inteligência artificial para gerar planos de treino verdadeiramente personalizados. Ao contrário de templates genéricos, cada plano é gerado dinamicamente considerando:
 
 - 🎯 **Perfil completo do atleta** (nível, histórico, disponibilidade)
 - 🏁 **Meta específica da prova** (distância, data, objetivo de tempo)
@@ -30,7 +30,7 @@
 ## 🚀 Acesso Rápido
 
 ### 🌐 Aplicação Online
-**URL**: https://42maurillio.abacusai.app
+**URL**: https://atherarun.com
 
 ### 📚 Documentação
 
@@ -212,18 +212,9 @@ yarn ts-node check_profile_data.ts
 
 ## 🔑 Credenciais de Teste
 
-### Usuário de Teste
+### Criando Conta
 
-```
-Email: mmaurillio2@gmail.com
-Senha: [definida pelo desenvolvedor]
-```
-
-Este usuário tem:
-- Perfil completo preenchido
-- Meta: Maratona de São Paulo (agosto 2026)
-- Plano ativo de ~40 semanas
-- Strava conectado
+Acesse https://atherarun.com/signup e crie sua conta gratuitamente.
 
 ---
 
@@ -300,10 +291,10 @@ Veja [Análise e Melhorias](ANALISE_SISTEMA_E_MELHORIAS.md) para lista completa.
 ### Documentação
 - [Documentação Completa](DOCUMENTACAO_COMPLETA_PROJETO.md)
 - [Guia Técnico](GUIA_TECNICO_DETALHADO.md)
-- [FAQ (em breve)](#)
+- [Roadmap](ROADMAP_IMPLEMENTACAO.md)
 
 ### Contato
-- **Email**: mmaurillio2@gmail.com
+- **Website**: https://atherarun.com
 - **Issues**: Abra uma issue neste repositório
 
 ---
@@ -364,10 +355,10 @@ Este projeto está sob a licença MIT. Veja [LICENSE](LICENSE) para mais detalhe
 
 ## 🚀 Deploy
 
-### Deploy Automático (Abacus.AI)
+### Deploy
 
-O projeto está configurado para deploy automático em:
-**https://42maurillio.abacusai.app**
+O projeto está configurado para:
+**https://atherarun.com**
 
 ### Deploy Manual
 
@@ -408,6 +399,6 @@ Certifique-se de configurar:
 
 **Feito com ❤️ para corredores por corredores**
 
-[Website](https://42maurillio.abacusai.app) • [Documentação](DOCUMENTACAO_COMPLETA_PROJETO.md) • [Roadmap](ROADMAP_IMPLEMENTACAO.md)
+[Website](https://atherarun.com) • [Documentação](DOCUMENTACAO_COMPLETA_PROJETO.md) • [Roadmap](ROADMAP_IMPLEMENTACAO.md)
 
 </div>
