@@ -207,28 +207,49 @@ export default function PerfilPage() {
   const handleDeletePlan = async () => {
     setDeletingPlan(true);
     try {
-      const response = await fetch('/api/plan/delete', {
-        method: 'DELETE',
+      // Usar regenerate ao invés de delete (mantém histórico)
+      const regenerateResponse = await fetch('/api/plan/regenerate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reason: 'manual_regeneration',
+          description: 'Regeneração manual do plano pelo usuário'
+        })
       });
 
-      const data = await response.json();
+      const regenerateData = await regenerateResponse.json();
 
-      if (response.ok) {
-        toast.success('Plano deletado com sucesso! Redirecionando para criar um novo plano...', {
-          icon: <CheckCircle2 className="h-5 w-5 text-green-500" />
+      if (regenerateResponse.ok) {
+        toast.success('Plano deletado! Gerando novo plano automaticamente...', {
+          icon: <RefreshCcw className="h-5 w-5 text-blue-500" />
         });
-        
-        // Aguardar um pouco antes de redirecionar
-        setTimeout(() => {
-          router.push('/onboarding');
-        }, 1500);
+
+        // Gerar novo plano automaticamente
+        const generateResponse = await fetch('/api/plan/generate', {
+          method: 'POST'
+        });
+
+        if (generateResponse.ok) {
+          toast.success('Novo plano gerado com sucesso!', {
+            icon: <CheckCircle2 className="h-5 w-5 text-green-500" />
+          });
+
+          setTimeout(() => {
+            router.push('/dashboard');
+            router.refresh();
+          }, 1000);
+        } else {
+          const generateData = await generateResponse.json();
+          toast.error(generateData.error || 'Erro ao gerar novo plano');
+          setDeletingPlan(false);
+        }
       } else {
-        toast.error(data.error || 'Erro ao deletar plano');
+        toast.error(regenerateData.error || 'Erro ao deletar plano');
         setDeletingPlan(false);
       }
     } catch (error) {
-      console.error('Error deleting plan:', error);
-      toast.error('Erro ao deletar plano');
+      console.error('Error regenerating plan:', error);
+      toast.error('Erro ao regenerar plano');
       setDeletingPlan(false);
     }
   };
