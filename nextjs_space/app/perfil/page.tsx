@@ -612,12 +612,32 @@ export default function PerfilPage() {
                     </div>
                   )}
 
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      Para editar sua disponibilidade de treino, você precisará deletar e recriar seu plano através da aba "Pessoal"
-                    </AlertDescription>
-                  </Alert>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full">
+                        <RefreshCcw className="h-4 w-4 mr-2" />
+                        Editar Disponibilidade
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Editar Disponibilidade de Treino</DialogTitle>
+                        <DialogDescription>
+                          Atualize seus dias e horários disponíveis para treinar. Se você tiver um plano ativo, recomendamos regenerá-lo após fazer mudanças significativas.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <p className="text-sm text-amber-600 bg-amber-50 p-3 rounded-md">
+                          ⚠️ Funcionalidade de edição em desenvolvimento. Por enquanto, para alterar sua disponibilidade, delete e recrie seu plano através da aba "Pessoal".
+                        </p>
+                      </div>
+                      <DialogFooter>
+                        <DialogTrigger asChild>
+                          <Button variant="outline">Fechar</Button>
+                        </DialogTrigger>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             </TabsContent>
