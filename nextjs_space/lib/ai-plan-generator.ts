@@ -1200,8 +1200,23 @@ export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors:
   }
   
   plan.weeks?.forEach((week, index) => {
-    if (!week.workouts || week.workouts.length !== 7) {
-      errors.push(`Semana ${index + 1} não tem 7 treinos`);
+    if (!week.workouts || week.workouts.length === 0) {
+      errors.push(`Semana ${index + 1} não tem treinos`);
+      return;
+    }
+
+    // Validar que há treino para cada dia da semana (0-6)
+    // Com múltiplas atividades por dia, pode haver mais de 7 treinos total
+    const daysWithWorkouts = new Set(week.workouts.map((w: any) => w.dayOfWeek));
+    if (daysWithWorkouts.size !== 7) {
+      const missingDays = [];
+      for (let day = 0; day < 7; day++) {
+        if (!daysWithWorkouts.has(day)) {
+          const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+          missingDays.push(dayNames[day]);
+        }
+      }
+      errors.push(`Semana ${index + 1} não tem treinos para: ${missingDays.join(', ')}`);
     }
   });
   

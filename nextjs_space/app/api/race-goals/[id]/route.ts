@@ -28,15 +28,16 @@ export async function PUT(
       return NextResponse.json({ error: 'Corrida não encontrada' }, { status: 404 });
     }
 
-    // Se for marcar como primary, remover primary de outras
-    if (body.isPrimary) {
+    // Se for marcar como priority A, remover A de outras
+    if (body.priority === 'A') {
       await prisma.raceGoal.updateMany({
         where: {
           athleteId: raceGoal.athleteId,
           id: { not: raceGoalId },
-          isPrimary: true
+          priority: 'A'
         },
         data: {
+          priority: 'B', // Downgrade para B
           isPrimary: false
         }
       });
@@ -51,7 +52,9 @@ export async function PUT(
         targetTime: body.targetTime,
         location: body.location,
         status: body.status,
-        isPrimary: body.isPrimary,
+        priority: body.priority,
+        autoClassified: body.priority ? false : undefined, // Se usuário escolheu, não é auto
+        isPrimary: body.priority === 'A', // Manter sincronizado (DEPRECATED)
         actualTime: body.actualTime,
         placement: body.placement,
         notes: body.notes

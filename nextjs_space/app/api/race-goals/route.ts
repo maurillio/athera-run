@@ -54,17 +54,18 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { raceName, distance, raceDate, targetTime, location, isPrimary } = body;
+    const { raceName, distance, raceDate, targetTime, location, priority } = body;
 
-    // Se for primary, remover primary de outras corridas
-    if (isPrimary) {
+    // Se for priority A, remover A de outras corridas
+    if (priority === 'A') {
       await prisma.raceGoal.updateMany({
         where: {
           athleteId: profile.id,
-          isPrimary: true
+          priority: 'A'
         },
         data: {
-          isPrimary: false
+          priority: 'B', // Downgrade para B
+          autoClassified: true
         }
       });
     }
@@ -77,7 +78,9 @@ export async function POST(req: NextRequest) {
         raceDate: new Date(raceDate),
         targetTime: targetTime || null,
         location: location || null,
-        isPrimary: isPrimary || false
+        priority: priority || 'B', // Default B se não informado
+        autoClassified: priority ? false : true, // Se usuário escolheu, não é auto
+        isPrimary: priority === 'A' // Manter sincronizado (DEPRECATED)
       }
     });
 
