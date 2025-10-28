@@ -22,21 +22,39 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
+    // Preparar dados para update (apenas campos que foram enviados)
+    const updateData: any = {};
+
+    // Dados básicos
+    if (body.weight !== undefined) updateData.weight = parseFloat(body.weight);
+    if (body.height !== undefined) updateData.height = parseFloat(body.height);
+    if (body.age !== undefined) updateData.age = parseInt(body.age);
+    if (body.gender !== undefined) updateData.gender = body.gender;
+    if (body.runningLevel !== undefined) updateData.runningLevel = body.runningLevel;
+    if (body.currentWeeklyKm !== undefined) updateData.currentWeeklyKm = parseFloat(body.currentWeeklyKm);
+    if (body.longestRun !== undefined) updateData.longestRun = parseFloat(body.longestRun);
+    if (body.experienceDescription !== undefined) updateData.experienceDescription = body.experienceDescription;
+    if (body.goalDistance !== undefined) updateData.goalDistance = body.goalDistance;
+    if (body.targetRaceDate !== undefined) updateData.targetRaceDate = new Date(body.targetRaceDate);
+    if (body.targetTime !== undefined) updateData.targetTime = body.targetTime;
+
+    // Disponibilidade e preferências
+    if (body.trainingActivities !== undefined) updateData.trainingActivities = body.trainingActivities;
+    if (body.longRunDay !== undefined) updateData.longRunDay = body.longRunDay;
+    if (body.usualPaces !== undefined) updateData.usualPaces = body.usualPaces;
+
+    // Informações médicas
+    if (body.injuries !== undefined) updateData.injuries = body.injuries;
+    if (body.medicalConditions !== undefined) updateData.medicalConditions = body.medicalConditions;
+    if (body.limitations !== undefined) updateData.limitations = body.limitations;
+
+    // Equipamentos
+    if (body.hasGymAccess !== undefined) updateData.hasGymAccess = body.hasGymAccess;
+    if (body.hasPoolAccess !== undefined) updateData.hasPoolAccess = body.hasPoolAccess;
+
     const updated = await prisma.athleteProfile.update({
       where: { id: profile.id },
-      data: {
-        weight: body.weight ? parseFloat(body.weight) : undefined,
-        height: body.height ? parseFloat(body.height) : undefined,
-        age: body.age ? parseInt(body.age) : undefined,
-        gender: body.gender,
-        runningLevel: body.runningLevel,
-        currentWeeklyKm: body.currentWeeklyKm ? parseFloat(body.currentWeeklyKm) : undefined,
-        longestRun: body.longestRun ? parseFloat(body.longestRun) : undefined,
-        experienceDescription: body.experienceDescription,
-        goalDistance: body.goalDistance,
-        targetRaceDate: body.targetRaceDate ? new Date(body.targetRaceDate) : undefined,
-        targetTime: body.targetTime
-      }
+      data: updateData
     });
 
     return NextResponse.json({ profile: updated });
