@@ -639,13 +639,25 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
     longRunDay: availability.longRunDay,
   });
   
+  // Calcular total de semanas que a IA planejou
+  const aiPlannedWeeks = strategy.phases.reduce((sum: number, p: any) => sum + (p.weeks || 0), 0);
+  console.log(`[AI PLAN] IA planejou ${aiPlannedWeeks} semanas, precisamos de ${totalWeeks} semanas`);
+
+  // Se IA planejou menos semanas que o necessário, vamos ajustar a última fase
+  if (aiPlannedWeeks < totalWeeks) {
+    const missingWeeks = totalWeeks - aiPlannedWeeks;
+    console.log(`[AI PLAN] ⚠️ Ajustando última fase: adicionando ${missingWeeks} semanas extras`);
+    const lastPhase = strategy.phases[strategy.phases.length - 1];
+    lastPhase.weeks += missingWeeks;
+  }
+
   // Processar cada fase
   for (const phase of strategy.phases) {
     console.log(`[AI PLAN] Processando fase: ${phase.name} (${phase.weeks} semanas)`);
-    
+
     const phaseWeeks = Math.min(phase.weeks, totalWeeks - weekNumber + 1);
     const weeklyKmRange = phase.weeklyKmEnd - phase.weeklyKmStart;
-    
+
     for (let phaseWeek = 0; phaseWeek < phaseWeeks; phaseWeek++) {
       const weekProgress = phaseWeek / phaseWeeks;
 
@@ -687,7 +699,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         currentWeekStart,
         raceThisWeek, // Passar corrida B/C se houver
       });
-      
+
       const week = {
         weekNumber,
         startDate: new Date(currentWeekStart),
@@ -697,16 +709,18 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         totalDistance: Math.round(weeklyKm * 10) / 10,
         workouts,
       };
-      
+
       weeks.push(week);
       weekNumber++;
       currentWeekStart = new Date(currentWeekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
-      
+
       if (weekNumber > totalWeeks) break;
     }
-    
+
     if (weekNumber > totalWeeks) break;
   }
+
+  console.log(`[AI PLAN] ✅ Geradas ${weeks.length} semanas (esperado: ${totalWeeks})`);
   
   return {
     totalWeeks,
@@ -895,7 +909,7 @@ function generateWeekWorkouts(params: {
 
   // ALOCAR TODAS AS ATIVIDADES CONFIGURADAS (sem prioridades - respeitar disponibilidade do usuário)
 
-  // 1. LONGÃO no dia configurado (OU CORRIDA B/C se houver nesta semana)
+  // 1. LONGÃO no dia configurado (OU CORRIDA A/B/C se houver nesta semana)
   if (params.raceThisWeek) {
     // Detectar dia da semana da corrida
     const raceDate = new Date(params.raceThisWeek.date);
@@ -906,26 +920,37 @@ function generateWeekWorkouts(params: {
     // Adicionar a corrida no dia correto
     addActivity(raceDayOfWeek, 'race', params.raceThisWeek);
 
-    // Se a corrida NÃO for no dia do longão, ainda adicionar um longão menor (50%)
+    // Se a corrida for C e NÃO for no dia do longão, ainda adicionar um longão menor (50%)
     if (raceDayOfWeek !== availability.longRunDay && params.raceThisWeek.priority === 'C') {
       addActivity(availability.longRunDay, 'long_run');
     }
+
+    // Para corridas A e B: semana de taper - apenas descanso/regeneração nos outros dias
+    // (não adicionar treinos de qualidade ou longões extras)
   } else {
     // Sem corrida esta semana - longão normal
     addActivity(availability.longRunDay, 'long_run');
   }
 
-  // 2. TREINOS DE QUALIDADE (apenas em dias de corrida e não em cutback weeks)
-  if (!params.isCutbackWeek) {
+  // 2. TREINOS DE QUALIDADE (apenas em dias de corrida e não em cutback weeks ou semanas de taper)
+  const isTaperWeek = params.raceThisWeek && (params.raceThisWeek.priority === 'A' || params.raceThisWeek.priority === 'B');
+  if (!params.isCutbackWeek && !isTaperWeek) {
     qualityDays.forEach(day => {
       addActivity(day, 'quality');
     });
   }
 
-  // 3. TREINOS FÁCEIS (apenas em dias de corrida)
-  easyDays.forEach(day => {
-    addActivity(day, 'easy');
-  });
+  // 3. TREINOS FÁCEIS (apenas em dias de corrida, e reduzidos em semanas de taper)
+  if (!isTaperWeek) {
+    easyDays.forEach(day => {
+      addActivity(day, 'easy');
+    });
+  } else {
+    // Semana de taper: apenas 1-2 treinos fáceis curtos para manter ritmo
+    easyDays.slice(0, 1).forEach(day => {
+      addActivity(day, 'easy');
+    });
+  }
 
   // 4. NATAÇÃO - adicionar em TODOS os dias configurados pelo usuário
   availability.swimmingDays.forEach(day => {
@@ -1089,13 +1114,16 @@ function generateWeekWorkouts(params: {
         };
       }
       else if (activityType === 'race') {
-        // Corrida B ou C cadastrada
+        // Corrida A, B ou C cadastrada
         const raceInfo = activity.details;
+        const isRaceA = raceInfo.priority === 'A';
         const isRaceB = raceInfo.priority === 'B';
         const isRaceC = raceInfo.priority === 'C';
 
         let raceDescription = '';
-        if (isRaceB) {
+        if (isRaceA) {
+          raceDescription = `🏁 CORRIDA A (OBJETIVO PRINCIPAL) - Esta é a corrida para a qual você treinou! Confie no seu treinamento, siga sua estratégia de ritmo, hidrate-se adequadamente e aproveite cada quilômetro. Você está preparado(a)! Descanse bem nos dias anteriores, alimente-se adequadamente e chegue à largada com confiança. BOA PROVA! 🎯`;
+        } else if (isRaceB) {
           raceDescription = `🏁 CORRIDA B (Preparatória) - Use como teste de ritmo e simulado para sua corrida principal. Aquecimento de 15-20 min fácil, corra no ritmo planejado, e desacelere nos últimos 2-3km se necessário. Objetivo: testar estratégia de prova sem comprometer o treinamento.`;
         } else if (isRaceC) {
           raceDescription = `🏁 CORRIDA C (Volume) - Use como treino longo intenso. Sem taper, esta corrida faz parte do volume semanal normal. Corra no ritmo confortável, aproveite a experiência e o ambiente de prova. Não force - o objetivo é acumular km.`;
