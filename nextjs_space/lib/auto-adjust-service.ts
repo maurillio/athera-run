@@ -1,12 +1,13 @@
 
 /**
  * Sistema de Ajuste Inteligente Automático
- * 
+ *
  * Analisa TODO o histórico do atleta (atividades Strava, treinos manuais e relatos)
  * e faz ajustes progressivos e científicos no plano de treinamento usando IA avançada.
  */
 
 import prisma from './db';
+import { callLLM } from './llm-client';
 
 interface AdjustmentDecision {
   needsAdjustment: boolean;
@@ -224,17 +225,10 @@ export class AutoAdjustService {
     };
     
     // Chamar IA para análise profunda e científica
-    const aiResponse = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [{
-          role: 'system',
-          content: `Você é um treinador de corrida PhD em fisiologia do exercício, especialista em periodização e treinamento científico.
+    const aiResponseText = await callLLM({
+      messages: [{
+        role: 'system',
+        content: `Você é um treinador de corrida PhD em fisiologia do exercício, especialista em periodização e treinamento científico.
 
 Sua missão é analisar o histórico COMPLETO do atleta (não apenas 7 dias) e decidir se o plano de treinamento precisa de ajustes PROGRESSIVOS e CIENTÍFICOS.
 
@@ -305,9 +299,9 @@ RESPONDA APENAS COM JSON VÁLIDO:
     }
   ]
 }`
-        }, {
-          role: 'user',
-          content: `Analise este atleta COMPLETO e determine ajustes necessários:
+      }, {
+        role: 'user',
+        content: `Analise este atleta COMPLETO e determine ajustes necessários:
 
 ${JSON.stringify(context, null, 2)}
 
@@ -320,21 +314,13 @@ IMPORTANTE: Faça uma análise PROFUNDA considerando:
 6. Individualização baseada no perfil completo
 
 Seja CONSERVADOR - prefira manter o plano a menos que haja evidências claras de necessidade de ajuste.`
-        }],
-        max_tokens: 1500,
-        temperature: 0.2, // Baixa temperatura para respostas mais consistentes
-        response_format: { type: "json_object" }
-      })
+      }],
+      max_tokens: 1500,
+      temperature: 0.2, // Baixa temperatura para respostas mais consistentes
+      response_format: { type: "json_object" }
     });
-    
-    if (!aiResponse.ok) {
-      const error = await aiResponse.text();
-      console.error('AI API Error:', error);
-      throw new Error('Erro ao chamar API de IA');
-    }
-    
-    const aiData = await aiResponse.json();
-    const decision: AdjustmentDecision = JSON.parse(aiData.choices[0].message.content);
+
+    const decision: AdjustmentDecision = JSON.parse(aiResponseText);
     
     return decision;
   }
