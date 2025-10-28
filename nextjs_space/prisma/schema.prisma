@@ -280,7 +280,10 @@ model AthleteProfile {
   // Paces habituais por distância para personalização do plano
   // Formato: { "hasRunBefore": true, "paces": { "5k": "5:00-5:30", "10k": "never", ... } }
   usualPaces        Json?    // Paces habituais em diferentes distâncias
-  
+
+  // Data preferida para começar o plano (se não fornecida, calcula automaticamente)
+  preferredStartDate DateTime? // Quando o atleta quer começar os treinos
+
   // Histórico de lesões (legacy - mantido para compatibilidade)
   injuryHistory     String?  // JSON ou texto livre
   
