@@ -42,7 +42,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
     raceDate: '',
     targetTime: '',
     location: '',
-    isPrimary: false
+    priority: 'B' as 'A' | 'B' | 'C'
   });
 
   const handleAddRace = async () => {
@@ -62,7 +62,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
           raceDate: '',
           targetTime: '',
           location: '',
-          isPrimary: false
+          priority: 'B'
         });
         
         // Classificar automaticamente
@@ -126,7 +126,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
       raceDate: race.raceDate.split('T')[0], // Converter para formato YYYY-MM-DD
       targetTime: race.targetTime || '',
       location: '',
-      isPrimary: race.priority === 'A'
+      priority: race.priority
     });
     setShowEditDialog(true);
   };
@@ -151,7 +151,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
           raceDate: '',
           targetTime: '',
           location: '',
-          isPrimary: false
+          priority: 'B'
         });
 
         // Classificar automaticamente após editar
@@ -301,17 +301,27 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="isPrimary"
-                      checked={formData.isPrimary}
-                      onChange={(e) => setFormData({...formData, isPrimary: e.target.checked})}
-                      className="rounded"
-                    />
-                    <Label htmlFor="isPrimary" className="cursor-pointer">
-                      Esta é minha corrida objetivo principal (Corrida A)
-                    </Label>
+                  <div>
+                    <Label htmlFor="priority">Classificação da Corrida *</Label>
+                    <Select
+                      value={formData.priority}
+                      onValueChange={(value: 'A' | 'B' | 'C') => setFormData({...formData, priority: value})}
+                    >
+                      <SelectTrigger id="priority">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="A">
+                          <span className="font-semibold">Corrida A</span> - Objetivo Principal
+                        </SelectItem>
+                        <SelectItem value="B">
+                          <span className="font-semibold">Corrida B</span> - Preparatória/Teste
+                        </SelectItem>
+                        <SelectItem value="C">
+                          <span className="font-semibold">Corrida C</span> - Volume/Experiência
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <Alert>
@@ -428,17 +438,27 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="editIsPrimary"
-                      checked={formData.isPrimary}
-                      onChange={(e) => setFormData({...formData, isPrimary: e.target.checked})}
-                      className="rounded"
-                    />
-                    <Label htmlFor="editIsPrimary" className="cursor-pointer">
-                      Esta é minha corrida objetivo principal (Corrida A)
-                    </Label>
+                  <div>
+                    <Label htmlFor="editPriority">Classificação da Corrida *</Label>
+                    <Select
+                      value={formData.priority}
+                      onValueChange={(value: 'A' | 'B' | 'C') => setFormData({...formData, priority: value})}
+                    >
+                      <SelectTrigger id="editPriority">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="A">
+                          <span className="font-semibold">Corrida A</span> - Objetivo Principal
+                        </SelectItem>
+                        <SelectItem value="B">
+                          <span className="font-semibold">Corrida B</span> - Preparatória/Teste
+                        </SelectItem>
+                        <SelectItem value="C">
+                          <span className="font-semibold">Corrida C</span> - Volume/Experiência
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="flex gap-3 pt-4">
