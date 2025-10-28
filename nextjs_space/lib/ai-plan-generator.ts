@@ -827,6 +827,9 @@ function generateWeekWorkouts(params: {
     otherActivityDays: Array.from(availability.otherActivityDays.entries()),
     longRunDay: availability.longRunDay,
   });
+
+  console.log(`[WORKOUT GEN] DEBUG - strengthDaysToUse que serão usados:`, availability.strengthDays);
+  console.log(`[WORKOUT GEN] DEBUG - Tem domingo (0) em strengthDays?`, availability.strengthDays.includes(0));
   
   // Calcular frequências desejadas
   const easyRunsCount = params.keyWorkouts.easy.frequency || 2;
@@ -1177,7 +1180,17 @@ function generateWeekWorkouts(params: {
   };
 
   console.log(`[WORKOUT GEN] Semana ${params.weekNumber}: Resumo - Running: ${summary.running}, Swimming: ${summary.swimming}, Strength: ${summary.strength}, Cross: ${summary.crossTraining}, Rest: ${summary.rest}`);
-  
+
+  // Ordenar workouts por data para garantir ordem Segunda → Domingo
+  workouts.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  console.log(`[WORKOUT GEN] DEBUG - Primeiro treino:`, {
+    dayOfWeek: workouts[0]?.dayOfWeek,
+    date: workouts[0]?.date,
+    type: workouts[0]?.type,
+    title: workouts[0]?.title
+  });
+
   return workouts;
 }
 
