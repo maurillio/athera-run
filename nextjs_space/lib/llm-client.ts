@@ -35,6 +35,21 @@ export async function callLLM(request: LLMRequest): Promise<string> {
   let body: any;
 
   switch (provider) {
+    case 'openai':
+      url = 'https://api.openai.com/v1/chat/completions';
+      headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+      };
+      body = {
+        model: request.model || process.env.LLM_MODEL || 'gpt-4o-mini',
+        messages: request.messages,
+        temperature: request.temperature ?? 0.5,
+        max_tokens: request.max_tokens ?? 8000,
+        ...(request.response_format && { response_format: request.response_format }),
+      };
+      break;
+
     case 'openrouter':
       url = 'https://openrouter.ai/api/v1/chat/completions';
       headers = {
