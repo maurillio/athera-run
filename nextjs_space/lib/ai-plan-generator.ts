@@ -604,17 +604,21 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   const startDate = new Date();
   startDate.setHours(0, 0, 0, 0);
 
-  // Começar na próxima segunda-feira
+  // Começar na segunda-feira DESTA semana
   const dayOfWeek = startDate.getDay();
-  // Se é domingo (0), adicionar 1 dia para segunda
-  // Se é segunda (1), adicionar 0 dias (começar hoje)
-  // Se é terça (2), adicionar 6 dias para próxima segunda
-  // etc.
-  const daysUntilMonday = dayOfWeek === 0 ? 1 : dayOfWeek === 1 ? 0 : (8 - dayOfWeek);
-
-  if (daysUntilMonday > 0) {
-    startDate.setDate(startDate.getDate() + daysUntilMonday);
+  // Se é domingo (0), começar amanhã (segunda)
+  // Se é segunda (1), começar hoje
+  // Se é terça-sábado (2-6), VOLTAR para a segunda desta semana
+  let daysToMonday;
+  if (dayOfWeek === 0) {
+    daysToMonday = 1; // Domingo -> Segunda (amanhã)
+  } else if (dayOfWeek === 1) {
+    daysToMonday = 0; // Segunda -> Segunda (hoje)
+  } else {
+    daysToMonday = -(dayOfWeek - 1); // Terça-Sábado -> Voltar para Segunda
   }
+
+  startDate.setDate(startDate.getDate() + daysToMonday);
 
   console.log(`[AI PLAN] Data de início calculada: ${startDate.toISOString()} (dia da semana: ${startDate.getDay()})`);
   
