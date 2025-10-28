@@ -1,7 +1,7 @@
 
 /**
  * Sistema de Geração de Planos de Treinamento com IA
- * 
+ *
  * Este sistema usa inteligência artificial para analisar o perfil completo do atleta
  * e gerar planos de treinamento verdadeiramente personalizados baseados em:
  * - Ciência do treinamento esportivo
@@ -10,6 +10,8 @@
  * - Objetivos específicos
  * - Condições médicas e preferências
  */
+
+import { callLLM } from './llm-client';
 
 export interface AIUserProfile {
   // Dados básicos
@@ -548,32 +550,16 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       console.log(`[AI PLAN] Tentativa ${attempt} de ${maxRetries}...`);
-      
-      const response = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.5,
-          max_tokens: 8000, // Estratégia precisa de menos tokens que plano completo
-        }),
+
+      const aiResponse = await callLLM({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.5,
+        max_tokens: 8000, // Estratégia precisa de menos tokens que plano completo
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API request failed: ${response.status} ${response.statusText}\n${errorText}`);
-      }
-
-      const data = await response.json();
-      const aiResponse = data.choices[0].message.content;
       
       try {
         const strategy = JSON.parse(aiResponse);
