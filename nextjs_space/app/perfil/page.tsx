@@ -579,6 +579,30 @@ export default function PerfilPage() {
                           </CardContent>
                         </Card>
                       ))}
+
+                      {/* Dia do Treino Longo */}
+                      {profile.longRunDay !== null && profile.longRunDay !== undefined && (
+                        <Card className="border-2 border-orange-200 bg-orange-50">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2">
+                              <div className="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center">
+                                <span className="text-white text-lg">🏃‍♂️</span>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold">Dia do Treino Longo</h4>
+                                <p className="text-sm text-muted-foreground">
+                                  {['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][profile.longRunDay]}
+                                </p>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                              Este é o dia mais importante da semana, onde você fará seus treinos longos de resistência.
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )}
                     </div>
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
@@ -587,7 +611,7 @@ export default function PerfilPage() {
                       <p className="text-sm mt-2">Complete o onboarding para adicionar sua disponibilidade de treino</p>
                     </div>
                   )}
-                  
+
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
