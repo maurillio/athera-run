@@ -1,6 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { callLLM } from '@/lib/llm-client';
 
 export const dynamic = "force-dynamic";
 
@@ -71,18 +72,11 @@ export async function POST(request: NextRequest) {
     const avgPerceivedEffort = workouts.reduce((sum, w) => sum + (w.perceivedEffort || 0), 0) / workouts.length;
 
     // Chamada para LLM API
-    const response = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4.1-mini',
-        messages: [
-          {
-            role: 'system',
-            content: `Você é um especialista em treinamento de corrida e análise de performance. Você está analisando os treinos de um atleta que está se preparando para uma maratona.
+    const aiResponse = await callLLM({
+      messages: [
+        {
+          role: 'system',
+          content: `Você é um especialista em treinamento de corrida e análise de performance. Você está analisando os treinos de um atleta que está se preparando para uma maratona.
 
 Perfil do atleta:
 - Peso: ${profile.weight}kg
@@ -116,10 +110,10 @@ Responda em formato JSON com a seguinte estrutura:
 }
 
 Responda com JSON puro, sem markdown ou code blocks.`
-          },
-          {
-            role: 'user',
-            content: `Analise os seguintes treinos do período de ${startDate.toLocaleDateString('pt-BR')} a ${endDate.toLocaleDateString('pt-BR')}:
+        },
+        {
+          role: 'user',
+          content: `Analise os seguintes treinos do período de ${startDate.toLocaleDateString('pt-BR')} a ${endDate.toLocaleDateString('pt-BR')}:
 
 ${JSON.stringify(workoutsSummary, null, 2)}
 
@@ -129,19 +123,13 @@ Métricas do período:
 - Distância total: ${totalDistance.toFixed(1)}km
 - Tempo total: ${Math.floor(totalDuration / 60)}h ${totalDuration % 60}min
 - Esforço percebido médio: ${avgPerceivedEffort.toFixed(1)}/10`
-          }
-        ],
-        response_format: { type: "json_object" },
-        max_tokens: 2000
-      })
+        }
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 2000
     });
 
-    if (!response.ok) {
-      throw new Error('Erro ao chamar API de IA');
-    }
-
-    const aiResponse = await response.json();
-    const analysisData = JSON.parse(aiResponse.choices[0].message.content);
+    const analysisData = JSON.parse(aiResponse);
 
     // Salvar análise no banco
     const analysis = await prisma.aIAnalysis.create({

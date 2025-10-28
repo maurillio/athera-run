@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { callLLM } from '@/lib/llm-client';
 
 // POST - Analisar últimos logs e sugerir/aplicar ajustes automaticamente
 export async function POST(request: Request) {
@@ -92,17 +93,10 @@ export async function POST(request: Request) {
     };
 
     // Chamar IA para análise profunda
-    const aiResponse = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4.1-mini',
-        messages: [{
-          role: 'system',
-          content: `Você é um treinador de corrida experiente. Analise os últimos ${daysToAnalyze} dias de treino do atleta e determine se o plano precisa de ajustes.
+    const aiResponseText = await callLLM({
+      messages: [{
+        role: 'system',
+        content: `Você é um treinador de corrida experiente. Analise os últimos ${daysToAnalyze} dias de treino do atleta e determine se o plano precisa de ajustes.
 
 CRITÉRIOS DE ATENÇÃO:
 1. Múltiplos dias de baixa energia (≤4/10) ou sensação ruim
@@ -126,26 +120,20 @@ Responda APENAS com este formato JSON:
   "severity": "low" | "medium" | "high",
   "summary": "resumo da análise em 2-3 frases"
 }`
-        }, {
-          role: 'user',
-          content: `Analise estes dados:
+      }, {
+        role: 'user',
+        content: `Analise estes dados:
 
 ${JSON.stringify(contextSummary, null, 2)}
 
 Determine se o plano precisa de ajustes e qual tipo.`
-        }],
-        max_tokens: 600,
-        temperature: 0.3,
-        response_format: { type: "json_object" }
-      })
+      }],
+      max_tokens: 600,
+      temperature: 0.3,
+      response_format: { type: "json_object" }
     });
 
-    if (!aiResponse.ok) {
-      throw new Error('Erro ao chamar API de IA');
-    }
-
-    const aiData = await aiResponse.json();
-    const analysis = JSON.parse(aiData.choices[0].message.content);
+    const analysis = JSON.parse(aiResponseText);
 
     // Criar registro da análise
     const aiAnalysisRecord = await prisma.aIAnalysis.create({
