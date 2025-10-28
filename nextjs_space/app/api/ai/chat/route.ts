@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { callLLM } from '@/lib/llm-client';
 
 // POST - Chat com IA sobre treinamento
 export async function POST(request: Request) {
@@ -138,26 +139,11 @@ TIPOS DE PERGUNTAS COMUNS:
     ];
 
     // Chamar IA
-    const aiResponse = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4.1-mini',
-        messages,
-        max_tokens: 500,
-        temperature: 0.8
-      })
+    const response = await callLLM({
+      messages,
+      max_tokens: 500,
+      temperature: 0.8
     });
-
-    if (!aiResponse.ok) {
-      throw new Error('Erro ao chamar API de IA');
-    }
-
-    const aiData = await aiResponse.json();
-    const response = aiData.choices[0].message.content;
 
     return NextResponse.json({ 
       response,
