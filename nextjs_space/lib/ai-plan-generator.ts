@@ -964,16 +964,20 @@ function generateWeekWorkouts(params: {
     })));
   
   // NOVA LÓGICA: Gerar MÚLTIPLOS treinos por dia (respeitando horários configurados)
-  for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-    const date = new Date(params.currentWeekStart);
-    date.setDate(date.getDate() + dayOfWeek);
+  // Semana começa na SEGUNDA (dayOfWeek 1) e termina no DOMINGO (dayOfWeek 0)
+  for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
+    const actualDayOfWeek = dayOfWeek % 7; // Segunda=1, Terça=2...Sábado=6, Domingo=0
+    const daysOffset = dayOfWeek - 1; // Segunda=0, Terça=1...Domingo=6
 
-    const activitiesForDay = dayActivities.get(dayOfWeek) || [];
+    const date = new Date(params.currentWeekStart);
+    date.setDate(date.getDate() + daysOffset);
+
+    const activitiesForDay = dayActivities.get(actualDayOfWeek) || [];
 
     // Se não há atividades configuradas para este dia, adicionar descanso
     if (activitiesForDay.length === 0) {
       workouts.push({
-        dayOfWeek,
+        dayOfWeek: actualDayOfWeek,
         date,
         type: 'rest',
         title: 'Descanso',
@@ -1006,7 +1010,7 @@ function generateWeekWorkouts(params: {
 
       if (activityType === 'long_run') {
         workout = {
-          dayOfWeek,
+          dayOfWeek: actualDayOfWeek,
           date,
           type: 'running',
           subtype: 'long',
@@ -1025,7 +1029,7 @@ function generateWeekWorkouts(params: {
 
         if (qualityType === 'tempo') {
           workout = {
-            dayOfWeek,
+            dayOfWeek: actualDayOfWeek,
             date,
             type: 'running',
             subtype: 'tempo',
@@ -1040,7 +1044,7 @@ function generateWeekWorkouts(params: {
           };
         } else if (qualityType === 'intervals') {
           workout = {
-            dayOfWeek,
+            dayOfWeek: actualDayOfWeek,
             date,
             type: 'running',
             subtype: 'intervals',
@@ -1056,7 +1060,7 @@ function generateWeekWorkouts(params: {
         } else {
           // Fartlek ou treino fácil
           workout = {
-            dayOfWeek,
+            dayOfWeek: actualDayOfWeek,
             date,
             type: 'running',
             subtype: 'easy',
@@ -1070,7 +1074,7 @@ function generateWeekWorkouts(params: {
       }
       else if (activityType === 'easy') {
         workout = {
-          dayOfWeek,
+          dayOfWeek: actualDayOfWeek,
           date,
           type: 'running',
           subtype: 'easy',
@@ -1095,7 +1099,7 @@ function generateWeekWorkouts(params: {
         }
 
         workout = {
-          dayOfWeek,
+          dayOfWeek: actualDayOfWeek,
           date,
           type: 'race',
           subtype: raceInfo.priority.toLowerCase(),
@@ -1114,7 +1118,7 @@ function generateWeekWorkouts(params: {
       }
       else if (activityType === 'swimming') {
         workout = {
-          dayOfWeek,
+          dayOfWeek: actualDayOfWeek,
           date,
           type: 'swimming',
           title: `Natação${timeInfoShort}`,
@@ -1126,7 +1130,7 @@ function generateWeekWorkouts(params: {
       }
       else if (activityType === 'strength') {
         workout = {
-          dayOfWeek,
+          dayOfWeek: actualDayOfWeek,
           date,
           type: 'strength',
           title: `Musculação${timeInfoShort}`,
@@ -1145,7 +1149,7 @@ function generateWeekWorkouts(params: {
         else if (activityType.includes('bike') || activityType.includes('cycling')) activityName = 'Ciclismo';
 
         workout = {
-          dayOfWeek,
+          dayOfWeek: actualDayOfWeek,
           date,
           type: 'cross-training',
           subtype: activityType,
