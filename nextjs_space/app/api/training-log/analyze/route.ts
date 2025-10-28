@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { callLLM } from '@/lib/llm-client';
 
 // POST - Analisar relato com IA
 export async function POST(request: Request) {
@@ -64,17 +65,10 @@ export async function POST(request: Request) {
     };
 
     // Chamar IA para análise
-    const aiResponse = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4.1-mini',
-        messages: [{
-          role: 'system',
-          content: `Você é um treinador experiente de corrida. Analise o relato diário do atleta e forneça:
+    const analysisText = await callLLM({
+      messages: [{
+        role: 'system',
+        content: `Você é um treinador experiente de corrida. Analise o relato diário do atleta e forneça:
 1. Uma análise breve do estado atual (2-3 frases)
 2. Alertas se houver sinais de overtraining, lesão ou fadiga excessiva
 3. Recomendações específicas (descanso, ajuste de treinos, etc)
@@ -92,9 +86,9 @@ RECOMENDAÇÕES:
 [suas recomendações específicas]
 
 ATENÇÃO: [low/medium/high]`
-        }, {
-          role: 'user',
-          content: `Contexto do atleta:
+      }, {
+        role: 'user',
+        content: `Contexto do atleta:
 - Nível: ${context.athleteProfile.runningLevel}
 - Lesões conhecidas: ${context.athleteProfile.injuries ? JSON.stringify(context.athleteProfile.injuries) : 'Nenhuma registrada'}
 - Condições médicas: ${context.athleteProfile.medicalConditions || 'Nenhuma registrada'}
@@ -118,18 +112,10 @@ Relato de hoje:
 - Notas: ${log.notes || 'Nenhuma nota adicional'}
 
 Analise este relato e forneça sua avaliação.`
-        }],
-        max_tokens: 800,
-        temperature: 0.7
-      })
+      }],
+      max_tokens: 800,
+      temperature: 0.7
     });
-
-    if (!aiResponse.ok) {
-      throw new Error('Erro ao chamar API de IA');
-    }
-
-    const aiData = await aiResponse.json();
-    const analysisText = aiData.choices[0].message.content;
 
     // Parse da resposta
     const attentionMatch = analysisText.match(/ATENÇÃO:\s*(low|medium|high)/i);

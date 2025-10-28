@@ -11,6 +11,7 @@
 
 import type { AIUserProfile } from './ai-plan-generator';
 import { classifyRaces, type ClassificationResult } from './race-classifier';
+import { callLLM } from './llm-client';
 
 export interface RaceInPlan {
   id: number;
@@ -339,31 +340,15 @@ IMPORTANTE:
     try {
       console.log(`[MULTI-RACE AI] Tentativa ${attempt}/${maxRetries}...`);
       
-      const response = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.5,
-          max_tokens: 8000,
-        }),
+      const aiResponse = await callLLM({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.5,
+        max_tokens: 8000,
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API request failed: ${response.status} ${response.statusText}\n${errorText}`);
-      }
-
-      const data = await response.json();
-      const aiResponse = data.choices[0].message.content;
       
       const strategy = JSON.parse(aiResponse);
       console.log(`[MULTI-RACE AI] Estratégia gerada com sucesso!`);

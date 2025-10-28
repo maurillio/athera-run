@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { callLLM } from '@/lib/llm-client';
 
 /**
  * API para análise pós-corrida com IA
@@ -80,29 +81,14 @@ Analise o resultado da corrida considerando:
 
 Seja específico, construtivo e motivador.`;
 
-    const response = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: context }
-        ],
-        temperature: 0.7,
-        max_tokens: 2000,
-      }),
+    const analysis = await callLLM({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: context }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
     });
-
-    if (!response.ok) {
-      throw new Error('Falha ao gerar análise com IA');
-    }
-
-    const data = await response.json();
-    const analysis = data.choices[0].message.content;
 
     // Salvar análise no banco
     await prisma.raceGoal.update({

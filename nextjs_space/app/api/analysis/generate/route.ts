@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { callLLM } from '@/lib/llm-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -97,27 +98,14 @@ Forneça uma análise em formato JSON com a seguinte estrutura:
 
 Responda apenas com o JSON, sem formatação markdown.`;
 
-    // Chamar API da Abacus
-    const response = await fetch('https://apps.abacus.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.ABACUSAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4.1-mini',
-        messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
-        max_tokens: 2000,
-      }),
+    // Chamar LLM para análise
+    const aiResponse = await callLLM({
+      messages: [{ role: 'user', content: prompt }],
+      response_format: { type: 'json_object' },
+      max_tokens: 2000,
     });
 
-    if (!response.ok) {
-      throw new Error('Erro ao chamar API de IA');
-    }
-
-    const data = await response.json();
-    const analysisData = JSON.parse(data.choices[0].message.content);
+    const analysisData = JSON.parse(aiResponse);
 
     // Salvar análise no banco
     const analysis = await prisma.aIAnalysis.create({
