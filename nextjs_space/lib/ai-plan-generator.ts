@@ -722,6 +722,9 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
       if (weekNumber <= 2) {
         console.log(`[AI PLAN] Semana ${weekNumber}: ${weekStartDate.toISOString()} (dia ${weekStartDate.getDay()}) até ${weekEndDate.toISOString()} (dia ${weekEndDate.getDay()})`);
+        console.log(`[AI PLAN] Semana ${weekNumber} - Total de ${workouts.length} treinos. Primeiros 3:`,
+          workouts.slice(0, 3).map(w => ({ date: w.date.toISOString().split('T')[0], dayOfWeek: w.dayOfWeek, type: w.type, title: w.title }))
+        );
       }
 
       weeks.push(week);
