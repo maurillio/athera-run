@@ -23,7 +23,11 @@ export async function GET(
         athleteProfile: true,
         weeks: {
           include: {
-            workouts: true
+            workouts: {
+              orderBy: {
+                date: 'asc'  // ← CRÍTICO: Ordenar workouts por data!
+              }
+            }
           },
           orderBy: {
             weekNumber: 'asc'
