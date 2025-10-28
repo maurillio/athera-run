@@ -52,6 +52,21 @@ export default function PerfilPage() {
     isPrimary: false
   });
 
+  // Estados para edição de disponibilidade
+  const [editingAvailability, setEditingAvailability] = useState(false);
+  const [editTrainingActivities, setEditTrainingActivities] = useState<any[]>([]);
+  const [editLongRunDay, setEditLongRunDay] = useState<number | null>(null);
+
+  const DAYS_OF_WEEK = [
+    { value: 0, label: 'Dom' },
+    { value: 1, label: 'Seg' },
+    { value: 2, label: 'Ter' },
+    { value: 3, label: 'Qua' },
+    { value: 4, label: 'Qui' },
+    { value: 5, label: 'Sex' },
+    { value: 6, label: 'Sáb' },
+  ];
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login');
@@ -252,6 +267,79 @@ export default function PerfilPage() {
       toast.error('Erro ao regenerar plano');
       setDeletingPlan(false);
     }
+  };
+
+  // Funções de edição de disponibilidade
+  const startEditingAvailability = () => {
+    setEditTrainingActivities(profile?.trainingActivities || []);
+    setEditLongRunDay(profile?.longRunDay !== undefined ? profile.longRunDay : null);
+    setEditingAvailability(true);
+  };
+
+  const handleSaveAvailability = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trainingActivities: editTrainingActivities,
+          longRunDay: editLongRunDay
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfile(data.profile);
+        setEditingAvailability(false);
+        toast.success('Disponibilidade atualizada com sucesso!');
+      } else {
+        toast.error('Erro ao atualizar disponibilidade');
+      }
+    } catch (error) {
+      toast.error('Erro ao atualizar disponibilidade');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const toggleActivityDay = (activityId: string, dayValue: number) => {
+    setEditTrainingActivities(prev =>
+      prev.map(activity => {
+        if (activity.id === activityId) {
+          const hasDay = activity.availableDays.includes(dayValue);
+          const newDays = hasDay
+            ? activity.availableDays.filter((d: number) => d !== dayValue)
+            : [...activity.availableDays, dayValue].sort((a, b) => a - b);
+          return { ...activity, availableDays: newDays };
+        }
+        return activity;
+      })
+    );
+  };
+
+  const updateActivityTime = (activityId: string, time: string) => {
+    setEditTrainingActivities(prev =>
+      prev.map(activity =>
+        activity.id === activityId ? { ...activity, preferredTime: time } : activity
+      )
+    );
+  };
+
+  const handleSetEditLongRunDay = (dayValue: number) => {
+    setEditLongRunDay(dayValue);
+    // Automaticamente adicionar aos dias de corrida
+    setEditTrainingActivities(prev =>
+      prev.map(activity => {
+        if (activity.id === 'running') {
+          const updatedDays = activity.availableDays.includes(dayValue)
+            ? activity.availableDays
+            : [...activity.availableDays, dayValue].sort((a, b) => a - b);
+          return { ...activity, availableDays: updatedDays };
+        }
+        return activity;
+      })
+    );
   };
 
   if (status === 'loading' || loading) {
@@ -612,29 +700,153 @@ export default function PerfilPage() {
                     </div>
                   )}
 
-                  <Dialog>
+                  <Dialog open={editingAvailability} onOpenChange={setEditingAvailability}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full" onClick={startEditingAvailability}>
                         <RefreshCcw className="h-4 w-4 mr-2" />
                         Editar Disponibilidade
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle>Editar Disponibilidade de Treino</DialogTitle>
                         <DialogDescription>
-                          Atualize seus dias e horários disponíveis para treinar. Se você tiver um plano ativo, recomendamos regenerá-lo após fazer mudanças significativas.
+                          Atualize seus dias e horários disponíveis para treinar. Após salvar, considere regenerar seu plano para aplicar as mudanças.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <p className="text-sm text-amber-600 bg-amber-50 p-3 rounded-md">
-                          ⚠️ Funcionalidade de edição em desenvolvimento. Por enquanto, para alterar sua disponibilidade, delete e recrie seu plano através da aba "Pessoal".
-                        </p>
+
+                      <div className="space-y-6 py-4">
+                        {/* Dia do Treino Longo */}
+                        <div className="space-y-3">
+                          <Label className="text-base font-semibold">Dia do Treino Longo</Label>
+                          <p className="text-sm text-muted-foreground">
+                            Escolha o dia mais importante da semana para o longão
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {DAYS_OF_WEEK.map((day) => (
+                              <button
+                                key={day.value}
+                                type="button"
+                                onClick={() => handleSetEditLongRunDay(day.value)}
+                                className={`
+                                  px-4 py-2 rounded-md text-sm font-medium transition-all
+                                  ${editLongRunDay === day.value
+                                    ? 'bg-orange-600 text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  }
+                                `}
+                              >
+                                {day.label}
+                              </button>
+                            ))}
+                          </div>
+                          {editLongRunDay !== null && (
+                            <p className="text-xs text-orange-600">
+                              ✓ {DAYS_OF_WEEK.find(d => d.value === editLongRunDay)?.label} será automaticamente adicionado aos dias de corrida
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Atividades */}
+                        <div className="space-y-4">
+                          <Label className="text-base font-semibold">Atividades de Treino</Label>
+                          {editTrainingActivities.map((activity) => (
+                            <Card key={activity.id} className="border-2">
+                              <CardHeader className="pb-3">
+                                <h4 className="font-semibold flex items-center gap-2">
+                                  <span className="text-lg">
+                                    {activity.icon === 'Dumbbell' && '🏋️'}
+                                    {activity.icon === 'Waves' && '🏊'}
+                                    {activity.icon === 'Bike' && '🚴'}
+                                    {activity.icon === 'Heart' && '❤️'}
+                                    {activity.icon === 'Zap' && '⚡'}
+                                    {activity.icon === 'Activity' && '🏃'}
+                                  </span>
+                                  {activity.name}
+                                </h4>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                {/* Horário Preferido */}
+                                <div className="space-y-2">
+                                  <Label className="text-sm">Horário Preferido</Label>
+                                  <Select
+                                    value={activity.preferredTime}
+                                    onValueChange={(value) => updateActivityTime(activity.id, value)}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="flexible">Horário Flexível</SelectItem>
+                                      <SelectItem value="early_morning">Manhã Cedo (5-7h)</SelectItem>
+                                      <SelectItem value="morning">Manhã (7-10h)</SelectItem>
+                                      <SelectItem value="afternoon">Tarde (12-15h)</SelectItem>
+                                      <SelectItem value="evening">Noite (17-20h)</SelectItem>
+                                      <SelectItem value="night">Noite Tarde (20-22h)</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                {/* Dias Disponíveis */}
+                                <div className="space-y-2">
+                                  <Label className="text-sm">Dias Disponíveis</Label>
+                                  <div className="flex flex-wrap gap-2">
+                                    {DAYS_OF_WEEK.map((day) => {
+                                      const isSelected = activity.availableDays.includes(day.value);
+                                      return (
+                                        <button
+                                          key={day.value}
+                                          type="button"
+                                          onClick={() => toggleActivityDay(activity.id, day.value)}
+                                          className={`
+                                            px-3 py-2 rounded-md text-sm font-medium transition-all
+                                            ${isSelected
+                                              ? 'bg-blue-600 text-white'
+                                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                            }
+                                          `}
+                                        >
+                                          {day.label}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+
+                        {/* Aviso sobre regeneração */}
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            Após salvar, recomendamos regenerar seu plano de treino para aplicar as mudanças na disponibilidade.
+                          </AlertDescription>
+                        </Alert>
                       </div>
-                      <DialogFooter>
-                        <DialogTrigger asChild>
-                          <Button variant="outline">Fechar</Button>
-                        </DialogTrigger>
+
+                      <DialogFooter className="gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setEditingAvailability(false)}
+                          disabled={saving}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          onClick={handleSaveAvailability}
+                          disabled={saving}
+                        >
+                          {saving ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Salvando...
+                            </>
+                          ) : (
+                            'Salvar Alterações'
+                          )}
+                        </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>

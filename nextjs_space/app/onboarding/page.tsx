@@ -865,11 +865,26 @@ export default function OnboardingPage() {
                           <button
                             key={day.value}
                             type="button"
-                            onClick={() => setLongRunDay(day.value)}
+                            onClick={() => {
+                              setLongRunDay(day.value);
+                              // Automaticamente adicionar este dia aos dias de corrida
+                              setTrainingActivities(prev => {
+                                return prev.map(activity => {
+                                  if (activity.id === 'running') {
+                                    // Adicionar o dia se ainda não estiver na lista
+                                    const updatedDays = activity.availableDays.includes(day.value)
+                                      ? activity.availableDays
+                                      : [...activity.availableDays, day.value].sort((a, b) => a - b);
+                                    return { ...activity, availableDays: updatedDays };
+                                  }
+                                  return activity;
+                                });
+                              });
+                            }}
                             className={`
                               px-4 py-3 rounded-md text-sm font-medium transition-all
-                              ${isSelected 
-                                ? 'bg-orange-600 text-white shadow-md scale-105' 
+                              ${isSelected
+                                ? 'bg-orange-600 text-white shadow-md scale-105'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                               }
                             `}
@@ -882,6 +897,9 @@ export default function OnboardingPage() {
                     {longRunDay !== null && (
                       <p className="text-xs text-orange-600 font-medium">
                         ✓ {DAYS_OF_WEEK.find(d => d.value === longRunDay)?.label} selecionado para o treino longo
+                        <span className="block mt-1 text-gray-600">
+                          (Este dia foi automaticamente adicionado aos seus dias de corrida)
+                        </span>
                       </p>
                     )}
                   </div>
