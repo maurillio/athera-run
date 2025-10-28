@@ -617,13 +617,20 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   
   const startDate = new Date();
   startDate.setHours(0, 0, 0, 0);
-  
+
   // Começar na próxima segunda-feira
   const dayOfWeek = startDate.getDay();
-  const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek) % 7;
+  // Se é domingo (0), adicionar 1 dia para segunda
+  // Se é segunda (1), adicionar 0 dias (começar hoje)
+  // Se é terça (2), adicionar 6 dias para próxima segunda
+  // etc.
+  const daysUntilMonday = dayOfWeek === 0 ? 1 : dayOfWeek === 1 ? 0 : (8 - dayOfWeek);
+
   if (daysUntilMonday > 0) {
     startDate.setDate(startDate.getDate() + daysUntilMonday);
   }
+
+  console.log(`[AI PLAN] Data de início calculada: ${startDate.toISOString()} (dia da semana: ${startDate.getDay()})`);
   
   const weeks: any[] = [];
   let weekNumber = 1;
@@ -700,15 +707,22 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         raceThisWeek, // Passar corrida B/C se houver
       });
 
+      const weekStartDate = new Date(currentWeekStart);
+      const weekEndDate = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+
       const week = {
         weekNumber,
-        startDate: new Date(currentWeekStart),
-        endDate: new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000),
+        startDate: weekStartDate,
+        endDate: weekEndDate,
         phase: phase.name,
         focus: phase.focus,
         totalDistance: Math.round(weeklyKm * 10) / 10,
         workouts,
       };
+
+      if (weekNumber <= 2) {
+        console.log(`[AI PLAN] Semana ${weekNumber}: ${weekStartDate.toISOString()} (dia ${weekStartDate.getDay()}) até ${weekEndDate.toISOString()} (dia ${weekEndDate.getDay()})`);
+      }
 
       weeks.push(week);
       weekNumber++;
