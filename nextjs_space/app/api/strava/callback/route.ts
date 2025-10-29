@@ -74,16 +74,20 @@ export async function GET(request: NextRequest) {
     // Importar banco de dados
     const { prisma } = await import('@/lib/db');
 
+    // Gerar email se não houver (Strava pode não retornar email)
+    const athleteEmail = tokenData.athlete.email || `${tokenData.athlete.id}@strava.user`;
+    console.log('[STRAVA] Email do atleta:', athleteEmail);
+
     // Buscar ou criar usuário
     let user = await prisma.user.findUnique({
-      where: { email: tokenData.athlete.email }
+      where: { email: athleteEmail }
     });
 
     if (!user) {
-      console.log('[STRAVA] Criando novo usuário:', tokenData.athlete.email);
+      console.log('[STRAVA] Criando novo usuário:', athleteEmail);
       user = await prisma.user.create({
         data: {
-          email: tokenData.athlete.email,
+          email: athleteEmail,
           name: `${tokenData.athlete.firstname} ${tokenData.athlete.lastname}`,
           image: tokenData.athlete.profile_medium
         }
