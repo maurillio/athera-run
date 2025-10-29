@@ -93,16 +93,8 @@ export default function LoginPage() {
     setIsStravaLoading(true);
     setError('');
     try {
-      const result = await signIn('strava', {
-        callbackUrl: '/dashboard',
-        redirect: true,
-      });
-
-      if (result?.error) {
-        console.error('Strava sign in error:', result.error);
-        setError('Erro ao fazer login com Strava. Verifique suas credenciais.');
-        setIsStravaLoading(false);
-      }
+      // Redirecionar para o endpoint customizado do Strava
+      window.location.href = '/api/strava/auth';
     } catch (error) {
       console.error('Strava sign in exception:', error);
       setError('Erro ao fazer login com Strava. Tente novamente.');
