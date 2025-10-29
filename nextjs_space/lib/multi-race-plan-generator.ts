@@ -344,7 +344,7 @@ IMPORTANTE:
   const cacheKey = `multi-race-plan-${raceIds}-${totalWeeks}w`;
 
   try {
-    const aiResponse = await resilientLLMCall(
+    const aiResponse = await resilientAICall(
       () => callLLM({
         messages: [
           { role: 'system', content: systemPrompt },

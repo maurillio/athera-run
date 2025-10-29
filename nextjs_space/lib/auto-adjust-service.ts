@@ -232,7 +232,7 @@ export class AutoAdjustService {
     const today = new Date().toISOString().split('T')[0];
     const cacheKey = `auto-adjust-${this.athleteId}-${today}`;
 
-    const aiResponseText = await resilientLLMCall(
+    const aiResponseText = await resilientAICall(
       () => callLLM({
         messages: [{
           role: 'system',

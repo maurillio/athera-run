@@ -102,7 +102,7 @@ Responda apenas com o JSON, sem formatação markdown.`;
     // Chamar LLM para análise com resilience
     const cacheKey = `analysis-${user.athleteProfile.id}-${period}-${startDate.toISOString().split('T')[0]}`;
 
-    const aiResponse = await resilientLLMCall(
+    const aiResponse = await resilientAICall(
       () => callLLM({
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
