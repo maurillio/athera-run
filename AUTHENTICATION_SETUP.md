@@ -2,14 +2,20 @@
 
 Este documento descreve como configurar a autenticação com Google e Strava no servidor.
 
+## Informações do Servidor
+
+- **Domínio**: atherarun.com
+- **Servidor**: 45.232.21.67
+- **Caminho**: ~/athera-run
+
 ## Variáveis de Ambiente Necessárias
 
-No servidor `45.232.21.67`, você precisa configurar as seguintes variáveis de ambiente no arquivo `.env`:
+No servidor, você precisa configurar as seguintes variáveis de ambiente no arquivo `.env`:
 
 ```bash
 # NextAuth Configuration
 NEXTAUTH_SECRET=<gerar_com: openssl rand -base64 32>
-NEXTAUTH_URL=http://45.232.21.67:3000
+NEXTAUTH_URL=https://atherarun.com
 
 # Google OAuth
 GOOGLE_CLIENT_ID=<seu_google_client_id>
@@ -31,10 +37,10 @@ STRAVA_CLIENT_SECRET=<seu_strava_client_secret>
 5. Escolha "Web application"
 6. Configure:
    - **Authorized JavaScript origins**:
-     - `http://45.232.21.67:3000`
+     - `https://atherarun.com`
      - `http://localhost:3000` (para desenvolvimento)
    - **Authorized redirect URIs**:
-     - `http://45.232.21.67:3000/api/auth/callback/google`
+     - `https://atherarun.com/api/auth/callback/google`
      - `http://localhost:3000/api/auth/callback/google` (para desenvolvimento)
 7. Copie o **Client ID** e **Client Secret**
 
@@ -43,8 +49,8 @@ STRAVA_CLIENT_SECRET=<seu_strava_client_secret>
 1. Acesse: https://www.strava.com/settings/api
 2. Crie uma nova aplicação ou edite uma existente
 3. Configure:
-   - **Authorization Callback Domain**: `45.232.21.67`
-   - **Authorization Callback URL**: `http://45.232.21.67:3000/api/auth/callback/strava`
+   - **Authorization Callback Domain**: `atherarun.com`
+   - **Authorization Callback URL**: `https://atherarun.com/api/auth/callback/strava`
 4. Copie o **Client ID** e **Client Secret**
 
 ## Configuração no Servidor
@@ -58,7 +64,7 @@ ssh root@45.232.21.67
 ### Passo 2: Navegar para o diretório do projeto
 
 ```bash
-cd /root/athera-run/nextjs_space
+cd ~/athera-run/nextjs_space
 ```
 
 ### Passo 3: Editar o arquivo .env
@@ -89,7 +95,7 @@ Após configurar as variáveis de ambiente, faça o deploy das correções:
 
 ```bash
 # Voltar para o diretório raiz
-cd /root/athera-run
+cd ~/athera-run
 
 # Pull das mudanças
 git pull origin claude/implement-application-011CUXjqYRAFMdfsj85sXHia
@@ -110,7 +116,7 @@ pm2 logs athera-run --lines 100
 
 ### 1. Testar autenticação
 
-1. Acesse: `http://45.232.21.67:3000/login`
+1. Acesse: `https://atherarun.com/login`
 2. Tente fazer login com:
    - Google
    - Strava
@@ -136,7 +142,7 @@ Você deve ver mensagens como:
 ✅ Este erro já foi corrigido! O problema era que `resilientLLMCall` estava sendo chamado incorretamente.
 
 #### "Error: NEXTAUTH_URL is not set"
-Configure a variável `NEXTAUTH_URL=http://45.232.21.67:3000` no .env
+Configure a variável `NEXTAUTH_URL=https://atherarun.com` no .env
 
 #### "OAuthCallback error"
 Verifique se as URLs de callback estão configuradas corretamente no Google Console e Strava API.
@@ -161,7 +167,7 @@ STRAVA_CLIENT_SECRET=<mesmo_do_servidor>
 NEXTAUTH_SECRET=<mesmo_do_servidor>
 ```
 
-2. Configure os callbacks no Google e Strava para incluir `localhost:3000`
+2. Configure os callbacks no Google e Strava para incluir `localhost:3000` (além de atherarun.com)
 
 ## Correções Implementadas
 
