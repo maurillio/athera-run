@@ -6,53 +6,6 @@ import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import { prisma } from './db';
 
-// Custom Strava Provider
-const StravaProvider = {
-  id: 'strava',
-  name: 'Strava',
-  type: 'oauth' as const,
-  allowDangerousEmailAccountLinking: true,
-  authorization: {
-    url: 'https://www.strava.com/oauth/authorize',
-    params: {
-      scope: 'read,activity:read_all,profile:read_all',
-      approval_prompt: 'auto',
-      response_type: 'code',
-      client_id: process.env.STRAVA_CLIENT_ID
-    }
-  },
-  token: {
-    url: 'https://www.strava.com/oauth/token',
-    async request(context: any) {
-      const { provider, params, checks } = context;
-
-      const response = await fetch(provider.token.url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          client_id: provider.clientId!,
-          client_secret: provider.clientSecret!,
-          code: params.code!,
-          grant_type: 'authorization_code',
-        })
-      });
-
-      return { tokens: await response.json() };
-    }
-  },
-  userinfo: 'https://www.strava.com/api/v3/athlete',
-  clientId: process.env.STRAVA_CLIENT_ID,
-  clientSecret: process.env.STRAVA_CLIENT_SECRET,
-  profile(profile: any) {
-    return {
-      id: profile.id.toString(),
-      name: `${profile.firstname} ${profile.lastname}`,
-      email: profile.email || `${profile.id}@strava.user`,
-      image: profile.profile || profile.profile_medium,
-    };
-  },
-};
-
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -104,7 +57,8 @@ export const authOptions: NextAuthOptions = {
         }
       }
     }),
-    StravaProvider as any,
+    // Nota: Strava OAuth é manipulado via /api/strava/auth e /api/strava/callback
+    // em vez de usar o NextAuth provider para evitar conflitos de Schema do Prisma
   ],
   session: {
     strategy: 'jwt',
@@ -144,80 +98,7 @@ export const authOptions: NextAuthOptions = {
         token.hasProfile = !!dbUser?.athleteProfile;
       }
 
-      // If signing in with Strava, save the tokens to athlete profile
-      if (account?.provider === 'strava' && account.access_token) {
-        try {
-          const userId = user?.id || token.id as string;
-
-          console.log('[AUTH] Processing Strava connection for user:', userId);
-
-          // Find or create athlete profile
-          let profile = await prisma.athleteProfile.findUnique({
-            where: { userId }
-          });
-
-          if (!profile) {
-            console.log('[AUTH] Creating new athlete profile for Strava user');
-            profile = await prisma.athleteProfile.create({
-              data: {
-                userId,
-                weight: 70,
-                height: 170,
-                currentVDOT: 35,
-                targetTime: "4:00:00",
-                goalDistance: "marathon",
-                runningLevel: "intermediate",
-                stravaConnected: true,
-                stravaAthleteId: account.providerAccountId,
-                stravaAccessToken: account.access_token,
-                stravaRefreshToken: account.refresh_token || null,
-                stravaTokenExpiry: account.expires_at
-                  ? new Date(account.expires_at * 1000)
-                  : null
-              }
-            });
-          } else {
-            // Update existing profile with Strava credentials
-            console.log('[AUTH] Updating existing athlete profile with Strava credentials');
-            await prisma.athleteProfile.update({
-              where: { id: profile.id },
-              data: {
-                stravaConnected: true,
-                stravaAthleteId: account.providerAccountId,
-                stravaAccessToken: account.access_token,
-                stravaRefreshToken: account.refresh_token || null,
-                stravaTokenExpiry: account.expires_at
-                  ? new Date(account.expires_at * 1000)
-                  : null
-              }
-            });
-          }
-
-          token.hasProfile = true;
-          console.log('[AUTH] Strava connection successful');
-
-          // Dispara importação de histórico e subscrição ao webhook em background
-          // Não aguarda para não bloquear o login
-          if (profile?.id) {
-            const baseUrl = process.env.NEXTAUTH_URL || 'https://atherarun.com';
-
-            // Importar histórico
-            fetch(`${baseUrl}/api/strava/import`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ profileId: profile.id, daysBack: 90 })
-            }).catch(err => console.error('[AUTH] Error triggering import:', err));
-
-            // Subscrever ao webhook
-            fetch(`${baseUrl}/api/strava/webhook/subscribe`, {
-              method: 'POST'
-            }).catch(err => console.error('[AUTH] Error triggering webhook subscribe:', err));
-          }
-        } catch (error) {
-          console.error('[AUTH] Error saving Strava credentials:', error);
-        }
-      }
-
+      // Nota: Strava é manipulado via /api/strava/callback, não pelo NextAuth JWT callback
       return token;
     },
     async session({ session, token }) {
