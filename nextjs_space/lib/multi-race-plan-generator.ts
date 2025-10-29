@@ -12,7 +12,7 @@
 import type { AIUserProfile } from './ai-plan-generator';
 import { classifyRaces, type ClassificationResult } from './race-classifier';
 import { callLLM } from './llm-client';
-import { resilientLLMCall } from './ai-resilience';
+import { resilientAICall } from './ai-resilience';
 
 export interface RaceInPlan {
   id: number;

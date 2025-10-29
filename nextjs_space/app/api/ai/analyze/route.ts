@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { callLLM } from '@/lib/llm-client';
-import { resilientLLMCall } from '@/lib/ai-resilience';
+import { resilientAICall } from '@/lib/ai-resilience';
 
 export const dynamic = "force-dynamic";
 
