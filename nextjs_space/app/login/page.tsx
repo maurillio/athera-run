@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -10,10 +10,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, Lock, Chrome, Activity } from 'lucide-react';
+import { Loader2, Mail, Lock, Chrome } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -21,7 +21,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isStravaLoading, setIsStravaLoading] = useState(false);
 
   // Check for OAuth errors in URL
   useEffect(() => {
@@ -89,26 +88,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleStravaSignIn = async () => {
-    setIsStravaLoading(true);
-    setError('');
-    try {
-      const result = await signIn('strava', {
-        callbackUrl: '/dashboard',
-        redirect: true,
-      });
-
-      if (result?.error) {
-        console.error('Strava sign in error:', result.error);
-        setError('Erro ao fazer login com Strava. Verifique suas credenciais.');
-        setIsStravaLoading(false);
-      }
-    } catch (error) {
-      console.error('Strava sign in exception:', error);
-      setError('Erro ao fazer login com Strava. Tente novamente.');
-      setIsStravaLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
@@ -210,21 +189,6 @@ export default function LoginPage() {
               )}
             </Button>
 
-            <Button
-              variant="outline"
-              onClick={handleStravaSignIn}
-              disabled={isStravaLoading || isLoading}
-              className="w-full"
-            >
-              {isStravaLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <Activity className="mr-2 h-4 w-4" />
-                  Strava
-                </>
-              )}
-            </Button>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
@@ -237,5 +201,13 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Carregando...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
