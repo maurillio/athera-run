@@ -95,10 +95,40 @@ export async function GET(request: NextRequest) {
     }
 
     // Buscar ou criar perfil de atleta
+    const stravaAthleteId = tokenData.athlete.id.toString();
+
+    // Primeiro tentar encontrar por userId
     let profile = await prisma.athleteProfile.findUnique({
       where: { userId: user.id }
     });
 
+    // Se não encontrou, procurar pelo stravaAthleteId (caso de tentativa de login anterior)
+    if (!profile) {
+      try {
+        profile = await prisma.athleteProfile.findFirst({
+          where: { stravaAthleteId }
+        });
+
+        if (profile) {
+          console.log('[STRAVA] Encontrou perfil existente com este stravaAthleteId, linkando ao novo usuário');
+          // Atualizar o userId do perfil existente para o novo usuário
+          profile = await prisma.athleteProfile.update({
+            where: { id: profile.id },
+            data: {
+              userId: user.id,
+              stravaConnected: true,
+              stravaAccessToken: tokenData.access_token,
+              stravaRefreshToken: tokenData.refresh_token,
+              stravaTokenExpiry: new Date(tokenData.expires_at * 1000)
+            }
+          });
+        }
+      } catch (error) {
+        console.log('[STRAVA] Perfil não encontrado pelo stravaAthleteId');
+      }
+    }
+
+    // Se ainda não tem perfil, criar novo
     if (!profile) {
       console.log('[STRAVA] Criando novo perfil de atleta');
       profile = await prisma.athleteProfile.create({
@@ -111,7 +141,7 @@ export async function GET(request: NextRequest) {
           goalDistance: "marathon",
           runningLevel: "intermediate",
           stravaConnected: true,
-          stravaAthleteId: tokenData.athlete.id.toString(),
+          stravaAthleteId: stravaAthleteId,
           stravaAccessToken: tokenData.access_token,
           stravaRefreshToken: tokenData.refresh_token,
           stravaTokenExpiry: new Date(tokenData.expires_at * 1000)
@@ -119,11 +149,10 @@ export async function GET(request: NextRequest) {
       });
     } else {
       console.log('[STRAVA] Atualizando perfil de atleta existente');
-      await prisma.athleteProfile.update({
+      profile = await prisma.athleteProfile.update({
         where: { id: profile.id },
         data: {
           stravaConnected: true,
-          stravaAthleteId: tokenData.athlete.id.toString(),
           stravaAccessToken: tokenData.access_token,
           stravaRefreshToken: tokenData.refresh_token,
           stravaTokenExpiry: new Date(tokenData.expires_at * 1000)
