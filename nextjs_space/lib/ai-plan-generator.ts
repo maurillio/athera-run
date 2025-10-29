@@ -12,7 +12,7 @@
  */
 
 import { callLLM } from './llm-client';
-import { resilientLLMCall } from './ai-resilience';
+import { resilientAICall } from './ai-resilience';
 
 export interface AIUserProfile {
   // Dados básicos

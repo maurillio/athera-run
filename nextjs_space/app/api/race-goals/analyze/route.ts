@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { callLLM } from '@/lib/llm-client';
-import { resilientLLMCall } from '@/lib/ai-resilience';
+import { resilientAICall } from '@/lib/ai-resilience';
 
 /**
  * API para análise pós-corrida com IA
