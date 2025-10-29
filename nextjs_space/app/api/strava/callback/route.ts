@@ -25,36 +25,32 @@ function getBaseUrl(request: NextRequest): string {
 }
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
   const baseUrl = getBaseUrl(request);
-  
-  if (!session?.user?.id) {
-    return NextResponse.redirect(new URL('/login', baseUrl));
-  }
-  
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get('code');
   const error = searchParams.get('error');
 
   // Se houver erro na autorização
   if (error) {
-    return NextResponse.redirect(new URL('/tracking?strava_error=' + error, baseUrl));
+    return NextResponse.redirect(new URL(`/login?error=${error}`, baseUrl));
   }
 
-  // Se não houver código, redirecionar para página de tracking
+  // Se não houver código, redirecionar para login
   if (!code) {
-    return NextResponse.redirect(new URL('/tracking?strava_error=no_code', baseUrl));
+    return NextResponse.redirect(new URL('/login?error=no_code', baseUrl));
   }
 
-  // Trocar código por tokens
   try {
     const clientId = process.env.STRAVA_CLIENT_ID;
     const clientSecret = process.env.STRAVA_CLIENT_SECRET;
 
     if (!clientId || !clientSecret) {
+      console.error('Credenciais do Strava não configuradas');
       throw new Error('Credenciais do Strava não configuradas');
     }
 
+    // Trocar código por tokens com Strava
+    console.log('[STRAVA] Trocando código por tokens...');
     const tokenResponse = await fetch('https://www.strava.com/oauth/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -68,63 +64,92 @@ export async function GET(request: NextRequest) {
 
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.json();
-      console.error('Erro ao obter tokens do Strava:', errorData);
-      throw new Error('Erro ao obter tokens do Strava');
+      console.error('[STRAVA] Erro ao obter tokens:', errorData);
+      throw new Error(`Erro ao obter tokens do Strava: ${errorData.message}`);
     }
 
-    const data = await tokenResponse.json();
+    const tokenData = await tokenResponse.json();
+    console.log('[STRAVA] Tokens obtidos com sucesso. Athlete ID:', tokenData.athlete?.id);
 
-    // Salvar tokens no perfil do atleta
+    // Importar banco de dados
     const { prisma } = await import('@/lib/db');
-    
-    let profile = await prisma.athleteProfile.findUnique({
-      where: { userId: session.user.id }
+
+    // Buscar ou criar usuário
+    let user = await prisma.user.findUnique({
+      where: { email: tokenData.athlete.email }
     });
-    
-    if (!profile) {
-      profile = await prisma.athleteProfile.create({
+
+    if (!user) {
+      console.log('[STRAVA] Criando novo usuário:', tokenData.athlete.email);
+      user = await prisma.user.create({
         data: {
-          userId: session.user.id,
-          weight: 88,
-          height: 180,
-          currentVDOT: 37.5,
-          targetTime: "4:00:00",
-          goalDistance: "marathon",
-          runningLevel: "intermediate",
-          stravaConnected: false
+          email: tokenData.athlete.email,
+          name: `${tokenData.athlete.firstname} ${tokenData.athlete.lastname}`,
+          image: tokenData.athlete.profile_medium
         }
       });
     }
 
-    await prisma.athleteProfile.update({
-      where: { id: profile.id },
-      data: {
-        stravaConnected: true,
-        stravaAthleteId: data.athlete.id.toString(),
-        stravaAccessToken: data.access_token,
-        stravaRefreshToken: data.refresh_token,
-        stravaTokenExpiry: new Date(data.expires_at * 1000)
-      }
+    // Buscar ou criar perfil de atleta
+    let profile = await prisma.athleteProfile.findUnique({
+      where: { userId: user.id }
     });
 
+    if (!profile) {
+      console.log('[STRAVA] Criando novo perfil de atleta');
+      profile = await prisma.athleteProfile.create({
+        data: {
+          userId: user.id,
+          weight: 70,
+          height: 170,
+          currentVDOT: 35,
+          targetTime: "4:00:00",
+          goalDistance: "marathon",
+          runningLevel: "intermediate",
+          stravaConnected: true,
+          stravaAthleteId: tokenData.athlete.id.toString(),
+          stravaAccessToken: tokenData.access_token,
+          stravaRefreshToken: tokenData.refresh_token,
+          stravaTokenExpiry: new Date(tokenData.expires_at * 1000)
+        }
+      });
+    } else {
+      console.log('[STRAVA] Atualizando perfil de atleta existente');
+      await prisma.athleteProfile.update({
+        where: { id: profile.id },
+        data: {
+          stravaConnected: true,
+          stravaAthleteId: tokenData.athlete.id.toString(),
+          stravaAccessToken: tokenData.access_token,
+          stravaRefreshToken: tokenData.refresh_token,
+          stravaTokenExpiry: new Date(tokenData.expires_at * 1000)
+        }
+      });
+    }
+
     // Iniciar importação de histórico em background
+    console.log('[STRAVA] Disparando importação de histórico...');
     const importUrl = new URL('/api/strava/import', baseUrl);
     fetch(importUrl.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ profileId: profile.id, daysBack: 90 })
-    }).catch(err => console.error('Erro ao iniciar importação:', err));
+    }).catch(err => console.error('[STRAVA] Erro ao iniciar importação:', err));
 
     // Configurar webhook em background
+    console.log('[STRAVA] Disparando configuração de webhook...');
     const webhookUrl = new URL('/api/strava/webhook/subscribe', baseUrl);
     fetch(webhookUrl.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
-    }).catch(err => console.error('Erro ao configurar webhook:', err));
+    }).catch(err => console.error('[STRAVA] Erro ao configurar webhook:', err));
 
-    return NextResponse.redirect(new URL('/tracking?strava_success=true', baseUrl));
+    // Redirecionar para onboarding se novo, ou dashboard se existente
+    const redirectUrl = profile ? '/onboarding' : '/dashboard';
+    return NextResponse.redirect(new URL(`${redirectUrl}?strava_success=true`, baseUrl));
   } catch (error) {
-    console.error('Erro na autenticação Strava:', error);
-    return NextResponse.redirect(new URL('/tracking?strava_error=auth_failed', baseUrl));
+    console.error('[STRAVA] Erro na autenticação Strava:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+    return NextResponse.redirect(new URL(`/login?error=strava_auth_failed&details=${encodeURIComponent(errorMessage)}`, baseUrl));
   }
 }
