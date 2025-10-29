@@ -78,9 +78,6 @@ export async function POST(request: NextRequest) {
       usualPaces: profile.usualPaces || undefined,
       injuries: profile.injuries || undefined,
       medicalConditions: profile.medicalConditions || undefined,
-      limitations: profile.limitations || undefined,
-      hasGymAccess: profile.hasGymAccess || undefined,
-      hasPoolAccess: profile.hasPoolAccess || undefined,
       raceGoals: raceGoals.length > 0 ? raceGoals.map(r => ({
         id: r.id,
         name: r.raceName,
@@ -93,22 +90,22 @@ export async function POST(request: NextRequest) {
 
     // Gerar novo plano com as mudanças
     console.log('[AUTO-ADJUST] Gerando novo plano com configurações atualizadas...');
-    const aiPlan = await generateAIPlan(updatedProfile);
+    const aiPlan = await generateAIPlan(updatedProfile as any);
 
     // Deletar semanas e workouts antigos
-    const weekIds = currentPlan.weeks.map(w => w.id);
+    const weekIds = currentPlan!.weeks.map(w => w.id);
     if (weekIds.length > 0) {
       await prisma.customWorkout.deleteMany({
         where: { weekId: { in: weekIds } }
       });
       await prisma.customWeek.deleteMany({
-        where: { planId: currentPlan.id }
+        where: { planId: currentPlan!.id }
       });
     }
 
     // Atualizar o plano existente (apenas campos que existem no schema)
     await prisma.customTrainingPlan.update({
-      where: { id: currentPlan.id },
+      where: { id: currentPlan!.id },
       data: {
         startDate: aiPlan.startDate,
         targetRaceDate: aiPlan.targetRaceDate,
@@ -131,14 +128,14 @@ export async function POST(request: NextRequest) {
     for (const weekData of aiPlan.weeks) {
       const week = await prisma.customWeek.create({
         data: {
-          planId: currentPlan.id,
+          planId: currentPlan!.id,
           weekNumber: weekData.weekNumber,
           startDate: weekData.startDate,
           endDate: weekData.endDate,
           phase: weekData.phase,
           focus: weekData.focus,
           totalDistance: weekData.totalDistance,
-        },
+        } as any,
       });
 
       const workouts = weekData.workouts.map(workout => ({
