@@ -11,6 +11,7 @@ const StravaProvider = {
   id: 'strava',
   name: 'Strava',
   type: 'oauth' as const,
+  allowDangerousEmailAccountLinking: true,
   authorization: {
     url: 'https://www.strava.com/oauth/authorize',
     params: {
@@ -24,7 +25,7 @@ const StravaProvider = {
     url: 'https://www.strava.com/oauth/token',
     async request(context: any) {
       const { provider, params, checks } = context;
-      
+
       const response = await fetch(provider.token.url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -35,7 +36,7 @@ const StravaProvider = {
           grant_type: 'authorization_code',
         })
       });
-      
+
       return { tokens: await response.json() };
     }
   },
@@ -194,6 +195,24 @@ export const authOptions: NextAuthOptions = {
 
           token.hasProfile = true;
           console.log('[AUTH] Strava connection successful');
+
+          // Dispara importação de histórico e subscrição ao webhook em background
+          // Não aguarda para não bloquear o login
+          if (profile?.id) {
+            const baseUrl = process.env.NEXTAUTH_URL || 'https://atherarun.com';
+
+            // Importar histórico
+            fetch(`${baseUrl}/api/strava/import`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ profileId: profile.id, daysBack: 90 })
+            }).catch(err => console.error('[AUTH] Error triggering import:', err));
+
+            // Subscrever ao webhook
+            fetch(`${baseUrl}/api/strava/webhook/subscribe`, {
+              method: 'POST'
+            }).catch(err => console.error('[AUTH] Error triggering webhook subscribe:', err));
+          }
         } catch (error) {
           console.error('[AUTH] Error saving Strava credentials:', error);
         }
