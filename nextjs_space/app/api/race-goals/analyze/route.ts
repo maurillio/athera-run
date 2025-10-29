@@ -82,7 +82,7 @@ Analise o resultado da corrida considerando:
 
 Seja específico, construtivo e motivador.`;
 
-    const analysis = await resilientLLMCall(
+    const analysis = await resilientAICall(
       () => callLLM({
         messages: [
           { role: 'system', content: systemPrompt },

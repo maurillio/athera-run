@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     // Chamar IA para análise com sistema resiliente
     const cacheKey = `training-log-analysis-${logId}-${log.date.toISOString().split('T')[0]}`;
 
-    const analysisText = await resilientLLMCall(
+    const analysisText = await resilientAICall(
       () => callLLM({
         messages: [{
         role: 'system',

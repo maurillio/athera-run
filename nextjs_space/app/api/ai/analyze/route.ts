@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     // Chamada para LLM API com resilience
     const cacheKey = `ai-analyze-${athleteId}-${analysisType}-${startDate.toISOString().split('T')[0]}`;
 
-    const aiResponse = await resilientLLMCall(
+    const aiResponse = await resilientAICall(
       () => callLLM({
         messages: [
         {

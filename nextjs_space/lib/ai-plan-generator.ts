@@ -554,7 +554,7 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
   const cacheKey = `ai-plan-${profile.runningLevel}-${profile.goalDistance}-${totalWeeks}w-${profile.currentWeeklyKm}km`;
 
   try {
-    const aiResponse = await resilientLLMCall(
+    const aiResponse = await resilientAICall(
       () => callLLM({
         messages: [
           { role: 'system', content: systemPrompt },
