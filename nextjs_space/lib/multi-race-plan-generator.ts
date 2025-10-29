@@ -12,6 +12,7 @@
 import type { AIUserProfile } from './ai-plan-generator';
 import { classifyRaces, type ClassificationResult } from './race-classifier';
 import { callLLM } from './llm-client';
+import { resilientLLMCall } from './ai-resilience';
 
 export interface RaceInPlan {
   id: number;
@@ -336,11 +337,15 @@ IMPORTANTE:
 - Periodização DEVE culminar na corrida A
 - Respeitar disponibilidade do atleta`;
 
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`[MULTI-RACE AI] Tentativa ${attempt}/${maxRetries}...`);
-      
-      const aiResponse = await callLLM({
+  console.log('[MULTI-RACE AI] Gerando estratégia com sistema resiliente...');
+
+  // Cache key baseado nas corridas
+  const raceIds = context.match(/id: (\d+)/g)?.join('-') || 'default';
+  const cacheKey = `multi-race-plan-${raceIds}-${totalWeeks}w`;
+
+  try {
+    const aiResponse = await resilientLLMCall(
+      () => callLLM({
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -348,21 +353,41 @@ IMPORTANTE:
         response_format: { type: "json_object" },
         temperature: 0.5,
         max_tokens: 8000,
-      });
-      
-      const strategy = JSON.parse(aiResponse);
-      console.log(`[MULTI-RACE AI] Estratégia gerada com sucesso!`);
-      return strategy;
-    } catch (error) {
-      console.error(`[MULTI-RACE AI] Erro na tentativa ${attempt}:`, error);
-      if (attempt === maxRetries) {
-        throw new Error('Falha ao gerar estratégia após múltiplas tentativas');
+      }),
+      {
+        cacheKey,
+        cacheTTL: 7200000, // 2 horas (planos multi-race são mais estáveis)
+        validateResponse: (response: string) => {
+          try {
+            const data = JSON.parse(response);
+            return (
+              data.totalWeeks &&
+              data.phases &&
+              Array.isArray(data.phases) &&
+              data.paces &&
+              data.raceIntegrationStrategy
+            );
+          } catch {
+            return false;
+          }
+        },
+        retryConfig: {
+          maxRetries,
+          baseDelay: 1000,
+          maxDelay: 10000,
+          backoffMultiplier: 2,
+        },
+        timeout: 60000, // 60 segundos
       }
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+    );
+
+    const strategy = JSON.parse(aiResponse);
+    console.log('[MULTI-RACE AI] Estratégia gerada e validada com sucesso!');
+    return strategy;
+  } catch (error) {
+    console.error('[MULTI-RACE AI] Falha após todas as tentativas:', error);
+    throw new Error('Não foi possível gerar o plano integrado neste momento. Por favor, tente novamente em alguns instantes.');
   }
-  
-  throw new Error('Falha ao gerar estratégia');
 }
 
 /**

@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { callLLM } from '@/lib/llm-client';
+import { resilientLLMCall } from '@/lib/ai-resilience';
 
 export const dynamic = "force-dynamic";
 
@@ -71,9 +72,12 @@ export async function POST(request: NextRequest) {
     const totalDuration = runningWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
     const avgPerceivedEffort = workouts.reduce((sum, w) => sum + (w.perceivedEffort || 0), 0) / workouts.length;
 
-    // Chamada para LLM API
-    const aiResponse = await callLLM({
-      messages: [
+    // Chamada para LLM API com resilience
+    const cacheKey = `ai-analyze-${athleteId}-${analysisType}-${startDate.toISOString().split('T')[0]}`;
+
+    const aiResponse = await resilientLLMCall(
+      () => callLLM({
+        messages: [
         {
           role: 'system',
           content: `Você é um especialista em treinamento de corrida e análise de performance. Você está analisando os treinos de um atleta que está se preparando para uma maratona.
@@ -124,10 +128,25 @@ Métricas do período:
 - Tempo total: ${Math.floor(totalDuration / 60)}h ${totalDuration % 60}min
 - Esforço percebido médio: ${avgPerceivedEffort.toFixed(1)}/10`
         }
-      ],
-      response_format: { type: "json_object" },
-      max_tokens: 2000
-    });
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 2000
+      }),
+      {
+        cacheKey,
+        cacheTTL: 1800000,
+        validateResponse: (resp) => {
+          try {
+            const data = JSON.parse(resp);
+            return data.summary && data.insights && data.recommendations;
+          } catch {
+            return false;
+          }
+        },
+        timeout: 40000,
+        retryConfig: { maxRetries: 3 }
+      }
+    );
 
     const analysisData = JSON.parse(aiResponse);
 
