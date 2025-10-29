@@ -1,6 +1,5 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 export const dynamic = "force-dynamic";
@@ -177,20 +176,15 @@ export async function GET(request: NextRequest) {
       headers: { 'Content-Type': 'application/json' }
     }).catch(err => console.error('[STRAVA] Erro ao configurar webhook:', err));
 
-    // Redirecionar para onboarding se novo, ou dashboard se existente
-    // O usuário está criado e pode fazer login normalmente agora
+    // Redirecionar para página de sucesso que vai fazer login automaticamente
+    // Passar informações de forma segura via query param
     const redirectUrl = profile ? '/onboarding' : '/dashboard';
-    const redirect = new URL(`${redirectUrl}?strava_success=true`, baseUrl);
+    const successPageUrl = new URL('/strava-success', baseUrl);
+    successPageUrl.searchParams.set('redirectTo', redirectUrl);
+    successPageUrl.searchParams.set('email', athleteEmail);
 
-    console.log('[STRAVA] Redirecionando para:', redirect.toString());
-
-    // Redirecionar para a página de login com redirecionamento automático
-    return NextResponse.redirect(
-      new URL(
-        `/api/auth/signin?callbackUrl=${encodeURIComponent(redirect.toString())}&email=${encodeURIComponent(athleteEmail)}`,
-        baseUrl
-      )
-    );
+    console.log('[STRAVA] Redirecionando para página de sucesso');
+    return NextResponse.redirect(successPageUrl);
   } catch (error) {
     console.error('[STRAVA] Erro na autenticação Strava:', error);
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
