@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,12 +15,33 @@ import { Separator } from '@/components/ui/separator';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isStravaLoading, setIsStravaLoading] = useState(false);
+
+  // Check for OAuth errors in URL
+  useEffect(() => {
+    const errorParam = searchParams?.get('error');
+    if (errorParam) {
+      const errorMessages: { [key: string]: string } = {
+        'OAuthSignin': 'Erro ao iniciar autenticação com o provedor',
+        'OAuthCallback': 'Erro ao processar resposta do provedor',
+        'OAuthCreateAccount': 'Erro ao criar conta com o provedor',
+        'EmailCreateAccount': 'Erro ao criar conta com email',
+        'Callback': 'Erro no callback de autenticação',
+        'OAuthAccountNotLinked': 'Este email já está associado a outro método de login',
+        'EmailSignin': 'Erro ao enviar email de verificação',
+        'CredentialsSignin': 'Credenciais inválidas',
+        'SessionRequired': 'Você precisa estar logado para acessar esta página',
+        'Default': 'Erro ao fazer login. Tente novamente.'
+      };
+      setError(errorMessages[errorParam] || errorMessages['Default']);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,9 +72,19 @@ export default function LoginPage() {
     setIsGoogleLoading(true);
     setError('');
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      const result = await signIn('google', {
+        callbackUrl: '/dashboard',
+        redirect: true,
+      });
+
+      if (result?.error) {
+        console.error('Google sign in error:', result.error);
+        setError('Erro ao fazer login com Google. Verifique suas credenciais.');
+        setIsGoogleLoading(false);
+      }
     } catch (error) {
-      setError('Erro ao fazer login com Google');
+      console.error('Google sign in exception:', error);
+      setError('Erro ao fazer login com Google. Tente novamente.');
       setIsGoogleLoading(false);
     }
   };
@@ -62,9 +93,19 @@ export default function LoginPage() {
     setIsStravaLoading(true);
     setError('');
     try {
-      await signIn('strava', { callbackUrl: '/dashboard' });
+      const result = await signIn('strava', {
+        callbackUrl: '/dashboard',
+        redirect: true,
+      });
+
+      if (result?.error) {
+        console.error('Strava sign in error:', result.error);
+        setError('Erro ao fazer login com Strava. Verifique suas credenciais.');
+        setIsStravaLoading(false);
+      }
     } catch (error) {
-      setError('Erro ao fazer login com Strava');
+      console.error('Strava sign in exception:', error);
+      setError('Erro ao fazer login com Strava. Tente novamente.');
       setIsStravaLoading(false);
     }
   };

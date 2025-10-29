@@ -92,14 +92,22 @@ export const authOptions: NextAuthOptions = {
       }
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || 'placeholder-google-client-id',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'placeholder-google-client-secret',
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
       allowDangerousEmailAccountLinking: true,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
     StravaProvider as any,
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: '/login',
@@ -107,29 +115,48 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async signIn({ user, account, profile }) {
+      console.log('[AUTH] SignIn attempt:', {
+        provider: account?.provider,
+        userId: user?.id,
+        email: user?.email
+      });
+
+      // For Strava, ensure we have an email (even if fake)
+      if (account?.provider === 'strava' && !user.email) {
+        user.email = `${account.providerAccountId}@strava.user`;
+        console.log('[AUTH] Generated email for Strava user:', user.email);
+      }
+
+      return true;
+    },
+    async jwt({ token, user, account, trigger }) {
       if (user) {
         token.id = user.id;
-        
+
         // Check if user is admin
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { isAdmin: true }
+          select: { isAdmin: true, athleteProfile: true }
         });
         token.isAdmin = dbUser?.isAdmin || false;
+        token.hasProfile = !!dbUser?.athleteProfile;
       }
-      
+
       // If signing in with Strava, save the tokens to athlete profile
       if (account?.provider === 'strava' && account.access_token) {
         try {
           const userId = user?.id || token.id as string;
-          
+
+          console.log('[AUTH] Processing Strava connection for user:', userId);
+
           // Find or create athlete profile
           let profile = await prisma.athleteProfile.findUnique({
             where: { userId }
           });
-          
+
           if (!profile) {
+            console.log('[AUTH] Creating new athlete profile for Strava user');
             profile = await prisma.athleteProfile.create({
               data: {
                 userId,
@@ -139,29 +166,39 @@ export const authOptions: NextAuthOptions = {
                 targetTime: "4:00:00",
                 goalDistance: "marathon",
                 runningLevel: "intermediate",
-                stravaConnected: false
+                stravaConnected: true,
+                stravaAthleteId: account.providerAccountId,
+                stravaAccessToken: account.access_token,
+                stravaRefreshToken: account.refresh_token || null,
+                stravaTokenExpiry: account.expires_at
+                  ? new Date(account.expires_at * 1000)
+                  : null
+              }
+            });
+          } else {
+            // Update existing profile with Strava credentials
+            console.log('[AUTH] Updating existing athlete profile with Strava credentials');
+            await prisma.athleteProfile.update({
+              where: { id: profile.id },
+              data: {
+                stravaConnected: true,
+                stravaAthleteId: account.providerAccountId,
+                stravaAccessToken: account.access_token,
+                stravaRefreshToken: account.refresh_token || null,
+                stravaTokenExpiry: account.expires_at
+                  ? new Date(account.expires_at * 1000)
+                  : null
               }
             });
           }
-          
-          // Update with Strava credentials
-          await prisma.athleteProfile.update({
-            where: { id: profile.id },
-            data: {
-              stravaConnected: true,
-              stravaAthleteId: account.providerAccountId,
-              stravaAccessToken: account.access_token,
-              stravaRefreshToken: account.refresh_token || null,
-              stravaTokenExpiry: account.expires_at 
-                ? new Date(account.expires_at * 1000) 
-                : null
-            }
-          });
+
+          token.hasProfile = true;
+          console.log('[AUTH] Strava connection successful');
         } catch (error) {
-          console.error('Error saving Strava credentials:', error);
+          console.error('[AUTH] Error saving Strava credentials:', error);
         }
       }
-      
+
       return token;
     },
     async session({ session, token }) {
@@ -172,17 +209,38 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Check if user has completed onboarding
-      if (url.includes('/api/auth/callback/google') || url.includes('/api/auth/callback/strava')) {
-        return baseUrl + '/onboarding';
+      console.log('[AUTH] Redirect:', { url, baseUrl });
+
+      // If it's a callback URL, check if user needs onboarding
+      if (url.includes('/api/auth/callback')) {
+        // For now, always go to dashboard after OAuth login
+        // The dashboard will handle redirecting to onboarding if needed
+        return baseUrl + '/dashboard';
       }
-      
-      // Default redirect
+
+      // If URL is provided and starts with base URL, use it
       if (url.startsWith(baseUrl)) return url;
+
+      // If URL is a relative path, append to base URL
       if (url.startsWith('/')) return baseUrl + url;
+
+      // Default to dashboard
       return baseUrl + '/dashboard';
     }
   },
+  events: {
+    async signIn({ user, account, isNewUser }) {
+      console.log('[AUTH] User signed in:', {
+        userId: user.id,
+        provider: account?.provider,
+        isNewUser,
+        email: user.email
+      });
+    },
+    async signOut({ token }) {
+      console.log('[AUTH] User signed out:', token?.id);
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: false,
+  debug: process.env.NODE_ENV === 'development',
 };
