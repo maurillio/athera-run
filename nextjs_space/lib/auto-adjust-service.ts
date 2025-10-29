@@ -8,6 +8,7 @@
 
 import prisma from './db';
 import { callLLM } from './llm-client';
+import { resilientLLMCall } from './ai-resilience';
 
 interface AdjustmentDecision {
   needsAdjustment: boolean;
@@ -224,11 +225,18 @@ export class AutoAdjustService {
       }))
     };
     
-    // Chamar IA para análise profunda e científica
-    const aiResponseText = await callLLM({
-      messages: [{
-        role: 'system',
-        content: `Você é um treinador de corrida PhD em fisiologia do exercício, especialista em periodização e treinamento científico.
+    // Chamar IA para análise profunda e científica com sistema resiliente
+    console.log('[AUTO-ADJUST] Analisando com IA resiliente...');
+
+    // Cache key baseado no athleteId e timestamp do dia (atualiza diariamente)
+    const today = new Date().toISOString().split('T')[0];
+    const cacheKey = `auto-adjust-${this.athleteId}-${today}`;
+
+    const aiResponseText = await resilientLLMCall(
+      () => callLLM({
+        messages: [{
+          role: 'system',
+          content: `Você é um treinador de corrida PhD em fisiologia do exercício, especialista em periodização e treinamento científico.
 
 Sua missão é analisar o histórico COMPLETO do atleta (não apenas 7 dias) e decidir se o plano de treinamento precisa de ajustes PROGRESSIVOS e CIENTÍFICOS.
 
@@ -299,9 +307,9 @@ RESPONDA APENAS COM JSON VÁLIDO:
     }
   ]
 }`
-      }, {
-        role: 'user',
-        content: `Analise este atleta COMPLETO e determine ajustes necessários:
+        }, {
+          role: 'user',
+          content: `Analise este atleta COMPLETO e determine ajustes necessários:
 
 ${JSON.stringify(context, null, 2)}
 
@@ -314,13 +322,47 @@ IMPORTANTE: Faça uma análise PROFUNDA considerando:
 6. Individualização baseada no perfil completo
 
 Seja CONSERVADOR - prefira manter o plano a menos que haja evidências claras de necessidade de ajuste.`
-      }],
-      max_tokens: 1500,
-      temperature: 0.2, // Baixa temperatura para respostas mais consistentes
-      response_format: { type: "json_object" }
-    });
+        }],
+        max_tokens: 1500,
+        temperature: 0.2,
+        response_format: { type: "json_object" }
+      }),
+      {
+        cacheKey,
+        cacheTTL: 3600000, // 1 hora
+        validateResponse: (response: string) => {
+          try {
+            const data = JSON.parse(response);
+            return (
+              typeof data.needsAdjustment === 'boolean' &&
+              data.adjustmentType !== undefined &&
+              typeof data.reason === 'string' &&
+              typeof data.severity === 'string'
+            );
+          } catch {
+            return false;
+          }
+        },
+        retryConfig: {
+          maxRetries: 3,
+          baseDelay: 2000,
+          maxDelay: 10000,
+          backoffMultiplier: 2,
+        },
+        timeout: 45000, // 45 segundos
+        fallbackResponse: JSON.stringify({
+          needsAdjustment: false,
+          adjustmentType: 'maintain',
+          reason: 'Sistema de análise temporariamente indisponível. Plano mantido por segurança.',
+          severity: 'low',
+          summary: 'Análise adiada - sistema indisponível',
+          specificChanges: []
+        })
+      }
+    );
 
     const decision: AdjustmentDecision = JSON.parse(aiResponseText);
+    console.log('[AUTO-ADJUST] Decisão da IA:', decision.adjustmentType);
     
     return decision;
   }

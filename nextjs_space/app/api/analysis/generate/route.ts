@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { callLLM } from '@/lib/llm-client';
+import { resilientLLMCall } from '@/lib/ai-resilience';
 
 export const dynamic = 'force-dynamic';
 
@@ -98,12 +99,30 @@ Forneça uma análise em formato JSON com a seguinte estrutura:
 
 Responda apenas com o JSON, sem formatação markdown.`;
 
-    // Chamar LLM para análise
-    const aiResponse = await callLLM({
-      messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
-      max_tokens: 2000,
-    });
+    // Chamar LLM para análise com resilience
+    const cacheKey = `analysis-${user.athleteProfile.id}-${period}-${startDate.toISOString().split('T')[0]}`;
+
+    const aiResponse = await resilientLLMCall(
+      () => callLLM({
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+        max_tokens: 2000,
+      }),
+      {
+        cacheKey,
+        cacheTTL: 1800000,
+        validateResponse: (resp) => {
+          try {
+            const data = JSON.parse(resp);
+            return data.summary && data.insights;
+          } catch {
+            return false;
+          }
+        },
+        timeout: 40000,
+        retryConfig: { maxRetries: 3 }
+      }
+    );
 
     const analysisData = JSON.parse(aiResponse);
 

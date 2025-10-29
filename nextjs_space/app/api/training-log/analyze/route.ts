@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { callLLM } from '@/lib/llm-client';
+import { resilientLLMCall } from '@/lib/ai-resilience';
 
 // POST - Analisar relato com IA
 export async function POST(request: Request) {
@@ -64,9 +65,12 @@ export async function POST(request: Request) {
       }
     };
 
-    // Chamar IA para análise
-    const analysisText = await callLLM({
-      messages: [{
+    // Chamar IA para análise com sistema resiliente
+    const cacheKey = `training-log-analysis-${logId}-${log.date.toISOString().split('T')[0]}`;
+
+    const analysisText = await resilientLLMCall(
+      () => callLLM({
+        messages: [{
         role: 'system',
         content: `Você é um treinador experiente de corrida. Analise o relato diário do atleta e forneça:
 1. Uma análise breve do estado atual (2-3 frases)
@@ -112,10 +116,43 @@ Relato de hoje:
 - Notas: ${log.notes || 'Nenhuma nota adicional'}
 
 Analise este relato e forneça sua avaliação.`
-      }],
-      max_tokens: 800,
-      temperature: 0.7
-    });
+        }],
+        max_tokens: 800,
+        temperature: 0.7
+      }),
+      {
+        cacheKey,
+        cacheTTL: 1800000, // 30 minutos
+        validateResponse: (response: string) => {
+          return (
+            response.includes('ANÁLISE:') &&
+            response.includes('ALERTAS:') &&
+            response.includes('RECOMENDAÇÕES:') &&
+            response.includes('ATENÇÃO:')
+          );
+        },
+        retryConfig: {
+          maxRetries: 3,
+          baseDelay: 1000,
+          maxDelay: 8000,
+          backoffMultiplier: 2,
+        },
+        timeout: 30000, // 30 segundos
+        fallbackResponse: `ANÁLISE:
+O sistema de análise está temporariamente indisponível. Continue com seu treinamento normal e monitore suas sensações.
+
+ALERTAS:
+Nenhum alerta no momento - sistema indisponível
+
+RECOMENDAÇÕES:
+- Continue seguindo seu plano de treino
+- Monitore suas sensações
+- Descanse adequadamente
+- Busque análise novamente mais tarde
+
+ATENÇÃO: low`
+      }
+    );
 
     // Parse da resposta
     const attentionMatch = analysisText.match(/ATENÇÃO:\s*(low|medium|high)/i);

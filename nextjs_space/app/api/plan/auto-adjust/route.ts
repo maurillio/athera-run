@@ -106,18 +106,24 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Atualizar o plano existente
+    // Atualizar o plano existente (apenas campos que existem no schema)
     await prisma.customTrainingPlan.update({
       where: { id: currentPlan.id },
       data: {
         startDate: aiPlan.startDate,
         targetRaceDate: aiPlan.targetRaceDate,
-        paces: aiPlan.paces,
-        planRationale: aiPlan.planRationale,
-        keyConsiderations: aiPlan.keyConsiderations,
-        progressionStrategy: aiPlan.progressionStrategy,
-        nutritionAdvice: aiPlan.nutritionAdvice,
-        injuryPreventionTips: aiPlan.injuryPreventionTips,
+        lastRegenerated: new Date(),
+        // Armazenar metadados do plano em periodization (JSON)
+        periodization: {
+          paces: aiPlan.paces,
+          vdot: aiPlan.vdot,
+          phases: aiPlan.phases,
+          planRationale: aiPlan.planRationale,
+          keyConsiderations: aiPlan.keyConsiderations,
+          progressionStrategy: aiPlan.progressionStrategy,
+          nutritionAdvice: aiPlan.nutritionAdvice,
+          injuryPreventionTips: aiPlan.injuryPreventionTips,
+        }
       }
     });
 

@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { callLLM } from '@/lib/llm-client';
+import { resilientLLMCall } from '@/lib/ai-resilience';
 
 /**
  * API para análise pós-corrida com IA
@@ -81,14 +82,22 @@ Analise o resultado da corrida considerando:
 
 Seja específico, construtivo e motivador.`;
 
-    const analysis = await callLLM({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: context }
-      ],
-      temperature: 0.7,
-      max_tokens: 2000,
-    });
+    const analysis = await resilientLLMCall(
+      () => callLLM({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: context }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+      }),
+      {
+        cacheKey: `race-analysis-${raceId}`,
+        cacheTTL: 3600000,
+        timeout: 30000,
+        retryConfig: { maxRetries: 3 }
+      }
+    );
 
     // Salvar análise no banco
     await prisma.raceGoal.update({

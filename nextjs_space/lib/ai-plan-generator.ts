@@ -12,6 +12,7 @@
  */
 
 import { callLLM } from './llm-client';
+import { resilientLLMCall } from './ai-resilience';
 
 export interface AIUserProfile {
   // Dados básicos
@@ -546,53 +547,71 @@ NÃO siga fórmulas prontas se o contexto indicar outro caminho!
 
 Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.`;
 
-  // Tentar gerar estratégia com retries
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`[AI PLAN] Tentativa ${attempt} de ${maxRetries}...`);
+  // Gerar estratégia com sistema de resiliência
+  console.log('[AI PLAN] Gerando estratégia com sistema resiliente...');
 
-      const aiResponse = await callLLM({
+  // Criar cache key baseado no perfil
+  const cacheKey = `ai-plan-${profile.runningLevel}-${profile.goalDistance}-${totalWeeks}w-${profile.currentWeeklyKm}km`;
+
+  try {
+    const aiResponse = await resilientLLMCall(
+      () => callLLM({
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
         response_format: { type: "json_object" },
         temperature: 0.5,
-        max_tokens: 8000, // Estratégia precisa de menos tokens que plano completo
-      });
-      
-      try {
-        const strategy = JSON.parse(aiResponse);
-        
-        console.log(`[AI PLAN] Estratégia parseada com sucesso na tentativa ${attempt}!`);
-        console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
-        
-        // Expandir estratégia em plano completo
-        const fullPlan = expandStrategyToPlan(strategy, profile, totalWeeks);
-        
-        return fullPlan;
-      } catch (parseError) {
-        console.error(`[AI PLAN] Erro ao parsear JSON na tentativa ${attempt}:`, parseError);
-        console.error(`[AI PLAN] JSON bruto (primeiros 1000 chars):`, aiResponse.substring(0, 1000));
-        console.error(`[AI PLAN] JSON bruto (últimos 1000 chars):`, aiResponse.substring(Math.max(0, aiResponse.length - 1000)));
-        
-        if (attempt === maxRetries) {
-          throw parseError;
-        }
-        // Tentar novamente
-        continue;
+        max_tokens: 8000,
+      }),
+      {
+        cacheKey,
+        cacheTTL: 3600000, // 1 hora de cache
+        validateResponse: (response: string) => {
+          try {
+            const data = JSON.parse(response);
+            // Validar campos obrigatórios
+            const hasRequiredFields =
+              data.totalWeeks &&
+              data.phases &&
+              Array.isArray(data.phases) &&
+              data.paces &&
+              data.paces.easy &&
+              data.paces.marathon;
+
+            if (!hasRequiredFields) {
+              console.error('[AI PLAN] Resposta inválida: campos obrigatórios ausentes');
+              return false;
+            }
+
+            return true;
+          } catch (e) {
+            console.error('[AI PLAN] Resposta inválida: JSON malformado');
+            return false;
+          }
+        },
+        retryConfig: {
+          maxRetries,
+          baseDelay: 1000,
+          maxDelay: 10000,
+          backoffMultiplier: 2,
+        },
+        timeout: 60000, // 60 segundos timeout
       }
-    } catch (error) {
-      console.error(`[AI PLAN] Erro na tentativa ${attempt}:`, error);
-      if (attempt === maxRetries) {
-        throw new Error('Falha ao gerar plano com IA após múltiplas tentativas. Por favor, tente novamente mais tarde.');
-      }
-      // Aguardar um pouco antes de tentar novamente
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+    );
+
+    const strategy = JSON.parse(aiResponse);
+    console.log('[AI PLAN] Estratégia gerada e validada com sucesso!');
+    console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
+
+    // Expandir estratégia em plano completo
+    const fullPlan = expandStrategyToPlan(strategy, profile, totalWeeks);
+
+    return fullPlan;
+  } catch (error) {
+    console.error('[AI PLAN] Falha após todas as tentativas de resiliência:', error);
+    throw new Error('Não foi possível gerar o plano de treinamento neste momento. Por favor, tente novamente em alguns instantes. Se o problema persistir, entre em contato com o suporte.');
   }
-  
-  throw new Error('Falha ao gerar plano com IA. Por favor, tente novamente.');
 }
 
 /**
