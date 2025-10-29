@@ -303,7 +303,7 @@ export async function resilientLLMCall(
   return resilientAICall(
     async () => {
       const response = await callLLM({
-        messages,
+        messages: messages as any,
         max_tokens: options.maxTokens || 2000,
         temperature: options.temperature ?? 0.5,
         response_format: options.responseFormat
