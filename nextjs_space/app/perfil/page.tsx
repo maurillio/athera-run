@@ -67,6 +67,27 @@ export default function PerfilPage() {
     { value: 6, label: 'Sáb' },
   ];
 
+  const AVAILABLE_ACTIVITIES = [
+    { id: 'running', name: 'Corrida', icon: '🏃', color: 'orange' },
+    { id: 'strength', name: 'Musculação', icon: '🏋️', color: 'blue' },
+    { id: 'swimming', name: 'Natação', icon: '🏊', color: 'cyan' },
+    { id: 'cycling', name: 'Ciclismo', icon: '🚴', color: 'green' },
+    { id: 'yoga', name: 'Yoga', icon: '🧘', color: 'purple' },
+    { id: 'pilates', name: 'Pilates', icon: '🤸', color: 'pink' },
+    { id: 'muay-thai', name: 'Muay-Thai', icon: '🥊', color: 'red' },
+    { id: 'functional', name: 'Funcional', icon: '⚡', color: 'yellow' },
+    { id: 'crossfit', name: 'CrossFit', icon: '💪', color: 'indigo' },
+  ];
+
+  const getActivityIcon = (activityId: string) => {
+    const activity = AVAILABLE_ACTIVITIES.find(a =>
+      a.id === activityId ||
+      a.name.toLowerCase() === activityId?.toLowerCase() ||
+      activityId?.toLowerCase().includes(a.id)
+    );
+    return activity?.icon || '🏃';
+  };
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login');
@@ -292,7 +313,34 @@ export default function PerfilPage() {
         const data = await response.json();
         setProfile(data.profile);
         setEditingAvailability(false);
-        toast.success('Disponibilidade atualizada com sucesso!');
+        toast.success('Disponibilidade atualizada!');
+
+        // Ajustar plano automaticamente se houver um plano ativo
+        if (profile?.hasCustomPlan) {
+          toast.loading('Ajustando plano automaticamente...', { id: 'adjusting' });
+          try {
+            const adjustResponse = await fetch('/api/plan/auto-adjust', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                reason: 'Atualização de disponibilidade',
+                changes: {
+                  trainingActivities: editTrainingActivities,
+                  longRunDay: editLongRunDay
+                }
+              })
+            });
+
+            if (adjustResponse.ok) {
+              toast.success('Plano ajustado automaticamente!', { id: 'adjusting' });
+            } else {
+              toast.dismiss('adjusting');
+              toast.info('Disponibilidade salva. Considere regenerar o plano para aplicar as mudanças.');
+            }
+          } catch {
+            toast.dismiss('adjusting');
+          }
+        }
       } else {
         toast.error('Erro ao atualizar disponibilidade');
       }
@@ -301,6 +349,22 @@ export default function PerfilPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const removeActivity = (activityId: string) => {
+    setEditTrainingActivities(prev => prev.filter(a => a.id !== activityId));
+  };
+
+  const addNewActivity = (activity: typeof AVAILABLE_ACTIVITIES[0]) => {
+    const newActivity = {
+      id: activity.id,
+      name: activity.name,
+      icon: activity.icon,
+      color: activity.color,
+      availableDays: [],
+      preferredTime: 'flexible'
+    };
+    setEditTrainingActivities(prev => [...prev, newActivity]);
   };
 
   const toggleActivityDay = (activityId: string, dayValue: number) => {
@@ -623,12 +687,7 @@ export default function PerfilPage() {
                               <div className="flex items-center gap-2">
                                 <div className={`w-10 h-10 rounded-lg bg-${activity.color || 'blue'}-600 flex items-center justify-center`}>
                                   <span className="text-white text-lg">
-                                    {activity.icon === 'Dumbbell' && '🏋️'}
-                                    {activity.icon === 'Waves' && '🏊'}
-                                    {activity.icon === 'Bike' && '🚴'}
-                                    {activity.icon === 'Heart' && '❤️'}
-                                    {activity.icon === 'Zap' && '⚡'}
-                                    {activity.icon === 'Activity' && '🏃'}
+                                    {getActivityIcon(activity.id || activity.name)}
                                   </span>
                                 </div>
                                 <div>
@@ -749,21 +808,30 @@ export default function PerfilPage() {
 
                         {/* Atividades */}
                         <div className="space-y-4">
-                          <Label className="text-base font-semibold">Atividades de Treino</Label>
+                          <div className="flex items-center justify-between">
+                            <Label className="text-base font-semibold">Atividades de Treino</Label>
+                          </div>
                           {editTrainingActivities.map((activity) => (
                             <Card key={activity.id} className="border-2">
                               <CardHeader className="pb-3">
-                                <h4 className="font-semibold flex items-center gap-2">
-                                  <span className="text-lg">
-                                    {activity.icon === 'Dumbbell' && '🏋️'}
-                                    {activity.icon === 'Waves' && '🏊'}
-                                    {activity.icon === 'Bike' && '🚴'}
-                                    {activity.icon === 'Heart' && '❤️'}
-                                    {activity.icon === 'Zap' && '⚡'}
-                                    {activity.icon === 'Activity' && '🏃'}
-                                  </span>
-                                  {activity.name}
-                                </h4>
+                                <div className="flex items-center justify-between">
+                                  <h4 className="font-semibold flex items-center gap-2">
+                                    <span className="text-lg">
+                                      {getActivityIcon(activity.id)}
+                                    </span>
+                                    {activity.name}
+                                  </h4>
+                                  {activity.id !== 'running' && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeActivity(activity.id)}
+                                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  )}
+                                </div>
                               </CardHeader>
                               <CardContent className="space-y-4">
                                 {/* Horário Preferido */}
@@ -815,13 +883,42 @@ export default function PerfilPage() {
                               </CardContent>
                             </Card>
                           ))}
+
+                          {/* Adicionar Nova Atividade */}
+                          <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
+                            <CardContent className="pt-6">
+                              <Label className="text-sm font-medium mb-3 block">Adicionar Nova Atividade</Label>
+                              <div className="flex flex-wrap gap-2">
+                                {AVAILABLE_ACTIVITIES.filter(a => !editTrainingActivities.some(e => e.id === a.id)).map((activity) => (
+                                  <button
+                                    key={activity.id}
+                                    type="button"
+                                    onClick={() => addNewActivity(activity)}
+                                    className="px-3 py-2 rounded-md text-sm font-medium bg-white border-2 border-gray-300 hover:border-orange-500 hover:bg-orange-50 transition-all flex items-center gap-2"
+                                  >
+                                    <span>{activity.icon}</span>
+                                    <span>{activity.name}</span>
+                                    <Plus className="h-3 w-3" />
+                                  </button>
+                                ))}
+                              </div>
+                              {editTrainingActivities.length >= AVAILABLE_ACTIVITIES.length && (
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  Todas as atividades disponíveis já foram adicionadas
+                                </p>
+                              )}
+                            </CardContent>
+                          </Card>
                         </div>
 
-                        {/* Aviso sobre regeneração */}
+                        {/* Aviso sobre ajuste automático */}
                         <Alert>
                           <AlertCircle className="h-4 w-4" />
                           <AlertDescription>
-                            Após salvar, recomendamos regenerar seu plano de treino para aplicar as mudanças na disponibilidade.
+                            {profile?.hasCustomPlan
+                              ? 'Seu plano será ajustado automaticamente após salvar as alterações.'
+                              : 'Após salvar, você poderá gerar um plano de treino personalizado.'
+                            }
                           </AlertDescription>
                         </Alert>
                       </div>

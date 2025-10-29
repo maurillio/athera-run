@@ -104,6 +104,47 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Criar race goal automaticamente se goalDistance e targetRaceDate foram fornecidos
+    if (goalDistance && targetRaceDate) {
+      try {
+        // Verificar se já existe uma race goal para essa data
+        const existingRaceGoal = await prisma.raceGoal.findFirst({
+          where: {
+            athleteId: profile.id,
+            raceDate: new Date(targetRaceDate)
+          }
+        });
+
+        if (!existingRaceGoal) {
+          // Criar nome padrão baseado na distância
+          const distanceNames: Record<string, string> = {
+            '5k': 'Corrida 5km',
+            '10k': 'Corrida 10km',
+            '21k': 'Meia Maratona',
+            '42k': 'Maratona',
+          };
+
+          await prisma.raceGoal.create({
+            data: {
+              athleteId: profile.id,
+              raceName: distanceNames[goalDistance] || `Corrida ${goalDistance}`,
+              distance: goalDistance,
+              raceDate: new Date(targetRaceDate),
+              targetTime: targetTime || null,
+              priority: 'A', // Corrida principal é sempre A
+              status: 'upcoming',
+              isPrimary: true,
+            }
+          });
+
+          console.log('[PROFILE CREATE] Race goal criada automaticamente:', distanceNames[goalDistance] || goalDistance);
+        }
+      } catch (error) {
+        // Não falhar a criação do perfil se a race goal falhar
+        console.error('[PROFILE CREATE] Erro ao criar race goal automática:', error);
+      }
+    }
+
     return NextResponse.json({ profile }, { status: existingProfile ? 200 : 201 });
 
   } catch (error) {
