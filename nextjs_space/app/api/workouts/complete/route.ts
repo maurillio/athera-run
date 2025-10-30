@@ -121,6 +121,17 @@ export async function POST(request: NextRequest) {
           },
         });
       }
+    } else {
+      // Se o treino NÃO foi completado, marcar como não completado
+      // Apenas marcar o CustomWorkout como tendo recebido relato
+      // sem marcar como completo
+      await prisma.customWorkout.update({
+        where: { id: workoutId },
+        data: {
+          isCompleted: false,
+          completedWorkoutId: null,
+        },
+      });
     }
 
     // Criar ou atualizar TrainingLog
@@ -133,7 +144,10 @@ export async function POST(request: NextRequest) {
 
     const logData = {
       workoutCompleted: completed,
+      hasPain: false, // Default, pode ser atualizado depois
+      hasInjury: false, // Default, pode ser atualizado depois
       overallFeeling: feeling || null,
+      energyLevel: null, // Pode ser mapeado de perceivedEffort se necessário
       perceivedEffort: perceivedEffort || null,
       notes: notes || null,
     };

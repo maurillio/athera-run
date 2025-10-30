@@ -52,6 +52,7 @@ interface CustomWeek {
   phase: string;
   focus: string;
   workouts: any[];
+  trainingLogs?: any[];
 }
 
 interface Workout {
@@ -175,6 +176,12 @@ export default function DashboardPage() {
   const handleCloseWorkoutLog = () => {
     setShowWorkoutLogDialog(false);
     setSelectedWorkout(null);
+  };
+
+  const handleWorkoutLogSuccess = async () => {
+    // Recarregar o plano após confirmar o treino
+    await fetchPlan();
+    handleCloseWorkoutLog();
   };
 
   if (status === 'loading' || loading) {
@@ -362,14 +369,25 @@ export default function DashboardPage() {
                         // Só mostrar botão de confirmação para treinos de hoje e não-rest
                         const canConfirm = isToday && workout.type !== 'rest';
 
+                        // Determinar cor baseada no status
+                        let containerClass = 'bg-white border-gray-200';
+                        if (workout.isCompleted) {
+                          containerClass = 'bg-green-50 border-green-200';
+                        } else if (isToday && currentWeek) {
+                          // Verificar se tem TrainingLog indicando que não foi feito
+                          const trainingLogForToday = currentWeek.trainingLogs?.find((log: any) => {
+                            const logDate = new Date(log.date);
+                            return logDate.toDateString() === today.toDateString() && log.workoutCompleted === false;
+                          });
+                          if (trainingLogForToday) {
+                            containerClass = 'bg-red-50 border-red-200';
+                          }
+                        }
+
                         return (
                           <div
                             key={workout.id}
-                            className={`flex flex-col p-4 rounded-lg border ${
-                              workout.isCompleted
-                                ? 'bg-green-50 border-green-200'
-                                : 'bg-white border-gray-200'
-                            }`}
+                            className={`flex flex-col p-4 rounded-lg border ${containerClass}`}
                           >
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1">
