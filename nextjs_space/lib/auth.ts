@@ -110,6 +110,18 @@ export const authOptions: NextAuthOptions = {
     maxAge: 90 * 24 * 60 * 60, // 90 days
     updateAge: 24 * 60 * 60, // Update session token daily
   },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax' as const,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production', // Use secure flag only in production
+        maxAge: 90 * 24 * 60 * 60, // 90 days
+      }
+    }
+  },
   pages: {
     signIn: '/login',
     signOut: '/login',

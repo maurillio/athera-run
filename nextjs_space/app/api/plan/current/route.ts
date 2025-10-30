@@ -32,6 +32,9 @@ export async function GET(request: NextRequest) {
                 },
               },
             },
+            trainingLogs: {
+              orderBy: { date: 'desc' },
+            },
           },
         },
       },
@@ -75,7 +78,10 @@ export async function GET(request: NextRequest) {
         currentWeek: currentWeek?.weekNumber || 1, // Sempre retornar o número da semana calculado
         completionRate: completionRate, // Sempre calcular a taxa de conclusão atual
       },
-      currentWeek: currentWeek,
+      currentWeek: {
+        ...currentWeek,
+        trainingLogs: user.athleteProfile.trainingLogs,
+      },
       profile: user.athleteProfile,
     });
   } catch (error) {
