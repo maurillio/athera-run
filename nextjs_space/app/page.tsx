@@ -53,7 +53,7 @@ export default function LandingPage() {
             Para todos os níveis de corredores
           </Badge>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight">
             <span className="bg-gradient-to-r from-orange-600 via-red-500 to-blue-600 bg-clip-text text-transparent">
               Seu Treinador
             </span>
@@ -299,7 +299,7 @@ export default function LandingPage() {
       {/* CTA Final */}
       <section className="bg-gradient-to-r from-orange-600 to-blue-600 py-20">
         <div className="container mx-auto max-w-4xl px-4 text-center text-white space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
             Pronto para Alcançar seus Objetivos?
           </h2>
           <p className="text-xl opacity-90">

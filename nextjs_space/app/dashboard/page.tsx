@@ -4,7 +4,9 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import Header from '@/components/header';
+import TrainingChat from '@/components/training-chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,7 +31,6 @@ import Link from 'next/link';
 import TrainingLogDialog from '@/components/training-log-dialog';
 import AIAnalysisSection from '@/components/ai-analysis-section';
 import AutoAdjustCard from '@/components/auto-adjust-card';
-import TrainingChat from '@/components/training-chat';
 
 interface CustomPlan {
   id: number;
@@ -250,7 +251,7 @@ export default function DashboardPage() {
           {hasCustomPlan && plan && currentWeek && (
             <>
               {/* Quick Stats */}
-              <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Próximo Treino</CardTitle>
@@ -357,7 +358,10 @@ export default function DashboardPage() {
                         const workoutDate = new Date(workout.date);
                         workoutDate.setHours(0, 0, 0, 0);
                         const isToday = workoutDate.getTime() === today.getTime();
-                        
+
+                        // Só mostrar botão de confirmação para treinos de hoje e não-rest
+                        const canConfirm = isToday && workout.type !== 'rest';
+
                         return (
                           <div
                             key={workout.id}
@@ -411,8 +415,8 @@ export default function DashboardPage() {
                               )}
                             </div>
 
-                            {!workout.isCompleted && (
-                              <Button 
+                            {!workout.isCompleted && canConfirm && (
+                              <Button
                                 onClick={() => handleOpenWorkoutLog(workout)}
                                 className="mt-2 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
                               >
@@ -442,7 +446,7 @@ export default function DashboardPage() {
           )}
 
           {/* Main Content */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -469,12 +473,13 @@ export default function DashboardPage() {
                     Registrar Treino
                   </Button>
                 </Link>
-                <Link href="/calculator">
+                {/* Calculadora VDOT - Desabilitada */}
+                {/* <Link href="/calculator">
                   <Button variant="outline" className="w-full justify-start">
                     <Target className="mr-2 h-4 w-4" />
                     Calculadora VDOT
                   </Button>
-                </Link>
+                </Link> */}
                 <Link href="/training">
                   <Button variant="outline" className="w-full justify-start">
                     <TrendingUp className="mr-2 h-4 w-4" />
@@ -559,7 +564,7 @@ function WorkoutLogDialog({ workout, open, onClose, onSuccess }: WorkoutLogDialo
 
   const handleSubmit = async () => {
     if (!workout) return;
-    
+
     setSubmitting(true);
     try {
       const response = await fetch('/api/workouts/complete', {
@@ -577,14 +582,15 @@ function WorkoutLogDialog({ workout, open, onClose, onSuccess }: WorkoutLogDialo
       });
 
       if (response.ok) {
+        toast.success(completed ? '✅ Treino confirmado com sucesso!' : '📝 Relato salvo com sucesso!');
         onSuccess();
       } else {
         const error = await response.json();
-        alert(error.message || 'Erro ao salvar relato do treino.');
+        toast.error(error.message || 'Erro ao salvar relato do treino.');
       }
     } catch (error) {
       console.error('Error submitting workout log:', error);
-      alert('Erro ao salvar relato do treino.');
+      toast.error('Erro ao salvar relato do treino.');
     } finally {
       setSubmitting(false);
     }
