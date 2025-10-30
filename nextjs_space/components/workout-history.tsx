@@ -4,7 +4,11 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { History, Activity, Clock, Heart, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'; // New import
+import { History, Activity, Clock, Heart, TrendingUp, MoreVertical } from 'lucide-react';
+import WorkoutLogForm from './workout-log-form'; // New import
 
 interface Workout {
   id: number;
@@ -18,6 +22,7 @@ interface Workout {
   perceivedEffort: number | null;
   feeling: string | null;
   notes: string | null;
+  source: string; // Added source property
 }
 
 interface WorkoutHistoryProps {
@@ -27,6 +32,8 @@ interface WorkoutHistoryProps {
 export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // New state
+  const [editingWorkout, setEditingWorkout] = useState<Workout | null>(null); // New state
 
   useEffect(() => {
     fetchWorkouts();
@@ -46,15 +53,43 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', { 
-      weekday: 'short', 
-      day: '2-digit', 
-      month: 'short' 
-    });
+  const handleDelete = async (workoutId: number) => { // Changed type to number
+    if (!confirm('Tem certeza que deseja excluir este treino?')) return;
+    try {
+      const response = await fetch(`/api/workouts/${workoutId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        fetchWorkouts(); // Refresh the list
+      } else {
+        console.error('Erro ao excluir treino:', await response.json());
+        alert('Erro ao excluir treino.');
+      }
+    } catch (error) {
+      console.error('Erro de rede ao excluir treino:', error);
+      alert('Erro de rede ao excluir treino.');
+    }
   };
 
+    const handleEdit = (workout: Workout) => {
+      setEditingWorkout(workout);
+      setIsEditModalOpen(true);
+    };
+  
+    const handleWorkoutSaved = () => {
+      setIsEditModalOpen(false);
+      setEditingWorkout(null);
+      fetchWorkouts(); // Refresh the list
+    };
+  
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('pt-BR', {
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short'
+      });
+    };
   const getTypeLabel = (type: string) => {
     const labels: { [key: string]: string } = {
       running: 'Corrida',
@@ -149,9 +184,29 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
                     </p>
                   </div>
                 </div>
-                {workout.feeling && (
-                  <span className="text-2xl">{getFeelingEmoji(workout.feeling)}</span>
-                )}
+                <div className="flex items-center gap-2">
+                  {workout.feeling && (
+                    <span className="text-2xl">{getFeelingEmoji(workout.feeling)}</span>
+                  )}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Abrir menu</span>
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleEdit(workout)}>
+                        Editar
+                      </DropdownMenuItem>
+                      {workout.source === 'manual' && (
+                        <DropdownMenuItem onClick={() => handleDelete(workout.id)}>
+                          Excluir
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
 
               {workout.type === 'running' && (
@@ -211,6 +266,20 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
           ))}
         </div>
       </CardContent>
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Editar Treino</DialogTitle>
+          </DialogHeader>
+          {editingWorkout && (
+            <WorkoutLogForm
+              athleteId={athleteId}
+              initialWorkout={editingWorkout}
+              onWorkoutSaved={handleWorkoutSaved}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

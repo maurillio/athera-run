@@ -21,11 +21,11 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Trophy },
   { name: 'Plano', href: '/plano', icon: Calendar },
   { name: 'Treinos', href: '/tracking', icon: Target },
-  { name: 'Chat IA', href: '/chat', icon: MessageCircle },
-  { name: 'Calculadora', href: '/calculator', icon: Calculator },
-  { name: 'Nutrição', href: '/nutrition', icon: Apple },
-  { name: 'Prevenção', href: '/prevention', icon: Shield },
-  { name: 'Glossário', href: '/glossary', icon: BookOpen },
+
+
+
+
+
 ];
 
 export default function Header() {

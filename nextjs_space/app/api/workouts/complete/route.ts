@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
             plan: true,
           },
         },
+        completedWorkout: true, // Include the completedWorkout relation
       },
     });
 
@@ -56,66 +57,107 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Se o treino foi completado, criar um registro de CompletedWorkout
-    let completedWorkout = null;
+    let completedWorkoutRecordId: number | null = null;
+
     if (completed) {
-      completedWorkout = await prisma.completedWorkout.create({
-        data: {
-          athleteId: profile.id,
-          source: 'manual',
-          date: customWorkout.date,
-          type: customWorkout.type,
-          subtype: customWorkout.subtype,
-          distance: customWorkout.distance,
-          duration: customWorkout.duration,
-          pace: customWorkout.targetPace,
-          perceivedEffort: perceivedEffort || null,
-          feeling: feeling || null,
-          notes: notes || null,
-        },
-      });
-
-      // Atualizar o CustomWorkout com isCompleted e referência ao completedWorkout
-      await prisma.customWorkout.update({
-        where: { id: workoutId },
-        data: {
-          isCompleted: true,
-          completedWorkoutId: completedWorkout.id,
-        },
-      });
-
-      // Atualizar a contagem de treinos completados na semana
-      await prisma.customWeek.update({
-        where: { id: customWorkout.weekId },
-        data: {
-          completedWorkouts: {
-            increment: 1,
+      // Se o treino foi marcado como completado
+      // Criar ou atualizar CompletedWorkout
+      if (customWorkout.completedWorkoutId) {
+        // Se já existe um CompletedWorkout, atualizá-lo
+        const updatedCompletedWorkout = await prisma.completedWorkout.update({
+          where: { id: customWorkout.completedWorkoutId },
+          data: {
+            athleteId: profile.id,
+            source: 'manual', // Assumindo que a confirmação manual sempre cria um manual
+            date: customWorkout.date,
+            type: customWorkout.type,
+            subtype: customWorkout.subtype,
+            distance: customWorkout.distance,
+            duration: customWorkout.duration,
+            pace: customWorkout.targetPace,
+            perceivedEffort: perceivedEffort || null,
+            feeling: feeling || null,
+            notes: notes || null,
           },
-        },
-      });
+        });
+        completedWorkoutRecordId = updatedCompletedWorkout.id;
+      } else {
+        // Se não existe, criar um novo CompletedWorkout
+        const newCompletedWorkout = await prisma.completedWorkout.create({
+          data: {
+            athleteId: profile.id,
+            source: 'manual',
+            date: customWorkout.date,
+            type: customWorkout.type,
+            subtype: customWorkout.subtype,
+            distance: customWorkout.distance,
+            duration: customWorkout.duration,
+            pace: customWorkout.targetPace,
+            perceivedEffort: perceivedEffort || null,
+            feeling: feeling || null,
+            notes: notes || null,
+          },
+        });
+        completedWorkoutRecordId = newCompletedWorkout.id;
+      }
+    } else {
+      // Se o treino foi marcado como NÃO completado
+      if (customWorkout.completedWorkoutId) {
+        // Se existia um CompletedWorkout associado, deletá-lo
+        await prisma.completedWorkout.delete({
+          where: { id: customWorkout.completedWorkoutId },
+        });
+      }
+      completedWorkoutRecordId = null;
+    }
 
-      // Recalcular a taxa de conclusão do plano
-      const plan = await prisma.customTrainingPlan.findUnique({
-        where: { id: customWorkout.week.plan.id },
-        include: {
-          weeks: {
-            include: {
-              workouts: true,
+    // Atualizar o CustomWorkout com o status de completado e a referência ao CompletedWorkout
+    await prisma.customWorkout.update({
+      where: { id: workoutId },
+      data: {
+        isCompleted: completed,
+        completedWorkoutId: completedWorkoutRecordId,
+      },
+    });
+
+    // Recalcular a contagem de treinos completados na semana e no plano
+    // (Esta lógica precisa ser mais robusta para lidar com increment/decrement)
+    // Por simplicidade, vamos re-fetch e recalcular tudo.
+    const updatedWeek = await prisma.customWeek.findUnique({
+      where: { id: customWorkout.weekId },
+      include: {
+        workouts: true, // Incluir CustomWorkouts para contar isCompleted
+        plan: {
+          include: {
+            weeks: {
+              include: {
+                workouts: true,
+              },
             },
           },
         },
+      },
+    });
+
+    if (updatedWeek) {
+      const completedWorkoutsInWeek = updatedWeek.workouts.filter(w => w.isCompleted).length;
+      await prisma.customWeek.update({
+        where: { id: updatedWeek.id },
+        data: {
+          completedWorkouts: completedWorkoutsInWeek,
+        },
       });
 
-      if (plan) {
-        const totalWorkouts = plan.weeks.reduce((sum, week) => sum + week.totalWorkouts, 0);
-        const completedWorkoutsCount = plan.weeks.reduce(
-          (sum, week) => sum + week.completedWorkouts,
+      if (updatedWeek.plan) {
+        const totalWorkoutsInPlan = updatedWeek.plan.weeks.reduce((sum, week) => sum + week.totalWorkouts, 0);
+        const completedWorkoutsInPlan = updatedWeek.plan.weeks.reduce(
+          (sum, week) => sum + week.workouts.filter(w => w.isCompleted).length,
           0
         );
-        const completionRate = totalWorkouts > 0 ? (completedWorkoutsCount / totalWorkouts) * 100 : 0;
+        const completionRate = totalWorkoutsInPlan > 0 ? (completedWorkoutsInPlan / totalWorkoutsInPlan) * 100 : 0;
 
         await prisma.customTrainingPlan.update({
-          where: { id: plan.id },
+          where: { id: updatedWeek.plan.id },
           data: {
             completionRate,
           },
@@ -155,7 +197,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: 'Relato salvo com sucesso',
-      completedWorkout,
     });
   } catch (error) {
     console.error('[API] Error completing workout:', error);
