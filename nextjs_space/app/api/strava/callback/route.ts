@@ -1,6 +1,5 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 export const dynamic = "force-dynamic";
@@ -34,6 +33,7 @@ export async function GET(request: NextRequest) {
   });
   console.log('========================================\n');
 
+  const { getServerSession } = await import('next-auth');
   const session = await getServerSession(authOptions);
   const baseUrl = getBaseUrl(request);
   const searchParams = request.nextUrl.searchParams;
@@ -79,21 +79,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/tracking?strava_error=' + error, baseUrl));
   }
 
-  // Se não houver código, redirecionar para página de tracking
+  // Se não houver código, redirecionar para login
   if (!code) {
     console.log('[STRAVA-CALLBACK] Nenhum código recebido');
     return NextResponse.redirect(new URL('/tracking?strava_error=no_code', baseUrl));
   }
 
-  // Trocar código por tokens
   try {
     const clientId = process.env.STRAVA_CLIENT_ID;
     const clientSecret = process.env.STRAVA_CLIENT_SECRET;
 
     if (!clientId || !clientSecret) {
+      console.error('Credenciais do Strava não configuradas');
       throw new Error('Credenciais do Strava não configuradas');
     }
 
+    // Trocar código por tokens com Strava
+    console.log('[STRAVA] Trocando código por tokens...');
     const tokenResponse = await fetch('https://www.strava.com/oauth/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -107,14 +109,14 @@ export async function GET(request: NextRequest) {
 
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.json();
-      console.error('Erro ao obter tokens do Strava:', errorData);
-      throw new Error('Erro ao obter tokens do Strava');
+      console.error('[STRAVA] Erro ao obter tokens:', errorData);
+      throw new Error(`Erro ao obter tokens do Strava: ${errorData.message}`);
     }
 
     const data = await tokenResponse.json();
     console.log('[STRAVA-CALLBACK] Tokens obtidos com sucesso. Athlete ID:', data.athlete?.id);
 
-    // Salvar tokens no perfil do atleta
+    // Importar banco de dados
     const { prisma } = await import('@/lib/db');
 
     let profile = await prisma.athleteProfile.findUnique({
@@ -140,6 +142,7 @@ export async function GET(request: NextRequest) {
       console.log('[STRAVA-CALLBACK] Novo perfil criado:', profile.id);
     }
 
+<<<<<<< HEAD
     console.log('[STRAVA-CALLBACK] Atualizando tokens do Strava para perfil', profile.id);
     console.log('[STRAVA-CALLBACK] Dados a salvar:');
     console.log('  - stravaAthleteId:', data.athlete.id.toString());
@@ -193,7 +196,8 @@ export async function GET(request: NextRequest) {
     console.log('[STRAVA-CALLBACK] Redirecionando para tracking...');
     return NextResponse.redirect(new URL('/tracking?strava_success=true', baseUrl));
   } catch (error) {
-    console.error('Erro na autenticação Strava:', error);
-    return NextResponse.redirect(new URL('/tracking?strava_error=auth_failed', baseUrl));
+    console.error('[STRAVA] Erro na autenticação Strava:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+    return NextResponse.redirect(new URL(`/login?error=strava_auth_failed&details=${encodeURIComponent(errorMessage)}`, baseUrl));
   }
 }
