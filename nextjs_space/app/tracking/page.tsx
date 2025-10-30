@@ -2,8 +2,8 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
 import Header from '@/components/header';
 import WorkoutLogFormImproved from '@/components/workout-log-form-improved';
 import WorkoutStats from '@/components/workout-stats';
@@ -12,9 +12,10 @@ import WorkoutHistory from '@/components/workout-history';
 import StravaConnect from '@/components/strava-connect';
 import { Loader2 } from 'lucide-react';
 
-export default function TrackingPage() {
+function TrackingPageContent() {
   const { data: session, status } = useSession() || {};
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [athleteProfile, setAthleteProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -30,6 +31,15 @@ export default function TrackingPage() {
       fetchAthleteProfile();
     }
   }, [session]);
+
+  // Recarregar perfil quando volta da conexão Strava
+  useEffect(() => {
+    const stravaSuccess = searchParams?.get('strava_success');
+    if (stravaSuccess === 'true' && athleteProfile) {
+      console.log('[TRACKING] Strava conexão detectada, recarregando perfil...');
+      fetchAthleteProfile();
+    }
+  }, [searchParams]);
 
   const fetchAthleteProfile = async () => {
     try {
@@ -84,7 +94,7 @@ export default function TrackingPage() {
           <WorkoutStats key={refreshKey} athleteId={athleteProfile.id} />
 
           {/* Main Content */}
-          <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Formulário de registro */}
             <div>
               <WorkoutLogFormImproved 
@@ -104,5 +114,13 @@ export default function TrackingPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function TrackingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-orange-600" /></div>}>
+      <TrackingPageContent />
+    </Suspense>
   );
 }

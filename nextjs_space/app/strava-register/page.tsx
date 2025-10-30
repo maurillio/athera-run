@@ -1,95 +1,122 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, Lock, User, Chrome } from 'lucide-react';
+import { Loader2, Mail, Lock, CheckCircle } from 'lucide-react';
 
-export default function SignupPage() {
+function StravaRegisterContent() {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const [name, setName] = useState('');
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [stravaAthleteId, setStravaAthleteId] = useState('');
 
-  // Redirect if already authenticated
   useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
-      router.push('/dashboard');
+    const athleteId = searchParams?.get('athleteId');
+    const profileId = searchParams?.get('profileId');
+
+    console.log('[STRAVA-REGISTER] Iniciando:');
+    console.log('[STRAVA-REGISTER]  - athleteId:', athleteId);
+    console.log('[STRAVA-REGISTER]  - profileId:', profileId);
+
+    if (athleteId) {
+      setStravaAthleteId(athleteId);
     }
-  }, [status, session, router]);
+  }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+  const validateForm = () => {
+    if (!email) {
+      setError('Email é obrigatório');
+      return false;
+    }
 
-    if (password !== confirmPassword) {
-      setError('As senhas não coincidem');
-      setIsLoading(false);
-      return;
+    if (!password) {
+      setError('Senha é obrigatória');
+      return false;
     }
 
     if (password.length < 6) {
-      setError('A senha deve ter no mínimo 6 caracteres');
-      setIsLoading(false);
+      setError('Senha deve ter no mínimo 6 caracteres');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError('As senhas não conferem');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!validateForm()) {
       return;
     }
 
+    setIsLoading(true);
+
     try {
-      const response = await fetch('/api/signup', {
+      console.log('[STRAVA-REGISTER] Salvando cadastro com email:', email);
+
+      const response = await fetch('/api/strava/complete-register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          stravaAthleteId
+        })
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        setError(data.error || 'Erro ao criar conta');
+        const data = await response.json();
+        setError(data.error || 'Erro ao completar cadastro');
         setIsLoading(false);
         return;
       }
 
-      // Auto-login após cadastro
-      const result = await signIn('credentials', {
+      const data = await response.json();
+      console.log('[STRAVA-REGISTER] Cadastro completado com sucesso!');
+      console.log('[STRAVA-REGISTER] Perfil de atleta está vinculado para treinos');
+      console.log('[STRAVA-REGISTER] Fazendo login automático...');
+
+      // Fazer login automático com as credenciais que acabou de cadastrar
+      const signInResult = await signIn('credentials', {
         email,
         password,
-        redirect: false,
+        redirect: false
       });
 
-      if (result?.error) {
-        setError('Conta criada, mas erro ao fazer login');
-        setIsLoading(false);
+      console.log('[STRAVA-REGISTER] Resultado do login:', signInResult?.ok);
+
+      if (signInResult?.ok) {
+        // Login bem-sucedido, redirecionar para o destino correto
+        console.log('[STRAVA-REGISTER] Login bem-sucedido, redirecionando para:', data.redirectTo);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        router.push(data.redirectTo);
       } else {
-        router.push('/onboarding');
-        router.refresh();
+        // Se o login falhar, ainda redirecionar para o destino
+        // (o usuário está com credenciais válidas, pode fazer login manual depois)
+        console.error('[STRAVA-REGISTER] Login automático falhou, mas credenciais foram salvas');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        router.push(data.redirectTo);
       }
     } catch (error) {
-      setError('Erro ao criar conta. Tente novamente.');
+      console.error('Erro ao completar cadastro:', error);
+      setError('Erro ao completar cadastro. Tente novamente.');
       setIsLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setIsGoogleLoading(true);
-    setError('');
-    try {
-      await signIn('google', { callbackUrl: '/onboarding' });
-    } catch (error) {
-      setError('Erro ao fazer login com Google');
-      setIsGoogleLoading(false);
     }
   };
 
@@ -102,10 +129,11 @@ export default function SignupPage() {
               <span className="text-white font-bold text-2xl">M</span>
             </div>
           </div>
-          <CardTitle className="text-2xl text-center font-bold">Crie sua conta</CardTitle>
-          <CardDescription className="text-center">
-            Comece sua jornada para a maratona
-          </CardDescription>
+          <CardTitle className="text-2xl text-center font-bold">Completar Cadastro Strava</CardTitle>
+          <div className="text-center space-y-2">
+            <CardDescription>Sua conta Strava já está vinculada para seus treinos! 🎉</CardDescription>
+            <p className="text-sm text-muted-foreground">Agora crie uma senha para sua conta e faça login com email também</p>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {error && (
@@ -114,51 +142,7 @@ export default function SignupPage() {
             </Alert>
           )}
 
-          <Button
-            variant="outline"
-            onClick={handleGoogleSignIn}
-            disabled={isGoogleLoading || isLoading}
-            className="w-full"
-          >
-            {isGoogleLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <Chrome className="mr-2 h-4 w-4" />
-                Cadastre-se com Google
-              </>
-            )}
-          </Button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                ou cadastre-se com email
-              </span>
-            </div>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="João Silva"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="pl-10"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -172,6 +156,7 @@ export default function SignupPage() {
                   className="pl-10"
                   required
                   disabled={isLoading}
+                  autoFocus
                 />
               </div>
             </div>
@@ -183,13 +168,12 @@ export default function SignupPage() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Mínimo 6 caracteres"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10"
                   required
                   disabled={isLoading}
-                  minLength={6}
                 />
               </div>
             </div>
@@ -201,13 +185,12 @@ export default function SignupPage() {
                 <Input
                   id="confirmPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Confirme sua senha"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="pl-10"
                   required
                   disabled={isLoading}
-                  minLength={6}
                 />
               </div>
             </div>
@@ -220,23 +203,28 @@ export default function SignupPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Criando conta...
+                  Cadastrando...
                 </>
               ) : (
-                'Criar conta'
+                'Completar Cadastro'
               )}
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-center text-muted-foreground">
-            Já tem uma conta?{' '}
-            <Link href="/login" className="text-orange-600 hover:text-orange-700 font-medium">
-              Faça login
-            </Link>
+        <CardFooter>
+          <div className="text-sm text-center text-muted-foreground w-full">
+            Você poderá fazer login com email e senha após este cadastro
           </div>
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function StravaRegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Carregando...</div>}>
+      <StravaRegisterContent />
+    </Suspense>
   );
 }

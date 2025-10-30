@@ -20,6 +20,7 @@ export default function StravaConnect({ profile }: StravaConnectProps) {
   const [isImporting, setIsImporting] = useState(false);
 
   const handleConnect = () => {
+    console.log('[STRAVA-CONNECT] Clicou em conectar, redirecionando para /api/strava/auth');
     // Redirecionar para OAuth do Strava
     window.location.href = '/api/strava/auth';
   };

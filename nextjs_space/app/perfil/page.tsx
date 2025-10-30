@@ -444,7 +444,7 @@ export default function PerfilPage() {
           </div>
 
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="grid w-full max-w-2xl grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1">
               <TabsTrigger value="personal">
                 <User className="h-4 w-4 mr-2" />
                 Pessoal
