@@ -16,31 +16,52 @@ import {
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
-interface WorkoutLogFormProps {
-  athleteId: number;
+interface Workout { // Define Workout interface here for reusability
+  id: number;
+  date: string;
+  type: string;
+  subtype: string | null;
+  distance: number | null;
+  duration: number | null;
+  pace: string | null;
+  avgHeartRate: number | null;
+  perceivedEffort: number | null;
+  feeling: string | null;
+  notes: string | null;
+  source: string; // Added source property
 }
 
-export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
+interface WorkoutLogFormProps {
+  athleteId: number;
+  initialWorkout?: Workout; // Optional workout data for editing
+  onWorkoutSaved: () => void; // Callback after saving
+}
+
+export default function WorkoutLogForm({ athleteId, initialWorkout, onWorkoutSaved }: WorkoutLogFormProps) {
   const [loading, setLoading] = useState(false);
+  const isStravaWorkout = initialWorkout?.source === 'strava'; // Determine if it's a Strava workout
   const [formData, setFormData] = useState({
-    date: new Date().toISOString().split('T')[0],
-    type: 'running',
-    subtype: 'easy',
-    distance: '',
-    duration: '',
-    avgHeartRate: '',
-    perceivedEffort: '5',
-    feeling: 'good',
-    notes: ''
+    date: initialWorkout?.date ? new Date(initialWorkout.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    type: initialWorkout?.type || 'running',
+    subtype: initialWorkout?.subtype || 'easy',
+    distance: initialWorkout?.distance?.toString() || '',
+    duration: initialWorkout?.duration?.toString() || '',
+    avgHeartRate: initialWorkout?.avgHeartRate?.toString() || '',
+    perceivedEffort: initialWorkout?.perceivedEffort?.toString() || '5',
+    feeling: initialWorkout?.feeling || 'good',
+    notes: initialWorkout?.notes || ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    const method = initialWorkout ? 'PUT' : 'POST';
+    const url = initialWorkout ? `/api/workouts/${initialWorkout.id}` : '/api/workouts/log';
+
     try {
-      const response = await fetch('/api/workouts/log', {
-        method: 'POST',
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           athleteId,
@@ -52,27 +73,27 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
         })
       });
 
-      if (!response.ok) throw new Error('Erro ao salvar treino');
+      if (!response.ok) throw new Error(`Erro ao ${initialWorkout ? 'atualizar' : 'registrar'} treino`);
 
-      toast.success('Treino registrado com sucesso!');
-      
-      // Limpar formulário
-      setFormData({
-        date: new Date().toISOString().split('T')[0],
-        type: 'running',
-        subtype: 'easy',
-        distance: '',
-        duration: '',
-        avgHeartRate: '',
-        perceivedEffort: '5',
-        feeling: 'good',
-        notes: ''
-      });
+      toast.success(`Treino ${initialWorkout ? 'atualizado' : 'registrado'} com sucesso!`);
 
-      // Recarregar página para atualizar dados
-      window.location.reload();
+      // Clear form only if creating a new workout
+      if (!initialWorkout) {
+        setFormData({
+          date: new Date().toISOString().split('T')[0],
+          type: 'running',
+          subtype: 'easy',
+          distance: '',
+          duration: '',
+          avgHeartRate: '',
+          perceivedEffort: '5',
+          feeling: 'good',
+          notes: ''
+        });
+      }
+      onWorkoutSaved(); // Call callback instead of reloading
     } catch (error) {
-      toast.error('Erro ao registrar treino');
+      toast.error(`Erro ao ${initialWorkout ? 'atualizar' : 'registrar'} treino`);
       console.error(error);
     } finally {
       setLoading(false);
@@ -91,6 +112,7 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             required
+            disabled={isStravaWorkout} // Added disabled prop
           />
         </div>
 
@@ -100,6 +122,7 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
           <Select
             value={formData.type}
             onValueChange={(value) => setFormData({ ...formData, type: value })}
+            disabled={isStravaWorkout} // Added disabled prop
           >
             <SelectTrigger>
               <SelectValue />
@@ -120,6 +143,7 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
             <Select
               value={formData.subtype}
               onValueChange={(value) => setFormData({ ...formData, subtype: value })}
+              disabled={isStravaWorkout} // Added disabled prop
             >
               <SelectTrigger>
                 <SelectValue />
@@ -139,15 +163,15 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
         {formData.type === 'running' && (
           <div>
             <Label htmlFor="distance">Distância (km)</Label>
-            <Input
-              id="distance"
-              type="number"
-              step="0.1"
-              placeholder="10.5"
-              value={formData.distance}
-              onChange={(e) => setFormData({ ...formData, distance: e.target.value })}
-            />
-          </div>
+                      <Input
+                        id="distance"
+                        type="number"
+                        step="0.1"
+                        placeholder="10.5"
+                        value={formData.distance}
+                        onChange={(e) => setFormData({ ...formData, distance: e.target.value })}
+                        disabled={isStravaWorkout} // Added disabled prop
+                      />          </div>
         )}
 
         {/* Duração */}
@@ -159,6 +183,7 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
             placeholder="60"
             value={formData.duration}
             onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+            disabled={isStravaWorkout} // Added disabled prop
           />
         </div>
 
@@ -166,14 +191,14 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
         {formData.type === 'running' && (
           <div>
             <Label htmlFor="avgHeartRate">FC Média (bpm)</Label>
-            <Input
-              id="avgHeartRate"
-              type="number"
-              placeholder="150"
-              value={formData.avgHeartRate}
-              onChange={(e) => setFormData({ ...formData, avgHeartRate: e.target.value })}
-            />
-          </div>
+                      <Input
+                        id="avgHeartRate"
+                        type="number"
+                        placeholder="150"
+                        value={formData.avgHeartRate}
+                        onChange={(e) => setFormData({ ...formData, avgHeartRate: e.target.value })}
+                        disabled={isStravaWorkout} // Added disabled prop
+                      />          </div>
         )}
 
         {/* Esforço Percebido */}
@@ -237,7 +262,7 @@ export default function WorkoutLogForm({ athleteId }: WorkoutLogFormProps) {
             Salvando...
           </>
         ) : (
-          'Registrar Treino'
+          initialWorkout ? 'Salvar Alterações' : 'Registrar Treino'
         )}
       </Button>
     </form>

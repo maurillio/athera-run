@@ -24,6 +24,7 @@ import {
   AlertCircle,
   CheckCircle2,
   BookOpen,
+  XCircle, // New import for X icon
 } from 'lucide-react';
 import Link from 'next/link';
 import TrainingLogDialog from '@/components/training-log-dialog';
@@ -363,8 +364,10 @@ export default function DashboardPage() {
                             key={workout.id}
                             className={`flex flex-col p-4 rounded-lg border ${
                               workout.isCompleted
-                                ? 'bg-green-50 border-green-200'
-                                : 'bg-white border-gray-200'
+                                ? 'bg-green-50 border-green-200' // Completed
+                                : (workoutDate.getTime() < today.getTime() && !workout.isCompleted) // Past and not completed
+                                  ? 'bg-red-50 border-red-200' // Marked as not completed (red)
+                                  : 'bg-white border-gray-200' // Not completed yet, or future
                             }`}
                           >
                             <div className="flex items-start justify-between mb-2">
@@ -373,9 +376,11 @@ export default function DashboardPage() {
                                   <Badge variant={isToday ? "default" : "secondary"}>
                                     {isToday ? 'Hoje' : 'Amanhã'}
                                   </Badge>
-                                  {workout.isCompleted && (
+                                  {workout.isCompleted ? (
                                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                  )}
+                                  ) : (workoutDate.getTime() < today.getTime() && !workout.isCompleted) ? (
+                                    <XCircle className="h-4 w-4 text-red-600" />
+                                  ) : null}
                                 </div>
                                 <h4 className="font-medium text-lg">{workout.title}</h4>
                                 <p className="text-sm text-muted-foreground">
@@ -411,7 +416,7 @@ export default function DashboardPage() {
                               )}
                             </div>
 
-                            {!workout.isCompleted && (
+                            {!workout.isCompleted && isToday && ( // Added isToday condition
                               <Button 
                                 onClick={() => handleOpenWorkoutLog(workout)}
                                 className="mt-2 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
