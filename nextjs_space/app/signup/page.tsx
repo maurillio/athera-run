@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -10,11 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, Lock, User, Chrome } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Chrome, Activity } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export default function SignupPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,13 +22,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
-      router.push('/dashboard');
-    }
-  }, [status, session, router]);
+  const [isStravaLoading, setIsStravaLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,6 +87,17 @@ export default function SignupPage() {
     }
   };
 
+  const handleStravaSignIn = async () => {
+    setIsStravaLoading(true);
+    setError('');
+    try {
+      await signIn('strava', { callbackUrl: '/onboarding' });
+    } catch (error) {
+      setError('Erro ao fazer login com Strava');
+      setIsStravaLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
       <Card className="w-full max-w-md shadow-xl">
@@ -114,25 +119,43 @@ export default function SignupPage() {
             </Alert>
           )}
 
-          <Button
-            variant="outline"
-            onClick={handleGoogleSignIn}
-            disabled={isGoogleLoading || isLoading}
-            className="w-full"
-          >
-            {isGoogleLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <Chrome className="mr-2 h-4 w-4" />
-                Cadastre-se com Google
-              </>
-            )}
-          </Button>
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              variant="outline"
+              onClick={handleGoogleSignIn}
+              disabled={isGoogleLoading || isLoading}
+              className="w-full"
+            >
+              {isGoogleLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <Chrome className="mr-2 h-4 w-4" />
+                  Google
+                </>
+              )}
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={handleStravaSignIn}
+              disabled={isStravaLoading || isLoading}
+              className="w-full"
+            >
+              {isStravaLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <Activity className="mr-2 h-4 w-4" />
+                  Strava
+                </>
+              )}
+            </Button>
+          </div>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t"></div>
+              <Separator />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
