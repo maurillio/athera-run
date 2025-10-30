@@ -17,7 +17,8 @@ const StravaProvider = {
       scope: 'read,activity:read_all,profile:read_all',
       approval_prompt: 'auto',
       response_type: 'code',
-      client_id: process.env.STRAVA_CLIENT_ID
+      client_id: process.env.STRAVA_CLIENT_ID,
+      redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/strava`
     }
   },
   token: {
@@ -99,7 +100,8 @@ export const authOptions: NextAuthOptions = {
         params: {
           prompt: "consent",
           access_type: "offline",
-          response_type: "code"
+          response_type: "code",
+          redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/google`
         }
       }
     }),
