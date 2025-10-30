@@ -4,7 +4,9 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { History, Activity, Clock, Heart, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { History, Activity, Clock, Heart, TrendingUp, Trash2, Edit2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Workout {
   id: number;
@@ -18,6 +20,7 @@ interface Workout {
   perceivedEffort: number | null;
   feeling: string | null;
   notes: string | null;
+  source?: string;
 }
 
 interface WorkoutHistoryProps {
@@ -43,6 +46,33 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
       console.error('Error fetching workouts:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (workoutId: number) => {
+    if (!confirm('Tem certeza que deseja deletar este treino?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/workouts/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ workoutId }),
+      });
+
+      if (response.ok) {
+        toast.success('✅ Treino deletado com sucesso!');
+        fetchWorkouts();
+      } else {
+        const error = await response.json();
+        toast.error(error.message || 'Erro ao deletar treino');
+      }
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      toast.error('Erro ao deletar treino');
     }
   };
 
@@ -206,6 +236,32 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
                 <p className="text-sm text-muted-foreground italic mt-2">
                   "{workout.notes}"
                 </p>
+              )}
+
+              {workout.source === 'manual' && (
+                <div className="flex gap-2 mt-4">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      // TODO: Abrir modal de edição
+                      toast('Funcionalidade de edição em desenvolvimento');
+                    }}
+                  >
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="flex-1"
+                    onClick={() => handleDelete(workout.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Deletar
+                  </Button>
+                </div>
               )}
             </div>
           ))}
