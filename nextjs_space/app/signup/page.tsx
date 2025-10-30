@@ -91,7 +91,8 @@ export default function SignupPage() {
     setIsStravaLoading(true);
     setError('');
     try {
-      await signIn('strava', { callbackUrl: '/onboarding' });
+      // Redirecionar para o endpoint customizado do Strava
+      window.location.href = '/api/strava/auth';
     } catch (error) {
       setError('Erro ao fazer login com Strava');
       setIsStravaLoading(false);
