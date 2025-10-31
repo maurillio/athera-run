@@ -172,12 +172,12 @@ function LoginContent() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex justify-center">
             <Button
               variant="outline"
               onClick={handleGoogleSignIn}
               disabled={isGoogleLoading || isLoading}
-              className="w-full"
+              className="w-full max-w-xs"
             >
               {isGoogleLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -188,7 +188,6 @@ function LoginContent() {
                 </>
               )}
             </Button>
-
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">

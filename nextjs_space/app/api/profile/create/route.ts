@@ -64,6 +64,12 @@ export async function POST(req: NextRequest) {
       longRunDay, // Dia do treino longo
       hasRunBefore, // Se já correu antes
       usualPaces, // Paces habituais por distância
+      // Novos campos para análise de elite
+      runningYears,
+      maxHeartRate,
+      sleepQuality,
+      stressLevel,
+      otherSportsExperience,
     } = body;
 
     const profileData = {
@@ -84,6 +90,10 @@ export async function POST(req: NextRequest) {
       longRunDay: longRunDay !== null && longRunDay !== undefined ? parseInt(longRunDay) : null,
       // Paces habituais (salvar apenas os paces, sem wrapper)
       ...(usualPaces && { usualPaces: usualPaces }),
+      // Novos campos para análise de elite
+      runningYears: runningYears ? parseInt(runningYears) : null,
+      maxHeartRate: maxHeartRate ? parseInt(maxHeartRate) : null,
+      recentLongRunPace: null, // Será preenchido com dados do Strava/logs
     };
 
     let profile;

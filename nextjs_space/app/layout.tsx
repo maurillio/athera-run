@@ -9,6 +9,12 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Athera Run - Treinamento de Corrida com Inteligência Artificial',
   description: 'Planos de treinamento personalizados com IA para corrida. 10km, meia-maratona e maratona. Treinos adaptados ao seu perfil e objetivos.',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   openGraph: {
     title: 'Athera Run - Treinamento de Corrida com IA',
     description: 'Planos de treinamento personalizados com IA para corrida de todos os níveis',

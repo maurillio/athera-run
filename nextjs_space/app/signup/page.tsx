@@ -22,7 +22,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isStravaLoading, setIsStravaLoading] = useState(false);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,16 +87,7 @@ export default function SignupPage() {
     }
   };
 
-  const handleStravaSignIn = async () => {
-    setIsStravaLoading(true);
-    setError('');
-    try {
-      await signIn('strava', { callbackUrl: '/onboarding' });
-    } catch (error) {
-      setError('Erro ao fazer login com Strava');
-      setIsStravaLoading(false);
-    }
-  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
@@ -119,12 +110,12 @@ export default function SignupPage() {
             </Alert>
           )}
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex justify-center">
             <Button
               variant="outline"
               onClick={handleGoogleSignIn}
               disabled={isGoogleLoading || isLoading}
-              className="w-full"
+              className="w-full max-w-xs"
             >
               {isGoogleLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -132,22 +123,6 @@ export default function SignupPage() {
                 <>
                   <Chrome className="mr-2 h-4 w-4" />
                   Google
-                </>
-              )}
-            </Button>
-
-            <Button
-              variant="outline"
-              onClick={handleStravaSignIn}
-              disabled={isStravaLoading || isLoading}
-              className="w-full"
-            >
-              {isStravaLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <Activity className="mr-2 h-4 w-4" />
-                  Strava
                 </>
               )}
             </Button>

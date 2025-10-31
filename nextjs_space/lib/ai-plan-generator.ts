@@ -1,4 +1,3 @@
-
 /**
  * Sistema de Geração de Planos de Treinamento com IA
  *
@@ -41,14 +40,14 @@ export interface AIUserProfile {
   limitations?: string[];
   
   // Histórico
-  previousRaces?: Array<{
+  previousRaces?: Array<{ 
     distance: string;
     time: string;
     date: Date;
   }>;
 
   // Corridas cadastradas (Sistema de Múltiplas Corridas)
-  raceGoals?: Array<{
+  raceGoals?: Array<{ 
     id: number;
     name: string;
     distance: string;
@@ -68,7 +67,7 @@ export interface AIUserProfile {
     percentage: number;
     period: string; // Ex: "últimas 4 semanas"
   };
-  athleteFeedback?: Array<{
+  athleteFeedback?: Array<{ 
     date: Date;
     type: 'fatiga' | 'dor' | 'motivacao' | 'desempenho' | 'outro';
     message: string;
@@ -88,7 +87,7 @@ export interface AIGeneratedPlan {
   targetRaceDate: Date;
   
   // Fases do treinamento
-  phases: Array<{
+  phases: Array<{ 
     name: string;
     weeks: number;
     focus: string;
@@ -96,14 +95,14 @@ export interface AIGeneratedPlan {
   }>;
   
   // Semanas detalhadas
-  weeks: Array<{
+  weeks: Array<{ 
     weekNumber: number;
     startDate: Date;
     endDate: Date;
     phase: string;
     focus: string;
     totalDistance: number;
-    workouts: Array<{
+    workouts: Array<{ 
       dayOfWeek: number;
       date: Date;
       type: string;
@@ -116,11 +115,15 @@ export interface AIGeneratedPlan {
       warmup?: string;
       mainSet?: string;
       cooldown?: string;
+      targetHeartRate?: string;
+      targetRPE?: number;
+      isStrengthSpecific?: boolean;
+      equipmentRequired?: string;
     }>;
   }>;
   
   // Ritmos personalizados
-  paces: {
+  paces: { 
     easy: string;
     marathon: string;
     threshold: string;
@@ -142,7 +145,7 @@ export interface AIGeneratedPlan {
 /**
  * Prepara o contexto completo do usuário para a IA
  */
-function prepareUserContext(profile: AIUserProfile): string {
+function prepareUserContext(profile: AIUserProfile): string { 
   const today = new Date();
   const raceDate = new Date(profile.targetRaceDate);
   const weeksUntilRace = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
@@ -163,6 +166,36 @@ function prepareUserContext(profile: AIUserProfile): string {
   context += `- Peso: ${profile.weight}kg\n`;
   if (profile.height) context += `- Altura: ${profile.height}cm\n`;
   if (profile.currentVDOT) context += `- VDOT Atual: ${profile.currentVDOT}\n`;
+  
+  // Novos campos fisiológicos e de experiência
+  if ((profile as any).runningYears) {
+    context += `- Anos de Experiência em Corrida: ${(profile as any).runningYears} anos\n`;
+  }
+  if ((profile as any).maxHeartRate) {
+    context += `- FC Máxima: ${(profile as any).maxHeartRate} bpm\n`;
+  }
+  if ((profile as any).recentLongRunPace) {
+    context += `- Pace do Último Longão: ${(profile as any).recentLongRunPace}\n`;
+  }
+  
+  // Estilo de vida
+  if ((profile as any).sleepQuality || (profile as any).stressLevel) {
+    context += `\n## Estilo de Vida\n`;
+    if ((profile as any).sleepQuality) {
+      const sleepLabels = ['', 'Ruim', 'Regular', 'Bom', 'Muito Bom', 'Ótimo'];
+      context += `- Qualidade do Sono: ${sleepLabels[(profile as any).sleepQuality]} (${(profile as any).sleepQuality}/5)\n`;
+    }
+    if ((profile as any).stressLevel) {
+      const stressLabels = ['', 'Baixo', 'Leve', 'Moderado', 'Alto', 'Muito Alto'];
+      context += `- Nível de Estresse Diário: ${stressLabels[(profile as any).stressLevel]} (${(profile as any).stressLevel}/5)\n`;
+    }
+  }
+  
+  // Experiência em outros esportes
+  if ((profile as any).otherSportsExperience) {
+    context += `\n## Base Atlética\n`;
+    context += `- Experiência em Outros Esportes: ${(profile as any).otherSportsExperience}\n`;
+  }
   
   // Paces usuais (dados reais!)
   if (profile.usualPaces && Object.keys(profile.usualPaces).length > 0) {
@@ -307,7 +340,7 @@ function prepareUserContext(profile: AIUserProfile): string {
     }
 
     // Análise contextual
-    const isOvertraining =
+    const isOvertraining = 
       profile.currentPhysicalState.energyLevel === 'baixo' ||
       profile.currentPhysicalState.energyLevel === 'exausto' ||
       profile.currentPhysicalState.soreness === 'intensa';
@@ -324,119 +357,70 @@ function prepareUserContext(profile: AIUserProfile): string {
  * Gera um plano de treinamento usando IA
  * A IA gera a estrutura e estratégia com exemplos, depois expandimos para todas as semanas
  */
-export async function generateAIPlan(profile: AIUserProfile, maxRetries: number = 3): Promise<AIGeneratedPlan> {
+export async function generateAIPlan(profile: AIUserProfile, maxRetries: number = 3): Promise<AIGeneratedPlan> { 
   const userContext = prepareUserContext(profile);
   
   const today = new Date();
   const raceDate = new Date(profile.targetRaceDate);
   const totalWeeks = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
   
-  console.log(`[AI PLAN] Total de semanas calculado: ${totalWeeks}`);
-  
-  const systemPrompt = `Você é um treinador de corrida de rua ESPECIALISTA com certificação internacional e experiência com atletas de TODOS OS NÍVEIS (iniciante absoluto ao ultra-avançado) e TODAS AS DISTÂNCIAS (5K, 10K, meia-maratona, maratona e ultramaratona).
+  const systemPrompt = `Você é um Treinador de Corrida de Rua de Elite, com especialização em fisiologia do exercício, metodologia VDOT (Jack Daniels) e periodização clássica e moderna. Seu objetivo é criar um plano de treinamento TOTALMENTE PERSONALIZADO, seguro, sustentável e otimizado para o pico de desempenho na Corrida A.
 
-🏃 ESPECIALIDADES:
-- Corrida de rua: do 5K (velocidade) até ultramaratona (endurance extremo)
-- Treino de iniciantes (walk/run) até atletas de elite
-- Sistema VDOT e periodização para cada distância
-- Metodologias: Daniels, Lydiard, Pfitzinger, Hansons, Pete Magill
-- Prevenção de lesões (ITBS, fascite, canelite, tendinites)
-- Integração harmoniosa: corrida + musculação + natação + yoga + outras
+**Sua Autoridade e Princípios Fundamentais:**
+1.  **Ciência:** Use o VDOT para determinar as zonas de intensidade e paces (Easy, Marathon, Threshold, Interval, Repetition).
+2.  **Experiência Empírica:** Incorpore as melhores práticas de treinadores de elite (ex: Peter Coe, Renato Canova, Brad Hudson) em termos de progressão de volume, distribuição de intensidade, e importância de treinos de força e mobilidade.
+3.  **Contexto e Individualização:** Sua decisão deve ser baseada na análise holística do perfil, histórico, feedback e adesão recente do atleta, ajustando o plano dinamicamente. Cada atleta é único.
+4.  **Segurança e Sustentabilidade:** Priorize a progressão gradual e planos executáveis na vida real. O descanso é um treino; nunca o comprometa.
 
-🎯 SUA MISSÃO:
-Criar planos TOTALMENTE PERSONALIZADOS respeitando:
-- Nível real do atleta (zero até avançado)
-- Distância objetivo (5K até ultra)
-- Disponibilidade EXATA configurada (dias, horários, modalidades)
-- Histórico de lesões
-- Preferências pessoais
+**Diretrizes de Treinamento (Regras Inegociáveis):**
+*   **Periodização:** Siga a estrutura Base (Volume Aeróbico), Build (Intensidade Específica), Peak (Ajuste Fino) e Taper (Recuperação).
+*   **Progressão:** Use a regra de 10% (ou menos) de aumento de volume semanal, com semanas de *cutback* (redução de 20-30%) a cada 3-4 semanas, exceto em *taper*.
+*   **Intensidade:** Siga a regra 80/20 (80% do volume em baixa intensidade, 20% em moderada/alta), ajustando para o nível do atleta.
+*   **Força:** Inclua 2 a 3 sessões de força/mobilidade semanais nos dias especificados, focando em exercícios funcionais para corredores.
+*   **Recuperação:** O descanso (rest day ou cross-training leve) é um treino. Nunca o comprometa.
+*   **Corridas B/C:** Corridas B são simulados importantes com *taper* leve (75-90% do volume). Corridas C são treinos longos de volume, sem *taper*.
+*   **VDOT:** O VDOT é a base para paces, mas o *pace* real deve ser ajustado pelo *pace* habitual do atleta e pelo contexto (calor, fadiga).
 
-⚡ PRINCÍPIOS FUNDAMENTAIS:
-1. **RESPEITO TOTAL À DISPONIBILIDADE**: Use EXATAMENTE os dias/horários/atividades configuradas
-2. **INDIVIDUALIZAÇÃO**: Cada atleta é único
-3. **SEGURANÇA**: Progressão gradual
-4. **INTEGRAÇÃO**: Corrida + complementos trabalham juntos
-5. **REALISMO**: Planos executáveis na vida real
+**Regras Específicas por Distância:**
+*   **5K** (Velocidade): Volume: 30-60km/sem (inter), até 100km (avanç). 70% fácil, 30% intenso. Treinos: Easy, Tempo, Intervals 400-1200m, Reps. Taper: 1 semana.
+*   **10K** (Misto): Volume: 35-70km/sem (inter), até 110km (avanç). 75% fácil, 25% intenso. Treinos: Easy, Long, Tempo, Intervals 800-2000m. Taper: 1-2 semanas.
+*   **Meia-Maratona**: Volume: 40-80km/sem (inter), até 120km (avanç). 80% fácil, 20% intenso. Treinos: Easy, Long 15-20km, Tempo, Intervals. Taper: 2 semanas.
+*   **Maratona** (Endurance): Volume: 50-100km/sem (inter), até 150km (avanç). 80% fácil, 20% intenso. Treinos: Easy, Long 25-35km, Tempo, Intervals. Taper: 3 semanas.
+*   **Ultramaratona** (Endurance extremo): Volume: 80-150km/sem+. 85% fácil, 15% intenso. Treinos: Easy, Ultra-long 4-6h, Back-to-backs, Vertical. Taper: 2-3 semanas.
 
-📊 REGRAS POR DISTÂNCIA:
-**5K** (Velocidade):
-- Volume: 30-60km/sem (inter), até 100km (avanç)
-- 70% fácil, 30% intenso
-- Treinos: Easy, Tempo, Intervals 400-1200m, Reps
-- Taper: 1 semana
+**Regras Específicas por Nível:**
+*   **Iniciante Absoluto** (<10km/sem): Walk/run, ZERO intensidade 8 semanas. 3x/sem inicial.
+*   **Iniciante** (10-30km/sem): Base aeróbica + 1 longão. SEM qualidade até 20km/sem.
+*   **Intermediário** (30-60km/sem): Base + qualidade 1-2x/sem. Complementos integrados.
+*   **Avançado** (>60km/sem): Periodização sofisticada. Qualidade 2-3x/sem.
 
-**10K** (Misto):
-- Volume: 35-70km/sem (inter), até 110km (avanç)
-- 75% fácil, 25% intenso
-- Treinos: Easy, Long, Tempo, Intervals 800-2000m
-- Taper: 1-2 semanas
-
-**Meia-Maratona**:
-- Volume: 40-80km/sem (inter), até 120km (avanç)
-- 80% fácil, 20% intenso
-- Treinos: Easy, Long 15-20km, Tempo, Intervals
-- Taper: 2 semanas
-
-**Maratona** (Endurance):
-- Volume: 50-100km/sem (inter), até 150km (avanç)
-- 80% fácil, 20% intenso
-- Treinos: Easy, Long 25-35km, Tempo, Intervals
-- Taper: 3 semanas
-
-**Ultramaratona** (Endurance extremo):
-- Volume: 80-150km/sem+
-- 85% fácil, 15% intenso
-- Treinos: Easy, Ultra-long 4-6h, Back-to-backs, Vertical
-- Taper: 2-3 semanas
-
-💪 ATIVIDADES CONFIGURADAS:
+**Atividades Configuradas:**
 IMPORTANTE: Se o atleta configurou musculação, natação, yoga ou qualquer outra atividade, você DEVE incluir no plano respeitando os dias e horários configurados! Complementos são ESSENCIAIS para atletas completos.
 
-⚠️ POR NÍVEL:
-**Iniciante Absoluto** (<10km/sem):
-- Walk/run, ZERO intensidade 8 semanas
-- 3x/sem inicial
+**Corridas A/B/C - Análise Contextual Obrigatória:**
+Antes de decidir o volume da semana de uma corrida B ou C, você DEVE analisar:
+1.  **Histórico de Execução Recente** (se disponível): Alta adesão + bom feedback = progressão. Baixa adesão + fadiga = redução de volume/intensidade.
+2.  **Objetivo do Atleta na Corrida B/C**: Quer fazer tempo competitivo? → Taper adequado (65-75% volume). Quer só testar ritmo/estratégia? → Taper mínimo (80-85% volume). Quer só completar/curtir? → Pode manter volume normal.
+3.  **Relação com Corrida A**: Corrida B muito próxima da A (<4 semanas)? → Taper mais conservador. Corrida B longe da A (>8 semanas)? → Pode usar como treino intenso. Distância da B similar à A? → Taper adequado. Distância da B muito menor que A? → Pode tratar como qualidade.
+4.  **Nível de Preparação**: Atleta avançado, vem treinando forte? → Taper mínimo pode bastar. Atleta iniciante ou com volume baixo? → Taper mais generoso.
 
-**Iniciante** (10-30km/sem):
-- Base aeróbica + 1 longão
-- SEM qualidade até 20km/sem
+**Pense como um Super Treinador:**
+Você NÃO é um algoritmo que segue regras rígidas. Você é um ESPECIALISTA que:
+1.  **ANALISA O TODO**: Contexto completo (execução recente + relatos + estado atual + objetivos + corridas).
+2.  **PERSONALIZA DE VERDADE**: Cada atleta é único - ajuste TUDO baseado no perfil individual.
+3.  **PRIORIZA SUSTENTABILIDADE**: Plano bom é o que o atleta CONSEGUE seguir na vida real.
+4.  **AJUSTA DINAMICAMENTE**: Se há sinais de fadiga/overtraining, REDUZA. Se está indo bem, pode progredir.
+5.  **USA INTUIÇÃO EXPERIENTE**: Combine ciência + experiência prática + bom senso.
+Você tem liberdade total para ajustar volumes, intensidades e estruturas baseado no CONTEXTO REAL. NÃO siga fórmulas prontas se o contexto indicar outro caminho!
 
-**Intermediário** (30-60km/sem):
-- Base + qualidade 1-2x/sem
-- Complementos integrados
+**Formato de Saída:**
+*   Você deve retornar **APENAS** o objeto JSON estritamente válido, sem formatação Markdown, comentários ou texto adicional.
+*   O campo planRationale deve ser uma explicação detalhada e profissional da sua estratégia, justificando as fases, o volume e a progressão escolhida.
 
-**Avançado** (>60km/sem):
-- Periodização sofisticada
-- Qualidade 2-3x/sem`;
+Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.`;
 
-  const userPrompt = `${userContext}
-
-# TAREFA
-
-Crie uma ESTRATÉGIA de treinamento COMPLETA e PERSONALIZADA para este atleta.
-
-O plano tem ${totalWeeks} semanas até a prova.
-
-Você deve definir:
-1. As FASES do treinamento (quantas semanas cada uma)
-2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)
-3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase
-4. PACES personalizados baseados no VDOT
-5. CONSELHOS específicos baseados no perfil
-
-FORMATO DA RESPOSTA (JSON):
-{
-  "totalWeeks": ${totalWeeks},
-  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
-  "paces": {
-    "easy": "X:XX min/km",
-    "marathon": "X:XX min/km",
-    "threshold": "X:XX min/km",
-    "interval": "X:XX min/km",
-    "repetition": "X:XX min/km"
-  },
-  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",
-  "keyConsiderations": ["consideração 1", "consideração 2", ...],
+  const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento COMPLETA e PERSONALIZADA para este atleta.\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
+  "paces": {\n    "easy": "X:XX min/km",\n    "marathon": "X:XX min/km",\n    "threshold": "X:XX min/km",\n    "interval": "X:XX min/km",\n    "repetition": "X:XX min/km"\n  },\n  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",\n  "keyConsiderations": ["consideração 1", "consideração 2", ...],
   "progressionStrategy": "Como o plano progride do início ao fim",
   "nutritionAdvice": "Conselhos nutricionais para este objetivo",
   "injuryPreventionTips": ["dica 1", "dica 2", ...],
@@ -545,7 +529,8 @@ Você NÃO é um algoritmo que segue regras rígidas. Você é um ESPECIALISTA q
 **VOCÊ TEM LIBERDADE TOTAL** para ajustar volumes, intensidades e estruturas baseado no CONTEXTO REAL.
 NÃO siga fórmulas prontas se o contexto indicar outro caminho!
 
-Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.`;
+Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.
+`;
 
   // Gerar estratégia com sistema de resiliência
   console.log('[AI PLAN] Gerando estratégia com sistema resiliente...');
@@ -553,7 +538,7 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
   // Criar cache key baseado no perfil
   const cacheKey = `ai-plan-${profile.runningLevel}-${profile.goalDistance}-${totalWeeks}w-${profile.currentWeeklyKm}km`;
 
-  try {
+  try { 
     const aiResponse = await resilientAICall(
       () => callLLM({
         messages: [
@@ -617,7 +602,7 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
 /**
  * Expande uma estratégia gerada pela IA em um plano completo com todas as semanas
  */
-function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks: number): AIGeneratedPlan {
+function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks: number): AIGeneratedPlan { 
   console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
   
   const startDate = new Date();
@@ -648,7 +633,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   // Determinar dias disponíveis SEPARADOS POR TIPO DE ATIVIDADE
   const availability = getActivityAvailability(profile);
   
-  console.log('[AI PLAN] Disponibilidade extraída:', {
+  console.log('[AI PLAN] Disponibilidade extraída:', { 
     runningDays: availability.runningDays,
     strengthDays: availability.strengthDays,
     swimmingDays: availability.swimmingDays,
@@ -774,7 +759,7 @@ function getActivityAvailability(profile: AIUserProfile): {
   otherActivityDays: Map<string, number[]>;
   preferredTimes: Map<string, string>;
   longRunDay: number;
-} {
+} { 
   const runningDays: number[] = [];
   const strengthDays: number[] = [];
   const swimmingDays: number[] = [];
@@ -830,7 +815,7 @@ function getActivityAvailability(profile: AIUserProfile): {
  * Gera os treinos de uma semana baseado na estratégia E na disponibilidade SEPARADA POR TIPO
  * CRÍTICO: Respeita EXATAMENTE a disponibilidade configurada por CADA USUÁRIO
  */
-function generateWeekWorkouts(params: {
+function generateWeekWorkouts(params: { 
   weekNumber: number;
   phase: string;
   focus: string;
@@ -838,7 +823,7 @@ function generateWeekWorkouts(params: {
   longRunKm: number;
   keyWorkouts: any;
   paces: any;
-  availability: {
+  availability: { 
     runningDays: number[];
     strengthDays: number[];
     swimmingDays: number[];
@@ -848,7 +833,7 @@ function generateWeekWorkouts(params: {
   };
   isCutbackWeek: boolean;
   currentWeekStart: Date;
-  raceThisWeek?: {
+  raceThisWeek?: { 
     id: number;
     name: string;
     distance: string;
@@ -856,11 +841,11 @@ function generateWeekWorkouts(params: {
     targetTime?: string;
     priority: 'A' | 'B' | 'C';
   };
-}): any[] {
+}): any[] { 
   const workouts: any[] = [];
   const { availability } = params;
   
-  console.log(`[WORKOUT GEN] Semana ${params.weekNumber}:`, {
+  console.log(`[WORKOUT GEN] Semana ${params.weekNumber}:`, { 
     runningDays: availability.runningDays,
     strengthDays: availability.strengthDays,
     swimmingDays: availability.swimmingDays,
@@ -894,16 +879,17 @@ function generateWeekWorkouts(params: {
   const strengthDaysToUse = [...availability.strengthDays];
   
   // Função auxiliar para formatar hora preferida
-  const getPreferredTimeText = (activityType: string): string => {
+  const getPreferredTimeText = (activityType: string): string => { 
     const time = availability.preferredTimes.get(activityType);
     if (!time) return '';
     
-    const timeMap: Record<string, string> = {
+    const timeMap: Record<string, string> = { 
       'early_morning': 'Manhã Cedo (5-7h)',
       'morning': 'Manhã (7-12h)',
       'afternoon': 'Tarde (12-18h)',
       'evening': 'Noite (18-21h)',
       'night': 'Noite (após 21h)',
+      'flexible': '',
     };
     
     return timeMap[time] || '';
@@ -912,7 +898,7 @@ function generateWeekWorkouts(params: {
   const runningTimeText = getPreferredTimeText('running');
   const strengthTimeText = getPreferredTimeText('strength');
   
-  console.log(`[WORKOUT GEN] Alocação:`, {
+  console.log(`[WORKOUT GEN] Alocação:`, { 
     longRunDay: availability.longRunDay,
     qualityDays,
     easyDays,
@@ -924,7 +910,7 @@ function generateWeekWorkouts(params: {
   const dayActivities = new Map<number, Array<{type: string, time: string, details?: any}>>();
 
   // Função auxiliar para adicionar atividade em um dia
-  const addActivity = (day: number, type: string, details?: any) => {
+  const addActivity = (day: number, type: string, details?: any) => { 
     if (!dayActivities.has(day)) {
       dayActivities.set(day, []);
     }
@@ -996,7 +982,7 @@ function generateWeekWorkouts(params: {
   });
 
   // Ordenar atividades de cada dia por horário preferido
-  const timeOrder = {
+  const timeOrder = { 
     'early_morning': 1,
     'morning': 2,
     'afternoon': 3,
@@ -1006,7 +992,7 @@ function generateWeekWorkouts(params: {
   };
 
   dayActivities.forEach((activities, day) => {
-    activities.sort((a, b) => {
+    activities.sort((a, b) => { 
       return (timeOrder[a.time as keyof typeof timeOrder] || 6) - (timeOrder[b.time as keyof typeof timeOrder] || 6);
     });
   });
@@ -1015,14 +1001,15 @@ function generateWeekWorkouts(params: {
     Array.from(dayActivities.entries()).map(([day, acts]) => ({
       day,
       activities: acts.map(a => `${a.type} (${a.time})`)
-    })));
+    })))
+  ;
   
   // NOVA LÓGICA: Gerar MÚLTIPLOS treinos por dia (respeitando horários configurados)
   // Iterar pelos 7 dias da semana: Segunda (1) até Domingo (0)
   // Ordem de exibição: Segunda, Terça, Quarta, Quinta, Sexta, Sábado, Domingo
   const daysOrder = [1, 2, 3, 4, 5, 6, 0]; // Segunda primeiro, Domingo por último
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 7; i++) { 
     const dayOfWeek = daysOrder[i]; // O dia da semana real (0=Dom, 1=Seg, etc)
     const daysOffset = i; // Offset em relação ao início da semana (segunda = 0)
 
@@ -1050,12 +1037,12 @@ function generateWeekWorkouts(params: {
     }
 
     // Gerar um treino para cada atividade configurada neste dia
-    activitiesForDay.forEach(activity => {
+    activitiesForDay.forEach(activity => { 
       const activityType = activity.type;
       const activityTime = activity.time;
 
       // Formatar horário preferido
-      const timeMap: Record<string, string> = {
+      const timeMap: Record<string, string> = { 
         'early_morning': 'Manhã Cedo (5-7h)',
         'morning': 'Manhã (7-12h)',
         'afternoon': 'Tarde (12-18h)',
@@ -1117,7 +1104,7 @@ function generateWeekWorkouts(params: {
             mainSet: `6-8 x 800m em ${params.paces.interval} (recuperação 2 min)`,
             cooldown: '10 min fácil',
           };
-        } else {
+        } else { 
           // Fartlek ou treino fácil
           workout = {
             dayOfWeek: dayOfWeek,
@@ -1203,7 +1190,7 @@ function generateWeekWorkouts(params: {
           targetPace: null,
         };
       }
-      else {
+      else { 
         // Outras atividades (yoga, muay-thai, etc)
         let activityName = activityType;
         if (activityType.includes('swim')) activityName = 'Natação';
@@ -1231,7 +1218,7 @@ function generateWeekWorkouts(params: {
   }
   
   // Log de resumo
-  const summary = {
+  const summary = { 
     running: workouts.filter(w => w.type === 'running').length,
     swimming: workouts.filter(w => w.type === 'swimming').length,
     strength: workouts.filter(w => w.type === 'strength').length,
@@ -1244,7 +1231,7 @@ function generateWeekWorkouts(params: {
   // Ordenar workouts por data para garantir ordem Segunda → Domingo
   workouts.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-  console.log(`[WORKOUT GEN] DEBUG - Primeiro treino:`, {
+  console.log(`[WORKOUT GEN] DEBUG - Primeiro treino:`, { 
     dayOfWeek: workouts[0]?.dayOfWeek,
     date: workouts[0]?.date,
     type: workouts[0]?.type,
@@ -1257,7 +1244,7 @@ function generateWeekWorkouts(params: {
 /**
  * Valida se o plano gerado pela IA está completo e correto
  */
-export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors: string[] } {
+export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors: string[] } { 
   const errors: string[] = [];
   
   if (!plan.totalWeeks || plan.totalWeeks < 1) {
@@ -1276,7 +1263,7 @@ export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors:
     errors.push('Paces obrigatórios ausentes');
   }
   
-  plan.weeks?.forEach((week, index) => {
+  plan.weeks?.forEach((week, index) => { 
     if (!week.workouts || week.workouts.length === 0) {
       errors.push(`Semana ${index + 1} não tem treinos`);
       return;
@@ -1287,7 +1274,7 @@ export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors:
     const daysWithWorkouts = new Set(week.workouts.map((w: any) => w.dayOfWeek));
     if (daysWithWorkouts.size !== 7) {
       const missingDays = [];
-      for (let day = 0; day < 7; day++) {
+      for (let day = 0; day < 7; day++) { 
         if (!daysWithWorkouts.has(day)) {
           const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
           missingDays.push(dayNames[day]);

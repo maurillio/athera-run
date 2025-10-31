@@ -64,6 +64,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   athleteProfile AthleteProfile?
+  athleteFeedback AthleteFeedback[] // Adicionado para a relação inversa
   
   @@map("users")
 }
@@ -232,8 +233,11 @@ model AthleteProfile {
   
   // Nível e experiência
   runningLevel      String   // "beginner", "intermediate", "advanced"
+  runningYears      Int?     // Anos de experiência em corrida.
   currentWeeklyKm   Float?   // Volume semanal atual em km
   longestRun        Float?   // Maior distância já corrida em km
+  recentLongRunPace String?  // Pace médio do último longão.
+  maxHeartRate      Int?     // Frequência Cardíaca Máxima (estimada ou real).
   
   // Experiências e histórico (analisado por IA)
   experienceDescription String? @db.Text // Descrição livre das experiências do corredor
@@ -464,6 +468,10 @@ model CustomWorkout {
   warmup            String?  @db.Text // Aquecimento específico
   mainSet           String?  @db.Text // Série principal detalhada
   cooldown          String?  @db.Text // Volta à calma
+  targetHeartRate   String?  // Zona de FC alvo (ex: "Zona 2 - 130-140 bpm")
+  targetRPE         Int?     // Esforço Percebido (1 a 10)
+  isStrengthSpecific Boolean @default(false) // Indica se é um treino de força focado em corrida.
+  equipmentRequired String?  // Equipamento necessário (ex: "banda elástica", "peso corporal")
   
   // Status
   isCompleted       Boolean  @default(false)
@@ -474,6 +482,7 @@ model CustomWorkout {
   
   week              CustomWeek @relation(fields: [weekId], references: [id], onDelete: Cascade)
   completedWorkout  CompletedWorkout? @relation(fields: [completedWorkoutId], references: [id])
+  athleteFeedback   AthleteFeedback[] // Adicionado para a relação inversa
   
   @@map("custom_workouts")
 }
@@ -623,4 +632,21 @@ model TrainingLog {
   
   @@index([athleteId, date])
   @@map("training_logs")
+}
+
+// Feedback diário do atleta (novo modelo)
+model AthleteFeedback {
+  id                Int      @id @default(autoincrement())
+  userId            String
+  date              DateTime
+  type              String   // "fatigue", "pain", "motivation", "performance", "other"
+  message           String   @db.Text
+  associatedWorkoutId Int?     // Opcional: FK para CustomWorkout
+  RPE               Int?     // Esforço Percebido no dia (1 a 10)
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  associatedWorkout CustomWorkout? @relation(fields: [associatedWorkoutId], references: [id])
+
+  @@index([userId, date])
+  @@map("athlete_feedback")
 }
