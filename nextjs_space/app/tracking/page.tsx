@@ -84,7 +84,7 @@ export default function TrackingPage() {
           <WorkoutStats key={refreshKey} athleteId={athleteProfile.id} />
 
           {/* Main Content */}
-          <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Formulário de registro */}
             <div>
               <WorkoutLogFormImproved 

@@ -194,6 +194,12 @@ export default function OnboardingPage() {
     targetRaceDate: '',
     targetTime: '',
     hasRunBefore: 'yes', // 'yes' ou 'no'
+    // Novos campos para análise de elite
+    runningYears: '',
+    maxHeartRate: '',
+    sleepQuality: '3', // 1-5
+    stressLevel: '3', // 1-5
+    otherSportsExperience: '',
   });
 
   // Paces habituais por distância
@@ -223,7 +229,16 @@ export default function OnboardingPage() {
   });
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newState = { ...prev, [field]: value };
+      if (field === 'hasRunBefore' && value === 'no') {
+        newState.runningLevel = '';
+        newState.currentWeeklyKm = '';
+        newState.longestRun = '';
+        newState.experienceDescription = '';
+      }
+      return newState;
+    });
   };
 
   const toggleDay = (activityId: string, day: number) => {
@@ -322,7 +337,7 @@ export default function OnboardingPage() {
     // Validar step atual antes de prosseguir
     if (step === 1) {
       // Validar dados básicos
-      if (!formData.weight || !formData.height || !formData.age || !formData.gender || !formData.runningLevel) {
+      if (!formData.weight || !formData.height || !formData.age || !formData.gender || (formData.hasRunBefore === 'yes' && !formData.runningLevel)) {
         setError('Por favor, preencha todos os campos obrigatórios.');
         return;
       }
@@ -538,7 +553,7 @@ export default function OnboardingPage() {
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Dados Físicos</h3>
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="weight">Peso (kg) *</Label>
                         <Input
@@ -563,7 +578,7 @@ export default function OnboardingPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="age">Idade *</Label>
                         <Input
@@ -607,60 +622,173 @@ export default function OnboardingPage() {
                       </Select>
                     </div>
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="runningLevel">Nível de Experiência *</Label>
-                      <Select value={formData.runningLevel} onValueChange={(value) => handleChange('runningLevel', value)} required>
-                        <SelectTrigger id="runningLevel">
-                          <SelectValue placeholder="Selecione seu nível" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="beginner">Iniciante (menos de 6 meses correndo)</SelectItem>
-                          <SelectItem value="intermediate">Intermediário (6 meses a 2 anos)</SelectItem>
-                          <SelectItem value="advanced">Avançado (mais de 2 anos)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+                    {formData.hasRunBefore === 'yes' && (
                       <div className="space-y-2">
-                        <Label htmlFor="currentWeeklyKm">Volume Semanal Atual (km)</Label>
-                        <Input
-                          id="currentWeeklyKm"
-                          type="number"
-                          step="0.1"
-                          value={formData.currentWeeklyKm}
-                          onChange={(e) => handleChange('currentWeeklyKm', e.target.value)}
-                          placeholder="Ex: 25"
-                        />
+                        <Label htmlFor="runningLevel">Nível de Experiência *</Label>
+                        <Select value={formData.runningLevel} onValueChange={(value) => handleChange('runningLevel', value)} required>
+                          <SelectTrigger id="runningLevel">
+                            <SelectValue placeholder="Selecione seu nível" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="beginner">Iniciante (menos de 6 meses correndo)</SelectItem>
+                            <SelectItem value="intermediate">Intermediário (6 meses a 2 anos)</SelectItem>
+                            <SelectItem value="advanced">Avançado (mais de 2 anos)</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
+                    )}
+
+                    {formData.hasRunBefore === 'yes' && (
+                      <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="currentWeeklyKm">Volume Semanal Atual (km)</Label>
+                            <Input
+                              id="currentWeeklyKm"
+                              type="number"
+                              step="0.1"
+                              value={formData.currentWeeklyKm}
+                              onChange={(e) => handleChange('currentWeeklyKm', e.target.value)}
+                              placeholder="Ex: 25"
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="longestRun">Maior Distância já Corrida (km)</Label>
+                            <Input
+                              id="longestRun"
+                              type="number"
+                              step="0.1"
+                              value={formData.longestRun}
+                              onChange={(e) => handleChange('longestRun', e.target.value)}
+                              placeholder="Ex: 18"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="runningYears">Há quantos anos você corre?</Label>
+                          <Input
+                            id="runningYears"
+                            type="number"
+                            step="0.5"
+                            min="0"
+                            max="50"
+                            value={formData.runningYears}
+                            onChange={(e) => handleChange('runningYears', e.target.value)}
+                            placeholder="Ex: 2"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Ajuda a IA a entender sua maturidade atlética
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    {formData.hasRunBefore === 'yes' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="experienceDescription">
+                          Conte sobre sua experiência com corrida (opcional)
+                        </Label>
+                        <Textarea
+                          id="experienceDescription"
+                          rows={4}
+                          value={formData.experienceDescription}
+                          onChange={(e) => handleChange('experienceDescription', e.target.value)}
+                          placeholder="Ex: Comecei a correr há 2 anos, já completei 3 provas de 10km, melhor tempo foi 50min..."
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          A IA analisará sua experiência para personalizar melhor seu plano
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="space-y-4 border-t pt-4">
+                      <h4 className="text-base font-semibold">Dados Fisiológicos (Opcional)</h4>
                       
                       <div className="space-y-2">
-                        <Label htmlFor="longestRun">Maior Distância já Corrida (km)</Label>
+                        <Label htmlFor="maxHeartRate">Frequência Cardíaca Máxima (FCMax)</Label>
                         <Input
-                          id="longestRun"
+                          id="maxHeartRate"
                           type="number"
-                          step="0.1"
-                          value={formData.longestRun}
-                          onChange={(e) => handleChange('longestRun', e.target.value)}
-                          placeholder="Ex: 18"
+                          min="100"
+                          max="220"
+                          value={formData.maxHeartRate}
+                          onChange={(e) => handleChange('maxHeartRate', e.target.value)}
+                          placeholder="Ex: 185"
                         />
+                        <p className="text-xs text-muted-foreground">
+                          Se não sabe, deixe em branco. Usaremos estimativa pela idade (220 - idade)
+                        </p>
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="experienceDescription">
-                        Conte sobre sua experiência com corrida (opcional)
-                      </Label>
-                      <Textarea
-                        id="experienceDescription"
-                        rows={4}
-                        value={formData.experienceDescription}
-                        onChange={(e) => handleChange('experienceDescription', e.target.value)}
-                        placeholder="Ex: Comecei a correr há 2 anos, já completei 3 provas de 10km, melhor tempo foi 50min..."
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        A IA analisará sua experiência para personalizar melhor seu plano
-                      </p>
+                    <div className="space-y-4 border-t pt-4">
+                      <h4 className="text-base font-semibold">Estilo de Vida</h4>
+                      
+                      <div className="space-y-2">
+                        <Label>Qualidade do Sono</Label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((value) => (
+                            <button
+                              key={value}
+                              type="button"
+                              onClick={() => handleChange('sleepQuality', value.toString())}
+                              className={`flex-1 py-2 px-3 rounded-md border text-sm font-medium transition-colors ${
+                                formData.sleepQuality === value.toString()
+                                  ? 'bg-orange-500 text-white border-orange-600'
+                                  : 'bg-white border-gray-300 hover:border-orange-400'
+                              }`}
+                            >
+                              {value}
+                            </button>
+                          ))}
+                        </div>
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span>Ruim</span>
+                          <span>Regular</span>
+                          <span>Ótimo</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Nível de Estresse Diário</Label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((value) => (
+                            <button
+                              key={value}
+                              type="button"
+                              onClick={() => handleChange('stressLevel', value.toString())}
+                              className={`flex-1 py-2 px-3 rounded-md border text-sm font-medium transition-colors ${
+                                formData.stressLevel === value.toString()
+                                  ? 'bg-orange-500 text-white border-orange-600'
+                                  : 'bg-white border-gray-300 hover:border-orange-400'
+                              }`}
+                            >
+                              {value}
+                            </button>
+                          ))}
+                        </div>
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span>Baixo</span>
+                          <span>Moderado</span>
+                          <span>Alto</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="otherSportsExperience">Experiência em Outros Esportes (Opcional)</Label>
+                        <Textarea
+                          id="otherSportsExperience"
+                          rows={2}
+                          value={formData.otherSportsExperience}
+                          onChange={(e) => handleChange('otherSportsExperience', e.target.value)}
+                          placeholder="Ex: Pratiquei natação por 5 anos, faço yoga 1x/semana..."
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Ajuda a IA a entender sua base atlética geral
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </>
@@ -980,7 +1108,7 @@ export default function OnboardingPage() {
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           <div>
                             <Label className="text-sm">Ícone</Label>
                             <Select

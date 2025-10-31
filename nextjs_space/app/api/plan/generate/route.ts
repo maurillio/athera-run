@@ -73,6 +73,23 @@ export async function POST(request: NextRequest) {
       a.id === 'strength' || a.id === 'musculação' || a.id === 'musculacao'
     );
 
+    // Buscar feedback recente do atleta (últimos 30 dias)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const recentFeedback = await prisma.athleteFeedback.findMany({
+      where: {
+        userId: user.id,
+        date: {
+          gte: thirtyDaysAgo
+        }
+      },
+      orderBy: {
+        date: 'desc'
+      },
+      take: 10
+    });
+
     const aiProfile: AIUserProfile = {
       runningLevel: profile.runningLevel,
       goalDistance: profile.goalDistance,
@@ -97,7 +114,16 @@ export async function POST(request: NextRequest) {
         date: race.raceDate,
         targetTime: race.targetTime || undefined,
         priority: race.priority as 'A' | 'B' | 'C'
-      }))
+      })),
+      // Novos campos para análise de elite
+      athleteFeedback: recentFeedback.length > 0 ? recentFeedback.map(f => ({
+        date: f.date,
+        type: f.type as 'fatiga' | 'dor' | 'motivacao' | 'desempenho' | 'outro',
+        message: f.message
+      })) : undefined,
+      ...(profile.runningYears && { runningYears: profile.runningYears }),
+      ...(profile.maxHeartRate && { maxHeartRate: profile.maxHeartRate }),
+      ...(profile.recentLongRunPace && { recentLongRunPace: profile.recentLongRunPace }),
     };
 
     console.log('[AI PLAN] Gerando plano com IA...');

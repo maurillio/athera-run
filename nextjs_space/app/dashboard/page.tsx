@@ -13,6 +13,16 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 import {
   Calendar,
   Target,
@@ -251,16 +261,16 @@ export default function DashboardPage() {
           {hasCustomPlan && plan && currentWeek && (
             <>
               {/* Quick Stats */}
-              <div className="grid md:grid-cols-4 gap-6 mb-8">
-                <Card>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+                <Card className="touch-manipulation">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Próximo Treino</CardTitle>
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-2">
                     {nextWorkout ? (
                       <>
-                        <div className="text-2xl font-bold">
+                        <div className="text-xl sm:text-2xl font-bold">
                           {new Date(nextWorkout.date).toLocaleDateString('pt-BR', { weekday: 'short' })}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-1">
@@ -273,26 +283,26 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="touch-manipulation">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Semana Atual</CardTitle>
                     <Activity className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
+                  <CardContent className="pt-2">
+                    <div className="text-xl sm:text-2xl font-bold">
                       {currentWeek.weekNumber}/{plan.totalWeeks}
                     </div>
                     <p className="text-xs text-muted-foreground">{currentWeek.phase}</p>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="touch-manipulation">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Objetivo</CardTitle>
                     <Target className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
+                  <CardContent className="pt-2">
+                    <div className="text-xl sm:text-2xl font-bold">
                       {getDistanceLabel(plan.goalDistance)}
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -301,13 +311,13 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="touch-manipulation">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Progresso</CardTitle>
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
+                  <CardContent className="pt-2">
+                    <div className="text-xl sm:text-2xl font-bold">
                       {Math.round(plan.completionRate)}%
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -323,22 +333,19 @@ export default function DashboardPage() {
                   <CardTitle>Seus Próximos Treinos</CardTitle>
                   <CardDescription>Treino de hoje e de amanhã</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-2">
                   <div className="space-y-3">
                     {(() => {
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      const tomorrow = new Date(today);
-                      tomorrow.setDate(tomorrow.getDate() + 1);
-                      const dayAfterTomorrow = new Date(today);
-                      dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+                      const appTimezone = 'America/Sao_Paulo';
+                      const today = dayjs().tz(appTimezone).startOf('day');
+                      const tomorrow = today.add(1, 'day');
+                      const dayAfterTomorrow = today.add(2, 'day');
                       
                       const todayAndTomorrow = currentWeek.workouts.filter((w: Workout) => {
-                        const workoutDate = new Date(w.date);
-                        workoutDate.setHours(0, 0, 0, 0);
-                        return workoutDate >= today && workoutDate < dayAfterTomorrow;
+                        const workoutDate = dayjs(w.date).tz(appTimezone).startOf('day');
+                        return workoutDate.isSameOrAfter(today) && workoutDate.isBefore(dayAfterTomorrow);
                       }).sort((a: Workout, b: Workout) => 
-                        new Date(a.date).getTime() - new Date(b.date).getTime()
+                        dayjs(a.date).tz(appTimezone).startOf('day').valueOf() - dayjs(b.date).tz(appTimezone).startOf('day').valueOf()
                       );
 
                       if (todayAndTomorrow.length === 0) {
@@ -355,9 +362,8 @@ export default function DashboardPage() {
                       }
 
                       return todayAndTomorrow.map((workout: Workout) => {
-                        const workoutDate = new Date(workout.date);
-                        workoutDate.setHours(0, 0, 0, 0);
-                        const isToday = workoutDate.getTime() === today.getTime();
+                        const workoutDate = dayjs(workout.date).tz(appTimezone).startOf('day');
+                        const isToday = workoutDate.isSame(today, 'day');
                         
                         return (
                           <div
@@ -365,7 +371,7 @@ export default function DashboardPage() {
                             className={`flex flex-col p-4 rounded-lg border ${
                               workout.isCompleted
                                 ? 'bg-green-50 border-green-200' // Completed
-                                : (workoutDate.getTime() < today.getTime() && !workout.isCompleted) // Past and not completed
+                                : (workoutDate.isBefore(today, 'day') && !workout.isCompleted) // Past and not completed
                                   ? 'bg-red-50 border-red-200' // Marked as not completed (red)
                                   : 'bg-white border-gray-200' // Not completed yet, or future
                             }`}
@@ -378,7 +384,7 @@ export default function DashboardPage() {
                                   </Badge>
                                   {workout.isCompleted ? (
                                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                  ) : (workoutDate.getTime() < today.getTime() && !workout.isCompleted) ? (
+                                  ) : (workoutDate.isBefore(today, 'day') && !workout.isCompleted) ? (
                                     <XCircle className="h-4 w-4 text-red-600" />
                                   ) : null}
                                 </div>

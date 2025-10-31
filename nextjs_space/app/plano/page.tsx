@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useSession } from 'next-auth/react';
@@ -8,7 +7,19 @@ import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell } from 'lucide-react';
+import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle } from 'lucide-react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+
+const appTimezone = 'America/Sao_Paulo';
 
 interface CustomPlan {
   id: number;
@@ -160,7 +171,7 @@ export default function PlanoPage() {
           </div>
 
           {/* Summary Cards */}
-          <div className="grid md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -168,7 +179,7 @@ export default function PlanoPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold">
                   {getDistanceLabel(plan.goalDistance)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -184,7 +195,7 @@ export default function PlanoPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold">
                   {currentWeekNum}/{plan.totalWeeks}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -200,7 +211,7 @@ export default function PlanoPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold">
                   {Math.round(plan.completionRate)}%
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -216,7 +227,7 @@ export default function PlanoPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold">
                   {plan.totalWeeks}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -279,43 +290,53 @@ export default function PlanoPage() {
 
                   <div className="space-y-3">
                     {currentWeek.workouts.length > 0 ? (
-                      currentWeek.workouts.map((workout: any) => (
-                        <div
-                          key={workout.id}
-                          className={`flex items-center justify-between p-4 rounded-lg border ${
-                            workout.isCompleted
-                              ? 'bg-green-50 border-green-200'
-                              : 'bg-white border-gray-200'
-                          }`}
-                        >
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Dumbbell className="h-4 w-4" />
-                              <span className="font-medium">{workout.title}</span>
-                              {workout.isCompleted && (
-                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      currentWeek.workouts.map((workout: any) => {
+                        const workoutDate = dayjs(workout.date).tz(appTimezone).startOf('day');
+                        const today = dayjs().tz(appTimezone).startOf('day');
+                        const isPastUncompleted = workoutDate.isBefore(today, 'day') && !workout.isCompleted;
+
+                        return (
+                          <div
+                            key={workout.id}
+                            className={`flex items-center justify-between p-4 rounded-lg border ${
+                              workout.isCompleted
+                                ? 'bg-green-50 border-green-200' // Completed
+                                : isPastUncompleted
+                                  ? 'bg-red-50 border-red-200' // Past and not completed
+                                  : 'bg-white border-gray-200' // Not completed yet, or future
+                            }`}
+                          >
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                {workout.type === 'running' ? (
+                                  <Dumbbell className="h-4 w-4" />
+                                ) : (
+                                  <Dumbbell className="h-4 w-4" /> // Default icon, consider more specific icons
+                                )}
+                                <span className="font-medium">{workout.title}</span>
+                                {workout.isCompleted ? (
+                                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                ) : isPastUncompleted ? (
+                                  <XCircle className="h-4 w-4 text-red-600" />
+                                ) : null}
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-2">
+                                {dayjs(workout.date).tz(appTimezone).format('dddd, D [de] MMMM')}
+                              </p>
+                              <p className="text-sm">{workout.description}</p>
+                              {workout.distance && (
+                                <p className="text-sm mt-1">
+                                  📍 {workout.distance} km
+                                  {workout.targetPace && ` • Pace: ${workout.targetPace}`}
+                                </p>
+                              )}
+                              {workout.duration && !workout.distance && (
+                                <p className="text-sm mt-1">⏱️ {workout.duration} min</p>
                               )}
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">
-                              {new Date(workout.date).toLocaleDateString('pt-BR', {
-                                weekday: 'long',
-                                day: 'numeric',
-                                month: 'long'
-                              })}
-                            </p>
-                            <p className="text-sm">{workout.description}</p>
-                            {workout.distance && (
-                              <p className="text-sm mt-1">
-                                📍 {workout.distance} km
-                                {workout.targetPace && ` • Pace: ${workout.targetPace}`}
-                              </p>
-                            )}
-                            {workout.duration && !workout.distance && (
-                              <p className="text-sm mt-1">⏱️ {workout.duration} min</p>
-                            )}
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
