@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import OpenAISettings from '@/components/openai-settings';
 import { Loader2, Crown, Shield, Trash2, Calendar } from 'lucide-react';
 
 interface User {
@@ -331,11 +330,6 @@ export default function AdminPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* OpenAI API Settings */}
-        <div className="mt-8">
-          <OpenAISettings />
-        </div>
       </main>
     </div>
   );
