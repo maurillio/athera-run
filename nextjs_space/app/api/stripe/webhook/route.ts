@@ -1,22 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
-// Disable body parsing, need raw body for Stripe
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-export async function POST(req: NextRequest) {
-  const body = await req.text();
-  const headersList = headers();
-  const signature = headersList.get('stripe-signature');
+export async function POST(request: Request) {
+  const body = await request.text();
+  const signature = request.headers.get('stripe-signature') as string;
 
   if (!signature) {
     console.error('[STRIPE WEBHOOK] No signature found');
