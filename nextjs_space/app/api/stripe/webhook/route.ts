@@ -148,7 +148,7 @@ export async function POST(request: Request) {
       }
 
       case 'invoice.payment_succeeded': {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object as any;
         console.log('[STRIPE WEBHOOK] Payment succeeded:', invoice.id);
 
         if (invoice.subscription) {
@@ -174,7 +174,7 @@ export async function POST(request: Request) {
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object as any;
         console.log('[STRIPE WEBHOOK] Payment failed:', invoice.id);
 
         const existingSubscription = await prisma.subscription.findUnique({
