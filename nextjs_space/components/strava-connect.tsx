@@ -5,8 +5,10 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, XCircle, ExternalLink, Info, RefreshCw, Loader2 } from 'lucide-react';
+import { CheckCircle2, XCircle, ExternalLink, Info, RefreshCw, Loader2, Crown } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { usePremium } from '@/hooks/use-premium';
+import PaywallModal from '@/components/subscription/paywall-modal';
 
 interface StravaConnectProps {
   profile: {
@@ -18,13 +20,24 @@ interface StravaConnectProps {
 
 export default function StravaConnect({ profile }: StravaConnectProps) {
   const [isImporting, setIsImporting] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const { isPremium, loading: premiumLoading } = usePremium();
 
   const handleConnect = () => {
+    if (!isPremium) {
+      setShowPaywall(true);
+      return;
+    }
     // Redirecionar para OAuth do Strava
     window.location.href = '/api/strava/auth';
   };
 
   const handleImportHistory = async () => {
+    if (!isPremium) {
+      setShowPaywall(true);
+      return;
+    }
+
     if (!confirm('Deseja importar as atividades dos últimos 90 dias do Strava?')) return;
     
     setIsImporting(true);
@@ -71,6 +84,7 @@ export default function StravaConnect({ profile }: StravaConnectProps) {
   };
 
   return (
+    <>
     <Card className="mb-8 border-2 border-orange-200">
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -80,6 +94,9 @@ export default function StravaConnect({ profile }: StravaConnectProps) {
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
               </svg>
               Integração com Strava
+              {!isPremium && (
+                <Crown className="h-4 w-4 text-orange-500 ml-1" />
+              )}
             </CardTitle>
             <CardDescription>
               Conecte sua conta do Strava para importar treinos automaticamente
@@ -175,5 +192,13 @@ export default function StravaConnect({ profile }: StravaConnectProps) {
         )}
       </CardContent>
     </Card>
+
+    <PaywallModal
+      isOpen={showPaywall}
+      onClose={() => setShowPaywall(false)}
+      feature="Integração com Strava"
+      description="Sincronize automaticamente seus treinos do Strava e tenha todos seus dados em um só lugar"
+    />
+    </>
   );
 }

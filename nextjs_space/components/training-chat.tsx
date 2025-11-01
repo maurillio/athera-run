@@ -8,8 +8,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Send, Sparkles, User, Bot, MessageCircle } from 'lucide-react';
+import { Loader2, Send, Sparkles, User, Bot, MessageCircle, Crown } from 'lucide-react';
 import { toast } from 'sonner';
+import { usePremium } from '@/hooks/use-premium';
+import PaywallModal from '@/components/subscription/paywall-modal';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -25,12 +27,16 @@ const SUGGESTED_QUESTIONS = [
   "Quantas horas de sono preciso para recuperar bem?"
 ];
 
+const FREE_MESSAGE_LIMIT = 5;
+
 export default function TrainingChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { isPremium, loading: premiumLoading } = usePremium();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -41,6 +47,13 @@ export default function TrainingChat() {
   const sendMessage = async (messageText?: string) => {
     const textToSend = messageText || input;
     if (!textToSend.trim() || loading) return;
+
+    // Check message limit for free users
+    const userMessageCount = messages.filter(m => m.role === 'user').length;
+    if (!isPremium && userMessageCount >= FREE_MESSAGE_LIMIT) {
+      setShowPaywall(true);
+      return;
+    }
 
     const userMessage: Message = {
       role: 'user',
@@ -103,27 +116,36 @@ export default function TrainingChat() {
     );
   }
 
+  const userMessageCount = messages.filter(m => m.role === 'user').length;
+  const remainingMessages = isPremium ? Infinity : Math.max(0, FREE_MESSAGE_LIMIT - userMessageCount);
+
   return (
-    <Card className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl z-50 flex flex-col">
-      <CardHeader className="border-b bg-gradient-to-r from-orange-500 to-red-500 text-white">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
-            <CardTitle className="text-lg">Treinador IA</CardTitle>
+    <>
+      <Card className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl z-50 flex flex-col">
+        <CardHeader className="border-b bg-gradient-to-r from-orange-500 to-red-500 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5" />
+              <CardTitle className="text-lg">Treinador IA</CardTitle>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="text-white hover:bg-white/20"
+            >
+              ✕
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsOpen(false)}
-            className="text-white hover:bg-white/20"
-          >
-            ✕
-          </Button>
-        </div>
-        <CardDescription className="text-white/90">
-          Tire suas dúvidas sobre treinamento
-        </CardDescription>
-      </CardHeader>
+          <CardDescription className="text-white/90 flex items-center justify-between">
+            <span>Tire suas dúvidas sobre treinamento</span>
+            {!isPremium && (
+              <Badge variant="secondary" className="ml-2">
+                {remainingMessages} restantes
+              </Badge>
+            )}
+          </CardDescription>
+        </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
         <ScrollArea className="flex-1 p-4" ref={scrollRef}>
@@ -233,5 +255,13 @@ export default function TrainingChat() {
         </div>
       </CardContent>
     </Card>
+
+    <PaywallModal
+      isOpen={showPaywall}
+      onClose={() => setShowPaywall(false)}
+      feature="Chat Ilimitado com IA"
+      description="Continue tirando suas dúvidas sobre treinamento, nutrição e corrida sem limites"
+    />
+    </>
   );
 }

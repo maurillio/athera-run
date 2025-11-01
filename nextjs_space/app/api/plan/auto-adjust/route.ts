@@ -3,12 +3,14 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { generateAIPlan } from '@/lib/ai-plan-generator';
+import { isPremiumUser } from '@/lib/premium-check';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * API para ajustar automaticamente o plano existente quando há mudanças
  * de disponibilidade ou outras configurações
+ * PREMIUM FEATURE
  */
 export async function POST(request: NextRequest) {
   try {
@@ -41,6 +43,15 @@ export async function POST(request: NextRequest) {
 
     if (!user?.athleteProfile) {
       return NextResponse.json({ error: 'Perfil não encontrado' }, { status: 404 });
+    }
+
+    // Check premium status
+    const premium = await isPremiumUser(user.id);
+    if (!premium) {
+      return NextResponse.json({ 
+        error: 'Recurso Premium',
+        message: 'Auto-ajuste de planos é exclusivo para assinantes Premium' 
+      }, { status: 403 });
     }
 
     if (!user.athleteProfile.customPlan) {
