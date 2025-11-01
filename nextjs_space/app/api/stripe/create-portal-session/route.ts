@@ -29,9 +29,9 @@ export async function POST(req: NextRequest) {
     });
 
     if (!subscription?.stripeCustomerId) {
-      console.log('[Portal] Stripe Customer ID não encontrado');
+      console.log('[Portal] Stripe Customer ID não encontrado para usuário:', userId);
       return NextResponse.json(
-        { error: 'No Stripe customer found' },
+        { error: 'Você precisa ter uma assinatura ativa para acessar o portal de gerenciamento.' },
         { status: 400 }
       );
     }
