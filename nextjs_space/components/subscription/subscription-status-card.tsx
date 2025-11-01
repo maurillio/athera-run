@@ -11,11 +11,14 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 interface SubscriptionData {
-  status: string;
-  plan: string;
-  stripeCurrentPeriodEnd: string | null;
-  trialEndsAt: string | null;
-  cancelAtPeriodEnd: boolean;
+  isPremium: boolean;
+  subscription?: {
+    status: string;
+    plan: string;
+    stripeCurrentPeriodEnd: string | null;
+    trialEndsAt: string | null;
+    cancelAtPeriodEnd: boolean;
+  };
 }
 
 export default function SubscriptionStatusCard() {
