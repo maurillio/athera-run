@@ -5,10 +5,12 @@ import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
-  const signature = headers().get('stripe-signature');
+  const headersList = headers();
+  const signature = headersList.get('stripe-signature');
 
   if (!signature) {
     console.error('[STRIPE WEBHOOK] No signature found');
