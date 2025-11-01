@@ -81,6 +81,16 @@ export default function SubscriptionPage() {
 
   const isFree = !subscription.isPremium;
   const isPremium = subscription.isPremium;
+  const planName = subscription.subscription?.plan === 'PREMIUM_MONTHLY' 
+    ? 'Premium Mensal' 
+    : subscription.subscription?.plan === 'PREMIUM_ANNUAL' 
+    ? 'Premium Anual' 
+    : 'Gratuito';
+  const statusBadge = subscription.subscription?.status === 'ACTIVE' 
+    ? 'Ativo' 
+    : subscription.subscription?.status === 'TRIAL' 
+    ? 'Trial' 
+    : 'Gratuito';
 
   return (
     <>
@@ -95,10 +105,16 @@ export default function SubscriptionPage() {
           <div className="grid gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Crown className="w-5 h-5" />
-                  Plano Atual
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Crown className="w-5 h-5" />
+                      Plano Atual
+                    </CardTitle>
+                    <CardDescription className="mt-2">{planName}</CardDescription>
+                  </div>
+                  <Badge className={isPremium ? "bg-green-500" : ""}>{statusBadge}</Badge>
+                </div>
               </CardHeader>
               <CardContent>
                 {isFree ? (
