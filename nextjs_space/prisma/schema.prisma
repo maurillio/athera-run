@@ -1,7 +1,5 @@
 generator client {
     provider = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
-    engineType = "library"
 }
 
 datasource db {
@@ -49,7 +47,7 @@ model User {
   password      String?   // For email/password auth
   image         String?
   
-  // Subscription & Premium
+  // Subscription & Premium (deprecated - use Subscription model)
   isPremium     Boolean   @default(false)
   isAdmin       Boolean   @default(false)
   stripeCustomerId String? @unique
@@ -63,10 +61,59 @@ model User {
   
   accounts      Account[]
   sessions      Session[]
+  subscription  Subscription?
   athleteProfile AthleteProfile?
   athleteFeedback AthleteFeedback[] // Adicionado para a relação inversa
   
   @@map("users")
+}
+
+// ===== SUBSCRIPTION & BILLING =====
+
+model Subscription {
+  id                     String   @id @default(cuid())
+  userId                 String   @unique
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Stripe data
+  stripeCustomerId       String?  @unique
+  stripeSubscriptionId   String?  @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+  
+  // Subscription status
+  status                 SubscriptionStatus @default(FREE)
+  plan                   SubscriptionPlan   @default(FREE)
+  
+  // Trial
+  trialEndsAt            DateTime?
+  cancelAtPeriodEnd      Boolean  @default(false)
+  
+  // Metadata
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  FREE
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+}
+
+enum SubscriptionPlan {
+  FREE
+  PREMIUM_MONTHLY
+  PREMIUM_ANNUAL
 }
 
 model VerificationToken {

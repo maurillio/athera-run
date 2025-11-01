@@ -2,9 +2,9 @@
 ## Plataforma Inteligente de Treinamento para Maratonistas
 
 **Data:** Novembro de 2025  
-**Versão:** 1.0  
+**Versão:** 2.0  
 **Contato:** mmaurillio2@gmail.com  
-**Website:** https://42maurillio.abacusai.app
+**Website:** https://atherarun.com
 
 ---
 
