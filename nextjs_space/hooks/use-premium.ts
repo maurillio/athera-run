@@ -27,9 +27,9 @@ export function usePremium() {
       if (response.ok) {
         const data = await response.json();
         setSubscription({
-          isPremium: data.status !== 'FREE',
-          status: data.status,
-          plan: data.plan,
+          isPremium: data.isPremium || false,
+          status: data.subscription?.status || 'FREE',
+          plan: data.subscription?.plan || 'FREE',
           loading: false,
         });
       } else {
