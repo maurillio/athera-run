@@ -1,7 +1,6 @@
 {
   "version": 2,
   "buildCommand": "cd nextjs_space && npm install --force && npm run build",
-  "outputDirectory": "nextjs_space/.next",
   "framework": "nextjs",
   "installCommand": "cd nextjs_space && npm install --force"
 }
