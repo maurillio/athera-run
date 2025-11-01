@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, Zap, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -12,7 +12,22 @@ import { toast } from 'sonner';
 export default function PricingPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      toast.success('🎉 Assinatura ativada com sucesso! Bem-vindo ao Premium!', {
+        duration: 5000,
+      });
+      // Limpar URL
+      window.history.replaceState({}, '', '/pricing');
+    }
+    if (searchParams.get('canceled') === 'true') {
+      toast.info('Checkout cancelado. Você pode tentar novamente quando quiser!');
+      window.history.replaceState({}, '', '/pricing');
+    }
+  }, [searchParams]);
 
   const handleSubscribe = async (priceId: string, planName: string) => {
     if (!session) {

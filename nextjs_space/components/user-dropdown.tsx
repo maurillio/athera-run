@@ -13,14 +13,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, Settings, Shield, LogOut, Loader2 } from 'lucide-react';
+import { User, Settings, Shield, LogOut, Loader2, Crown, CreditCard } from 'lucide-react';
 import { useState } from 'react';
+import { usePremium } from '@/hooks/use-premium';
+import PremiumBadge from '@/components/subscription/premium-badge';
 
 export default function UserDropdown() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [open, setOpen] = useState(false);
+  const { isPremium, status: subscriptionStatus } = usePremium();
 
   if (status === 'loading') {
     return (
@@ -87,13 +90,35 @@ export default function UserDropdown() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{session.user.name}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium leading-none">{session.user.name}</p>
+              {subscriptionStatus && <PremiumBadge status={subscriptionStatus} />}
+            </div>
             <p className="text-xs leading-none text-muted-foreground">
               {session.user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {!isPremium && (
+          <>
+            <DropdownMenuItem onClick={() => router.push('/pricing')} className="cursor-pointer text-orange-600 font-medium">
+              <Crown className="mr-2 h-4 w-4" />
+              <span>Fazer Upgrade</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        {isPremium && (
+          <>
+            <DropdownMenuItem onClick={() => router.push('/subscription')} className="cursor-pointer">
+              <CreditCard className="mr-2 h-4 w-4" />
+              <span>Minha Assinatura</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        
         <DropdownMenuItem onClick={() => router.push('/perfil')} className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />
           <span>Editar Perfil</span>
