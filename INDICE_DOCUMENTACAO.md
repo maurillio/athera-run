@@ -149,7 +149,7 @@ Este índice organiza toda a documentação criada para facilitar a continuaçã
 
 ### URLs Importantes
 
-- **Produção**: https://42maurillio.abacusai.app
+- **Produção**: https://atherarun.com
 - **Strava Developers**: https://www.strava.com/settings/api
 - **Abacus.AI**: https://abacus.ai
 

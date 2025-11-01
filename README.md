@@ -155,7 +155,7 @@ nextjs_space/
 
 ### Para Usuários
 
-1. **Cadastre-se**: Crie uma conta em https://42maurillio.abacusai.app/signup
+1. **Cadastre-se**: Crie uma conta em https://atherarun.com/signup
 2. **Onboarding**: Preencha seu perfil de atleta (5 etapas)
 3. **Gere o Plano**: Sistema gera automaticamente seu plano personalizado
 4. **Conecte o Strava** (opcional): Sincronização automática de treinos
