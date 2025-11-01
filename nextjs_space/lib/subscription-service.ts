@@ -1,4 +1,4 @@
-import { prisma } from './prisma';
+import { prisma } from './db';
 import { SubscriptionStatus, SubscriptionPlan } from '@prisma/client';
 
 export async function getSubscriptionStatus(userId: string) {

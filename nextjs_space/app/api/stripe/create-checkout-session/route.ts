@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { stripe, STRIPE_PRICES } from '@/lib/stripe';
 import { getSubscriptionStatus } from '@/lib/subscription-service';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {
