@@ -285,12 +285,19 @@ curl -I https://atherarun.com/pricing
 
 ## 📝 HISTÓRICO DE DEPLOYS
 
-### 01/11/2025 - Integração Stripe
-- ✅ Adicionada integração completa do Stripe
-- ✅ Página /pricing criada
-- ✅ Fix login "Carregando..."
-- ⚠️ Build falhando por problema de dependências
-- Status: Aguardando correção de build
+### 01/11/2025 21:18 - MIGRAÇÃO PARA VERCEL ✅
+- ✅ **MIGRADO DE PM2 PARA VERCEL**
+- ✅ Deploy automático funcionando
+- ✅ Build passando no Vercel
+- ✅ 4 erros de TypeScript corrigidos
+- ✅ Integração Stripe deployada
+- ✅ Paywalls implementados
+- Status: **TUDO FUNCIONANDO!**
+
+### 01/11/2025 - Integração Stripe (PM2 - DESCONTINUADO)
+- ⚠️ Build falhando com PM2
+- ⚠️ Problemas de dependências
+- Status: **MIGRADO PARA VERCEL**
 
 ---
 
@@ -306,8 +313,13 @@ curl -I https://atherarun.com/pricing
 **🎯 RESUMO PARA SEMPRE LEMBRAR:**
 
 ```
-ESTE É O SERVIDOR DE PRODUÇÃO!
-PM2 roda a aplicação em modo production.
-Deploy = git pull + npm build + pm2 restart
-Não há automação de deploy.
+🚀 USAMOS VERCEL AGORA!
+✅ Deploy automático via GitHub
+✅ Build feito pelo Vercel
+✅ Deploy = git push origin main
+✅ Tudo automático e funcionando!
+
+❌ PM2 NÃO É MAIS USADO
+❌ Não fazemos build local
+❌ Não precisamos acessar servidor
 ```
