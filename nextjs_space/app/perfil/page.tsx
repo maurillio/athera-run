@@ -21,6 +21,8 @@ import RaceManagement from '@/components/race-management';
 import PeriodizationDashboard from '@/components/periodization-dashboard';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
+import PremiumBadge from '@/components/subscription/premium-badge';
 
 interface RaceGoal {
   id: number;
@@ -465,6 +467,9 @@ export default function PerfilPage() {
 
             <TabsContent value="personal">
               <div className="space-y-6">
+                {/* Subscription Status Card */}
+                <SubscriptionStatusCard />
+
                 {/* Gerenciar Plano de Treinamento */}
                 {profile.hasCustomPlan && (
                   <Card className="border-orange-200 bg-orange-50/50">
