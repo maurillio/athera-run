@@ -48,15 +48,26 @@ export default function SubscriptionPage() {
   const handleManageSubscription = async () => {
     setManagingSubscription(true);
     try {
+      console.log('Tentando abrir portal do Stripe...');
       const response = await fetch('/api/stripe/create-portal-session', { method: 'POST' });
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
-        const { url } = await response.json();
-        window.location.href = url;
+        const data = await response.json();
+        console.log('Portal URL:', data.url);
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          toast.error('URL do portal não recebida');
+        }
       } else {
-        toast.error('Erro ao abrir portal');
+        const error = await response.json();
+        console.error('Erro da API:', error);
+        toast.error(`Erro ao abrir portal: ${error.error || 'Desconhecido'}`);
       }
     } catch (error) {
-      toast.error('Erro ao processar');
+      console.error('Erro ao processar:', error);
+      toast.error('Erro ao processar solicitação');
     } finally {
       setManagingSubscription(false);
     }
