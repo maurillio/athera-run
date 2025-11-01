@@ -81,10 +81,10 @@ export default function SubscriptionStatusCard() {
 
   if (!subscription) return null;
 
-  const isFree = subscription.status === 'FREE';
-  const isActive = subscription.status === 'ACTIVE';
-  const isTrial = subscription.status === 'TRIAL';
-  const isCanceled = subscription.cancelAtPeriodEnd;
+  const isFree = !subscription.isPremium;
+  const isActive = subscription.subscription?.status === 'ACTIVE';
+  const isTrial = subscription.subscription?.status === 'TRIAL';
+  const isCanceled = subscription.subscription?.cancelAtPeriodEnd || false;
 
   const getStatusBadge = () => {
     if (isFree) return <Badge variant="secondary">Gratuito</Badge>;
@@ -95,17 +95,17 @@ export default function SubscriptionStatusCard() {
   };
 
   const getPlanName = () => {
-    if (subscription.plan === 'PREMIUM_MONTHLY') return 'Premium Mensal';
-    if (subscription.plan === 'PREMIUM_ANNUAL') return 'Premium Anual';
+    if (subscription.subscription?.plan === 'PREMIUM_MONTHLY') return 'Premium Mensal';
+    if (subscription.subscription?.plan === 'PREMIUM_ANNUAL') return 'Premium Anual';
     return 'Gratuito';
   };
 
   const getNextBillingDate = () => {
-    if (isTrial && subscription.trialEndsAt) {
-      return new Date(subscription.trialEndsAt);
+    if (isTrial && subscription.subscription?.trialEndsAt) {
+      return new Date(subscription.subscription.trialEndsAt);
     }
-    if (subscription.stripeCurrentPeriodEnd) {
-      return new Date(subscription.stripeCurrentPeriodEnd);
+    if (subscription.subscription?.stripeCurrentPeriodEnd) {
+      return new Date(subscription.subscription.stripeCurrentPeriodEnd);
     }
     return null;
   };
@@ -139,12 +139,12 @@ export default function SubscriptionStatusCard() {
           </Alert>
         )}
 
-        {isTrial && subscription.trialEndsAt && (
+        {isTrial && subscription.subscription?.trialEndsAt && (
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               Seu período de teste termina em{' '}
-              {format(new Date(subscription.trialEndsAt), "dd 'de' MMMM", { locale: ptBR })}
+              {format(new Date(subscription.subscription.trialEndsAt), "dd 'de' MMMM", { locale: ptBR })}
             </AlertDescription>
           </Alert>
         )}

@@ -18,10 +18,18 @@ export async function POST(req: NextRequest) {
     const userId = session.user.id;
     const subscription = await getSubscriptionStatus(userId);
 
-    if (!subscription.stripeCustomerId) {
+    if (!subscription?.stripeCustomerId) {
       return NextResponse.json(
         { error: 'No Stripe customer found' },
         { status: 400 }
+      );
+    }
+
+    // Verificar se stripe está inicializado
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Stripe not configured' },
+        { status: 500 }
       );
     }
 

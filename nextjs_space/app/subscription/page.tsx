@@ -79,8 +79,8 @@ export default function SubscriptionPage() {
 
   if (!subscription) return null;
 
-  const isFree = subscription.status === 'FREE';
-  const isPremium = subscription.status === 'ACTIVE' || subscription.status === 'TRIAL';
+  const isFree = !subscription.isPremium;
+  const isPremium = subscription.isPremium;
 
   return (
     <>
