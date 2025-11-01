@@ -50,27 +50,25 @@ export default function SubscriptionStatusCard() {
       console.log('[Card] Tentando abrir portal...');
       const response = await fetch('/api/stripe/create-portal-session', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       console.log('[Card] Response status:', response.status);
+      const data = await response.json();
+      console.log('[Card] Response data:', data);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('[Card] Portal URL recebida:', data.url);
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          console.error('[Card] URL não encontrada na resposta:', data);
-          toast.error('URL do portal não recebida');
-        }
+      if (response.ok && data.url) {
+        console.log('[Card] Redirecionando para:', data.url);
+        window.location.href = data.url;
       } else {
-        const error = await response.json();
-        console.error('[Card] Erro da API:', error);
-        toast.error(`Erro: ${error.error || 'Desconhecido'}`);
+        console.error('[Card] Erro:', data);
+        toast.error(data.error || 'Erro ao abrir portal de gerenciamento');
       }
     } catch (error) {
       console.error('[Card] Erro ao processar:', error);
-      toast.error('Erro ao processar solicitação');
+      toast.error('Erro ao processar solicitação. Tente novamente.');
     } finally {
       setManagingSubscription(false);
     }
