@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": "cd nextjs_space && npm install --legacy-peer-deps && npm run build",
+  "outputDirectory": "nextjs_space/.next",
+  "framework": "nextjs",
+  "installCommand": "cd nextjs_space && npm install --legacy-peer-deps",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
