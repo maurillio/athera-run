@@ -94,7 +94,7 @@ export default function SubscriptionStatusCard() {
     if (isCanceled) return <Badge variant="destructive">Cancelado</Badge>;
     if (isTrial) return <Badge className="bg-blue-500">Trial</Badge>;
     if (isActive) return <Badge className="bg-green-500">Ativo</Badge>;
-    return <Badge variant="secondary">{subscription.status}</Badge>;
+    return <Badge variant="secondary">{subscription.subscription?.status || 'FREE'}</Badge>;
   };
 
   const getPlanName = () => {
