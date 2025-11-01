@@ -39,7 +39,8 @@ export async function POST(request: Request) {
           const customerId = session.customer as string;
 
           // Get subscription details
-          const subscriptionData = await stripe.subscriptions.retrieve(subscriptionId);
+          const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId);
+          const subscriptionData = subscriptionResponse as Stripe.Subscription;
           
           // Find user by customer ID
           const existingSubscription = await prisma.subscription.findUnique({
