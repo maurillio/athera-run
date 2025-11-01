@@ -22,7 +22,7 @@ export default function PaywallModal({ isOpen, onClose, feature, description }: 
   ];
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <button
           onClick={onClose}
