@@ -29,7 +29,12 @@ export async function GET() {
       passed: !!stripe && !!process.env.STRIPE_SECRET_KEY,
     };
 
-    let test3 = { name: 'Create portal', passed: false, data: null, error: null };
+    let test3: { name: string; passed: boolean; data: string | null; error: string | null } = { 
+      name: 'Create portal', 
+      passed: false, 
+      data: null, 
+      error: null 
+    };
 
     if (subscription?.stripeCustomerId && stripe) {
       try {
