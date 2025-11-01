@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 
+// Stripe webhook handler for subscription events
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature') as string;
