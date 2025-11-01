@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as any;
         console.log('[STRIPE WEBHOOK] Subscription updated:', subscription.id);
 
         const existingSubscription = await prisma.subscription.findUnique({
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as any;
         console.log('[STRIPE WEBHOOK] Subscription deleted:', subscription.id);
 
         const existingSubscription = await prisma.subscription.findUnique({
