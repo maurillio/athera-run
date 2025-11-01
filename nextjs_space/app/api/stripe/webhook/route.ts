@@ -39,8 +39,7 @@ export async function POST(request: Request) {
           const customerId = session.customer as string;
 
           // Get subscription details
-          const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId);
-          const subscriptionData = subscriptionResponse as Stripe.Subscription;
+          const subscriptionData = await stripe.subscriptions.retrieve(subscriptionId) as any;
           
           // Find user by customer ID
           const existingSubscription = await prisma.subscription.findUnique({
@@ -153,7 +152,7 @@ export async function POST(request: Request) {
         console.log('[STRIPE WEBHOOK] Payment succeeded:', invoice.id);
 
         if (invoice.subscription) {
-          const subscriptionData = await stripe.subscriptions.retrieve(invoice.subscription as string);
+          const subscriptionData = await stripe.subscriptions.retrieve(invoice.subscription as string) as any;
           
           const existingSubscription = await prisma.subscription.findUnique({
             where: { stripeCustomerId: invoice.customer as string },
