@@ -21,9 +21,17 @@ function LoginContent() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component is mounted
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Check for OAuth errors in URL
   useEffect(() => {
+    if (!mounted) return;
+    
     const errorParam = searchParams?.get('error');
     if (errorParam) {
       const errorMessages: { [key: string]: string } = {
@@ -40,7 +48,11 @@ function LoginContent() {
       };
       setError(errorMessages[errorParam] || errorMessages['Default']);
     }
-  }, [searchParams]);
+  }, [searchParams, mounted]);
+
+  if (!mounted) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,7 +217,14 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Carregando...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+          <p className="text-sm text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    }>
       <LoginContent />
     </Suspense>
   );
