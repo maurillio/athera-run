@@ -39,27 +39,27 @@ export async function POST(request: Request) {
           const customerId = session.customer as string;
 
           // Get subscription details
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          const subscriptionData = await stripe.subscriptions.retrieve(subscriptionId);
           
           // Find user by customer ID
           const existingSubscription = await prisma.subscription.findUnique({
             where: { stripeCustomerId: customerId },
           });
 
-          if (existingSubscription) {
+          if (existingSubscription && subscriptionData) {
             // Update subscription
             await prisma.subscription.update({
               where: { id: existingSubscription.id },
               data: {
                 stripeSubscriptionId: subscriptionId,
-                stripePriceId: subscription.items.data[0].price.id,
-                status: subscription.status === 'trialing' ? 'TRIAL' : 'ACTIVE',
-                plan: subscription.items.data[0].price.id === process.env.STRIPE_PRICE_ANNUAL 
+                stripePriceId: subscriptionData.items.data[0]?.price?.id || '',
+                status: subscriptionData.status === 'trialing' ? 'TRIAL' : 'ACTIVE',
+                plan: subscriptionData.items.data[0]?.price?.id === process.env.STRIPE_PRICE_ANNUAL 
                   ? 'PREMIUM_ANNUAL' 
                   : 'PREMIUM_MONTHLY',
-                stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
-                trialEndsAt: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
-                cancelAtPeriodEnd: subscription.cancel_at_period_end,
+                stripeCurrentPeriodEnd: subscriptionData.current_period_end ? new Date(subscriptionData.current_period_end * 1000) : null,
+                trialEndsAt: subscriptionData.trial_end ? new Date(subscriptionData.trial_end * 1000) : null,
+                cancelAtPeriodEnd: subscriptionData.cancel_at_period_end || false,
               },
             });
 
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
           where: { stripeCustomerId: subscription.customer as string },
         });
 
-        if (existingSubscription) {
+        if (existingSubscription && subscription.current_period_end) {
           const status = subscription.status === 'trialing' ? 'TRIAL' 
             : subscription.status === 'active' ? 'ACTIVE'
             : subscription.status === 'past_due' ? 'PAST_DUE'
@@ -96,14 +96,14 @@ export async function POST(request: Request) {
             where: { id: existingSubscription.id },
             data: {
               stripeSubscriptionId: subscription.id,
-              stripePriceId: subscription.items.data[0].price.id,
+              stripePriceId: subscription.items?.data?.[0]?.price?.id || '',
               status,
-              plan: subscription.items.data[0].price.id === process.env.STRIPE_PRICE_ANNUAL 
+              plan: subscription.items?.data?.[0]?.price?.id === process.env.STRIPE_PRICE_ANNUAL 
                 ? 'PREMIUM_ANNUAL' 
                 : 'PREMIUM_MONTHLY',
               stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
               trialEndsAt: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
-              cancelAtPeriodEnd: subscription.cancel_at_period_end,
+              cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
             },
           });
 
@@ -152,18 +152,18 @@ export async function POST(request: Request) {
         console.log('[STRIPE WEBHOOK] Payment succeeded:', invoice.id);
 
         if (invoice.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+          const subscriptionData = await stripe.subscriptions.retrieve(invoice.subscription as string);
           
           const existingSubscription = await prisma.subscription.findUnique({
             where: { stripeCustomerId: invoice.customer as string },
           });
 
-          if (existingSubscription) {
+          if (existingSubscription && subscriptionData.current_period_end) {
             await prisma.subscription.update({
               where: { id: existingSubscription.id },
               data: {
                 status: 'ACTIVE',
-                stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
+                stripeCurrentPeriodEnd: new Date(subscriptionData.current_period_end * 1000),
               },
             });
 
