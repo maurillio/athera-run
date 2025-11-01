@@ -41,6 +41,7 @@ import TrainingLogDialog from '@/components/training-log-dialog';
 import AIAnalysisSection from '@/components/ai-analysis-section';
 import AutoAdjustCard from '@/components/auto-adjust-card';
 import TrainingChat from '@/components/training-chat';
+import UpgradeBanner from '@/components/subscription/upgrade-banner';
 
 interface CustomPlan {
   id: number;
@@ -224,6 +225,9 @@ export default function DashboardPage() {
                 : 'Vamos criar seu plano de treinamento personalizado'}
             </p>
           </div>
+
+          {/* Upgrade Banner */}
+          <UpgradeBanner className="mb-6" />
 
           {!hasCustomPlan && (
             <Card className="mb-8 border-orange-200 bg-orange-50">
