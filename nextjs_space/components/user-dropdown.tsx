@@ -92,7 +92,7 @@ export default function UserDropdown() {
           <div className="flex flex-col space-y-1">
             <div className="flex items-center gap-2">
               <p className="text-sm font-medium leading-none">{session.user.name}</p>
-              {subscriptionStatus && <PremiumBadge status={subscriptionStatus} />}
+              {subscriptionStatus && <PremiumBadge status={subscriptionStatus as 'FREE' | 'TRIAL' | 'ACTIVE'} />}
             </div>
             <p className="text-xs leading-none text-muted-foreground">
               {session.user.email}
