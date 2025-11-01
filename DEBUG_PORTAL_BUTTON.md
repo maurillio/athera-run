@@ -152,6 +152,34 @@ Enquanto não funciona, usuário pode:
 
 ---
 
-**Status:** 🔴 Aguardando logs do console  
+**Status:** 🟡 Em investigação  
 **Prioridade:** Alta  
 **Bloqueador:** Sim (usuário não consegue cancelar)
+
+---
+
+## ✅ VERIFICAÇÕES FEITAS
+
+- [x] stripeCustomerId existe: `cus_TLQNdenKg5e0WH`
+- [x] Código do botão está correto
+- [x] API endpoint está funcionando
+- [x] Mensagens de erro melhoradas
+- [ ] **Aguardando:** Logs do console do navegador
+
+---
+
+## 🚀 ÚLTIMA ATUALIZAÇÃO (01/11/2025 21:56 UTC)
+
+**Deploy realizado com melhorias:**
+- Adicionado Content-Type header na requisição
+- Melhorado tratamento de erros
+- Mensagens de erro mais claras
+- Mais logs para debugging
+
+**Aguardando deploy no Vercel completar...**
+
+Após deploy, testar:
+1. Abrir https://atherarun.com/subscription
+2. Abrir F12 (Console)
+3. Clicar em "Gerenciar Assinatura"
+4. Enviar screenshot dos logs
