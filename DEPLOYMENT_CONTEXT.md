@@ -1,59 +1,77 @@
 # ⚠️ CONTEXTO DE DEPLOYMENT - LEIA SEMPRE!
 
 **Data de criação:** 01/11/2025  
-**Última atualização:** 01/11/2025 15:07 UTC
+**Última atualização:** 01/11/2025 21:18 UTC
 
 ---
 
 ## 🖥️ AMBIENTE DE PRODUÇÃO
 
-### Configuração Atual:
-
-- **Servidor:** Este servidor (/root/athera-run) é o servidor de produção
-- **Domínio:** atherarun.com aponta para ESTE servidor
-- **Process Manager:** PM2 (não Docker, não Vercel, não Netlify)
-- **Modo:** Production (npm run start)
-- **Build:** nextjs_space/.next/
-
-### ❗ IMPORTANTE:
+### ⚠️ IMPORTANTE - MUDANÇA CRÍTICA:
 
 ```
-✅ Estamos NO SERVIDOR DE PRODUÇÃO
-❌ NÃO HÁ deploy automático do GitHub
-❌ Git push NÃO atualiza a aplicação automaticamente
+🚀 AGORA USAMOS VERCEL!
+✅ Deploy automático via GitHub
+✅ Git push atualiza aplicação automaticamente
+❌ NÃO USAMOS MAIS PM2
+❌ NÃO fazemos build local
+```
+
+### Configuração Atual:
+
+- **Plataforma:** Vercel (deploy automático)
+- **Repositório:** github.com/maurillio/athera-run
+- **Branch:** main
+- **Root Directory:** nextjs_space
+- **Deploy:** Automático a cada push no GitHub
+- **Build:** Feito pelo Vercel (não local)
+
+### ❗ NUNCA MAIS:
+
+```
+❌ PM2 - NÃO USAMOS MAIS
+❌ Build local - Vercel faz isso
+❌ npm run start local - Não é necessário
+❌ Deploy manual - Tudo automático agora
 ```
 
 ---
 
-## 🔄 PROCESSO DE DEPLOY
+## 🔄 PROCESSO DE DEPLOY (VERCEL)
 
-### Para atualizar em produção:
+### ✅ Deploy Automático - Novo Workflow:
 
 ```bash
-# 1. Pull das mudanças (se necessário)
-cd /root/athera-run
-git pull origin main
+# 1. Fazer mudanças localmente
+# Editar arquivos normalmente
 
-# 2. Instalar dependências (se houver novas)
-cd nextjs_space
-npm install --legacy-peer-deps
+# 2. Commitar mudanças
+git add .
+git commit -m "sua mensagem"
 
-# 3. Fazer build
-npm run build
+# 3. Push para GitHub
+git push origin main
 
-# 4. Reiniciar PM2
-pm2 restart athera-run
-
-# 5. Verificar status
-pm2 status
-pm2 logs athera-run --lines 50
+# 4. PRONTO! Vercel faz o resto automaticamente:
+#    - Detecta o push
+#    - Instala dependências
+#    - Faz build
+#    - Deploy em produção (2-5 min)
 ```
 
-### ⚠️ NÃO ESQUECER:
+### 📊 Monitorar Deploy:
 
-- Build SEMPRE antes de restart
-- Verificar logs após restart
-- Testar no browser após deploy
+1. Acessar: https://vercel.com/dashboard
+2. Ver status do deployment em tempo real
+3. Verificar logs se houver erro
+4. Testar aplicação após deploy
+
+### ⚠️ NÃO É MAIS NECESSÁRIO:
+
+- ❌ Build local
+- ❌ PM2 restart
+- ❌ npm install manual
+- ❌ Deploy manual
 
 ---
 
@@ -75,27 +93,32 @@ pm2 logs athera-run --lines 50
 
 ---
 
-## 🔧 PM2 - COMANDOS ÚTEIS
+## 📊 VERCEL - COMANDOS E MONITORAMENTO
 
+### Dashboard Vercel:
+- **URL:** https://vercel.com/dashboard
+- **Projeto:** athera-run
+- **Status:** Deploy automático ativo
+
+### Verificar Status:
 ```bash
-# Ver status
-pm2 status
+# Ver deployments recentes (se tiver CLI instalado)
+vercel ls
 
-# Ver logs em tempo real
-pm2 logs athera-run
+# Ou acessar dashboard web
+# https://vercel.com/dashboard
+```
 
-# Reiniciar
-pm2 restart athera-run
+### Ver Logs:
+- Acessar Vercel Dashboard
+- Clicar no deployment
+- Ver logs completos do build
+- Ver logs de runtime (se houver erros)
 
-# Stop/Start
-pm2 stop athera-run
-pm2 start athera-run
-
-# Ver informações detalhadas
-pm2 show athera-run
-
-# Ver monitoramento
-pm2 monit
+### ⚠️ PM2 NÃO É MAIS USADO
+```
+Todos os comandos PM2 foram substituídos pelo Vercel.
+Não há mais necessidade de gerenciar processos localmente.
 ```
 
 ---
@@ -248,14 +271,15 @@ curl -I https://atherarun.com/pricing
 
 ---
 
-## ⚠️ LEMBRETES IMPORTANTES
+## ⚠️ LEMBRETES IMPORTANTES (VERCEL)
 
-1. ✅ **SEMPRE** fazer build antes de restart
-2. ✅ **SEMPRE** verificar logs após restart
-3. ✅ **SEMPRE** testar no browser após deploy
-4. ❌ **NUNCA** fazer git pull sem backup
-5. ❌ **NUNCA** fazer npm install sem --legacy-peer-deps
-6. ❌ **NUNCA** commitar arquivos .env ou secrets
+1. ✅ **SEMPRE** testar com `npm run dev` antes de commitar
+2. ✅ **SEMPRE** verificar logs no Vercel Dashboard após deploy
+3. ✅ **SEMPRE** testar aplicação após deploy
+4. ✅ **Vercel faz build automaticamente** - não precisa fazer local
+5. ❌ **NUNCA** commitar arquivos .env ou secrets
+6. ❌ **NUNCA** tentar fazer build local para produção
+7. ❌ **NUNCA** usar PM2 - não existe mais no workflow
 
 ---
 
