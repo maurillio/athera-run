@@ -6,6 +6,12 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+// Disable body parsing, need raw body for Stripe
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
