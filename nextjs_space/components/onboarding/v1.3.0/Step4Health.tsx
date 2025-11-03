@@ -11,6 +11,11 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   const [injuries, setInjuries] = useState(data.injuryHistory || []);
   const [currentInjury, setCurrentInjury] = useState('');
   const [doctorCleared, setDoctorCleared] = useState(data.medicalClearance ?? true);
+  
+  // v1.3.0 - Novos campos fisiológicos
+  const [restingHeartRate, setRestingHeartRate] = useState(data.restingHeartRate || '');
+  const [sleepQuality, setSleepQuality] = useState(data.sleepQuality || 3);
+  const [stressLevel, setStressLevel] = useState(data.stressLevel || 3);
 
   const addInjury = () => {
     if (!currentInjury.trim()) return;
@@ -23,6 +28,10 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
       hasInjuryHistory,
       injuryHistory: hasInjuryHistory && injuries.length > 0 ? injuries : undefined,
       medicalClearance: doctorCleared,
+      // v1.3.0 - Dados fisiológicos
+      restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
+      sleepQuality,
+      stressLevel,
     });
     onNext();
   };
@@ -81,6 +90,47 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
           )}
         </div>
       )}
+
+      {/* v1.3.0 - Dados Fisiológicos */}
+      <div className="border-t pt-6 space-y-4">
+        <h3 className="font-semibold text-lg">📊 Dados Fisiológicos</h3>
+        
+        <div>
+          <label className="block font-medium mb-2">
+            Frequência Cardíaca em Repouso (opcional)
+            <span className="text-sm text-gray-500 ml-2">40-80 bpm é normal para atletas</span>
+          </label>
+          <input type="number" value={restingHeartRate} onChange={(e) => setRestingHeartRate(e.target.value)}
+            placeholder="Ex: 60" min="40" max="100"
+            className="w-full px-4 py-2 border rounded-lg" />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-2">
+            Qualidade do Sono
+            <span className="text-sm text-gray-500 ml-2">{sleepQuality === 1 ? '1-4h (Péssima)' : sleepQuality === 2 ? '4-6h (Ruim)' : sleepQuality === 3 ? '6-7h (Regular)' : sleepQuality === 4 ? '7-8h (Boa)' : '8h+ (Excelente)'}</span>
+          </label>
+          <input type="range" min="1" max="5" value={sleepQuality} onChange={(e) => setSleepQuality(parseInt(e.target.value))}
+            className="w-full" />
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>Péssima</span>
+            <span>Excelente</span>
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-medium mb-2">
+            Nível de Estresse
+            <span className="text-sm text-gray-500 ml-2">{stressLevel === 1 ? 'Muito Baixo' : stressLevel === 2 ? 'Baixo' : stressLevel === 3 ? 'Moderado' : stressLevel === 4 ? 'Alto' : 'Muito Alto'}</span>
+          </label>
+          <input type="range" min="1" max="5" value={stressLevel} onChange={(e) => setStressLevel(parseInt(e.target.value))}
+            className="w-full" />
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>Muito Baixo</span>
+            <span>Muito Alto</span>
+          </div>
+        </div>
+      </div>
 
       <div className="border-t pt-6">
         <label className="block font-medium mb-3">Liberação Médica</label>
