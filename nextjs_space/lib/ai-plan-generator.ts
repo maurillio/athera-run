@@ -12,6 +12,7 @@
 
 import { callLLM } from './llm-client';
 import { resilientAICall } from './ai-resilience';
+import { buildComprehensiveContext } from './ai-context-builder';
 
 export interface AIUserProfile {
   // Dados básicos
@@ -150,8 +151,9 @@ export interface AIGeneratedPlan {
 
 /**
  * Prepara o contexto completo do usuário para a IA
+ * @deprecated v1.3.0 - Use buildComprehensiveContext from ai-context-builder.ts
  */
-function prepareUserContext(profile: AIUserProfile): string { 
+function prepareUserContext_LEGACY(profile: AIUserProfile): string { 
   const today = new Date();
   const raceDate = new Date(profile.targetRaceDate);
   // Usar Math.ceil para incluir a semana da corrida (mesmo que seja parcial)
@@ -366,7 +368,8 @@ function prepareUserContext(profile: AIUserProfile): string {
  * A IA gera a estrutura e estratégia com exemplos, depois expandimos para todas as semanas
  */
 export async function generateAIPlan(profile: AIUserProfile, maxRetries: number = 3): Promise<AIGeneratedPlan> { 
-  const userContext = prepareUserContext(profile);
+  // v1.3.0: Usar novo context builder completo
+  const userContext = buildComprehensiveContext(profile as any);
   
   const today = new Date();
   today.setHours(0, 0, 0, 0);
