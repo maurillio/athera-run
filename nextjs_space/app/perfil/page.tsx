@@ -42,6 +42,7 @@ export default function PerfilPage() {
   const [saving, setSaving] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [deletingPlan, setDeletingPlan] = useState(false);
+  const [deletingProfile, setDeletingProfile] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [raceGoals, setRaceGoals] = useState<RaceGoal[]>([]);
   const [showAddRace, setShowAddRace] = useState(false);
@@ -289,6 +290,36 @@ export default function PerfilPage() {
       console.error('Error regenerating plan:', error);
       toast.error('Erro ao regenerar plano');
       setDeletingPlan(false);
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    setDeletingProfile(true);
+    try {
+      const response = await fetch('/api/profile/delete', {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Perfil excluído com sucesso! Redirecionando para onboarding...', {
+          icon: <CheckCircle2 className="h-5 w-5 text-green-500" />
+        });
+
+        // Redirecionar para onboarding após 1.5 segundos
+        setTimeout(() => {
+          router.push('/onboarding');
+          router.refresh();
+        }, 1500);
+      } else {
+        toast.error(data.error || 'Erro ao excluir perfil');
+        setDeletingProfile(false);
+      }
+    } catch (error) {
+      console.error('Error deleting profile:', error);
+      toast.error('Erro ao excluir perfil');
+      setDeletingProfile(false);
     }
   };
 
@@ -549,6 +580,118 @@ export default function PerfilPage() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* Zona de Perigo - Excluir Perfil */}
+                <Card className="border-red-300 bg-red-50/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-red-700">
+                      <AlertCircle className="h-5 w-5" />
+                      Zona de Perigo
+                    </CardTitle>
+                    <CardDescription className="text-red-600">
+                      Excluir completamente seu perfil e todos os dados
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="p-4 bg-red-100 border border-red-300 rounded-lg flex items-start gap-3">
+                      <AlertCircle className="h-5 w-5 text-red-700 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-red-900">
+                        <p className="font-medium mb-1">⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!</p>
+                        <p>Ao excluir seu perfil, TODOS os seus dados serão permanentemente deletados:</p>
+                        <ul className="list-disc list-inside mt-2 space-y-1">
+                          <li>Perfil de atleta e configurações</li>
+                          <li>Plano de treinamento completo</li>
+                          <li>Todas as corridas cadastradas</li>
+                          <li>Histórico de treinos registrados</li>
+                          <li>Feedback e análises da IA</li>
+                          <li>Dados de disponibilidade</li>
+                          <li>Atividades do Strava sincronizadas</li>
+                        </ul>
+                        <p className="mt-2 font-semibold">
+                          Você será redirecionado para o onboarding para criar um novo perfil do zero.
+                        </p>
+                      </div>
+                    </div>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          variant="destructive" 
+                          className="w-full bg-red-600 hover:bg-red-700"
+                          disabled={deletingProfile}
+                        >
+                          {deletingProfile ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Excluindo perfil...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Excluir Perfil Completamente
+                            </>
+                          )}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-red-700">
+                            ⚠️ ÚLTIMA CONFIRMAÇÃO: Excluir Perfil?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            <div className="space-y-3">
+                              <p className="font-semibold text-red-600">
+                                Esta é uma ação IRREVERSÍVEL e PERMANENTE!
+                              </p>
+                              <p>
+                                Todos os seus dados serão completamente deletados do sistema:
+                              </p>
+                              <div className="bg-red-50 border border-red-200 rounded p-3">
+                                <ul className="list-disc list-inside space-y-1 text-sm">
+                                  <li>Perfil de atleta</li>
+                                  <li>{profile.totalWeeks || 0} semanas de treino</li>
+                                  <li>Corridas cadastradas</li>
+                                  <li>Histórico de treinos</li>
+                                  <li>Análises da IA</li>
+                                  <li>Configurações de disponibilidade</li>
+                                  <li>Sincronização com Strava</li>
+                                </ul>
+                              </div>
+                              <p className="font-semibold text-red-700">
+                                Após a exclusão, você voltará ao onboarding para criar um novo perfil do zero.
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                Digite "EXCLUIR" para confirmar que entende as consequências.
+                              </p>
+                            </div>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel disabled={deletingProfile}>
+                            Cancelar
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleDeleteProfile}
+                            disabled={deletingProfile}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            {deletingProfile ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Excluindo...
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Sim, excluir TUDO permanentemente
+                              </>
+                            )}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </CardContent>
+                </Card>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Dados Pessoais */}
