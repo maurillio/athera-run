@@ -874,6 +874,7 @@ function getActivityAvailability(profile: AIUserProfile): {
 /**
  * Gera sugestão inteligente e contextual para dia de descanso
  * Baseado em: fase do treino, semana de cutback, proximidade de corridas, atividades disponíveis
+ * INCLUI exercícios específicos de fortalecimento e prevenção de lesões
  */
 function generateRestDaySuggestion(context: {
   phase: string;
@@ -886,6 +887,33 @@ function generateRestDaySuggestion(context: {
 }): string {
   const { phase, isCutbackWeek, raceThisWeek, hasStrength, hasSwimming, hasOtherActivities } = context;
 
+  // Exercícios de fortalecimento específicos para corredores
+  const strengthExercises = [
+    '🦵 Agachamento unilateral (3x10 cada perna) - fortalece quadríceps e glúteos',
+    '🦶 Elevação de panturrilha (3x15) - previne canelite e fortalece sóleo',
+    '💪 Prancha lateral (3x30s cada lado) - estabilidade de core e oblíquos',
+    '🏋️ Ponte de glúteo com uma perna (3x12 cada) - ativa glúteo médio',
+    '🤸 Afundo reverso (3x10 cada perna) - trabalho excêntrico de quadríceps',
+    '🧘 Clamshell (3x15 cada lado) - ativa glúteo médio, previne IT band',
+    '⚡ Single leg deadlift (3x8 cada perna) - equilíbrio e posterior de coxa',
+  ];
+
+  const mobilityExercises = [
+    '🔄 Rotação de quadril 90/90 (2x10 cada lado) - mobilidade de quadril',
+    '🦵 Alongamento de flexor de quadril (2x30s cada lado) - essencial para corredores',
+    '🦶 Alfabeto com tornozelo (2x completo cada pé) - mobilidade e prevenção',
+    '🌊 Cat-cow (2x10 repetições) - mobilidade de coluna e aquecimento',
+    '🧘‍♂️ Downward dog to cobra (2x8 repetições) - cadeia posterior completa',
+  ];
+
+  const recoveryTools = [
+    '🎾 Bola de tênis na sola do pé (5min cada pé) - prevenção de fascite plantar',
+    '📦 Rolo de massagem em panturrilha e IT band (10-15min)',
+    '❄️ Gelo em áreas inflamadas (15min) se houver desconforto',
+    '🛁 Banho de contraste (3x quente/frio) - melhora circulação',
+    '💤 Elevação de pernas 15min - reduz inchaço',
+  ];
+
   // Base da descrição
   let description = '💤 Descanso - Dia de recuperação ';
 
@@ -893,42 +921,37 @@ function generateRestDaySuggestion(context: {
   if (phase === 'base') {
     description += 'ativa. ';
     
-    // Sugestões baseadas em atividades disponíveis
-    const suggestions: string[] = [];
+    // Sugestões de fortalecimento progressivo
+    const selectedExercises = strengthExercises.slice(0, 3);
+    const selectedMobility = mobilityExercises.slice(0, 2);
     
-    if (hasStrength) {
-      suggestions.push('alongamento dinâmico (15-20min)');
-    }
+    description += '\n\n💪 FORTALECIMENTO (20-30min):\n• ' + selectedExercises.join('\n• ');
+    description += '\n\n🧘 MOBILIDADE:\n• ' + selectedMobility.join('\n• ');
+    
     if (hasSwimming) {
-      suggestions.push('natação leve e relaxada (20-30min)');
-    }
-    if (hasOtherActivities) {
-      suggestions.push('yoga ou pilates para flexibilidade');
+      description += '\n\n🏊 OU: Natação leve (20-30min) - recuperação ativa sem impacto';
     }
     
-    // Sugestões gerais sempre disponíveis
-    suggestions.push('caminhada leve (20-30min)');
-    suggestions.push('rolo de massagem miofascial');
-    suggestions.push('alongamento estático (10-15min)');
-
-    if (suggestions.length > 0) {
-      description += `\n\n✨ Sugestões para otimizar recuperação:\n• ${suggestions.slice(0, 3).join('\n• ')}`;
-    }
-    
-    description += '\n\n💡 Foco: hidratação adequada (2-3L água), sono de qualidade (7-9h) e nutrição balanceada.';
+    description += '\n\n💡 Nutrição: Proteína adequada (1.6-2g/kg) e hidratação (2-3L água).';
     
   } else if (phase === 'build') {
     description += 'importante. ';
     
     if (isCutbackWeek) {
       description += 'Semana de recuperação - seu corpo está se adaptando ao volume.';
-      description += '\n\n🔥 Priorize:\n• Sono extra (8-9h)\n• Massagem ou liberação miofascial\n• Hidratação reforçada\n• Evite ficar muito tempo em pé';
+      const selectedRecovery = recoveryTools.slice(0, 3);
+      description += '\n\n🔥 RECUPERAÇÃO ATIVA:\n• ' + selectedRecovery.join('\n• ');
+      description += '\n\n😴 Priorize: Sono extra (8-9h) e hidratação reforçada';
     } else {
-      description += 'O volume está alto - recuperação é essencial.';
-      description += '\n\n⚡ Recomendações:\n• Alongamento passivo (15min)\n• Elevação de pernas (10min)\n• Compressão ou gelo em áreas doloridas';
+      description += 'O volume está alto - recuperação + fortalecimento leve.';
+      const selectedStrength = strengthExercises.slice(3, 5); // Diferentes exercícios
+      const selectedRecovery = recoveryTools.slice(0, 2);
+      
+      description += '\n\n💪 FORTALECIMENTO LEVE (15min):\n• ' + selectedStrength.join('\n• ');
+      description += '\n\n🛠️ FERRAMENTAS DE RECUPERAÇÃO:\n• ' + selectedRecovery.join('\n• ');
       
       if (hasStrength) {
-        description += '\n• Mobilidade de quadril e tornozelo';
+        description += '\n\n🏋️ Dica: Aproveite para trabalhar mobilidade de quadril e tornozelo - áreas críticas para corredores.';
       }
     }
     
@@ -940,19 +963,35 @@ function generateRestDaySuggestion(context: {
       
       if (daysToRace <= 3) {
         description += `🏁 Corrida ${raceThisWeek.priority} em ${daysToRace} dias!`;
-        description += '\n\n🎯 DESCANSO ABSOLUTO:\n• Evite ficar em pé por longos períodos\n• Hidratação constante\n• Visualização mental da prova\n• Prepare equipamento e estratégia\n• Durma 8h+ por noite';
+        description += '\n\n🎯 DESCANSO ABSOLUTO:';
+        description += '\n• Evite ficar em pé por longos períodos';
+        description += '\n• Hidratação constante + carboidratos adequados';
+        description += '\n• Alongamento suave apenas (5-10min)';
+        description += '\n• Visualização mental da prova';
+        description += '\n• Prepare equipamento e estratégia';
+        description += '\n• Durma 8h+ por noite';
       } else {
-        description += 'Fase de pico - cada treino conta.';
-        description += '\n\n🔋 Recuperação ativa:\n• Caminhada leve (15-20min)\n• Alongamento suave\n• Respiração e meditação (10min)';
+        description += 'Fase de pico - recuperação + manutenção.';
+        const selectedMobility = mobilityExercises.slice(0, 2);
+        description += '\n\n🧘 MOBILIDADE SUAVE (10-15min):\n• ' + selectedMobility.join('\n• ');
+        description += '\n\n🧠 Mental: Respiração e meditação (10min) para controle de ansiedade pré-prova';
       }
     } else {
-      description += 'Intensidade está alta - recuperação é treino.';
-      description += '\n\n💪 Sugestões:\n• Massagem profunda (se disponível)\n• Banho de contraste (quente/frio)\n• Elevação de pernas\n• Core leve (prancha 3x30s)';
+      description += 'Intensidade está alta - recuperação ativa.';
+      const selectedRecovery = recoveryTools.slice(1, 4);
+      description += '\n\n🛠️ RECUPERAÇÃO:\n• ' + selectedRecovery.join('\n• ');
+      description += '\n\n💪 OPCIONAL: Core leve (prancha 3x30s + prancha lateral 2x30s)';
     }
     
   } else if (phase === 'taper') {
     description += 'essencial para chegar fresco na prova. ';
-    description += '\n\n🏆 SEMANA DE TAPER:\n• Descanso é sua prioridade #1\n• Evite atividades desnecessárias\n• Mantenha rotina de sono\n• Hidratação e carboidratos adequados\n• Relaxe e confie no treinamento';
+    description += '\n\n🏆 SEMANA DE TAPER:';
+    description += '\n• Descanso é sua prioridade #1';
+    description += '\n• Alongamento suave diário (10min)';
+    description += '\n• Mantenha rotina de sono (8h+)';
+    description += '\n• Hidratação e carboidratos adequados';
+    description += '\n• Evite atividades desnecessárias';
+    description += '\n• Relaxe e confie no treinamento';
     
     if (raceThisWeek) {
       description += '\n\n🎯 Você está preparado(a)! Chegou a hora de colher os frutos do seu treino.';
@@ -960,7 +999,11 @@ function generateRestDaySuggestion(context: {
   }
 
   // Sempre adicionar dicas de prevenção de lesões
-  description += '\n\n🛡️ Prevenção de lesões: Aproveite o descanso para identificar áreas de desconforto. Dor persistente? Considere avaliar com profissional.';
+  description += '\n\n🛡️ PREVENÇÃO DE LESÕES:';
+  description += '\n• Identifique áreas de desconforto durante o descanso';
+  description += '\n• Dor persistente >3 dias? Considere avaliar com profissional';
+  description += '\n• Sinais de alerta: dor que piora, inchaço, rigidez matinal excessiva';
+  description += '\n• Trabalhe pontos fracos ANTES que virem lesões';
 
   return description;
 }
