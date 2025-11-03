@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 03 de Novembro de 2024 17:40  
-**Versão:** 1.0.2  
+**Última atualização:** 03 de Novembro de 2025 17:56  
+**Versão:** 1.1.0  
 **Status:** 🟢 Produção Estável
 
 ---
@@ -78,9 +78,9 @@ STRAVA_CLIENT_ID=...
 STRAVA_CLIENT_SECRET=...
 STRAVA_REDIRECT_URI=https://atherarun.com/api/strava/callback
 
-# Stripe (modo LIVE)
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_PUBLISHABLE_KEY=pk_live_...
+# Stripe (modo TEST)
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
@@ -258,7 +258,7 @@ RETORNE JSON com semanas e treinos`
 ## 🔗 INTEGRAÇÕES
 
 ### Stripe (Pagamentos)
-- **Modo:** LIVE (não test!)
+- **Modo:** TEST (ambiente de testes)
 - **Webhook:** `https://atherarun.com/api/stripe/webhook`
 - **Eventos:** subscription.*, invoice.*, checkout.session.completed
 - **Customer Portal:** Gerenciar assinatura
@@ -354,7 +354,7 @@ git push origin main
 
 ---
 
-## 📊 STATUS ATUAL (Nov 2024)
+## 📊 STATUS ATUAL (Nov 2025)
 
 ### ✅ Implementado
 - [x] Autenticação (Email + Google OAuth)
@@ -368,13 +368,13 @@ git push origin main
 - [x] Chat com treinador virtual
 - [x] Calculadoras (VDOT, nutrição)
 
-### 🚧 Em Desenvolvimento (Q4 2024)
+### 🚧 Em Desenvolvimento (Q4 2025)
 - [ ] Ajustes inteligentes automáticos
 - [ ] Notificações e lembretes
 - [ ] Analytics avançados
 - [ ] Relatórios semanais por email
 
-### 🔮 Roadmap 2025
+### 🔮 Roadmap 2026
 - Q1: Badges, Garmin/Polar
 - Q2: App mobile, social features
 - Q3: Marketplace treinadores
@@ -444,8 +444,8 @@ Este arquivo (CONTEXTO.md) contém 80% do que você precisa saber!
 ## ✅ VERSÃO ATUAL
 
 ```
-Versão: 1.0.2
-Data: 03/Nov/2024 17:40
+Versão: 1.1.0
+Data: 03/Nov/2025 17:56
 Stack: Next.js 14 + OpenAI GPT-4o + PostgreSQL + Vercel
 Status: 🟢 Produção Estável
 URL: https://atherarun.com
@@ -453,7 +453,7 @@ URL: https://atherarun.com
 
 ---
 
-**© 2024 Athera Run**
+**© 2025 Athera Run**
 
 ---
 

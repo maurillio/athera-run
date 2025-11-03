@@ -2,8 +2,8 @@
 
 > Documentação técnica completa para desenvolvedores
 
-**Última atualização:** 03 de Novembro de 2024  
-**Versão:** 1.0.0
+**Última atualização:** 03 de Novembro de 2025  
+**Versão:** 1.1.0
 
 ---
 
@@ -87,9 +87,9 @@ STRAVA_CLIENT_SECRET='seu-strava-client-secret'
 STRAVA_REDIRECT_URI='https://atherarun.com/api/strava/callback'
 STRAVA_VERIFY_TOKEN='token-aleatorio-para-webhooks'
 
-# Stripe (modo LIVE)
-STRIPE_SECRET_KEY='sk_live_...'
-STRIPE_PUBLISHABLE_KEY='pk_live_...'
+# Stripe (modo TEST)
+STRIPE_SECRET_KEY='sk_test_...'
+STRIPE_PUBLISHABLE_KEY='pk_test_...'
 STRIPE_WEBHOOK_SECRET='whsec_...'
 STRIPE_PRICE_MONTHLY='price_...'
 STRIPE_PRICE_ANNUAL='price_...'
@@ -431,7 +431,7 @@ Listar corridas do atleta
       "id": 1,
       "raceName": "Maratona de SP",
       "distance": "marathon",
-      "raceDate": "2024-06-02T00:00:00.000Z",
+      "raceDate": "2026-06-02T00:00:00.000Z",
       "targetTime": "4:00:00",
       "priority": "A",
       "status": "active"
@@ -449,7 +449,7 @@ Criar nova corrida
 {
   "raceName": "10K Parque",
   "distance": "10k",
-  "raceDate": "2024-03-10",
+  "raceDate": "2026-03-10",
   "targetTime": "00:50:00",
   "location": "São Paulo"
 }
@@ -529,7 +529,7 @@ Obter semanas de um plano
     {
       "id": 1,
       "weekNumber": 1,
-      "startDate": "2024-01-01",
+      "startDate": "2026-01-01",
       "phase": "base",
       "totalDistance": 30,
       "workouts": [ /* CustomWorkout[] */ ]
@@ -556,7 +556,7 @@ Treinos da semana atual
     {
       "id": 1,
       "dayOfWeek": 0,
-      "date": "2024-01-01",
+      "date": "2026-01-01",
       "type": "running",
       "subtype": "long",
       "title": "Longão",
@@ -590,7 +590,7 @@ Registrar treino completado
 ```typescript
 // Request
 {
-  "date": "2024-01-01",
+  "date": "2026-01-01",
   "type": "running",
   "distance": 10,
   "duration": 60,
@@ -634,7 +634,7 @@ Status da assinatura
   "status": "ACTIVE",
   "plan": "PREMIUM_MONTHLY",
   "isPremium": true,
-  "currentPeriodEnd": "2024-02-01T00:00:00.000Z"
+  "currentPeriodEnd": "2026-02-01T00:00:00.000Z"
 }
 ```
 
@@ -1470,9 +1470,9 @@ STRAVA_CLIENT_ID=...
 STRAVA_CLIENT_SECRET=...
 STRAVA_REDIRECT_URI=https://atherarun.com/api/strava/callback
 
-# Stripe (modo LIVE, não test)
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_PUBLISHABLE_KEY=pk_live_...
+# Stripe (modo TEST)
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
@@ -1661,4 +1661,4 @@ yarn ts-node check_profile_data.ts
 
 ---
 
-**© 2024 Athera Run. Feito com ❤️ para desenvolvedores.**
+**© 2025 Athera Run. Feito com ❤️ para desenvolvedores.**
