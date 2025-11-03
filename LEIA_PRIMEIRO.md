@@ -9,6 +9,14 @@
 
 ## 🎯 Você é...
 
+### 🤖 **IA/Assistente** (COMECE AQUI!)
+Vai trabalhar no projeto?
+
+→ **Leia APENAS:** [CONTEXTO.md](CONTEXTO.md) - Contexto completo em 1 arquivo!  
+→ **Pronto!** Você tem 80% do que precisa
+
+---
+
 ### 🏃 **Usuário/Atleta**
 Quer usar a plataforma para treinar?
 
@@ -53,6 +61,10 @@ Quer configurar ambiente e desenvolver?
 
 ```
 athera-run/
+├── CONTEXTO.md            # 🎯 CONTEXTO COMPLETO (Para IA - LEIA SÓ ESTE!)
+│                           # → 80% do que você precisa em 1 arquivo
+│                           # → Stack, infraestrutura, fluxo, regras
+│
 ├── README.md              # 🏠 Visão geral e introdução
 │                           # → Para todos: primeira leitura
 │
