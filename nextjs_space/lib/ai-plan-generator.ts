@@ -843,9 +843,16 @@ function getActivityAvailability(profile: AIUserProfile): {
   }
   
   // Fallbacks caso não haja configuração
+  // APENAS corrida tem fallback (essencial para plano de corrida)
+  // Todas as outras atividades: usuário escolhe 100%
   const finalRunningDays = runningDays.length > 0 ? [...new Set(runningDays)].sort() : [0, 2, 4]; // Dom, Ter, Qui
-  const finalStrengthDays = strengthDays.length > 0 ? [...new Set(strengthDays)].sort() : [1, 3, 5]; // Seg, Qua, Sex
-  const finalSwimmingDays = swimmingDays.length > 0 ? [...new Set(swimmingDays)].sort() : [];
+  const finalStrengthDays = [...new Set(strengthDays)].sort(); // SEM fallback - só se usuário configurar
+  const finalSwimmingDays = [...new Set(swimmingDays)].sort(); // SEM fallback - só se usuário configurar
+  
+  // Validar que pelo menos corrida foi configurada
+  if (finalRunningDays.length === 0) {
+    throw new Error('Configure pelo menos os dias de corrida para gerar seu plano de treinamento.');
+  }
   
   const longRunDay = profile.longRunDay !== null && profile.longRunDay !== undefined 
     ? profile.longRunDay 

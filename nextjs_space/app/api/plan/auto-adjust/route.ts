@@ -45,14 +45,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Perfil não encontrado' }, { status: 404 });
     }
 
-    // Check premium status
-    const premium = await isPremiumUser(user.id);
-    if (!premium) {
-      return NextResponse.json({ 
-        error: 'Recurso Premium',
-        message: 'Auto-ajuste de planos é exclusivo para assinantes Premium' 
-      }, { status: 403 });
-    }
+    // Auto-ajuste de disponibilidade/perfil é FREE para todos
+    // Premium features: análise inteligente + ajustes baseados em Strava/feedbacks
+    console.log('[AUTO-ADJUST] Ajuste de disponibilidade disponível para todos os usuários');
 
     if (!user.athleteProfile.customPlan) {
       return NextResponse.json({ error: 'Nenhum plano ativo encontrado' }, { status: 404 });

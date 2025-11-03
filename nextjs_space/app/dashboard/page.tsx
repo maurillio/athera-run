@@ -42,6 +42,7 @@ import AIAnalysisSection from '@/components/ai-analysis-section';
 import AutoAdjustCard from '@/components/auto-adjust-card';
 import TrainingChat from '@/components/training-chat';
 import UpgradeBanner from '@/components/subscription/upgrade-banner';
+import ProgressAnalysisBanner from '@/components/progress-analysis-banner';
 
 interface CustomPlan {
   id: number;
@@ -228,6 +229,9 @@ export default function DashboardPage() {
 
           {/* Upgrade Banner */}
           <UpgradeBanner className="mb-6" />
+
+          {/* Progress Analysis Banner (Premium Feature) */}
+          {hasCustomPlan && <ProgressAnalysisBanner />}
 
           {!hasCustomPlan && (
             <Card className="mb-8 border-orange-200 bg-orange-50">
