@@ -869,6 +869,100 @@ function getActivityAvailability(profile: AIUserProfile): {
 }
 
 /**
+ * Gera sugestão inteligente e contextual para dia de descanso
+ * Baseado em: fase do treino, semana de cutback, proximidade de corridas, atividades disponíveis
+ */
+function generateRestDaySuggestion(context: {
+  phase: string;
+  isCutbackWeek: boolean;
+  weekNumber: number;
+  raceThisWeek?: any;
+  hasStrength: boolean;
+  hasSwimming: boolean;
+  hasOtherActivities: boolean;
+}): string {
+  const { phase, isCutbackWeek, raceThisWeek, hasStrength, hasSwimming, hasOtherActivities } = context;
+
+  // Base da descrição
+  let description = '💤 Descanso - Dia de recuperação ';
+
+  // Ajustar mensagem baseado na fase
+  if (phase === 'base') {
+    description += 'ativa. ';
+    
+    // Sugestões baseadas em atividades disponíveis
+    const suggestions: string[] = [];
+    
+    if (hasStrength) {
+      suggestions.push('alongamento dinâmico (15-20min)');
+    }
+    if (hasSwimming) {
+      suggestions.push('natação leve e relaxada (20-30min)');
+    }
+    if (hasOtherActivities) {
+      suggestions.push('yoga ou pilates para flexibilidade');
+    }
+    
+    // Sugestões gerais sempre disponíveis
+    suggestions.push('caminhada leve (20-30min)');
+    suggestions.push('rolo de massagem miofascial');
+    suggestions.push('alongamento estático (10-15min)');
+
+    if (suggestions.length > 0) {
+      description += `\n\n✨ Sugestões para otimizar recuperação:\n• ${suggestions.slice(0, 3).join('\n• ')}`;
+    }
+    
+    description += '\n\n💡 Foco: hidratação adequada (2-3L água), sono de qualidade (7-9h) e nutrição balanceada.';
+    
+  } else if (phase === 'build') {
+    description += 'importante. ';
+    
+    if (isCutbackWeek) {
+      description += 'Semana de recuperação - seu corpo está se adaptando ao volume.';
+      description += '\n\n🔥 Priorize:\n• Sono extra (8-9h)\n• Massagem ou liberação miofascial\n• Hidratação reforçada\n• Evite ficar muito tempo em pé';
+    } else {
+      description += 'O volume está alto - recuperação é essencial.';
+      description += '\n\n⚡ Recomendações:\n• Alongamento passivo (15min)\n• Elevação de pernas (10min)\n• Compressão ou gelo em áreas doloridas';
+      
+      if (hasStrength) {
+        description += '\n• Mobilidade de quadril e tornozelo';
+      }
+    }
+    
+  } else if (phase === 'peak') {
+    description += 'estratégica. ';
+    
+    if (raceThisWeek) {
+      const daysToRace = Math.ceil((new Date(raceThisWeek.date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      
+      if (daysToRace <= 3) {
+        description += `🏁 Corrida ${raceThisWeek.priority} em ${daysToRace} dias!`;
+        description += '\n\n🎯 DESCANSO ABSOLUTO:\n• Evite ficar em pé por longos períodos\n• Hidratação constante\n• Visualização mental da prova\n• Prepare equipamento e estratégia\n• Durma 8h+ por noite';
+      } else {
+        description += 'Fase de pico - cada treino conta.';
+        description += '\n\n🔋 Recuperação ativa:\n• Caminhada leve (15-20min)\n• Alongamento suave\n• Respiração e meditação (10min)';
+      }
+    } else {
+      description += 'Intensidade está alta - recuperação é treino.';
+      description += '\n\n💪 Sugestões:\n• Massagem profunda (se disponível)\n• Banho de contraste (quente/frio)\n• Elevação de pernas\n• Core leve (prancha 3x30s)';
+    }
+    
+  } else if (phase === 'taper') {
+    description += 'essencial para chegar fresco na prova. ';
+    description += '\n\n🏆 SEMANA DE TAPER:\n• Descanso é sua prioridade #1\n• Evite atividades desnecessárias\n• Mantenha rotina de sono\n• Hidratação e carboidratos adequados\n• Relaxe e confie no treinamento';
+    
+    if (raceThisWeek) {
+      description += '\n\n🎯 Você está preparado(a)! Chegou a hora de colher os frutos do seu treino.';
+    }
+  }
+
+  // Sempre adicionar dicas de prevenção de lesões
+  description += '\n\n🛡️ Prevenção de lesões: Aproveite o descanso para identificar áreas de desconforto. Dor persistente? Considere avaliar com profissional.';
+
+  return description;
+}
+
+/**
  * Gera os treinos de uma semana baseado na estratégia E na disponibilidade SEPARADA POR TIPO
  * CRÍTICO: Respeita EXATAMENTE a disponibilidade configurada por CADA USUÁRIO
  */
@@ -1078,14 +1172,25 @@ function generateWeekWorkouts(params: {
 
     const activitiesForDay = dayActivities.get(dayOfWeek) || [];
 
-    // Se não há atividades configuradas para este dia, adicionar descanso
+    // Se não há atividades configuradas para este dia, adicionar descanso com sugestão inteligente
     if (activitiesForDay.length === 0) {
+      // Gerar sugestão contextual baseada na fase e proximidade de corridas
+      const restDescription = generateRestDaySuggestion({
+        phase: params.phase,
+        isCutbackWeek: params.isCutbackWeek,
+        weekNumber: params.weekNumber,
+        raceThisWeek: params.raceThisWeek,
+        hasStrength: params.availability.strengthDays.length > 0,
+        hasSwimming: params.availability.swimmingDays.length > 0,
+        hasOtherActivities: params.availability.otherActivityDays.size > 0,
+      });
+
       workouts.push({
         dayOfWeek: dayOfWeek,
         date,
         type: 'rest',
         title: 'Descanso',
-        description: 'Dia de recuperação completa. Hidrate-se bem, cuide do sono e considere alongamento leve ou caminhada se sentir necessidade.',
+        description: restDescription,
         distance: null,
         duration: null,
         targetPace: null,
@@ -1119,7 +1224,7 @@ function generateWeekWorkouts(params: {
           type: 'running',
           subtype: 'long',
           title: `Longão - ${Math.round(params.longRunKm)}km${timeInfoShort}`,
-          description: params.keyWorkouts.long.description || `Treino longo semanal em ritmo confortável. O mais importante da semana!${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          description: `Treino longo de ${Math.round(params.longRunKm)}km em ritmo confortável. O mais importante da semana - constrói resistência aeróbica e mental.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
           distance: Math.round(params.longRunKm * 10) / 10,
           duration: null,
           targetPace: params.paces.easy,
@@ -1169,7 +1274,7 @@ function generateWeekWorkouts(params: {
             type: 'running',
             subtype: 'easy',
             title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfoShort}`,
-            description: `Corrida em ritmo confortável para construir base aeróbica.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            description: `Corrida leve de ${Math.round(easyRunKm)}km em ritmo confortável para construir base aeróbica e recuperação ativa.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
             distance: Math.round(easyRunKm * 10) / 10,
             duration: null,
             targetPace: params.paces.easy,
@@ -1183,7 +1288,7 @@ function generateWeekWorkouts(params: {
           type: 'running',
           subtype: 'easy',
           title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfoShort}`,
-          description: `Corrida em ritmo confortável. Foque em manter o ritmo fácil e respiração controlada.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          description: `Corrida leve de ${Math.round(easyRunKm)}km em ritmo confortável. Foque em manter o ritmo fácil e respiração controlada.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
           distance: Math.round(easyRunKm * 10) / 10,
           duration: null,
           targetPace: params.paces.easy,

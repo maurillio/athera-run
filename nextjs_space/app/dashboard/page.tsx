@@ -430,7 +430,7 @@ export default function DashboardPage() {
                               )}
                             </div>
 
-                            {!workout.isCompleted && isToday && ( // Added isToday condition
+                            {!workout.isCompleted && isToday && workout.type !== 'rest' && ( // Não mostrar botão para descanso
                               <Button 
                                 onClick={() => handleOpenWorkoutLog(workout)}
                                 className="mt-2 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
