@@ -68,8 +68,8 @@ export async function DELETE(request: NextRequest) {
     });
     console.log(`[DELETE PROFILE] Deletadas ${deletedRaces.count} corridas`);
 
-    // 5. Deletar Workouts (treinos registrados)
-    const deletedWorkouts = await prisma.workout.deleteMany({
+    // 5. Deletar CompletedWorkouts (treinos registrados/completados)
+    const deletedWorkouts = await prisma.completedWorkout.deleteMany({
       where: { athleteId }
     });
     console.log(`[DELETE PROFILE] Deletados ${deletedWorkouts.count} treinos registrados`);
