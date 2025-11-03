@@ -17,7 +17,7 @@
 - 🏁 **Múltiplas corridas** (sistema A/B/C de classificação automática)
 - 📊 **Metodologia VDOT** (Jack Daniels - científica e comprovada)
 - 🔄 **Integração com Strava** (sincronização automática de atividades)
-- 🤖 **IA GPT-4o** (via Abacus.AI - geração inteligente)
+- 🤖 **IA GPT-4o** (OpenAI - geração inteligente de planos)
 
 ### 🎯 Diferenciais Competitivos
 
@@ -62,13 +62,15 @@
 - **Auth**: NextAuth.js 4.24 (JWT + OAuth)
 
 ### IA & Integrações
-- **LLM**: GPT-4o via Abacus.AI
+- **LLM**: OpenAI GPT-4o (geração de planos)
 - **Payments**: Stripe 19.2 (subscriptions + webhooks)
 - **Wearables**: Strava API (OAuth 2.0 + webhooks)
 
-### DevOps
-- **Hosting**: Vercel (CI/CD automático)
-- **Domain**: GoDaddy → atherarun.com
+### Infraestrutura
+- **Hosting**: Vercel (frontend + API routes + CI/CD)
+- **Database**: PostgreSQL (servidor próprio)
+- **Domain**: atherarun.com (via GoDaddy)
+- **Deploy**: Automático via Git push
 - **Monitoring**: Vercel Analytics
 
 ---
@@ -118,10 +120,16 @@ DATABASE_URL="postgresql://user:pass@localhost:5432/atherarun"
 NEXTAUTH_SECRET="openssl-rand-base64-32"
 NEXTAUTH_URL="http://localhost:3000"
 
-# Abacus.AI (obrigatório para geração de planos)
-ABACUSAI_API_KEY="seu-api-key"
+# OpenAI (obrigatório para geração de planos)
+OPENAI_API_KEY="sk-..."
+LLM_PROVIDER="openai"
+LLM_MODEL="gpt-4o"
 
-# Strava (opcional)
+# Google OAuth (obrigatório - feature crítica)
+GOOGLE_CLIENT_ID="..."
+GOOGLE_CLIENT_SECRET="..."
+
+# Strava
 STRAVA_CLIENT_ID="seu-client-id"
 STRAVA_CLIENT_SECRET="seu-client-secret"
 

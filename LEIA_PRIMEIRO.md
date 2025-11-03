@@ -125,7 +125,12 @@ athera-run/
 **Você terá:**
 ✅ Ambiente funcionando  
 ✅ Entendimento da arquitetura  
-✅ Capacidade de desenvolver  
+✅ Capacidade de desenvolver
+
+**⚠️ IMPORTANTE**: 
+- Ambiente local é APENAS para código
+- Conecta no mesmo banco do Vercel
+- Deploy é 100% automático via Git push  
 
 ---
 

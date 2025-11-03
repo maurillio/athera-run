@@ -362,18 +362,19 @@ A IA analisa e classifica automaticamente:
 
 | Serviço | Uso |
 |---------|-----|
-| **Abacus.AI** | Infraestrutura LLM |
-| **OpenAI GPT-4o** | Geração de planos |
-| **Strava API** | Sincronização atividades |
+| **OpenAI GPT-4o** | Geração de planos com IA |
+| **Strava API** | Sincronização de atividades |
 | **Stripe** | Pagamentos e assinaturas |
 
-### DevOps
+### DevOps e Infraestrutura
 
-| Ferramenta | Uso |
-|------------|-----|
-| **Vercel** | Hosting e CI/CD |
-| **GoDaddy** | Domínio (atherarun.com) |
-| **Git** | Controle de versão |
+| Componente | Detalhes |
+|------------|----------|
+| **Hosting** | Vercel (frontend + API routes) |
+| **Banco de Dados** | PostgreSQL (servidor próprio) |
+| **CI/CD** | Vercel (deploy automático via Git) |
+| **Domínio** | atherarun.com (via GoDaddy) |
+| **Controle de Versão** | Git + GitHub |
 
 ---
 
