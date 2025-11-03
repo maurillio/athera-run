@@ -117,90 +117,109 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('[AUTH] SignIn attempt:', {
-        provider: account?.provider,
-        userId: user?.id,
-        email: user?.email
-      });
+      try {
+        console.log('[AUTH] SignIn attempt:', {
+          provider: account?.provider,
+          userId: user?.id,
+          email: user?.email
+        });
 
-      // For Strava, ensure we have an email (even if fake)
-      if (account?.provider === 'strava' && !user.email) {
-        user.email = `${account.providerAccountId}@strava.user`;
-        console.log('[AUTH] Generated email for Strava user:', user.email);
+        // For Strava, ensure we have an email (even if fake)
+        if (account?.provider === 'strava' && !user.email) {
+          user.email = `${account.providerAccountId}@strava.user`;
+          console.log('[AUTH] Generated email for Strava user:', user.email);
+        }
+
+        // For Google OAuth, ensure we have the minimum required data
+        if (account?.provider === 'google') {
+          if (!user.email) {
+            console.error('[AUTH] Google OAuth missing email');
+            return false;
+          }
+          console.log('[AUTH] Google OAuth successful for:', user.email);
+        }
+
+        return true;
+      } catch (error) {
+        console.error('[AUTH] SignIn callback error:', error);
+        return false;
       }
-
-      return true;
     },
     async jwt({ token, user, account, trigger }) {
-      if (user) {
-        token.id = user.id;
+      try {
+        if (user) {
+          token.id = user.id;
 
-        // Check if user is admin
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: { isAdmin: true, athleteProfile: true }
-        });
-        token.isAdmin = dbUser?.isAdmin || false;
-        token.hasProfile = !!dbUser?.athleteProfile;
-      }
-
-      // If signing in with Strava, save the tokens to athlete profile
-      if (account?.provider === 'strava' && account.access_token) {
-        try {
-          const userId = user?.id || token.id as string;
-
-          console.log('[AUTH] Processing Strava connection for user:', userId);
-
-          // Find or create athlete profile
-          let profile = await prisma.athleteProfile.findUnique({
-            where: { userId }
+          // Check if user is admin
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { isAdmin: true, athleteProfile: true }
           });
-
-          if (!profile) {
-            console.log('[AUTH] Creating new athlete profile for Strava user');
-            profile = await prisma.athleteProfile.create({
-              data: {
-                userId,
-                weight: 70,
-                height: 170,
-                currentVDOT: 35,
-                targetTime: "4:00:00",
-                goalDistance: "marathon",
-                runningLevel: "intermediate",
-                stravaConnected: true,
-                stravaAthleteId: account.providerAccountId,
-                stravaAccessToken: account.access_token,
-                stravaRefreshToken: account.refresh_token || null,
-                stravaTokenExpiry: account.expires_at
-                  ? new Date(account.expires_at * 1000)
-                  : null
-              }
-            });
-          } else {
-            // Update existing profile with Strava credentials
-            console.log('[AUTH] Updating existing athlete profile with Strava credentials');
-            await prisma.athleteProfile.update({
-              where: { id: profile.id },
-              data: {
-                stravaConnected: true,
-                stravaAthleteId: account.providerAccountId,
-                stravaAccessToken: account.access_token,
-                stravaRefreshToken: account.refresh_token || null,
-                stravaTokenExpiry: account.expires_at
-                  ? new Date(account.expires_at * 1000)
-                  : null
-              }
-            });
-          }
-
-          token.hasProfile = true;
-          console.log('[AUTH] Strava connection successful');
-        } catch (error) {
-          console.error('[AUTH] Error saving Strava credentials:', error);
+          token.isAdmin = dbUser?.isAdmin || false;
+          token.hasProfile = !!dbUser?.athleteProfile;
         }
-      }
 
-      return token;
+        // If signing in with Strava, save the tokens to athlete profile
+        if (account?.provider === 'strava' && account.access_token) {
+          try {
+            const userId = user?.id || token.id as string;
+
+            console.log('[AUTH] Processing Strava connection for user:', userId);
+
+            // Find or create athlete profile
+            let profile = await prisma.athleteProfile.findUnique({
+              where: { userId }
+            });
+
+            if (!profile) {
+              console.log('[AUTH] Creating new athlete profile for Strava user');
+              profile = await prisma.athleteProfile.create({
+                data: {
+                  userId,
+                  weight: 70,
+                  height: 170,
+                  currentVDOT: 35,
+                  targetTime: "4:00:00",
+                  goalDistance: "marathon",
+                  runningLevel: "intermediate",
+                  stravaConnected: true,
+                  stravaAthleteId: account.providerAccountId,
+                  stravaAccessToken: account.access_token,
+                  stravaRefreshToken: account.refresh_token || null,
+                  stravaTokenExpiry: account.expires_at
+                    ? new Date(account.expires_at * 1000)
+                    : null
+                }
+              });
+            } else {
+              // Update existing profile with Strava credentials
+              console.log('[AUTH] Updating existing athlete profile with Strava credentials');
+              await prisma.athleteProfile.update({
+                where: { id: profile.id },
+                data: {
+                  stravaConnected: true,
+                  stravaAthleteId: account.providerAccountId,
+                  stravaAccessToken: account.access_token,
+                  stravaRefreshToken: account.refresh_token || null,
+                  stravaTokenExpiry: account.expires_at
+                    ? new Date(account.expires_at * 1000)
+                    : null
+                }
+              });
+            }
+
+            token.hasProfile = true;
+            console.log('[AUTH] Strava connection successful');
+          } catch (error) {
+            console.error('[AUTH] Error saving Strava credentials:', error);
+          }
+        }
+
+        return token;
+      } catch (error) {
+        console.error('[AUTH] JWT callback error:', error);
+        return token;
+      }
     },
     async session({ session, token }) {
       if (session.user) {
