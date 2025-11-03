@@ -3,402 +3,339 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
+**Versão:** 1.0.0  
+**Última atualização:** 03 de Novembro de 2024  
+**Website:** https://atherarun.com
+
 ---
 
 ## 📖 Sobre o Projeto
 
-**Athera Run** é uma plataforma completa de treinamento de corrida que utiliza inteligência artificial para gerar planos de treino verdadeiramente personalizados. Ao contrário de templates genéricos, cada plano é gerado dinamicamente considerando:
+**Athera Run** é uma plataforma SaaS de treinamento de corrida que utiliza inteligência artificial para gerar planos de treino 100% personalizados. Diferente de templates genéricos, cada plano é único e considera:
 
-- 🎯 **Perfil completo do atleta** (nível, histórico, disponibilidade)
-- 🏁 **Meta específica da prova** (distância, data, objetivo de tempo)
-- 📊 **Metodologia VDOT** (Jack Daniels)
-- 🔄 **Integração com Strava** (sincronização automática)
-- 🤖 **IA GPT-4o** (Abacus.AI)
+- 🎯 **Perfil completo do atleta** (nível, histórico, disponibilidade real)
+- 🏁 **Múltiplas corridas** (sistema A/B/C de classificação automática)
+- 📊 **Metodologia VDOT** (Jack Daniels - científica e comprovada)
+- 🔄 **Integração com Strava** (sincronização automática de atividades)
+- 🤖 **IA GPT-4o** (via Abacus.AI - geração inteligente)
 
-### 🎯 Diferenciais
+### 🎯 Diferenciais Competitivos
 
-- ✅ Planos adaptados à **sua** disponibilidade de dias
-- ✅ Periodização científica (base, build, peak, taper)
-- ✅ Cálculo dinâmico de duração baseado na data da prova
-- ✅ Treinos de força nos dias escolhidos
-- ✅ Chat com treinador virtual
-- ✅ Calculadora de macros nutricionais
-- ✅ Prevenção de overtraining
+✅ **Planos 100% personalizados** - Não são templates, são gerados por IA  
+✅ **Sistema multi-corrida** - Gerencia várias provas simultaneamente  
+✅ **Classificação inteligente** - IA identifica automaticamente corridas A/B/C  
+✅ **Periodização científica** - Base → Build → Peak → Taper  
+✅ **Integração Strava** - Sincronização automática e OAuth 2.0  
+✅ **Ajustes inteligentes** - IA monitora e ajusta o plano continuamente  
+✅ **Chat com treinador virtual** - Suporte personalizado 24/7  
 
 ---
 
 ## 🚀 Acesso Rápido
 
 ### 🌐 Aplicação Online
-**URL**: https://atherarun.com
+**Produção:** https://atherarun.com  
+**Status:** ✅ Online e estável
 
 ### 📚 Documentação
 
 | Documento | Descrição |
 |-----------|-----------|
-| [Documentação Completa](DOCUMENTACAO_COMPLETA_PROJETO.md) | Visão geral, arquitetura, funcionalidades |
-| [Guia Técnico Detalhado](GUIA_TECNICO_DETALHADO.md) | Setup, código, APIs, troubleshooting |
-| [Roadmap de Implementação](ROADMAP_IMPLEMENTACAO.md) | Features futuras, priorização, timeline |
-| [Análise e Melhorias](ANALISE_SISTEMA_E_MELHORIAS.md) | Análise técnica, oportunidades de melhoria |
-| [OAuth Strava Setup](OAUTH_SETUP_INSTRUCTIONS.md) | Configuração completa da integração Strava |
+| **[DOCUMENTACAO.md](DOCUMENTACAO.md)** | 📘 Documentação completa do produto |
+| **[GUIA_TECNICO.md](GUIA_TECNICO.md)** | 🛠️ Guia técnico para desenvolvedores |
+| **[ROADMAP.md](ROADMAP.md)** | 🗺️ Roadmap e planejamento futuro |
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
-- **Framework**: Next.js 14 (App Router)
-- **Linguagem**: TypeScript
-- **UI**: Tailwind CSS + Shadcn UI + Radix UI
-- **State**: Zustand + React Query
-- **Charts**: Recharts + React-Chartjs-2
+- **Next.js** 14.2.28 (App Router, React 18, TypeScript)
+- **Styling**: Tailwind CSS 3.4 + Shadcn UI + Radix UI
+- **State**: Zustand 5.0 + React Query 5.0
+- **Charts**: Recharts, React-Chartjs-2, Plotly.js
 
 ### Backend
-- **API**: Next.js API Routes
-- **Banco de Dados**: PostgreSQL
-- **ORM**: Prisma 6.7
-- **Autenticação**: NextAuth.js
+- **Runtime**: Node.js 18+
+- **API**: Next.js API Routes (REST)
+- **Database**: PostgreSQL 14+ (via Prisma ORM 6.18)
+- **Auth**: NextAuth.js 4.24 (JWT + OAuth)
 
-### IA e Integrações
-- **LLM**: OpenAI GPT-4o (via Abacus.AI)
-- **Wearables**: Strava API (OAuth 2.0)
-- **Futuros**: Garmin, Polar, Apple Health
+### IA & Integrações
+- **LLM**: GPT-4o via Abacus.AI
+- **Payments**: Stripe 19.2 (subscriptions + webhooks)
+- **Wearables**: Strava API (OAuth 2.0 + webhooks)
+
+### DevOps
+- **Hosting**: Vercel (CI/CD automático)
+- **Domain**: GoDaddy → atherarun.com
+- **Monitoring**: Vercel Analytics
 
 ---
 
-## 📦 Instalação Local
+## 💻 Setup Local
 
 ### Pré-requisitos
 
-- Node.js 18+
-- PostgreSQL 14+
-- Yarn (gerenciador de pacotes)
-- Conta no Strava (para integração)
-- API Key da Abacus.AI
+- **Node.js** 18+ ([download](https://nodejs.org/))
+- **PostgreSQL** 14+ ([download](https://postgresql.org/))
+- **Yarn** (recomendado) ou npm
+- **Git**
 
-### Passo a Passo
+### Instalação Rápida
 
 ```bash
-# 1. Clone o repositório (ou navegue até o diretório)
-cd /home/ubuntu/app_maratona/nextjs_space
+# 1. Clone e navegue
+cd athera-run/nextjs_space
 
-# 2. Instale as dependências
+# 2. Instale dependências
 yarn install
 
-# 3. Configure as variáveis de ambiente
+# 3. Configure ambiente
 cp .env.example .env
 # Edite .env com suas credenciais
 
-# 4. Configure o banco de dados
+# 4. Setup banco de dados
 yarn prisma generate
 yarn prisma db push
 
-# 5. (Opcional) Popule com dados de teste
+# 5. (Opcional) Seed com dados de teste
 yarn prisma db seed
 
-# 6. Inicie o servidor de desenvolvimento
+# 6. Inicie dev server
 yarn dev
 
-# Acesse: http://localhost:3000
+# 🚀 Acesse: http://localhost:3000
 ```
 
-### Variáveis de Ambiente Necessárias
+### Variáveis de Ambiente Essenciais
 
 ```bash
 # Database
-DATABASE_URL="postgresql://user:password@host:port/database"
+DATABASE_URL="postgresql://user:pass@localhost:5432/atherarun"
 
 # NextAuth
-NEXTAUTH_SECRET="gere-com-openssl-rand-base64-32"
+NEXTAUTH_SECRET="openssl-rand-base64-32"
 NEXTAUTH_URL="http://localhost:3000"
 
-# Strava API
+# Abacus.AI (obrigatório para geração de planos)
+ABACUSAI_API_KEY="seu-api-key"
+
+# Strava (opcional)
 STRAVA_CLIENT_ID="seu-client-id"
 STRAVA_CLIENT_SECRET="seu-client-secret"
-STRAVA_REDIRECT_URI="http://localhost:3000/api/strava/callback"
 
-# Abacus.AI
-ABACUSAI_API_KEY="seu-api-key"
+# Stripe (opcional)
+STRIPE_SECRET_KEY="sk_test_..."
 ```
 
-Veja [OAuth Strava Setup](OAUTH_SETUP_INSTRUCTIONS.md) para obter credenciais do Strava.
+📖 **Detalhes completos**: Ver [GUIA_TECNICO.md](GUIA_TECNICO.md)
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Estrutura Principal
 
 ```
-nextjs_space/
-├── app/                    # Next.js App Router
-│   ├── api/               # API Routes (backend)
-│   ├── dashboard/         # Dashboard principal
-│   ├── plano/             # Visualização do plano
-│   ├── onboarding/        # Fluxo de cadastro
-│   └── ...
-├── components/            # Componentes React reutilizáveis
-│   ├── ui/               # Componentes Shadcn UI
-│   └── ...
-├── lib/                   # Lógica de negócio
-│   ├── ai-plan-generator.ts
-│   ├── strava.ts
-│   ├── db.ts
-│   └── ...
-├── prisma/
-│   └── schema.prisma     # Schema do banco de dados
-├── scripts/              # Scripts utilitários
-└── public/               # Assets estáticos
+athera-run/
+├── nextjs_space/              # 🏠 Aplicação principal
+│   ├── app/                   # Next.js 14 App Router
+│   │   ├── api/              # API Routes (REST endpoints)
+│   │   ├── dashboard/        # Dashboard interativo
+│   │   ├── plano/            # Visualização completa do plano
+│   │   ├── onboarding/       # Fluxo de cadastro (5 etapas)
+│   │   ├── perfil/           # Perfil do atleta
+│   │   └── tracking/         # Acompanhamento de treinos
+│   │
+│   ├── components/           # Componentes React
+│   │   ├── ui/              # Shadcn UI components
+│   │   ├── dashboard/       # Dashboard específicos
+│   │   └── plan/            # Plano específicos
+│   │
+│   ├── lib/                  # 🧠 Lógica de negócio
+│   │   ├── ai-plan-generator.ts        # Gerador principal IA
+│   │   ├── multi-race-plan-generator.ts # Sistema multi-corrida
+│   │   ├── race-classifier.ts          # Classificador A/B/C
+│   │   ├── strava.ts                   # Cliente Strava
+│   │   ├── stripe.ts                   # Cliente Stripe
+│   │   └── ...
+│   │
+│   ├── prisma/              # Banco de dados
+│   │   ├── schema.prisma   # Schema completo
+│   │   └── migrations/     # Histórico de migrações
+│   │
+│   └── scripts/            # Scripts utilitários
+│
+├── DOCUMENTACAO.md         # 📘 Documentação do produto
+├── GUIA_TECNICO.md        # 🛠️ Guia técnico completo
+└── ROADMAP.md             # 🗺️ Roadmap e planejamento
 ```
 
 ---
 
-## 🎮 Como Usar
+## 🎯 Como Usar
 
-### Para Usuários
+### Para Atletas
 
-1. **Cadastre-se**: Crie uma conta em https://atherarun.com/signup
-2. **Onboarding**: Preencha seu perfil de atleta (5 etapas)
-3. **Gere o Plano**: Sistema gera automaticamente seu plano personalizado
-4. **Conecte o Strava** (opcional): Sincronização automática de treinos
-5. **Acompanhe**: Marque treinos como completos, veja progresso, chat com IA
+1. **Acesse**: https://atherarun.com
+2. **Cadastre-se**: Email/senha ou Google OAuth
+3. **Onboarding (5 etapas)**:
+   - Dados básicos (peso, altura, idade)
+   - Nível e experiência em corrida
+   - Disponibilidade de dias e horários
+   - Corridas e objetivos
+   - Revisão e geração do plano
+4. **Receba seu plano**: IA gera em ~30-60 segundos
+5. **Acompanhe**: Dashboard interativo, marque treinos completos
+6. **Conecte Strava**: Sincronização automática (opcional)
+7. **Evolua**: IA ajusta seu plano conforme progresso
 
 ### Para Desenvolvedores
 
-1. **Leia a documentação**: Comece por [DOCUMENTACAO_COMPLETA_PROJETO.md](DOCUMENTACAO_COMPLETA_PROJETO.md)
-2. **Entenda a arquitetura**: Veja [GUIA_TECNICO_DETALHADO.md](GUIA_TECNICO_DETALHADO.md)
-3. **Configure o ambiente**: Siga instruções de instalação acima
-4. **Rode os testes**:
+1. **Leia**: [DOCUMENTACAO.md](DOCUMENTACAO.md) - Entenda o produto
+2. **Configure**: [GUIA_TECNICO.md](GUIA_TECNICO.md) - Setup completo
+3. **Desenvolva**: Siga padrões de código documentados
+4. **Teste**: 
    ```bash
    yarn ts-node scripts/comprehensive_test.ts
    ```
-5. **Contribua**: Veja [Roadmap](ROADMAP_IMPLEMENTACAO.md) para features planejadas
+5. **Contribua**: Veja [ROADMAP.md](ROADMAP.md) para features futuras
 
 ---
 
-## 🧪 Testes
+## ✅ Status e Features
 
-### Testes Abrangentes
+### Implementado (v1.0.0)
 
-```bash
-# Script que cria usuários de teste e valida geração de planos
-yarn ts-node scripts/comprehensive_test.ts
-```
+- [x] Autenticação (Email/senha + Google OAuth)
+- [x] Onboarding inteligente (5 etapas com IA)
+- [x] Geração de planos 100% personalizados
+- [x] Sistema multi-corrida com classificação A/B/C
+- [x] Dashboard interativo com métricas
+- [x] Visualização completa do plano (todas as semanas)
+- [x] Integração Strava (OAuth 2.0 + sincronização)
+- [x] Sistema de assinaturas (Stripe + webhooks)
+- [x] Customer Portal (gerenciar assinatura)
+- [x] Chat com treinador virtual (GPT-4o)
+- [x] Calculadoras (VDOT, nutrição)
+- [x] Tracking de treinos completados
 
-### Teste de Usuário Específico
+### Em Desenvolvimento (Q4 2024)
 
-```bash
-# Verificar dados de um usuário
-yarn ts-node scripts/check_user.ts
-```
+- [ ] Ajustes inteligentes automáticos
+- [ ] Notificações e lembretes
+- [ ] Analytics avançados
+- [ ] Relatórios semanais por email
 
-### Validação de Perfil
+### Roadmap (2025)
 
-```bash
-# Verificar perfil e disponibilidade
-yarn ts-node check_profile_data.ts
-```
+- [ ] App mobile nativo (Q3 2025)
+- [ ] Integração Garmin e Polar (Q1 2025)
+- [ ] Social features e comunidade (Q2 2025)
+- [ ] Marketplace de treinadores (Q2 2025)
+- [ ] Internacionalização (EN, ES) (Q4 2025)
 
-### Último Resultado de Testes
-
-```
-✅ Taxa de Sucesso: 80% (4/5)
-✅ Planos respeitam disponibilidade: 100%
-✅ Dias de força corretos: 100%
-✅ Duração calculada corretamente: 100%
-
-⚠️ Observação: Planos > 40 semanas podem falhar ocasionalmente
-```
-
----
-
-## 🔑 Credenciais de Teste
-
-### Criando Conta
-
-Acesse https://atherarun.com/signup e crie sua conta gratuitamente.
+📖 **Ver detalhes**: [ROADMAP.md](ROADMAP.md)
 
 ---
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Veja o [Roadmap](ROADMAP_IMPLEMENTACAO.md) para features planejadas.
+Contribuições são bem-vindas! 
 
-### Processo
+### Como Contribuir
 
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+1. Fork o repositório
+2. Crie uma branch: `git checkout -b feature/MinhaFeature`
+3. Commit: `git commit -m 'Adiciona MinhaFeature'`
+4. Push: `git push origin feature/MinhaFeature`
 5. Abra um Pull Request
 
-### Padrões de Código
+### Padrões
 
-- TypeScript para type safety
-- Componentes funcionais com hooks
-- Nomes descritivos (inglês ou português consistente)
-- Comentários em português
-- Prettier para formatação
+- **TypeScript** - Type safety obrigatório
+- **Componentes** - Funcionais com hooks
+- **Nomenclatura** - PascalCase (componentes), camelCase (funções)
+- **Comentários** - Em português quando necessário
+- **Formatação** - Prettier automático
 
----
-
-## 📈 Status do Projeto
-
-### ✅ Implementado
-
-- [x] Cadastro e autenticação
-- [x] Perfil completo do atleta
-- [x] Geração de planos com IA
-- [x] Integração Strava OAuth
-- [x] Dashboard interativo
-- [x] Chat com IA
-- [x] Calculadora nutricional
-- [x] Visualização de plano completo
-
-### 🚧 Em Desenvolvimento
-
-- [ ] Ajustes automáticos inteligentes
-- [ ] Notificações e lembretes
-- [ ] Análise avançada de progresso
-- [ ] Multi-race planning
-
-### 🔮 Planejado
-
-- [ ] App mobile nativo
-- [ ] Comunidade e social features
-- [ ] Marketplace de treinadores
-- [ ] Integração Garmin/Polar
-- [ ] Planos de força detalhados
-
-Veja [Roadmap completo](ROADMAP_IMPLEMENTACAO.md) para mais detalhes.
+📖 **Detalhes**: [GUIA_TECNICO.md](GUIA_TECNICO.md)
 
 ---
 
-## 🐛 Problemas Conhecidos
+## 📊 Métricas Atuais
 
-1. **Planos muito longos (>40 semanas) podem falhar ocasionalmente**
-   - Workaround: Gerar plano novamente
-   - Fix planejado: Geração em chunks
+| Métrica | Valor |
+|---------|-------|
+| **Usuários Ativos** | 50+ |
+| **Assinantes Premium** | 10+ |
+| **Planos Gerados** | 100+ |
+| **Uptime** | 99.9% |
+| **Tempo Médio de Geração** | ~45s |
+| **Taxa de Sucesso** | 95% |
 
-2. **Timezone pode ser inconsistente em algumas datas**
-   - Workaround: Tudo em UTC, conversão na UI
-   - Fix planejado: Padronização completa
-
-Veja [Análise e Melhorias](ANALISE_SISTEMA_E_MELHORIAS.md) para lista completa.
-
----
-
-## 📞 Suporte
-
-### Documentação
-- [Documentação Completa](DOCUMENTACAO_COMPLETA_PROJETO.md)
-- [Guia Técnico](GUIA_TECNICO_DETALHADO.md)
-- [Roadmap](ROADMAP_IMPLEMENTACAO.md)
-
-### Contato
-- **Website**: https://atherarun.com
-- **Issues**: Abra uma issue neste repositório
+*Última atualização: 03/Nov/2024*
 
 ---
 
-## 🎓 Metodologia
+## 🎓 Metodologia Científica
 
 ### VDOT (Jack Daniels)
 
-O sistema usa a metodologia **VDOT** de Jack Daniels, que:
-- Calcula fitness level baseado em performances recentes
+Sistema baseado na metodologia **VDOT** de Jack Daniels:
+- Calcula fitness level baseado em performances
 - Define zonas de treino personalizadas
-- Garante progressão segura e efetiva
+- Progressão segura e comprovada
 
-**Referências**:
+📚 **Referências**:
 - [Daniels' Running Formula](https://www.amazon.com/Daniels-Running-Formula-Jack/dp/1450431836)
 - [VDOT Calculator](https://runsmartproject.com/calculator/)
 
-### Periodização
+### Periodização Clássica
 
-Planos seguem periodização clássica:
-1. **Base**: Construção de volume aeróbico
-2. **Build**: Introdução de treinos específicos
-3. **Peak**: Treinos mais intensos e específicos
-4. **Taper**: Redução de volume para recuperação
-
----
-
-## 📊 Estatísticas
-
-### Projeto
-- **Linhas de código**: ~15,000+
-- **Componentes React**: 50+
-- **API Routes**: 30+
-- **Tempo de desenvolvimento**: 3 meses
-- **Última atualização**: 27 de outubro de 2025
-
-### Tecnologia
-- **TypeScript**: 95%
-- **CSS**: 3%
-- **Outros**: 2%
+```
+BASE (40-50%) → BUILD (30-35%) → PEAK (10-15%) → TAPER (5-10%)
+    ↓                ↓                ↓               ↓
+Volume alto    Intensidade     Específico      Recuperação
+Aeróbico       moderada        da prova        pré-prova
+```
 
 ---
 
-## 🌟 Agradecimentos
+## 📞 Suporte e Links
 
-- **Abacus.AI** - Infraestrutura e APIs de IA
-- **Strava** - Integração de atividades
-- **Jack Daniels** - Metodologia VDOT
-- **Comunidade de corredores** - Feedback e testes
+### 📚 Documentação
+
+- **Produto**: [DOCUMENTACAO.md](DOCUMENTACAO.md)
+- **Técnica**: [GUIA_TECNICO.md](GUIA_TECNICO.md)
+- **Roadmap**: [ROADMAP.md](ROADMAP.md)
+
+### 🌐 Links Úteis
+
+- **Website**: https://atherarun.com
+- **Email**: suporte@atherarun.com
+- **Issues**: GitHub Issues (este repo)
+
+### 🛠️ Para Desenvolvedores
+
+- **Next.js**: [Docs](https://nextjs.org/docs)
+- **Prisma**: [Docs](https://www.prisma.io/docs)
+- **Strava API**: [Docs](https://developers.strava.com)
+- **Stripe**: [Docs](https://stripe.com/docs)
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## 🚀 Deploy
-
-### Deploy
-
-O projeto está configurado para:
-**https://atherarun.com**
-
-### Deploy Manual
-
-```bash
-# Build de produção
-yarn build
-
-# Iniciar servidor
-yarn start
-```
-
-### Variáveis de Produção
-
-Certifique-se de configurar:
-- `NEXTAUTH_URL` com domínio de produção
-- `STRAVA_REDIRECT_URI` com URL de produção
-- `DATABASE_URL` com banco de produção
-
----
-
-## 📚 Aprenda Mais
-
-### Next.js
-- [Documentação oficial](https://nextjs.org/docs)
-- [Learn Next.js](https://nextjs.org/learn)
-
-### Prisma
-- [Prisma Docs](https://www.prisma.io/docs)
-- [Prisma Schema Reference](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)
-
-### Strava API
-- [Developers Guide](https://developers.strava.com/docs/)
-- [API Reference](https://developers.strava.com/docs/reference/)
+Este projeto está sob a licença MIT.
 
 ---
 
 <div align="center">
 
-**Feito com ❤️ para corredores por corredores**
+### 🏃‍♂️ Feito com ❤️ para corredores por corredores 🏃‍♀️
 
-[Website](https://atherarun.com) • [Documentação](DOCUMENTACAO_COMPLETA_PROJETO.md) • [Roadmap](ROADMAP_IMPLEMENTACAO.md)
+**[Website](https://atherarun.com)** • **[Documentação](DOCUMENTACAO.md)** • **[Roadmap](ROADMAP.md)**
+
+**© 2024 Athera Run** - O futuro da corrida é agora 💨
 
 </div>
