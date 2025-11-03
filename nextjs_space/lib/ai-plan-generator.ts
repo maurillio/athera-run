@@ -1264,18 +1264,19 @@ function generateWeekWorkouts(params: {
       let workout: any = null;
 
       if (activityType === 'long_run') {
+        const longKm = Math.round(params.longRunKm * 10) / 10; // Arredondar 1 casa decimal
         workout = {
           dayOfWeek: dayOfWeek,
           date,
           type: 'running',
           subtype: 'long',
-          title: `Longão - ${Math.round(params.longRunKm)}km${timeInfoShort}`,
-          description: `Treino longo de ${Math.round(params.longRunKm)}km em ritmo confortável. O mais importante da semana - constrói resistência aeróbica e mental.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
-          distance: Math.round(params.longRunKm * 10) / 10,
+          title: `Longão - ${longKm}km${timeInfoShort}`,
+          description: `Treino longo de ${longKm}km em ritmo confortável. O mais importante da semana - constrói resistência aeróbica e mental.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          distance: longKm,
           duration: null,
           targetPace: params.paces.easy,
           warmup: null,
-          mainSet: `${Math.round(params.longRunKm)}km em ritmo fácil (${params.paces.easy})`,
+          mainSet: `${longKm}km em ritmo fácil (${params.paces.easy})`,
           cooldown: null,
         };
       }
@@ -1283,14 +1284,15 @@ function generateWeekWorkouts(params: {
         const qualityType = params.keyWorkouts.quality.type;
 
         if (qualityType === 'tempo') {
+          const tempoKm = Math.round(easyRunKm * 10) / 10;
           workout = {
             dayOfWeek: dayOfWeek,
             date,
             type: 'running',
             subtype: 'tempo',
-            title: `Treino de Ritmo (Tempo Run)${timeInfoShort}`,
-            description: params.keyWorkouts.quality.description || `Treino em ritmo controlado e sustentado.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
-            distance: Math.round(easyRunKm * 10) / 10,
+            title: `Treino de Ritmo - ${tempoKm}km${timeInfoShort}`,
+            description: params.keyWorkouts.quality.description || `Treino de ${tempoKm}km em ritmo controlado e sustentado (threshold). Aquecimento 10min + parte principal 20-30min + desaquecimento 10min.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            distance: tempoKm,
             duration: null,
             targetPace: params.paces.threshold,
             warmup: '10 min fácil',
@@ -1298,14 +1300,15 @@ function generateWeekWorkouts(params: {
             cooldown: '10 min fácil',
           };
         } else if (qualityType === 'intervals') {
+          const intervalKm = Math.round(easyRunKm * 10) / 10;
           workout = {
             dayOfWeek: dayOfWeek,
             date,
             type: 'running',
             subtype: 'intervals',
-            title: `Treino Intervalado${timeInfoShort}`,
-            description: params.keyWorkouts.quality.description || `Treino de velocidade com recuperação.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
-            distance: Math.round(easyRunKm * 10) / 10,
+            title: `Treino Intervalado - ${intervalKm}km${timeInfoShort}`,
+            description: params.keyWorkouts.quality.description || `Treino de velocidade de ${intervalKm}km total. Aquecimento 15min + 6-8 tiros de 800m em ritmo forte + desaquecimento 10min.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            distance: intervalKm,
             duration: null,
             targetPace: params.paces.interval,
             warmup: '15 min fácil',
@@ -1314,28 +1317,30 @@ function generateWeekWorkouts(params: {
           };
         } else { 
           // Fartlek ou treino fácil
+          const easyKm = Math.round(easyRunKm * 10) / 10;
           workout = {
             dayOfWeek: dayOfWeek,
             date,
             type: 'running',
             subtype: 'easy',
-            title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfoShort}`,
-            description: `Corrida leve de ${Math.round(easyRunKm)}km em ritmo confortável para construir base aeróbica e recuperação ativa.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
-            distance: Math.round(easyRunKm * 10) / 10,
+            title: `Treino Fácil - ${easyKm}km${timeInfoShort}`,
+            description: `Corrida leve de ${easyKm}km em ritmo confortável para construir base aeróbica e recuperação ativa.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            distance: easyKm,
             duration: null,
             targetPace: params.paces.easy,
           };
         }
       }
       else if (activityType === 'easy') {
+        const easyKm = Math.round(easyRunKm * 10) / 10;
         workout = {
           dayOfWeek: dayOfWeek,
           date,
           type: 'running',
           subtype: 'easy',
-          title: `Treino Fácil - ${Math.round(easyRunKm)}km${timeInfoShort}`,
-          description: `Corrida leve de ${Math.round(easyRunKm)}km em ritmo confortável. Foque em manter o ritmo fácil e respiração controlada.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
-          distance: Math.round(easyRunKm * 10) / 10,
+          title: `Treino Fácil - ${easyKm}km${timeInfoShort}`,
+          description: `Corrida leve de ${easyKm}km em ritmo confortável. Foque em manter o ritmo fácil e respiração controlada.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          distance: easyKm,
           duration: null,
           targetPace: params.paces.easy,
         };
