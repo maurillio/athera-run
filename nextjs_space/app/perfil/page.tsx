@@ -50,9 +50,13 @@ export default function PerfilPage() {
         }
         
         setProfile(data.profile);
+      } else {
+        console.error('Error fetching profile: HTTP', response.status);
+        toast.error('Erro ao carregar perfil. Recarregue a página.');
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      toast.error('Erro ao carregar perfil. Verifique sua conexão.');
     } finally {
       setLoading(false);
     }
@@ -181,13 +185,38 @@ export default function PerfilPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-orange-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-orange-600 mx-auto mb-4" />
+          <p className="text-gray-600">Carregando perfil...</p>
+        </div>
       </div>
     );
   }
 
-  if (!session || !profile) return null;
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <div className="text-center">
+          <p className="text-gray-600">Redirecionando para login...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <div className="text-center">
+          <AlertTriangle className="h-12 w-12 text-orange-600 mx-auto mb-4" />
+          <p className="text-gray-600 mb-4">Erro ao carregar perfil</p>
+          <Button onClick={() => window.location.reload()}>
+            Recarregar Página
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -15,6 +15,7 @@ interface ProfileTabsProps {
 export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
   const [activeTab, setActiveTab] = useState('basic');
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const tabs = [
     { id: 'basic', label: '👤 Dados Básicos', component: BasicDataTab },
@@ -27,8 +28,12 @@ export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
 
   const handleUpdate = async (data: any) => {
     setIsSaving(true);
+    setError(null);
     try {
       await onUpdate(data);
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      setError('Erro ao atualizar perfil. Tente novamente.');
     } finally {
       setIsSaving(false);
     }
@@ -36,8 +41,24 @@ export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
 
   const ActiveComponent = tabs.find(t => t.id === activeTab)?.component || BasicDataTab;
 
+  // Error boundary check
+  if (!userData) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-600">Erro: Dados do usuário não disponíveis</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
+      {/* Error message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
       {/* Tabs */}
       <div className="border-b border-gray-200 overflow-x-auto">
         <nav className="flex space-x-2 min-w-max">
