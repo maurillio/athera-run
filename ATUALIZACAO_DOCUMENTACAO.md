@@ -376,3 +376,75 @@ Agora qualquer pessoa pode:
 
 **© 2024 Athera Run**  
 Documentação v1.0.0 - Novembro 2024
+
+---
+
+## 🔄 Atualização 1.0.1 (03/Nov/2024 - 17h30)
+
+### Correções Realizadas
+
+#### 1. IA / LLM Provider
+- ❌ **Removido**: Todas referências ao Abacus.AI
+- ✅ **Atualizado**: OpenAI GPT-4o como único provider
+- ✅ Variáveis corretas:
+  - `OPENAI_API_KEY`
+  - `LLM_PROVIDER=openai`
+  - `LLM_MODEL=gpt-4o`
+
+#### 2. Infraestrutura e Deploy
+- ✅ Esclarecido: **100% Vercel** (não há prod local)
+- ✅ Banco de dados: PostgreSQL no servidor 45.232.21.67
+- ✅ Nota sobre migração futura para solução escalável
+- ✅ Dev local conecta no **mesmo banco** do Vercel
+- ❌ Removido: Referências a PM2 e `.env.local` obsoleto
+
+#### 3. URLs e Endpoints
+- ❌ Removido: Referências a localhost:3000 em produção
+- ✅ Atualizado: Todas URLs para atherarun.com
+- ✅ Callbacks corretos:
+  - Strava: `https://atherarun.com/api/strava/callback`
+  - Google: `https://atherarun.com/api/auth/callback/google`
+  - Stripe Webhook: `https://atherarun.com/api/stripe/webhook`
+
+#### 4. Autenticação
+- ✅ Mantido Google OAuth como feature crítica
+- ✅ Esclarecido que é obrigatório e permanente
+
+#### 5. Fluxo de Trabalho
+- ✅ Documentado fluxo correto:
+  ```
+  Código Local → Git Push → Vercel Deploy Automático → atherarun.com
+  ```
+- ✅ Ambiente local = apenas para código
+- ✅ Banco compartilhado dev/prod
+
+### Arquivos Atualizados
+
+1. **DOCUMENTACAO.md**
+   - Stack tecnológico corrigido
+   - Infraestrutura esclarecida
+
+2. **GUIA_TECNICO.md**
+   - Variáveis de ambiente completas
+   - Setup corrigido (sem Abacus)
+   - Deploy 100% Vercel
+   - Banco de dados atual + futuro
+
+3. **README.md**
+   - Stack atualizado
+   - URLs corretas
+   - Nota sobre dev local
+
+4. **LEIA_PRIMEIRO.md**
+   - Aviso sobre ambiente local
+   - Fluxo correto
+
+### Status Final
+
+✅ Documentação 100% alinhada com infraestrutura real  
+✅ Sem referências a Abacus.AI  
+✅ URLs corretas (atherarun.com)  
+✅ Fluxo de trabalho correto  
+✅ Banco de dados atual documentado  
+
+**A documentação agora reflete exatamente como o sistema funciona!** 🎯
