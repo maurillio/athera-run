@@ -3,7 +3,7 @@
 > Planejamento de features, melhorias e evolução da plataforma
 
 **Última atualização:** 03 de Novembro de 2025  
-**Versão Atual:** 1.1.0
+**Versão Atual:** 1.2.0
 
 ---
 
@@ -77,13 +77,22 @@ Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferec
 
 ### Novembro ✅ COMPLETO
 
-#### Features Implementadas
+#### Features Implementadas (v1.2.0)
 
-- [x] **Auto-Ajuste de Disponibilidade (FREE)**
-  - Disponível para TODOS os usuários
-  - Atualiza plano automaticamente ao mudar atividades
-  - Validação sem fallbacks automáticos (100% escolha do usuário)
-  - Refresh automático após ajuste
+- [x] **Auto-Ajuste Progressivo (FREE)** ⭐ MAJOR UPDATE
+  - Preserva histórico completo ao alterar disponibilidade
+  - Mantém treinos completados + taxa de conclusão
+  - Ajusta apenas futuro (semanas não iniciadas)
+  - Transação atômica (rollback se falhar)
+  - Feedback: "X semanas anteriores preservadas"
+  - **Status:** ✅ Implementado
+  - **Data:** 03/Nov/2025 19:41
+
+- [x] **IA em Dias de Descanso (FREE)**
+  - Sugestões contextuais por fase (base/build/peak/taper)
+  - Considera atividades disponíveis do usuário
+  - Dicas de recuperação e prevenção de lesões
+  - Mensagens específicas para pré-prova
   - **Status:** ✅ Implementado
   - **Data:** 03/Nov/2025
 
@@ -94,6 +103,13 @@ Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferec
   - Banner inteligente no dashboard
   - Teaser para usuários FREE (upgrade prompt)
   - **Status:** ✅ Implementado  
+  - **Data:** 03/Nov/2025
+
+- [x] **Correções de UX**
+  - Botão "Confirmar Treino" oculto em descanso
+  - Consistência título/descrição (km sincronizados)
+  - Onboarding: apenas Masculino/Feminino
+  - **Status:** ✅ Implementado
   - **Data:** 03/Nov/2025
 
 #### Em Andamento

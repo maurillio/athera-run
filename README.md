@@ -3,7 +3,7 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Versão:** 1.1.0  
+**Versão:** 1.2.0  
 **Última atualização:** 03 de Novembro de 2025  
 **Website:** https://atherarun.com
 
@@ -229,10 +229,30 @@ athera-run/
 - ✅ **Integração Strava** - Sincronização automática
 - ✅ **Análise Inteligente de Progresso** - IA analisa treinos e feedbacks
 - ✅ **Ajustes Automáticos Inteligentes** - Baseado em performance
-- ✅ **Notificações Proativas** - Sistema avisa necessidade de ajustes
+- ✅ **Banner de Sugestões** - IA avisa quando detecta oportunidades
 - ✅ **Relatórios Detalhados** - Análise semanal completa
 
-### Implementado (v1.1.0)
+### 🆕 Novidades v1.2.0
+
+**Auto-Ajuste Progressivo (FREE):**
+- Preserva todo histórico ao alterar disponibilidade
+- Mantém treinos completados e taxa de conclusão
+- Ajusta apenas treinos futuros
+- Feedback claro: "X semanas anteriores preservadas"
+
+**IA em Dias de Descanso:**
+- Sugestões personalizadas por fase de treino
+- Considera atividades disponíveis do usuário
+- Dicas de recuperação e prevenção de lesões
+- Contexto: base, build, peak ou taper
+
+**Correções de UX:**
+- Botão "Confirmar Treino" oculto em dias de descanso
+- Consistência entre título e descrição (km sincronizados)
+- Onboarding: apenas Masculino/Feminino (precisão VDOT)
+- Transação atômica: plano nunca fica vazio durante ajuste
+
+### Implementado (v1.2.0)
 
 - [x] Autenticação (Email/senha + Google OAuth)
 - [x] Onboarding inteligente (5 etapas com IA)
@@ -246,9 +266,11 @@ athera-run/
 - [x] Chat com treinador virtual (GPT-4o)
 - [x] Calculadoras (VDOT, nutrição)
 - [x] Tracking de treinos completados
-- [x] **Auto-ajuste de plano ao mudar disponibilidade (FREE)**
+- [x] **Auto-ajuste progressivo (FREE)** - Preserva histórico
 - [x] **Análise inteligente de progresso (Premium)**
-- [x] **Validação de disponibilidade (100% escolha do usuário)**
+- [x] **IA em dias de descanso** - Sugestões contextuais
+- [x] **Validação de disponibilidade** - 100% escolha do usuário
+- [x] **Transação atômica** - Plano nunca fica quebrado
 
 ### Em Desenvolvimento (Q4 2025)
 

@@ -271,8 +271,10 @@ RETORNE JSON com semanas e treinos`
 - ✅ Calculadoras (VDOT, nutrição, pace)
 - ✅ Sistema multi-corridas (A/B/C)
 - ✅ Chat com treinador virtual (IA)
-- ✅ **Auto-ajuste ao alterar disponibilidade/perfil**
-- ✅ **Atualização automática ao mudar atividades**
+- ✅ **Auto-ajuste progressivo** - Preserva histórico ao mudar disponibilidade
+- ✅ **Atualização automática** - Regenera futuro, mantém passado
+- ✅ **IA em descanso** - Sugestões personalizadas por fase
+- ✅ **Validação de disponibilidade** - 100% escolha do usuário
 - ❌ Integração Strava (sync automático)
 - ❌ Análise inteligente de progresso
 - ❌ Sugestões automáticas de ajuste baseadas em treinos/feedbacks
@@ -288,6 +290,38 @@ RETORNE JSON com semanas e treinos`
   - Padrões de desempenho
 - ✅ **Notificações Proativas** - Sistema avisa quando detecta necessidade de ajuste
 - ✅ **Relatórios Detalhados** - Análise semanal do progresso
+
+## 🔧 AUTO-AJUSTE PROGRESSIVO
+
+### Como Funciona (FREE):
+```
+Usuário altera disponibilidade (ex: adiciona musculação)
+    ↓
+Sistema identifica: Hoje = Semana 5
+    ↓
+PRESERVA:
+✅ Semanas 1-4 (passado completo)
+✅ Treinos completados da semana 5
+✅ Taxa de conclusão mantida (ex: 95%)
+✅ Histórico de km/semana
+✅ Gráficos de evolução
+    ↓
+AJUSTA:
+🔄 Treinos futuros da semana 5
+🔄 Todas as semanas 6-16
+    ↓
+RESULTADO:
+✅ Histórico preservado
+✅ Futuro adaptado às mudanças
+💬 "Plano ajustado! 4 semanas anteriores preservadas."
+```
+
+### Vantagens:
+- 🎯 **Correto conceitualmente**: Ajuste = mudar FUTURO
+- 📊 **Preserva valor**: Histórico do atleta é precioso
+- 📈 **Gráficos funcionam**: Evolução visível
+- 🔢 **Estatísticas mantidas**: Taxa de conclusão real
+- 💪 **Respeita esforço**: Treinos completados preservados
 
 ### Strava (Atividades)
 - **OAuth 2.0:** Authorization Callback Domain: `atherarun.com`
@@ -393,15 +427,20 @@ git push origin main
 - [x] Customer Portal
 - [x] Chat com treinador virtual
 - [x] Calculadoras (VDOT, nutrição)
-- [x] Auto-ajuste de plano ao mudar disponibilidade (FREE)
-- [x] Análise inteligente de progresso (Premium)
-- [x] Validação de disponibilidade (100% escolha do usuário)
+- [x] **Auto-ajuste progressivo (FREE)** - Preserva histórico
+- [x] **Análise inteligente de progresso (Premium)**
+- [x] **Validação de disponibilidade** (100% escolha do usuário)
+- [x] **IA em dias de descanso** - Sugestões contextuais
+- [x] **Consistência título/descrição** - KM sincronizados
+- [x] **Transação atômica** - Plano nunca fica quebrado
 
 ### 🚧 Em Desenvolvimento (Q4 2025)
 - [x] Ajustes inteligentes automáticos (Premium) ✅ CONCLUÍDO
-- [ ] Notificações e lembretes
-- [ ] Analytics avançados
-- [ ] Relatórios semanais por email
+- [x] Auto-ajuste progressivo (FREE) ✅ CONCLUÍDO
+- [x] IA em dias de descanso ✅ CONCLUÍDO
+- [ ] Notificações e lembretes por email
+- [ ] Analytics avançados e dashboards
+- [ ] Relatórios semanais por email automáticos
 
 ### 🔮 Roadmap 2026
 - Q1: Badges, Garmin/Polar
@@ -473,11 +512,19 @@ Este arquivo (CONTEXTO.md) contém 80% do que você precisa saber!
 ## ✅ VERSÃO ATUAL
 
 ```
-Versão: 1.1.0
-Data: 03/Nov/2025 17:56
+Versão: 1.2.0
+Data: 03/Nov/2025 19:41
 Stack: Next.js 14 + OpenAI GPT-4o + PostgreSQL + Vercel
 Status: 🟢 Produção Estável
 URL: https://atherarun.com
+
+NOVIDADES v1.2.0:
+✅ Auto-ajuste progressivo (preserva histórico)
+✅ IA em dias de descanso (sugestões contextuais)
+✅ Consistência título/descrição
+✅ Transação atômica (plano nunca quebra)
+✅ Gênero apenas M/F (precisão VDOT)
+✅ Botão confirmação oculto em descanso
 ```
 
 ---
