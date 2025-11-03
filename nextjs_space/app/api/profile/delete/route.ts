@@ -80,13 +80,7 @@ export async function DELETE(request: NextRequest) {
     });
     console.log(`[DELETE PROFILE] Deletados ${deletedFeedback.count} feedbacks`);
 
-    // 7. Deletar StravaActivities
-    const deletedStravaActivities = await prisma.stravaActivity.deleteMany({
-      where: { userId: user.id }
-    });
-    console.log(`[DELETE PROFILE] Deletadas ${deletedStravaActivities.count} atividades do Strava`);
-
-    // 8. Por último, deletar o AthleteProfile
+    // 7. Por último, deletar o AthleteProfile
     await prisma.athleteProfile.delete({
       where: { id: athleteId }
     });
