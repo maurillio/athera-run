@@ -209,12 +209,20 @@ export async function POST(request: NextRequest) {
 
     console.log('[AI PLAN] Perfil do atleta atualizado!');
 
+    // Preparar mensagem incluindo aviso se houver
+    let message = `🎉 Plano personalizado gerado com IA!\n\n${aiPlan.planRationale}\n\nVDOT: ${aiPlan.vdot}\n\nO plano foi criado especificamente para você baseado em todo o seu perfil e disponibilidade.`;
+    
+    if (aiPlan.warnings?.isShortNotice) {
+      message = `${aiPlan.warnings.shortNoticeMessage}\n\n${message}`;
+    }
+
     return NextResponse.json({
       success: true,
       plan: customPlan,
       vdot: aiPlan.vdot,
       paces: aiPlan.paces,
-      message: `🎉 Plano personalizado gerado com IA!\n\n${aiPlan.planRationale}\n\nVDOT: ${aiPlan.vdot}\n\nO plano foi criado especificamente para você baseado em todo o seu perfil e disponibilidade.`,
+      message,
+      warnings: aiPlan.warnings,
       planDetails: {
         phases: aiPlan.phases,
         keyConsiderations: aiPlan.keyConsiderations,
