@@ -64,12 +64,27 @@ export async function POST(req: NextRequest) {
       longRunDay, // Dia do treino longo
       hasRunBefore, // Se já correu antes
       usualPaces, // Paces habituais por distância
-      // Novos campos para análise de elite
+      // v1.3.0 - Fisiologia
       runningYears,
       maxHeartRate,
+      restingHeartRate, // v1.3.0
       sleepQuality,
       stressLevel,
       otherSportsExperience,
+      otherSportsYears, // v1.3.0
+      // v1.3.0 - Lesões detalhadas
+      injuryDetails,
+      injuryRecoveryStatus,
+      lastInjuryDate,
+      // v1.3.0 - Performance
+      bestTimes,
+      // v1.3.0 - Infraestrutura
+      hasGymAccess,
+      hasPoolAccess,
+      hasTrackAccess,
+      // v1.3.0 - Preferências
+      trainingPreferences,
+      motivationFactors,
     } = body;
 
     const profileData = {
@@ -90,10 +105,26 @@ export async function POST(req: NextRequest) {
       longRunDay: longRunDay !== null && longRunDay !== undefined ? parseInt(longRunDay) : null,
       // Paces habituais (salvar apenas os paces, sem wrapper)
       ...(usualPaces && { usualPaces: usualPaces }),
-      // Novos campos para análise de elite
+      // Campos de experiência
       runningYears: runningYears ? parseInt(runningYears) : null,
       maxHeartRate: maxHeartRate ? parseInt(maxHeartRate) : null,
       recentLongRunPace: null, // Será preenchido com dados do Strava/logs
+      // v1.3.0 - Novos campos
+      restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
+      sleepQuality: sleepQuality ? parseInt(sleepQuality) : null,
+      stressLevel: stressLevel ? parseInt(stressLevel) : null,
+      otherSportsExperience: otherSportsExperience || null,
+      otherSportsYears: otherSportsYears ? parseInt(otherSportsYears) : null,
+      injuryDetails: injuryDetails || null,
+      injuryRecoveryStatus: injuryRecoveryStatus || null,
+      lastInjuryDate: lastInjuryDate ? new Date(lastInjuryDate) : null,
+      bestTimes: bestTimes || null,
+      lastVDOTUpdate: bestTimes ? new Date() : null,
+      hasGymAccess: hasGymAccess === true || hasGymAccess === 'true',
+      hasPoolAccess: hasPoolAccess === true || hasPoolAccess === 'true',
+      hasTrackAccess: hasTrackAccess === true || hasTrackAccess === 'true',
+      trainingPreferences: trainingPreferences || null,
+      motivationFactors: motivationFactors || null,
     };
 
     let profile;

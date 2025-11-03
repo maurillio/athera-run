@@ -52,6 +52,25 @@ export async function POST(req: NextRequest) {
     if (body.hasGymAccess !== undefined) updateData.hasGymAccess = body.hasGymAccess;
     if (body.hasPoolAccess !== undefined) updateData.hasPoolAccess = body.hasPoolAccess;
 
+    // v1.3.0 - Novos campos
+    if (body.restingHeartRate !== undefined) updateData.restingHeartRate = body.restingHeartRate ? parseInt(body.restingHeartRate) : null;
+    if (body.sleepQuality !== undefined) updateData.sleepQuality = body.sleepQuality ? parseInt(body.sleepQuality) : null;
+    if (body.stressLevel !== undefined) updateData.stressLevel = body.stressLevel ? parseInt(body.stressLevel) : null;
+    if (body.otherSportsExperience !== undefined) updateData.otherSportsExperience = body.otherSportsExperience;
+    if (body.otherSportsYears !== undefined) updateData.otherSportsYears = body.otherSportsYears ? parseInt(body.otherSportsYears) : null;
+    if (body.injuryDetails !== undefined) updateData.injuryDetails = body.injuryDetails;
+    if (body.injuryRecoveryStatus !== undefined) updateData.injuryRecoveryStatus = body.injuryRecoveryStatus;
+    if (body.lastInjuryDate !== undefined) updateData.lastInjuryDate = body.lastInjuryDate ? new Date(body.lastInjuryDate) : null;
+    if (body.bestTimes !== undefined) {
+      updateData.bestTimes = body.bestTimes;
+      updateData.lastVDOTUpdate = new Date(); // Auto-update quando muda tempos
+    }
+    if (body.hasTrackAccess !== undefined) updateData.hasTrackAccess = body.hasTrackAccess;
+    if (body.trainingPreferences !== undefined) updateData.trainingPreferences = body.trainingPreferences;
+    if (body.motivationFactors !== undefined) updateData.motivationFactors = body.motivationFactors;
+    if (body.runningYears !== undefined) updateData.runningYears = body.runningYears ? parseInt(body.runningYears) : null;
+    if (body.maxHeartRate !== undefined) updateData.maxHeartRate = body.maxHeartRate ? parseInt(body.maxHeartRate) : null;
+
     const updated = await prisma.athleteProfile.update({
       where: { id: profile.id },
       data: updateData
