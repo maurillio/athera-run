@@ -3,8 +3,8 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Versão:** 1.0.0  
-**Última atualização:** 03 de Novembro de 2024  
+**Versão:** 1.1.0  
+**Última atualização:** 03 de Novembro de 2025  
 **Website:** https://atherarun.com
 
 ---
@@ -25,8 +25,9 @@
 ✅ **Sistema multi-corrida** - Gerencia várias provas simultaneamente  
 ✅ **Classificação inteligente** - IA identifica automaticamente corridas A/B/C  
 ✅ **Periodização científica** - Base → Build → Peak → Taper  
-✅ **Integração Strava** - Sincronização automática e OAuth 2.0  
-✅ **Ajustes inteligentes** - IA monitora e ajusta o plano continuamente  
+✅ **Auto-ajuste FREE** - Atualiza plano ao mudar disponibilidade (todos usuários)  
+✅ **Integração Strava** - Sincronização automática (Premium)  
+✅ **Análise inteligente** - IA analisa progresso e sugere ajustes (Premium)  
 ✅ **Chat com treinador virtual** - Suporte personalizado 24/7  
 
 ---
@@ -212,7 +213,26 @@ athera-run/
 
 ## ✅ Status e Features
 
-### Implementado (v1.0.0)
+### 💎 Plano FREE vs PREMIUM
+
+#### 🆓 FREE (R$ 0)
+- ✅ Geração de plano personalizado com IA (GPT-4o)
+- ✅ Dashboard completo com visualização semanal
+- ✅ Calculadoras (VDOT, nutrição, pace)
+- ✅ Sistema multi-corridas (A/B/C)
+- ✅ Chat com treinador virtual (IA)
+- ✅ **Auto-ajuste ao alterar disponibilidade/perfil**
+- ✅ **Atualização automática ao mudar atividades**
+
+#### ⭐ PREMIUM (R$ 29,90/mês ou R$ 288/ano)
+- ✅ **Tudo do Free +**
+- ✅ **Integração Strava** - Sincronização automática
+- ✅ **Análise Inteligente de Progresso** - IA analisa treinos e feedbacks
+- ✅ **Ajustes Automáticos Inteligentes** - Baseado em performance
+- ✅ **Notificações Proativas** - Sistema avisa necessidade de ajustes
+- ✅ **Relatórios Detalhados** - Análise semanal completa
+
+### Implementado (v1.1.0)
 
 - [x] Autenticação (Email/senha + Google OAuth)
 - [x] Onboarding inteligente (5 etapas com IA)
@@ -220,27 +240,29 @@ athera-run/
 - [x] Sistema multi-corrida com classificação A/B/C
 - [x] Dashboard interativo com métricas
 - [x] Visualização completa do plano (todas as semanas)
-- [x] Integração Strava (OAuth 2.0 + sincronização)
+- [x] Integração Strava (Premium - OAuth 2.0 + sincronização)
 - [x] Sistema de assinaturas (Stripe + webhooks)
 - [x] Customer Portal (gerenciar assinatura)
 - [x] Chat com treinador virtual (GPT-4o)
 - [x] Calculadoras (VDOT, nutrição)
 - [x] Tracking de treinos completados
+- [x] **Auto-ajuste de plano ao mudar disponibilidade (FREE)**
+- [x] **Análise inteligente de progresso (Premium)**
+- [x] **Validação de disponibilidade (100% escolha do usuário)**
 
-### Em Desenvolvimento (Q4 2024)
+### Em Desenvolvimento (Q4 2025)
 
-- [ ] Ajustes inteligentes automáticos
-- [ ] Notificações e lembretes
-- [ ] Analytics avançados
-- [ ] Relatórios semanais por email
+- [ ] Notificações e lembretes por email
+- [ ] Analytics avançados e dashboards
+- [ ] Relatórios automáticos semanais
 
-### Roadmap (2025)
+### Roadmap (2026)
 
-- [ ] App mobile nativo (Q3 2025)
-- [ ] Integração Garmin e Polar (Q1 2025)
-- [ ] Social features e comunidade (Q2 2025)
-- [ ] Marketplace de treinadores (Q2 2025)
-- [ ] Internacionalização (EN, ES) (Q4 2025)
+- [ ] App mobile nativo (Q3 2026)
+- [ ] Integração Garmin e Polar (Q1 2026)
+- [ ] Social features e comunidade (Q2 2026)
+- [ ] Marketplace de treinadores (Q2 2026)
+- [ ] Internacionalização (EN, ES) (Q4 2026)
 
 📖 **Ver detalhes**: [ROADMAP.md](ROADMAP.md)
 
@@ -281,7 +303,7 @@ Contribuições são bem-vindas!
 | **Tempo Médio de Geração** | ~45s |
 | **Taxa de Sucesso** | 95% |
 
-*Última atualização: 03/Nov/2024*
+*Última atualização: 03/Nov/2025*
 
 ---
 
@@ -344,6 +366,6 @@ Este projeto está sob a licença MIT.
 
 **[Website](https://atherarun.com)** • **[Documentação](DOCUMENTACAO.md)** • **[Roadmap](ROADMAP.md)**
 
-**© 2024 Athera Run** - O futuro da corrida é agora 💨
+**© 2025 Athera Run** - O futuro da corrida é agora 💨
 
 </div>

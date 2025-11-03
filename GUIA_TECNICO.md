@@ -1623,6 +1623,89 @@ yarn ts-node check_profile_data.ts
 
 ---
 
+## 💎 Recursos FREE vs PREMIUM
+
+### Implementação Técnica
+
+#### Auto-Ajuste de Disponibilidade (FREE)
+
+**Endpoint:** `POST /api/plan/auto-adjust`
+
+```typescript
+// Disponível para TODOS os usuários
+// Acionado automaticamente ao mudar:
+// - trainingActivities
+// - longRunDay  
+// - Qualquer campo de disponibilidade
+
+// Fluxo:
+// 1. Usuário altera disponibilidade no perfil
+// 2. Sistema detecta mudança crítica
+// 3. Chama auto-adjust automaticamente
+// 4. Regenera plano com novas configurações
+// 5. Refresh automático da página
+```
+
+**Validação de Disponibilidade:**
+
+```typescript
+// lib/ai-plan-generator.ts
+function getActivityAvailability(profile) {
+  // ✅ Apenas corrida tem fallback (essencial)
+  const runningDays = configured || [0, 2, 4];
+  
+  // ✅ Outras atividades: SEM fallback
+  const strengthDays = configured || []; // Vazio se não configurado
+  const swimmingDays = configured || []; // Vazio se não configurado
+  
+  // ✅ Validação obrigatória
+  if (runningDays.length === 0) {
+    throw new Error('Configure pelo menos dias de corrida');
+  }
+}
+```
+
+#### Análise Inteligente de Progresso (PREMIUM)
+
+**Endpoint:** `POST /api/plan/analyze-progress`
+
+```typescript
+// Disponível APENAS para Premium
+// Analisa automaticamente:
+// - Taxa de conclusão de treinos (últimos 30 dias)
+// - Feedbacks e relatos (fadiga, dor)
+// - Dados do Strava (se conectado)
+// - Padrões de performance
+
+// Retorno para FREE:
+{
+  hasSuggestion: true,
+  isPremiumFeature: true,
+  teaser: "Taxa de conclusão abaixo do ideal",
+  message: "Upgrade para ver sugestões completas"
+}
+
+// Retorno para PREMIUM:
+{
+  hasSuggestion: true,
+  isPremiumFeature: false,
+  suggestion: "Reduzir volume em 10% - sinais de fadiga",
+  confidence: "high",
+  reasons: ["Taxa conclusão 60%", "3 relatos de fadiga"],
+  adjustmentType: "volume"
+}
+```
+
+**Banner no Dashboard:**
+
+```typescript
+// components/progress-analysis-banner.tsx
+// - FREE: Mostra teaser + botão "Upgrade Premium"
+// - PREMIUM: Mostra sugestão completa + botão "Aplicar Ajuste"
+```
+
+---
+
 ## 📝 Checklist de Deploy
 
 ### Pré-Deploy
@@ -1631,14 +1714,16 @@ yarn ts-node check_profile_data.ts
 - [ ] Banco de dados de produção criado
 - [ ] Migrations rodadas no banco de produção
 - [ ] Strava app em modo produção (não sandbox)
-- [ ] Stripe em modo live (não test)
+- [ ] Stripe em modo TEST (usar test keys)
 - [ ] Domínio configurado e DNS propagado
 
 ### Pós-Deploy
 
 - [ ] Testar signup e login
-- [ ] Testar geração de plano
-- [ ] Testar integração Strava
+- [ ] Testar geração de plano (apenas corrida)
+- [ ] Testar adicionar atividade (auto-ajuste)
+- [ ] Testar integração Strava (Premium)
+- [ ] Testar análise de progresso (Premium vs FREE)
 - [ ] Testar checkout Stripe
 - [ ] Testar webhooks (Strava e Stripe)
 - [ ] Monitorar logs por 24h
@@ -1649,6 +1734,7 @@ yarn ts-node check_profile_data.ts
 - [ ] Monitorar uso de APIs (limites)
 - [ ] Atualizar dependências (mensal)
 - [ ] Revisar logs de erro (diário)
+- [ ] Verificar análises Premium funcionando (semanal)
 
 ---
 

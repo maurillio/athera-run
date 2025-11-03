@@ -2,8 +2,8 @@
 
 > Planejamento de features, melhorias e evolução da plataforma
 
-**Última atualização:** 03 de Novembro de 2024  
-**Versão Atual:** 1.0.0
+**Última atualização:** 03 de Novembro de 2025  
+**Versão Atual:** 1.1.0
 
 ---
 
@@ -26,13 +26,13 @@
 
 Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferecendo planos verdadeiramente personalizados e ajustes inteligentes em tempo real.
 
-### Objetivos 2024-2025
+### Objetivos 2025-2026
 
-- **1.000 usuários ativos** até Março/2025
-- **250 assinantes Premium** até Junho/2025
-- **10.000 planos gerados** até final de 2025
-- **App Mobile** lançado até Setembro/2025
-- **Expansão internacional** (EN, ES) até Dezembro/2025
+- **1.000 usuários ativos** até Março/2026
+- **250 assinantes Premium** até Junho/2026
+- **10.000 planos gerados** até final de 2026
+- **App Mobile** lançado até Setembro/2026
+- **Expansão internacional** (EN, ES) até Dezembro/2026
 
 ---
 
@@ -63,29 +63,40 @@ Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferec
 
 ---
 
-## 📅 Q4 2024 (Outubro - Dezembro)
+## 📅 Q4 2025 (Outubro - Dezembro)
 
 ### Outubro ✅ COMPLETO
 
 - [x] Lançamento MVP
 - [x] Sistema multi-corrida com classificação A/B/C
-- [x] Integração Strava completa
+- [x] Integração Strava completa (Premium)
 - [x] Sistema de assinaturas Stripe
 - [x] Onboarding em 5 etapas
 - [x] Dashboard interativo
 - [x] Customer Portal Stripe
 
-### Novembro 🚧 EM ANDAMENTO
+### Novembro ✅ COMPLETO
 
-#### Features
+#### Features Implementadas
 
-- [ ] **Ajustes Inteligentes Automáticos**
-  - IA monitora progresso contínuo
-  - Detecta overtraining precocemente
-  - Ajusta plano automaticamente quando necessário
-  - Notifica atleta sobre mudanças
-  - **Status:** Em desenvolvimento
-  - **ETA:** 15/Nov
+- [x] **Auto-Ajuste de Disponibilidade (FREE)**
+  - Disponível para TODOS os usuários
+  - Atualiza plano automaticamente ao mudar atividades
+  - Validação sem fallbacks automáticos (100% escolha do usuário)
+  - Refresh automático após ajuste
+  - **Status:** ✅ Implementado
+  - **Data:** 03/Nov/2025
+
+- [x] **Análise Inteligente de Progresso (Premium)**
+  - IA analisa taxa de conclusão de treinos
+  - Detecta sinais de fadiga e overtraining
+  - Sugestões automáticas de ajuste
+  - Banner inteligente no dashboard
+  - Teaser para usuários FREE (upgrade prompt)
+  - **Status:** ✅ Implementado  
+  - **Data:** 03/Nov/2025
+
+#### Em Andamento
 
 - [ ] **Notificações e Lembretes**
   - Email para treinos do dia
