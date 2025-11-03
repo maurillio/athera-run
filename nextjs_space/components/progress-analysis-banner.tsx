@@ -48,24 +48,50 @@ export default function ProgressAnalysisBanner() {
 
   const handleApplyAdjustment = async () => {
     setApplying(true);
+    
+    // Toast informativo sobre o processo
+    toast.loading('Gerando novo plano... Isso pode levar até 60 segundos.', { 
+      id: 'applying',
+      duration: 65000 // Manter por 65s
+    });
+
     try {
+      // Timeout aumentado para 90 segundos (geração IA pode demorar)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 90000);
+
       const response = await fetch('/api/plan/auto-adjust', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           reason: 'ai_analysis',
           analysis: analysis
-        })
+        }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (response.ok) {
-        toast.success('Plano ajustado com sucesso!');
-        setTimeout(() => window.location.reload(), 1500);
+        const data = await response.json();
+        toast.success('Plano ajustado com sucesso!', { id: 'applying' });
+        
+        // Aguardar 2s antes de recarregar para usuário ver sucesso
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
-        toast.error('Erro ao aplicar ajuste');
+        const errorData = await response.json();
+        toast.error(errorData.error || 'Erro ao aplicar ajuste', { id: 'applying' });
+        console.error('Erro no ajuste:', errorData);
       }
-    } catch (error) {
-      toast.error('Erro ao aplicar ajuste');
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        toast.error('Tempo esgotado. Tente novamente.', { id: 'applying' });
+      } else {
+        toast.error('Erro ao aplicar ajuste. Verifique sua conexão.', { id: 'applying' });
+      }
+      console.error('Erro ao aplicar ajuste:', error);
     } finally {
       setApplying(false);
     }
