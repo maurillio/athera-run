@@ -1,8 +1,8 @@
 # 📝 Atualização de Documentação - Athera Run
 
 **Data:** 03 de Novembro de 2024  
-**Versão:** 1.0.0  
-**Status:** ✅ COMPLETO
+**Versão:** 1.0.1  
+**Status:** ✅ COMPLETO E ATUALIZADO
 
 ---
 

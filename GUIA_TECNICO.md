@@ -59,60 +59,84 @@ yarn dev
 
 ### Variáveis de Ambiente
 
-Crie `.env` na raiz de `nextjs_space/`:
+**⚠️ IMPORTANTE**: As variáveis oficiais estão configuradas no **Vercel Dashboard**. 
+Para desenvolvimento local, você pode criar um `.env.local` mas ele deve conectar nos **mesmos serviços de produção** (mesmo banco de dados, etc).
+
+#### Variáveis de Produção (Vercel)
 
 ```bash
-# Database
-DATABASE_URL='postgresql://user:password@localhost:5432/atherarun'
+# Database (PostgreSQL no servidor próprio)
+DATABASE_URL='postgresql://user:password@45.232.21.67:5432/atherarun'
 
 # NextAuth
-NEXTAUTH_SECRET='gere-com-openssl-rand-base64-32'
-NEXTAUTH_URL='http://localhost:3000'
+NEXTAUTH_SECRET='seu-secret-gerado'
+NEXTAUTH_URL='https://atherarun.com'
 
-# Google OAuth (opcional)
+# Google OAuth (OBRIGATÓRIO - feature crítica)
 GOOGLE_CLIENT_ID='seu-google-client-id'
 GOOGLE_CLIENT_SECRET='seu-google-client-secret'
 
-# Abacus.AI (obrigatório para geração de planos)
-ABACUSAI_API_KEY='seu-abacus-api-key'
-
-# OpenAI (alternativa ao Abacus)
-OPENAI_API_KEY='seu-openai-key'
-LLM_PROVIDER='abacusai'  # ou 'openai'
+# OpenAI (geração de planos com IA)
+OPENAI_API_KEY='sk-...'
+LLM_PROVIDER='openai'
 LLM_MODEL='gpt-4o'
 
-# Strava API (opcional)
+# Strava API
 STRAVA_CLIENT_ID='seu-strava-client-id'
 STRAVA_CLIENT_SECRET='seu-strava-client-secret'
-STRAVA_REDIRECT_URI='http://localhost:3000/api/strava/callback'
+STRAVA_REDIRECT_URI='https://atherarun.com/api/strava/callback'
 STRAVA_VERIFY_TOKEN='token-aleatorio-para-webhooks'
 
-# Stripe (opcional, para pagamentos)
-STRIPE_SECRET_KEY='sk_test_...'
-STRIPE_PUBLISHABLE_KEY='pk_test_...'
+# Stripe (modo LIVE)
+STRIPE_SECRET_KEY='sk_live_...'
+STRIPE_PUBLISHABLE_KEY='pk_live_...'
 STRIPE_WEBHOOK_SECRET='whsec_...'
 STRIPE_PRICE_MONTHLY='price_...'
 STRIPE_PRICE_ANNUAL='price_...'
 ```
 
+#### Para Desenvolvimento Local
+
+```bash
+# Crie .env.local na raiz de nextjs_space/
+# IMPORTANTE: Conecta nos MESMOS serviços de produção
+
+# Database (mesmo servidor)
+DATABASE_URL='postgresql://user:password@45.232.21.67:5432/atherarun'
+
+# NextAuth (use URL local apenas para OAuth redirects)
+NEXTAUTH_SECRET='mesmo-secret-do-vercel'
+NEXTAUTH_URL='http://localhost:3000'
+
+# Demais variáveis: use as MESMAS do Vercel
+# (copie do Vercel Dashboard → Settings → Environment Variables)
+```
+
 ### Obtendo Credenciais
 
-#### Abacus.AI
-1. Acesse https://abacus.ai
+#### OpenAI
+1. Acesse https://platform.openai.com
 2. Crie conta e obtenha API Key
-3. Configure no `.env`
+3. Configure no Vercel Dashboard
+
+#### Google OAuth
+1. Acesse https://console.cloud.google.com
+2. Crie projeto e configure OAuth
+3. Adicione Authorized redirect URIs: `https://atherarun.com/api/auth/callback/google`
+4. Copie Client ID e Secret para o Vercel
 
 #### Strava API
 1. Acesse https://www.strava.com/settings/api
 2. Crie aplicação
-3. Configure Callback URL: `http://localhost:3000/api/strava/callback`
-4. Copie Client ID e Secret
+3. Configure Authorization Callback Domain: `atherarun.com`
+4. Copie Client ID e Secret para o Vercel
 
 #### Stripe
 1. Acesse https://dashboard.stripe.com
-2. Use Test Mode para desenvolvimento
+2. Use **Live Mode** (produção)
 3. Obtenha API Keys em Developers > API keys
-4. Configure Webhook em Developers > Webhooks
+4. Configure Webhook: `https://atherarun.com/api/stripe/webhook`
+5. Copie todas as keys para o Vercel Dashboard
 
 ---
 
@@ -1382,42 +1406,77 @@ function mapStripeStatus(status: string): SubscriptionStatus {
 
 ## 🚀 Deployment
 
-### Vercel (Recomendado)
+### Arquitetura de Deploy
 
-#### 1. Criar Projeto no Vercel
+**IMPORTANTE**: O projeto roda 100% no Vercel. Não há servidor local de produção.
+
+```
+Código Local (dev)
+    ↓ git push
+GitHub Repository
+    ↓ webhook automático
+Vercel Build & Deploy
+    ↓
+atherarun.com (produção)
+```
+
+### Fluxo de Trabalho
+
+1. **Desenvolvimento Local**
+   ```bash
+   cd nextjs_space
+   yarn dev  # Roda em localhost:3000
+   # Conecta no MESMO banco de dados do Vercel
+   ```
+
+2. **Commit e Push**
+   ```bash
+   git add .
+   git commit -m "feat: nova funcionalidade"
+   git push origin main
+   ```
+
+3. **Deploy Automático**
+   - Vercel detecta push
+   - Faz build automático
+   - Deploy em ~2-3 minutos
+   - Live em atherarun.com
+
+### Configurar Variáveis de Ambiente (Vercel)
+
+**Dashboard da Vercel** → Settings → Environment Variables
+
+⚠️ Todas as variáveis devem ser configuradas no Vercel, não localmente.
 
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
+# Database
+DATABASE_URL=postgresql://user:pass@45.232.21.67:5432/atherarun
 
-# Login
-vercel login
+# NextAuth
+NEXTAUTH_SECRET=seu-secret-seguro
+NEXTAUTH_URL=https://atherarun.com
 
-# Deploy
-cd nextjs_space
-vercel
+# OpenAI (não Abacus!)
+OPENAI_API_KEY=sk-live_...
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4o
+
+# Google OAuth
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+
+# Strava
+STRAVA_CLIENT_ID=...
+STRAVA_CLIENT_SECRET=...
+STRAVA_REDIRECT_URI=https://atherarun.com/api/strava/callback
+
+# Stripe (modo LIVE, não test)
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
-#### 2. Configurar Variáveis de Ambiente
-
-No dashboard da Vercel:
-- Settings → Environment Variables
-- Adicionar todas as variáveis do `.env`
-- Usar valores de **produção** (não teste!)
-
-Exemplo:
-```
-DATABASE_URL = postgresql://prod-user:pass@host:5432/prod-db
-NEXTAUTH_URL = https://atherarun.com
-STRAVA_REDIRECT_URI = https://atherarun.com/api/strava/callback
-STRIPE_SECRET_KEY = sk_live_...
-```
-
-#### 3. Configurar Domínio
-
-- Settings → Domains
-- Adicionar `atherarun.com`
-- Configurar DNS (veja abaixo)
+### Configurar Domínio
 
 ### Configuração de DNS (GoDaddy)
 
@@ -1430,28 +1489,33 @@ CNAME www   cname.vercel-dns.com.   600
 
 ### Banco de Dados (PostgreSQL)
 
-Opções de hosting:
+#### Setup Atual
+- **PostgreSQL** no servidor próprio (45.232.21.67)
+- Compartilhado entre dev local e produção Vercel
+- Conexão via `DATABASE_URL` no Vercel
 
-1. **Vercel Postgres** (mais fácil)
-2. **Supabase** (gratuito até certo limite)
-3. **Railway** (simples, bom preço)
-4. **AWS RDS** (produção enterprise)
+#### Migração Futura (Planejado)
+Para melhor escalabilidade e redundância, migrar para:
 
-#### Exemplo: Supabase
+1. **Vercel Postgres** (integrado)
+2. **Supabase** (gratuito até certo volume)
+3. **AWS RDS** (enterprise)
+4. **Railway** (boa relação custo/benefício)
 
-1. Criar projeto em https://supabase.com
-2. Obter connection string
-3. Adicionar em Vercel: `DATABASE_URL`
-4. Rodar migrations:
-   ```bash
-   npx prisma migrate deploy
-   ```
+#### Rodar Migrations
+
+```bash
+# Local ou CI/CD
+npx prisma migrate deploy
+```
 
 ### CI/CD Automático
 
-Vercel faz deploy automático:
-- `main` branch → Produção
-- Outras branches → Preview deploys
+O Vercel gerencia todo o CI/CD:
+- **Push no `main`** → Deploy em produção (atherarun.com)
+- **Push em outras branches** → Preview deploys
+- **Build automático** com cache inteligente
+- **Rollback fácil** pelo dashboard
 
 ### Verificação Pós-Deploy
 
@@ -1514,9 +1578,10 @@ Verificar:
 
 #### 6. IA: Plano não gera ou dá timeout
 
-- Verificar `ABACUSAI_API_KEY` ou `OPENAI_API_KEY`
+- Verificar `OPENAI_API_KEY` no Vercel
+- Confirmar `LLM_PROVIDER=openai` e `LLM_MODEL=gpt-4o`
 - Planos muito longos (>40 semanas) podem demorar
-- Aumentar timeout no Vercel (Pro plan)
+- Verificar logs do Vercel para detalhes do erro
 
 ### Logs e Debug
 
