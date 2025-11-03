@@ -170,23 +170,25 @@ Stack alterado:
 Quando iniciar uma nova sessão de desenvolvimento com IA, use este prompt:
 
 ```
-Olá! Vou trabalhar no projeto Athera Run.
+Leia CONTEXTO.md
+```
 
-Por favor, leia primeiro:
-1. LEIA_PRIMEIRO.md - Para entender a estrutura
-2. DOCUMENTACAO.md - Para contexto do produto
-3. GUIA_TECNICO.md - Para detalhes técnicos
+**Pronto!** Em 1 arquivo você tem todo o contexto:
+- Stack completo (OpenAI GPT-4o, Vercel, PostgreSQL)
+- Infraestrutura (100% Vercel, banco compartilhado)
+- Fluxo de desenvolvimento
+- Regras importantes
+- Troubleshooting
 
-Stack atual (verificar sempre na documentação):
-- Hosting: 100% Vercel
-- Banco: PostgreSQL (servidor próprio 45.232.21.67)
-- IA: OpenAI GPT-4o direto
-- Auth: NextAuth (Email + Google OAuth)
-- Integrações: Stripe, Strava
+Se precisar de mais detalhes:
+```
+Vou implementar: [DESCREVA]
 
-Vou implementar: [DESCREVA O QUE VAI FAZER]
+Consulte detalhes em:
+- DOCUMENTACAO.md → Para funcionalidades
+- GUIA_TECNICO.md → Para setup/APIs
 
-Lembre-se de atualizar a documentação junto com o código!
+Lembre de atualizar documentação junto com código!
 ```
 
 ---
@@ -197,6 +199,7 @@ Lembre-se de atualizar a documentação junto com o código!
 
 ```
 athera-run/
+├── CONTEXTO.md                # 🎯 CONTEXTO COMPLETO (IA: leia só este!)
 ├── LEIA_PRIMEIRO.md           # 🏠 Hub de navegação
 ├── DOCUMENTACAO.md            # 📘 Documentação do produto
 ├── GUIA_TECNICO.md            # 🛠️ Guia técnico para devs
