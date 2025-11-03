@@ -95,8 +95,7 @@ export async function DELETE(request: NextRequest) {
         profile: true,
         races: deletedRaces.count,
         workouts: deletedWorkouts.count,
-        feedback: deletedFeedback.count,
-        stravaActivities: deletedStravaActivities.count
+        feedback: deletedFeedback.count
       }
     });
 
