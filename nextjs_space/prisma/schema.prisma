@@ -286,9 +286,18 @@ model AthleteProfile {
   recentLongRunPace String?  // Pace médio do último longão.
   maxHeartRate      Int?     // Frequência Cardíaca Máxima (estimada ou real).
   
+  // NOVOS CAMPOS v1.3.0 - Fisiologia e Recuperação
+  restingHeartRate  Int?     // FC repouso (40-80 bpm) - indica base aeróbica
+  sleepQuality      Int?     // 1-5 (1=péssima <5h, 5=excelente 8h+)
+  stressLevel       Int?     // 1-5 (1=muito baixo, 5=muito alto)
+  
   // Experiências e histórico (analisado por IA)
   experienceDescription String? @db.Text // Descrição livre das experiências do corredor
   experienceAnalysis    String? @db.Text // Análise gerada pela IA
+  
+  // NOVOS CAMPOS v1.3.0 - Outros Esportes (Base Aeróbica)
+  otherSportsExperience String? @db.Text // Esportes praticados (natação, ciclismo, etc)
+  otherSportsYears      Int?   // Anos totais em outros esportes
   
   // Objetivos principais (mantido para compatibilidade)
   goalDistance      String   // "10k", "half_marathon", "marathon"
@@ -304,11 +313,18 @@ model AthleteProfile {
   stravaTokenExpiry DateTime?
   
   // Histórico de lesões e informações médicas
-  injuries          Json?    // Array de lesões detalhadas
+  injuries          Json?    // Array de lesões detalhadas (legacy - mantido para compatibilidade)
   medicalConditions String?  @db.Text // Condições médicas relevantes
   medications       String?  @db.Text // Medicamentos em uso
   physicalRestrictions String? @db.Text // Restrições físicas
   weeklyAvailability Int?    @default(5) // Dias disponíveis por semana para treinar
+  
+  // NOVOS CAMPOS v1.3.0 - Lesões Detalhadas
+  injuryDetails        Json?     // Array detalhado de lesões
+  // Formato: [{ type: "fascite plantar", date: "2024-06-01", duration: "3 meses",
+  //            treatment: "fisioterapia", status: "recovered", recurringRisk: "médio" }]
+  injuryRecoveryStatus String?   // "recovered", "recovering", "chronic"
+  lastInjuryDate       DateTime? // Data da última lesão
   
   // Disponibilidade por modalidade e horários (sistema flexível)
   // Formato: [
@@ -330,13 +346,32 @@ model AthleteProfile {
   
   // Paces habituais por distância para personalização do plano
   // Formato: { "hasRunBefore": true, "paces": { "5k": "5:00-5:30", "10k": "never", ... } }
-  usualPaces        Json?    // Paces habituais em diferentes distâncias
+  usualPaces        Json?    // Paces habituais em diferentes distâncias (legacy)
+  
+  // NOVOS CAMPOS v1.3.0 - Performance Detalhada
+  bestTimes         Json?    // Melhores tempos por distância
+  // Formato: { "5k": { time: "20:00", date: "2025-01-15", vdot: 50 },
+  //           "10k": { time: "45:30", date: "2025-03-20", vdot: 48 } }
+  lastVDOTUpdate    DateTime? // Última vez que VDOT foi recalculado
 
   // Data preferida para começar o plano (se não fornecida, calcula automaticamente)
   preferredStartDate DateTime? // Quando o atleta quer começar os treinos
 
   // Histórico de lesões (legacy - mantido para compatibilidade)
   injuryHistory     String?  // JSON ou texto livre
+  
+  // NOVOS CAMPOS v1.3.0 - Infraestrutura e Recursos
+  hasGymAccess      Boolean  @default(false) // Tem acesso a academia/musculação
+  hasPoolAccess     Boolean  @default(false) // Tem acesso a piscina/natação
+  hasTrackAccess    Boolean  @default(false) // Tem acesso a pista de atletismo
+  
+  // NOVOS CAMPOS v1.3.0 - Preferências e Motivação
+  trainingPreferences Json?  // Preferências de treino
+  // Formato: { location: ["rua", "pista", "esteira"], preference: "rua",
+  //           groupTraining: true, indoorOutdoor: "outdoor" }
+  motivationFactors   Json?  // Motivação para correr
+  // Formato: { primary: "saúde", secondary: ["desafio", "social"],
+  //           goals: ["emagrecer", "competir"] }
   
   // Plano de treinamento personalizado
   hasCustomPlan     Boolean  @default(false)
