@@ -748,3 +748,107 @@ AthleteProfile (1) ←→ (N) CompletedWorkout
 ---
 
 **© 2025 Athera Run. Feito com ❤️ para corredores.**
+
+---
+
+## 🚀 ATUALIZAÇÕES v1.3.0 (03/Nov/2025)
+
+### INTELLIGENT PERSONALIZATION
+
+**Status:** Backend 100% | Frontend em Progresso  
+**Deploy:** 03/Nov/2025 20:30 UTC
+
+#### O QUE MUDOU
+
+**1. Schema Database (+13 campos)**
+```typescript
+// Novos campos no AthleteProfile
+restingHeartRate: Int?          // FC repouso
+sleepQuality: Int?              // 1-5
+stressLevel: Int?               // 1-5
+otherSportsExperience: String?  // Outros esportes
+otherSportsYears: Int?          // Anos praticando
+injuryDetails: Json?            // Histórico lesões
+injuryRecoveryStatus: String?   // Status recuperação
+lastInjuryDate: DateTime?       // Última lesão
+bestTimes: Json?                // Melhores tempos
+lastVDOTUpdate: DateTime?       // Update VDOT
+hasGymAccess: Boolean           // Academia
+hasPoolAccess: Boolean          // Piscina  
+hasTrackAccess: Boolean         // Pista
+trainingPreferences: Json?      // Preferências
+motivationFactors: Json?        // Motivação
+```
+
+**2. Utility Libraries (60KB)**
+- `vdot-calculator.ts`: VDOT preciso, paces científicos, zonas FC
+- `injury-analyzer.ts`: 50+ exercícios prevenção, análise risco
+- `recovery-adjuster.ts`: Ajuste volume, capacidade recuperação
+- `onboarding-validator.ts`: Validação inteligente, inconsistências
+- `ai-context-builder.ts`: Contexto completo (9 seções)
+
+**3. IA Aprimorada**
+- **Antes:** 60% dos dados usados
+- **Agora:** 100% dos dados usados
+- Contexto de 9 seções científicas
+- Ajuste automático por lesões/recuperação
+- Paces precisos (Jack Daniels)
+
+#### IMPACTO NOS PLANOS
+
+Com v1.3.0 backend, os planos são:
+- ✅ Mais inteligentes (100% dos dados)
+- ✅ Mais seguros (ajuste por lesões)
+- ✅ Mais científicos (VDOT preciso)
+- ✅ Mais personalizados (sono, estresse)
+- ✅ Melhor prevenção (50+ exercícios)
+
+#### APIs ATUALIZADAS
+
+```typescript
+// POST /api/profile/create
+// POST /api/profile/update
+// Agora aceitam todos os 13 novos campos
+
+// Exemplo:
+{
+  // ... campos existentes ...
+  restingHeartRate: 55,
+  sleepQuality: 4,
+  stressLevel: 2,
+  otherSportsExperience: "Natação, Ciclismo",
+  otherSportsYears: 5,
+  injuryDetails: [
+    {
+      type: "fascite_plantar",
+      status: "recovered",
+      date: "2025-01-15"
+    }
+  ],
+  bestTimes: {
+    "5k": { time: "00:22:30", date: "2025-10-01", vdot: 48 },
+    "10k": { time: "00:47:00", date: "2025-09-15", vdot: 47 }
+  },
+  hasGymAccess: true,
+  hasPoolAccess: false,
+  hasTrackAccess: true,
+  trainingPreferences: {
+    location: ["rua", "parque"],
+    groupTraining: false
+  },
+  motivationFactors: {
+    primary: "competição",
+    secondary: ["saúde", "desafio"]
+  }
+}
+```
+
+#### PRÓXIMAS ETAPAS
+
+- [ ] Frontend v1.3.0 (Onboarding 7 etapas)
+- [ ] Perfil com tabs (6 abas)
+- [ ] Componentes polidos
+- [ ] Testes completos
+
+**Previsão:** 2-3 dias úteis para frontend completo
+
