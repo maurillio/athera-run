@@ -3,7 +3,7 @@
 > Guia rápido de navegação da documentação
 
 **Última atualização:** 03 de Novembro de 2025  
-**Versão:** 1.1.0
+**Versão:** 1.3.0 (70% Implementado)
 
 ---
 
