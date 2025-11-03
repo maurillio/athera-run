@@ -2,8 +2,8 @@
 
 > Guia rápido de navegação da documentação
 
-**Última atualização:** 03 de Novembro de 2024  
-**Versão:** 1.0.0
+**Última atualização:** 03 de Novembro de 2025  
+**Versão:** 1.1.0
 
 ---
 
@@ -256,4 +256,4 @@ Se você leu até aqui, parabéns! Você agora sabe exatamente onde encontrar qu
 
 ---
 
-**© 2024 Athera Run**
+**© 2025 Athera Run**

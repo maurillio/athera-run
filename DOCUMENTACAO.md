@@ -2,8 +2,8 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Última atualização:** 03 de Novembro de 2024  
-**Versão:** 1.0.0  
+**Última atualização:** 03 de Novembro de 2025  
+**Versão:** 1.1.0  
 **URL Produção:** https://atherarun.com
 
 ---
@@ -248,14 +248,14 @@ A IA analisa e classifica automaticamente:
 {
   "A": {
     name: "Maratona de São Paulo",
-    date: "2024-06-02",
+    date: "2026-06-02",
     distance: "marathon",
     reason: "Corrida mais importante, maior distância"
   },
   "B": [
     {
       name: "Meia Maratona de SP",
-      date: "2024-04-14",
+      date: "2026-04-14",
       distance: "half_marathon",
       reason: "Preparatória importante, 7 semanas antes da A",
       weeksBeforeA: 7
@@ -264,7 +264,7 @@ A IA analisa e classifica automaticamente:
   "C": [
     {
       name: "10K Parque",
-      date: "2024-03-10",
+      date: "2026-03-10",
       distance: "10k",
       reason: "Corrida de volume na fase base",
       weeksBeforeA: 12
@@ -747,4 +747,4 @@ AthleteProfile (1) ←→ (N) CompletedWorkout
 
 ---
 
-**© 2024 Athera Run. Feito com ❤️ para corredores.**
+**© 2025 Athera Run. Feito com ❤️ para corredores.**
