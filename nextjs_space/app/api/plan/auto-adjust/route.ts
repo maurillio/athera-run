@@ -94,34 +94,116 @@ export async function POST(request: NextRequest) {
       })) : undefined,
     };
 
-    // Gerar novo plano com as mudanças
-    console.log('[AUTO-ADJUST] Gerando novo plano com configurações atualizadas...');
-    const aiPlan = await generateAIPlan(updatedProfile as any);
+    // AJUSTE PROGRESSIVO: Preservar histórico, ajustar apenas futuro
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    
+    // Encontrar semana atual (onde hoje está)
+    const semanaAtual = await prisma.customWeek.findFirst({
+      where: {
+        planId: currentPlan!.id,
+        startDate: { lte: hoje },
+        endDate: { gte: hoje }
+      },
+      include: {
+        workouts: true
+      }
+    });
+    
+    // Definir data de corte (início da semana atual, ou hoje se não encontrou)
+    const cutoffDate = semanaAtual ? semanaAtual.startDate : hoje;
+    const cutoffWeekNumber = semanaAtual ? semanaAtual.weekNumber : 1;
+    
+    console.log('[AUTO-ADJUST] Data de corte:', cutoffDate.toISOString());
+    console.log('[AUTO-ADJUST] Semana de corte:', cutoffWeekNumber);
+    console.log('[AUTO-ADJUST] Preservando semanas anteriores + treinos completados');
+    
+    // Calcular semanas restantes
+    const raceDate = profile.targetRaceDate ? new Date(profile.targetRaceDate) : new Date();
+    const weeksRemaining = Math.ceil((raceDate.getTime() - cutoffDate.getTime()) / (1000 * 60 * 60 * 24 * 7));
+    
+    console.log('[AUTO-ADJUST] Semanas restantes até corrida:', weeksRemaining);
+    
+    // Gerar novo plano APENAS para as semanas restantes
+    console.log('[AUTO-ADJUST] Gerando plano para semanas futuras...');
+    
+    // Ajustar perfil para gerar plano a partir da data de corte
+    const adjustedProfile = {
+      ...updatedProfile,
+      targetRaceDate: raceDate,
+      // IA vai gerar plano considerando que começa em cutoffDate
+    };
+    
+    const aiPlan = await generateAIPlan(adjustedProfile as any);
     console.log('[AUTO-ADJUST] Plano gerado com sucesso! Total semanas:', aiPlan.weeks.length);
 
-    // CRÍTICO: Usar transação para garantir atomicidade
-    // Se algo falhar, rollback automático (plano não fica quebrado)
+    // TRANSAÇÃO ATÔMICA: Preservar passado, ajustar futuro
     await prisma.$transaction(async (tx) => {
-      // 1. Deletar workouts antigos
-      const weekIds = currentPlan!.weeks.map(w => w.id);
-      if (weekIds.length > 0) {
-        console.log('[AUTO-ADJUST] Deletando workouts antigos...');
-        await tx.customWorkout.deleteMany({
-          where: { weekId: { in: weekIds } }
-        });
+      // 1. Encontrar semanas a partir do cutoff (futuro + semana atual)
+      const semanasFuturas = await tx.customWeek.findMany({
+        where: {
+          planId: currentPlan!.id,
+          startDate: { gte: cutoffDate }
+        },
+        include: {
+          workouts: true
+        },
+        orderBy: {
+          weekNumber: 'asc'
+        }
+      });
+      
+      console.log('[AUTO-ADJUST] Semanas futuras encontradas:', semanasFuturas.length);
+      
+      // 2. Deletar apenas workouts NÃO completados das semanas futuras
+      const weekIdsToDelete: number[] = [];
+      let totalWorkoutsPreservados = 0;
+      let totalWorkoutsRemovidos = 0;
+      
+      for (const semana of semanasFuturas) {
+        const workoutsCompletados = semana.workouts.filter(w => w.isCompleted);
+        const workoutsNaoCompletados = semana.workouts.filter(w => !w.isCompleted);
         
-        console.log('[AUTO-ADJUST] Deletando semanas antigas...');
+        if (workoutsCompletados.length > 0) {
+          console.log(`[AUTO-ADJUST] Semana ${semana.weekNumber}: ${workoutsCompletados.length} treinos completados preservados`);
+          totalWorkoutsPreservados += workoutsCompletados.length;
+        }
+        
+        // Deletar apenas workouts NÃO completados
+        if (workoutsNaoCompletados.length > 0) {
+          await tx.customWorkout.deleteMany({
+            where: {
+              id: { in: workoutsNaoCompletados.map(w => w.id) }
+            }
+          });
+          console.log(`[AUTO-ADJUST] Semana ${semana.weekNumber}: ${workoutsNaoCompletados.length} treinos não completados removidos`);
+          totalWorkoutsRemovidos += workoutsNaoCompletados.length;
+        }
+        
+        // Marcar semana para deleção apenas se não tem workouts completados
+        if (workoutsCompletados.length === 0) {
+          weekIdsToDelete.push(semana.id);
+        }
+      }
+      
+      // 3. Deletar apenas semanas SEM workouts completados
+      if (weekIdsToDelete.length > 0) {
+        console.log('[AUTO-ADJUST] Deletando', weekIdsToDelete.length, 'semanas sem treinos completados...');
         await tx.customWeek.deleteMany({
-          where: { planId: currentPlan!.id }
+          where: {
+            id: { in: weekIdsToDelete }
+          }
         });
       }
+      
+      console.log(`[AUTO-ADJUST] Total: ${totalWorkoutsPreservados} completados preservados, ${totalWorkoutsRemovidos} não completados removidos`);
 
-      // 2. Atualizar plano existente
+      // 4. Atualizar metadados do plano (preserva startDate original!)
       console.log('[AUTO-ADJUST] Atualizando metadados do plano...');
       await tx.customTrainingPlan.update({
         where: { id: currentPlan!.id },
         data: {
-          startDate: aiPlan.startDate,
+          // NÃO atualizar startDate - preserva data original
           targetRaceDate: aiPlan.targetRaceDate,
           lastRegenerated: new Date(),
           periodization: {
@@ -137,41 +219,107 @@ export async function POST(request: NextRequest) {
         }
       });
 
-      // 3. Criar novas semanas e workouts
-      console.log('[AUTO-ADJUST] Criando novas semanas...');
-      for (const weekData of aiPlan.weeks) {
-        const week = await tx.customWeek.create({
-          data: {
-            planId: currentPlan!.id,
-            weekNumber: weekData.weekNumber,
-            startDate: weekData.startDate,
-            endDate: weekData.endDate,
-            phase: weekData.phase,
-            focus: weekData.focus,
-            totalDistance: weekData.totalDistance,
-          } as any,
-        });
+      // 5. Criar ou atualizar semanas futuras
+      console.log('[AUTO-ADJUST] Criando/atualizando semanas futuras...');
+      
+      // Buscar última semana preservada para continuar numeração
+      const ultimaSemanaPreservada = await tx.customWeek.findFirst({
+        where: {
+          planId: currentPlan!.id,
+          startDate: { lt: cutoffDate }
+        },
+        orderBy: {
+          weekNumber: 'desc'
+        }
+      });
+      
+      const baseWeekNumber = ultimaSemanaPreservada ? ultimaSemanaPreservada.weekNumber : 0;
+      let semanasCriadas = 0;
+      let semanasAtualizadas = 0;
+      
+      for (let i = 0; i < aiPlan.weeks.length; i++) {
+        const weekData = aiPlan.weeks[i];
+        const weekDate = new Date(weekData.startDate);
+        
+        // Pular semanas anteriores ao cutoff (já preservadas)
+        if (weekDate < cutoffDate) {
+          continue;
+        }
+        
+        const novoWeekNumber = baseWeekNumber + i + 1;
+        
+        // Verificar se semana já existe (tem workouts completados)
+        const semanaExistente = semanasFuturas.find(s => 
+          new Date(s.startDate).getTime() === weekDate.getTime()
+        );
+        
+        let weekId: number;
+        
+        if (semanaExistente && semanaExistente.workouts.some(w => w.isCompleted)) {
+          // Atualizar semana existente (preserva workouts completados)
+          await tx.customWeek.update({
+            where: { id: semanaExistente.id },
+            data: {
+              weekNumber: novoWeekNumber,
+              phase: weekData.phase,
+              focus: weekData.focus,
+              totalDistance: weekData.totalDistance,
+            }
+          });
+          weekId = semanaExistente.id;
+          semanasAtualizadas++;
+          console.log(`[AUTO-ADJUST] Semana ${novoWeekNumber} atualizada (tem workouts completados)`);
+        } else {
+          // Criar nova semana
+          const week = await tx.customWeek.create({
+            data: {
+              planId: currentPlan!.id,
+              weekNumber: novoWeekNumber,
+              startDate: weekData.startDate,
+              endDate: weekData.endDate,
+              phase: weekData.phase,
+              focus: weekData.focus,
+              totalDistance: weekData.totalDistance,
+            } as any,
+          });
+          weekId = week.id;
+          semanasCriadas++;
+        }
 
-        const workouts = weekData.workouts.map(workout => ({
-          weekId: week.id,
-          dayOfWeek: workout.dayOfWeek,
-          date: workout.date,
-          type: workout.type,
-          subtype: workout.subtype || null,
-          title: workout.title,
-          description: workout.description,
-          distance: workout.distance || null,
-          duration: workout.duration || null,
-          targetPace: workout.targetPace || null,
-          warmup: workout.warmup || null,
-          mainSet: workout.mainSet || null,
-          cooldown: workout.cooldown || null,
-        }));
+        // Criar workouts não completados
+        const workoutsExistentes = semanaExistente?.workouts.filter(w => w.isCompleted) || [];
+        const datasExistentes = new Set(workoutsExistentes.map(w => new Date(w.date).toDateString()));
+        
+        const workoutsNovos = weekData.workouts
+          .filter(workout => {
+            const workoutDateStr = new Date(workout.date).toDateString();
+            return !datasExistentes.has(workoutDateStr); // Não criar se já tem workout completado nessa data
+          })
+          .map(workout => ({
+            weekId: weekId,
+            dayOfWeek: workout.dayOfWeek,
+            date: workout.date,
+            type: workout.type,
+            subtype: workout.subtype || null,
+            title: workout.title,
+            description: workout.description,
+            distance: workout.distance || null,
+            duration: workout.duration || null,
+            targetPace: workout.targetPace || null,
+            warmup: workout.warmup || null,
+            mainSet: workout.mainSet || null,
+            cooldown: workout.cooldown || null,
+            isCompleted: false,
+          }));
 
-        await tx.customWorkout.createMany({
-          data: workouts,
-        });
+        if (workoutsNovos.length > 0) {
+          await tx.customWorkout.createMany({
+            data: workoutsNovos,
+          });
+        }
       }
+      
+      console.log(`[AUTO-ADJUST] Semanas criadas: ${semanasCriadas}, atualizadas: ${semanasAtualizadas}`);
 
       // 4. Atualizar VDOT do perfil se mudou
       if (aiPlan.vdot && aiPlan.vdot !== profile.currentVDOT) {
@@ -184,14 +332,24 @@ export async function POST(request: NextRequest) {
     });
 
     console.log('[AUTO-ADJUST] Plano ajustado com sucesso! Transação completa.');
+    
+    // Calcular estatísticas para feedback
+    const semanasPassadas = await prisma.customWeek.count({
+      where: {
+        planId: currentPlan!.id,
+        startDate: { lt: cutoffDate }
+      }
+    });
 
     return NextResponse.json({
       success: true,
-      message: 'Plano ajustado automaticamente com sucesso!',
+      message: `Plano ajustado! ${semanasPassadas} semanas anteriores preservadas.`,
       changes: {
         totalWeeks: aiPlan.totalWeeks,
         vdot: aiPlan.vdot,
-        phases: aiPlan.phases?.length || 0
+        phases: aiPlan.phases?.length || 0,
+        preservedWeeks: semanasPassadas,
+        adjustedFrom: cutoffDate.toISOString()
       }
     });
 

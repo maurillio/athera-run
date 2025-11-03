@@ -74,12 +74,18 @@ export default function ProgressAnalysisBanner() {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success('Plano ajustado com sucesso!', { id: 'applying' });
+        const preservedWeeks = data.changes?.preservedWeeks || 0;
+        
+        const message = preservedWeeks > 0 
+          ? `Plano ajustado! ${preservedWeeks} semanas anteriores preservadas.`
+          : 'Plano ajustado com sucesso!';
+        
+        toast.success(message, { id: 'applying', duration: 4000 });
         
         // Aguardar 2s antes de recarregar para usuário ver sucesso
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 2500);
       } else {
         const errorData = await response.json();
         toast.error(errorData.error || 'Erro ao aplicar ajuste', { id: 'applying' });
