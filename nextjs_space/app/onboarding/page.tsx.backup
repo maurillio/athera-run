@@ -179,8 +179,6 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  // V1.3.0: 3-Phase Onboarding
-  // Phase 1: Runner Profile, Phase 2: Goals & Races, Phase 3: Availability
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -320,12 +318,15 @@ export default function OnboardingPage() {
   };
 
   const handleGoBack = () => {
-    // V1.3.0: Navegação simplificada para 3 fases
+    // Lógica de navegação para voltar respeitando os steps condicionais
     if (step === 3 && formData.hasRunBefore === 'no') {
-      // Se nunca correu e está nos objetivos, volta para perfil
+      // Se está no step 3 (objetivos) e nunca correu, volta para step 1
       setStep(1);
-    } else if (step > 1) {
-      // Volta um step
+    } else if (step === 2) {
+      // Se está no step 2 (paces), volta para step 1
+      setStep(1);
+    } else {
+      // Caso padrão: volta um step
       setStep(step - 1);
     }
   };
@@ -521,20 +522,20 @@ export default function OnboardingPage() {
           <CardHeader>
             <div className="flex items-center justify-between mb-2">
               <Badge variant="outline" className="text-sm">
-                Fase {step > 1 && formData.hasRunBefore === 'no' ? step - 1 : step} de {formData.hasRunBefore === 'no' ? '2' : '3'}
+                Passo {step > 1 && formData.hasRunBefore === 'no' ? step - 1 : step} de {formData.hasRunBefore === 'no' ? '3' : '4'}
               </Badge>
             </div>
             <CardTitle className="text-3xl">
-              {step === 1 && '🏃 Fase 1: Seu Perfil de Corredor'}
-              {step === 2 && '📊 Desempenho Atual'}
-              {step === 3 && '🎯 Fase 2: Objetivos e Metas'}
-              {step === 4 && '📅 Fase 3: Sua Disponibilidade'}
+              {step === 1 && 'Vamos criar seu plano personalizado!'}
+              {step === 2 && 'Seus Paces Habituais'}
+              {step === 3 && 'Seus Objetivos'}
+              {step === 4 && 'Configure sua Disponibilidade'}
             </CardTitle>
             <CardDescription>
               {step === 1 && 'Conte-nos sobre você e sua experiência com corrida'}
-              {step === 2 && 'Seus ritmos habituais nos ajudam a personalizar melhor o plano'}
-              {step === 3 && 'Defina sua corrida alvo e suas metas'}
-              {step === 4 && 'Configure os dias e modalidades que você pode treinar'}
+              {step === 2 && 'Selecione seus ritmos habituais em diferentes distâncias'}
+              {step === 3 && 'Qual é seu objetivo principal?'}
+              {step === 4 && 'Quando você pode treinar? Vamos adaptar o plano à sua rotina!'}
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
@@ -549,13 +550,6 @@ export default function OnboardingPage() {
               {/* STEP 1: Dados Básicos e Experiência */}
               {step === 1 && (
                 <>
-                  <Alert className="border-blue-300 bg-blue-50">
-                    <Activity className="h-4 w-4 text-blue-600" />
-                    <AlertDescription>
-                      <strong>🧠 IA Personalizada:</strong> Todas as informações que você fornecer serão analisadas pela nossa IA para criar um plano verdadeiramente personalizado para você.
-                    </AlertDescription>
-                  </Alert>
-                  
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Dados Físicos</h3>
                     
@@ -1192,13 +1186,13 @@ export default function OnboardingPage() {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Criando seu plano...
                     </>
-                  ) : step < 4 ? (
+                  ) : step < 3 ? (
                     <>
-                      Continuar
+                      Próximo
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </>
                   ) : (
-                    '✨ Criar Meu Plano Personalizado'
+                    'Criar Meu Plano Personalizado'
                   )}
                 </Button>
               </div>

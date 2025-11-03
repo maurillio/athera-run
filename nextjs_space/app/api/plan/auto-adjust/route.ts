@@ -28,19 +28,22 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: {
-        athleteProfile: true,
-        trainingPlan: {
+        athleteProfile: {
           include: {
-            weeks: {
-              include: { workouts: true },
-              orderBy: { weekNumber: 'asc' }
+            customPlan: {
+              include: {
+                weeks: {
+                  include: { workouts: true },
+                  orderBy: { weekNumber: 'asc' }
+                }
+              }
             }
           }
         }
       }
     });
 
-    if (!user?.trainingPlan) {
+    if (!user?.athleteProfile?.customPlan) {
       return NextResponse.json({ 
         error: 'No training plan found',
         message: 'Você ainda não tem um plano de treino.'
@@ -48,7 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     const today = startOfDay(new Date());
-    const plan = user.trainingPlan;
+    const plan = user.athleteProfile.customPlan;
 
     if (!preserveHistory) {
       return NextResponse.json({ 

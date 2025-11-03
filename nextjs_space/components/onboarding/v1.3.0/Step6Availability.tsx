@@ -14,13 +14,13 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   ];
 
   const toggleRunDay = (idx: number) => {
-    setRunDays(runDays.includes(idx) ? runDays.filter(d => d !== idx) : [...runDays, idx].sort());
+    setRunDays(runDays.includes(idx) ? runDays.filter((d: number) => d !== idx) : [...runDays, idx].sort());
   };
 
   const toggleActivity = (activity: string, day: number) => {
     const current = otherActivities[activity] || [];
     const updated = current.includes(day) 
-      ? current.filter(d => d !== day)
+      ? current.filter((d: number) => d !== day)
       : [...current, day].sort();
     
     setOtherActivities({
@@ -33,7 +33,7 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     if (runDays.length === 0) return;
     
     const cleanOther = Object.fromEntries(
-      Object.entries(otherActivities).filter(([_, days]) => days && days.length > 0)
+      Object.entries(otherActivities).filter(([_, days]: [string, any]) => days && days.length > 0)
     );
 
     onUpdate({
