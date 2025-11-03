@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, Settings, Shield, LogOut, Loader2, Crown, CreditCard } from 'lucide-react';
+import { User, Settings, Shield, LogOut, Loader2, Crown } from 'lucide-react';
 import { useState } from 'react';
 import { usePremium } from '@/hooks/use-premium';
 import PremiumBadge from '@/components/subscription/premium-badge';
@@ -109,16 +109,6 @@ export default function UserDropdown() {
             <DropdownMenuSeparator />
           </>
         )}
-        {isPremium && (
-          <>
-            <DropdownMenuItem onClick={() => router.push('/subscription')} className="cursor-pointer">
-              <CreditCard className="mr-2 h-4 w-4" />
-              <span>Minha Assinatura</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-          </>
-        )}
-        
         <DropdownMenuItem onClick={() => router.push('/perfil')} className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />
           <span>Editar Perfil</span>
