@@ -49,29 +49,39 @@ O erro acontece porque uma das seguintes configurações está incorreta:
 
 ---
 
-### 2️⃣ VERIFICAR GOOGLE CLOUD CONSOLE
+### 2️⃣ ADICIONAR REDIRECT URI NO GOOGLE CLOUD CONSOLE ⚠️
+
+**🚨 ERRO ATUAL: "redirect_uri_mismatch" - FALTA CONFIGURAR O GOOGLE!**
 
 **Acesse:** https://console.cloud.google.com/apis/credentials
 
-**Passos:**
+**Passos OBRIGATÓRIOS:**
 
-1. Clique no seu **OAuth 2.0 Client ID** (o que você está usando)
-2. Role até **"Authorized redirect URIs"**
-3. **VERIFICAR** se existe esta URL:
+1. Clique no seu **OAuth 2.0 Client ID** (que você está usando para Athera Run)
+
+2. Role até a seção **"Authorized redirect URIs"**
+
+3. Clique em **"+ ADD URI"**
+
+4. Cole **EXATAMENTE** esta URL (copie e cole!):
    ```
    https://atherarun.com/api/auth/callback/google
    ```
 
-**Se NÃO existir:**
+5. Clique em **"SAVE"** no final da página
 
-4. Clique em **"+ ADD URI"**
-5. Cole: `https://atherarun.com/api/auth/callback/google`
-6. Clique em **"SAVE"**
+**⚠️ CRÍTICO:**
+- A URL deve ser **EXATAMENTE**: `https://atherarun.com/api/auth/callback/google`
+- Sem espaços antes ou depois
+- Sem barra `/` no final
+- Deve começar com `https://` (não `http://`)
+- Copie e cole para evitar erros de digitação
 
-**⚠️ ATENÇÃO:**
-- A URL deve ser **EXATAMENTE** como mostrado acima
-- Não pode ter espaços ou barra no final
-- Deve começar com `https://`
+**✅ Deve ficar assim na lista:**
+```
+Authorized redirect URIs
+└─ https://atherarun.com/api/auth/callback/google
+```
 
 ---
 
