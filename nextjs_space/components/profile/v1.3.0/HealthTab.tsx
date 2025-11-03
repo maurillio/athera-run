@@ -5,6 +5,12 @@ export default function HealthTab({ userData, onUpdate }: any) {
   const [hasInjuryHistory, setHasInjuryHistory] = useState(userData.hasInjuryHistory ?? false);
   const [injuries, setInjuries] = useState(userData.injuryHistory || []);
   const [medicalClearance, setMedicalClearance] = useState(userData.medicalClearance ?? true);
+  
+  // v1.3.0 - Dados fisiológicos
+  const [restingHeartRate, setRestingHeartRate] = useState(userData.restingHeartRate || '');
+  const [sleepQuality, setSleepQuality] = useState(userData.sleepQuality || 3);
+  const [stressLevel, setStressLevel] = useState(userData.stressLevel || 3);
+  
   const [hasChanges, setHasChanges] = useState(false);
 
   const handleSave = () => {
@@ -12,6 +18,10 @@ export default function HealthTab({ userData, onUpdate }: any) {
       hasInjuryHistory,
       injuryHistory: hasInjuryHistory && injuries.length > 0 ? injuries : null,
       medicalClearance,
+      // v1.3.0 - Dados fisiológicos
+      restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
+      sleepQuality,
+      stressLevel,
     });
     setHasChanges(false);
   };
@@ -52,6 +62,40 @@ export default function HealthTab({ userData, onUpdate }: any) {
           ))}
         </div>
       )}
+
+      {/* v1.3.0 - Dados Fisiológicos */}
+      <div className="border-t pt-6 space-y-4">
+        <h3 className="font-semibold">📊 Dados Fisiológicos</h3>
+        
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            FC em Repouso (bpm)
+            <span className="text-gray-500 ml-2">40-80 normal para atletas</span>
+          </label>
+          <input type="number" value={restingHeartRate} 
+            onChange={(e) => { setRestingHeartRate(e.target.value); setHasChanges(true); }}
+            placeholder="Ex: 60" min="40" max="100"
+            className="w-full px-4 py-2 border rounded-lg" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Qualidade do Sono: {sleepQuality === 1 ? '1-4h (Péssima)' : sleepQuality === 2 ? '4-6h (Ruim)' : sleepQuality === 3 ? '6-7h (Regular)' : sleepQuality === 4 ? '7-8h (Boa)' : '8h+ (Excelente)'}
+          </label>
+          <input type="range" min="1" max="5" value={sleepQuality} 
+            onChange={(e) => { setSleepQuality(parseInt(e.target.value)); setHasChanges(true); }}
+            className="w-full" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Nível de Estresse: {stressLevel === 1 ? 'Muito Baixo' : stressLevel === 2 ? 'Baixo' : stressLevel === 3 ? 'Moderado' : stressLevel === 4 ? 'Alto' : 'Muito Alto'}
+          </label>
+          <input type="range" min="1" max="5" value={stressLevel} 
+            onChange={(e) => { setStressLevel(parseInt(e.target.value)); setHasChanges(true); }}
+            className="w-full" />
+        </div>
+      </div>
 
       <div className="border-t pt-6">
         <label className="flex items-center gap-3">
