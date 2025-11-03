@@ -3,7 +3,7 @@
 > Documentação técnica completa para desenvolvedores
 
 **Última atualização:** 03 de Novembro de 2025  
-**Versão:** 1.1.0
+**Versão:** 1.2.0
 
 ---
 
@@ -1627,24 +1627,100 @@ yarn ts-node check_profile_data.ts
 
 ### Implementação Técnica
 
-#### Auto-Ajuste de Disponibilidade (FREE)
+#### Auto-Ajuste Progressivo (FREE)
 
 **Endpoint:** `POST /api/plan/auto-adjust`
 
-```typescript
-// Disponível para TODOS os usuários
-// Acionado automaticamente ao mudar:
-// - trainingActivities
-// - longRunDay  
-// - Qualquer campo de disponibilidade
+**Características:**
+- Disponível para TODOS os usuários
+- **PRESERVA histórico** ao ajustar
+- Usa transação atômica (rollback se falhar)
+- Timeout de 90 segundos
+- Feedback detalhado
 
-// Fluxo:
-// 1. Usuário altera disponibilidade no perfil
-// 2. Sistema detecta mudança crítica
-// 3. Chama auto-adjust automaticamente
-// 4. Regenera plano com novas configurações
-// 5. Refresh automático da página
+**Fluxo Completo:**
+
+```typescript
+// 1. Identificar ponto de corte
+const hoje = new Date();
+const semanaAtual = await prisma.customWeek.findFirst({
+  where: {
+    planId: currentPlan.id,
+    startDate: { lte: hoje },
+    endDate: { gte: hoje }
+  }
+});
+
+const cutoffDate = semanaAtual ? semanaAtual.startDate : hoje;
+
+// 2. PRESERVAR passado + completados
+const semanasFuturas = await prisma.customWeek.findMany({
+  where: {
+    planId: currentPlan.id,
+    startDate: { gte: cutoffDate }
+  },
+  include: { workouts: true }
+});
+
+// Para cada semana futura:
+for (const semana of semanasFuturas) {
+  const completados = semana.workouts.filter(w => w.isCompleted);
+  const naoCompletados = semana.workouts.filter(w => !w.isCompleted);
+  
+  // ✅ PRESERVA completados
+  // ❌ REMOVE apenas não completados
+  await tx.customWorkout.deleteMany({
+    where: { id: { in: naoCompletados.map(w => w.id) } }
+  });
+  
+  // Semana só é deletada se não tem completados
+  if (completados.length === 0) {
+    weekIdsToDelete.push(semana.id);
+  }
+}
+
+// 3. REGENERAR futuro
+const aiPlan = await generateAIPlan(updatedProfile);
+
+// 4. CRIAR/ATUALIZAR semanas
+for (const weekData of aiPlan.weeks) {
+  const weekDate = new Date(weekData.startDate);
+  
+  // Pular semanas antes do cutoff (já preservadas)
+  if (weekDate < cutoffDate) continue;
+  
+  const semanaExistente = semanasFuturas.find(s => 
+    new Date(s.startDate).getTime() === weekDate.getTime()
+  );
+  
+  if (semanaExistente && semanaExistente.workouts.some(w => w.isCompleted)) {
+    // ATUALIZAR (tem completados)
+    await tx.customWeek.update({ where: { id: semanaExistente.id }, data: {...} });
+  } else {
+    // CRIAR nova
+    await tx.customWeek.create({ data: {...} });
+  }
+  
+  // Criar workouts APENAS para datas sem completados
+  const datasExistentes = new Set(
+    semanaExistente?.workouts
+      .filter(w => w.isCompleted)
+      .map(w => new Date(w.date).toDateString())
+  );
+  
+  const workoutsNovos = weekData.workouts.filter(workout => {
+    return !datasExistentes.has(new Date(workout.date).toDateString());
+  });
+  
+  await tx.customWorkout.createMany({ data: workoutsNovos });
+}
 ```
+
+**Resultado:**
+- ✅ Histórico 100% preservado
+- ✅ Taxa de conclusão mantida
+- ✅ Gráficos de evolução funcionando
+- ✅ Futuro ajustado com mudanças
 
 **Validação de Disponibilidade:**
 
@@ -1662,6 +1738,51 @@ function getActivityAvailability(profile) {
   if (runningDays.length === 0) {
     throw new Error('Configure pelo menos dias de corrida');
   }
+}
+```
+
+#### IA em Dias de Descanso (FREE)
+
+**Função:** `generateRestDaySuggestion()`
+
+```typescript
+// lib/ai-plan-generator.ts
+function generateRestDaySuggestion(context: {
+  phase: string;              // base, build, peak, taper
+  isCutbackWeek: boolean;
+  raceThisWeek?: any;
+  hasStrength: boolean;       // Usuário faz musculação?
+  hasSwimming: boolean;       // Usuário faz natação?
+  hasOtherActivities: boolean;
+}): string {
+  
+  // Gera descrição contextual baseada em:
+  // - Fase do treino
+  // - Proximidade de corridas
+  // - Atividades disponíveis do usuário
+  
+  // Exemplos:
+  
+  // BASE:
+  // "💤 Descanso - Dia de recuperação ativa.
+  //  
+  //  ✨ Sugestões: alongamento dinâmico, natação leve, yoga
+  //  💡 Foco: hidratação 2-3L, sono 7-9h"
+  
+  // PEAK (3 dias antes corrida A):
+  // "💤 Descanso estratégico. 🏁 Corrida A em 3 dias!
+  //  
+  //  🎯 DESCANSO ABSOLUTO:
+  //  • Evite ficar em pé por longos períodos
+  //  • Hidratação constante
+  //  • Visualização mental da prova"
+  
+  // TAPER:
+  // "💤 Descanso essencial para chegar fresco na prova.
+  //  
+  //  🏆 SEMANA DE TAPER:
+  //  • Descanso é sua prioridade #1
+  //  • Relaxe e confie no treinamento"
 }
 ```
 
