@@ -140,6 +140,12 @@ export interface AIGeneratedPlan {
   progressionStrategy: string;
   nutritionAdvice?: string;
   injuryPreventionTips?: string[];
+  
+  // Avisos importantes
+  warnings?: {
+    isShortNotice?: boolean;
+    shortNoticeMessage?: string;
+  };
 }
 
 /**
@@ -363,26 +369,40 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   const userContext = prepareUserContext(profile);
   
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const raceDate = new Date(profile.targetRaceDate);
+  raceDate.setHours(0, 0, 0, 0);
+  
   // Usar Math.ceil para incluir a semana da corrida (mesmo que seja parcial)
   const weeksCalculated = Math.ceil((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
   
-  // Garantir mínimo de 4 semanas para gerar um plano válido
-  // Se a data da corrida já passou ou é muito próxima, usar valor padrão baseado na distância
+  // SEMPRE usar a data escolhida pelo atleta (é a data da corrida dele!)
+  // Só validar se a data não é inválida (passado)
   let totalWeeks = weeksCalculated;
-  if (totalWeeks < 4) {
-    console.warn(`[AI PLAN] Data de corrida muito próxima ou no passado (${weeksCalculated} semanas). Ajustando para plano padrão.`);
-    // Definir semanas mínimas baseadas na distância
-    const minWeeksByDistance: Record<string, number> = {
-      '5K': 8,
-      '10K': 10,
-      'Meia Maratona': 12,
-      'Maratona': 16,
-      'Ultramaratona': 20,
-    };
-    totalWeeks = minWeeksByDistance[profile.goalDistance] || 12;
-    console.log(`[AI PLAN] Usando ${totalWeeks} semanas para distância ${profile.goalDistance}`);
+  let isShortNotice = false;
+  
+  if (totalWeeks < 1) {
+    // Data no passado ou hoje - INVÁLIDA
+    throw new Error('A data da corrida não pode estar no passado. Por favor, escolha uma data futura para sua corrida.');
   }
+  
+  // Verificar se o tempo é considerado curto para a distância
+  const recommendedWeeksByDistance: Record<string, number> = {
+    '5K': 8,
+    '10K': 10,
+    'Meia Maratona': 12,
+    'Maratona': 16,
+    'Ultramaratona': 20,
+  };
+  
+  const recommendedWeeks = recommendedWeeksByDistance[profile.goalDistance] || 12;
+  if (totalWeeks < recommendedWeeks) {
+    isShortNotice = true;
+    console.warn(`[AI PLAN] ⚠️ AVISO: ${totalWeeks} semanas é um tempo curto para ${profile.goalDistance}. Recomendado: ${recommendedWeeks} semanas.`);
+    console.log(`[AI PLAN] Mas vamos gerar o plano mesmo assim respeitando a data escolhida pelo atleta!`);
+  }
+  
+  console.log(`[AI PLAN] Gerando plano de ${totalWeeks} semanas até ${raceDate.toLocaleDateString('pt-BR')}${isShortNotice ? ' (tempo curto)' : ''}`)
   
   const systemPrompt = `Você é um Treinador de Corrida de Rua de Elite, com especialização em fisiologia do exercício, metodologia VDOT (Jack Daniels) e periodização clássica e moderna. Seu objetivo é criar um plano de treinamento TOTALMENTE PERSONALIZADO, seguro, sustentável e otimizado para o pico de desempenho na Corrida A.
 
@@ -611,6 +631,14 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
 
     // Expandir estratégia em plano completo
     const fullPlan = expandStrategyToPlan(strategy, profile, totalWeeks);
+    
+    // Adicionar aviso se for tempo curto
+    if (isShortNotice) {
+      fullPlan.warnings = {
+        isShortNotice: true,
+        shortNoticeMessage: `⚠️ Aviso: ${totalWeeks} semanas é um tempo considerado curto para preparação de ${profile.goalDistance}. O recomendado seria ${recommendedWeeks} semanas. O plano foi otimizado para sua data, mas considere ajustar expectativas ou focar em completar a prova com segurança.`
+      };
+    }
 
     return fullPlan;
   } catch (error) {
@@ -753,7 +781,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
   console.log(`[AI PLAN] ✅ Geradas ${weeks.length} semanas (esperado: ${totalWeeks})`);
   
-  return {
+  const plan: AIGeneratedPlan = {
     totalWeeks,
     startDate,
     targetRaceDate: new Date(profile.targetRaceDate),
@@ -767,6 +795,8 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
     nutritionAdvice: strategy.nutritionAdvice,
     injuryPreventionTips: strategy.injuryPreventionTips,
   };
+  
+  return plan;
 }
 
 /**
