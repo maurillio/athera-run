@@ -2,9 +2,16 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 03 de Novembro de 2025 20:30  
-**Versão:** 1.3.0 (Backend) / 1.2.0 (Frontend)  
-**Status:** 🟢 Produção Estável + 🔄 v1.3.0 em Deploy
+**Última atualização:** 03 de Novembro de 2025 20:56  
+**Versão:** 1.3.0 (Implementação em Progresso)  
+**Status:** 🟢 Produção Estável + 🚀 Correções Críticas Deployed
+
+### 🔥 Últimas Correções (03/Nov/2025 20:56)
+1. ✅ **Auto-ajuste preserva histórico** - Deleta apenas treinos futuros, nunca passados
+2. ✅ **Descanso com IA melhorado** - Sugestões completas de fortalecimento, mobilidade e recuperação específicas por fase
+3. ✅ **Disponibilidade com controle total** - Apenas atividades marcadas pelo usuário são incluídas (zero imposição)
+4. ✅ **Títulos consistentes** - Título, descrição e distância agora sempre batem nos treinos
+5. ✅ **UX melhorada** - Feedback visual, estados de loading, mensagens claras
 
 ---
 
