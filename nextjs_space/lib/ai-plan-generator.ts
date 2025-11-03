@@ -362,7 +362,24 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   
   const today = new Date();
   const raceDate = new Date(profile.targetRaceDate);
-  const totalWeeks = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
+  const weeksCalculated = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
+  
+  // Garantir mínimo de 4 semanas para gerar um plano válido
+  // Se a data da corrida já passou ou é muito próxima, usar valor padrão baseado na distância
+  let totalWeeks = weeksCalculated;
+  if (totalWeeks < 4) {
+    console.warn(`[AI PLAN] Data de corrida muito próxima ou no passado (${weeksCalculated} semanas). Ajustando para plano padrão.`);
+    // Definir semanas mínimas baseadas na distância
+    const minWeeksByDistance: Record<string, number> = {
+      '5K': 8,
+      '10K': 10,
+      'Meia Maratona': 12,
+      'Maratona': 16,
+      'Ultramaratona': 20,
+    };
+    totalWeeks = minWeeksByDistance[profile.goalDistance] || 12;
+    console.log(`[AI PLAN] Usando ${totalWeeks} semanas para distância ${profile.goalDistance}`);
+  }
   
   const systemPrompt = `Você é um Treinador de Corrida de Rua de Elite, com especialização em fisiologia do exercício, metodologia VDOT (Jack Daniels) e periodização clássica e moderna. Seu objetivo é criar um plano de treinamento TOTALMENTE PERSONALIZADO, seguro, sustentável e otimizado para o pico de desempenho na Corrida A.
 
