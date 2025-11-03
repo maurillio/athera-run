@@ -263,6 +263,32 @@ RETORNE JSON com semanas e treinos`
 - **Eventos:** subscription.*, invoice.*, checkout.session.completed
 - **Customer Portal:** Gerenciar assinatura
 
+## 💎 RECURSOS PREMIUM vs FREE
+
+### 🆓 Free (R$ 0)
+- ✅ Geração de plano personalizado com IA (GPT-4o)
+- ✅ Dashboard completo com visualização semanal
+- ✅ Calculadoras (VDOT, nutrição, pace)
+- ✅ Sistema multi-corridas (A/B/C)
+- ✅ Chat com treinador virtual (IA)
+- ✅ **Auto-ajuste ao alterar disponibilidade/perfil**
+- ✅ **Atualização automática ao mudar atividades**
+- ❌ Integração Strava (sync automático)
+- ❌ Análise inteligente de progresso
+- ❌ Sugestões automáticas de ajuste baseadas em treinos/feedbacks
+
+### ⭐ Premium (R$ 29,90/mês ou R$ 288/ano)
+- ✅ **Tudo do Free +**
+- ✅ **Integração Strava** - Sincronização automática de treinos
+- ✅ **Análise Inteligente de Progresso** - IA analisa seus treinos e feedbacks
+- ✅ **Ajustes Automáticos Inteligentes** baseados em:
+  - Taxa de conclusão de treinos
+  - Feedbacks e relatos de fadiga/dor
+  - Dados do Strava (ritmo, frequência cardíaca)
+  - Padrões de desempenho
+- ✅ **Notificações Proativas** - Sistema avisa quando detecta necessidade de ajuste
+- ✅ **Relatórios Detalhados** - Análise semanal do progresso
+
 ### Strava (Atividades)
 - **OAuth 2.0:** Authorization Callback Domain: `atherarun.com`
 - **Callback:** `https://atherarun.com/api/strava/callback`
@@ -362,14 +388,17 @@ git push origin main
 - [x] Geração de planos com IA (GPT-4o)
 - [x] Sistema multi-corrida (A/B/C)
 - [x] Dashboard interativo
-- [x] Integração Strava completa
+- [x] Integração Strava completa (Premium)
 - [x] Sistema de assinaturas Stripe
 - [x] Customer Portal
 - [x] Chat com treinador virtual
 - [x] Calculadoras (VDOT, nutrição)
+- [x] Auto-ajuste de plano ao mudar disponibilidade (FREE)
+- [x] Análise inteligente de progresso (Premium)
+- [x] Validação de disponibilidade (100% escolha do usuário)
 
 ### 🚧 Em Desenvolvimento (Q4 2025)
-- [ ] Ajustes inteligentes automáticos
+- [x] Ajustes inteligentes automáticos (Premium) ✅ CONCLUÍDO
 - [ ] Notificações e lembretes
 - [ ] Analytics avançados
 - [ ] Relatórios semanais por email

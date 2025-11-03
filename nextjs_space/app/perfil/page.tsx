@@ -349,6 +349,7 @@ export default function PerfilPage() {
         toast.success('Disponibilidade atualizada!');
 
         // Ajustar plano automaticamente se houver um plano ativo
+        // Disponível para TODOS os usuários (não requer Premium)
         if (profile?.hasCustomPlan) {
           toast.loading('Ajustando plano automaticamente...', { id: 'adjusting' });
           try {
@@ -356,7 +357,7 @@ export default function PerfilPage() {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                reason: 'Atualização de disponibilidade',
+                reason: 'availability_update',
                 changes: {
                   trainingActivities: editTrainingActivities,
                   longRunDay: editLongRunDay
@@ -366,12 +367,18 @@ export default function PerfilPage() {
 
             if (adjustResponse.ok) {
               toast.success('Plano ajustado automaticamente!', { id: 'adjusting' });
+              // Recarregar página para mostrar novo plano
+              setTimeout(() => {
+                router.refresh();
+              }, 1500);
             } else {
-              toast.dismiss('adjusting');
-              toast.info('Disponibilidade salva. Considere regenerar o plano para aplicar as mudanças.');
+              const errorData = await adjustResponse.json();
+              toast.error(errorData.error || 'Erro ao ajustar plano', { id: 'adjusting' });
+              toast.info('Você pode regenerar o plano manualmente se necessário.');
             }
-          } catch {
+          } catch (error) {
             toast.dismiss('adjusting');
+            toast.error('Erro ao ajustar plano automaticamente');
           }
         }
       } else {
