@@ -599,7 +599,6 @@ export default function OnboardingPage() {
                           <SelectContent>
                             <SelectItem value="male">Masculino</SelectItem>
                             <SelectItem value="female">Feminino</SelectItem>
-                            <SelectItem value="other">Outro</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
