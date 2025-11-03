@@ -1,6 +1,6 @@
 {
   "name": "athera-run",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "Athera Run - Plataforma de treinamento de corrida com IA",
   "private": true,
   "scripts": {

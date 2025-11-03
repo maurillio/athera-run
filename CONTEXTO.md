@@ -2,16 +2,16 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 03 de Novembro de 2025 20:56  
-**Versão:** 1.3.0 (Implementação em Progresso)  
-**Status:** 🟢 Produção Estável + 🚀 Correções Críticas Deployed
+**Última atualização:** 03 de Novembro de 2025 21:30  
+**Versão:** 1.3.0 Final  
+**Status:** 🟢 Produção Estável + ✅ Todas Correções Aplicadas
 
-### 🔥 Últimas Correções (03/Nov/2025 20:56)
-1. ✅ **Auto-ajuste preserva histórico** - Deleta apenas treinos futuros, nunca passados
-2. ✅ **Descanso com IA melhorado** - Sugestões completas de fortalecimento, mobilidade e recuperação específicas por fase
-3. ✅ **Disponibilidade com controle total** - Apenas atividades marcadas pelo usuário são incluídas (zero imposição)
-4. ✅ **Títulos consistentes** - Título, descrição e distância agora sempre batem nos treinos
-5. ✅ **UX melhorada** - Feedback visual, estados de loading, mensagens claras
+### 🔥 Últimas Correções (03/Nov/2025 21:30)
+1. ✅ **Onboarding 3-Fase Otimizado** - Estrutura clara: Perfil → Objetivos → Disponibilidade
+2. ✅ **Controle Total do Usuário** - Sistema NUNCA adiciona modalidades não configuradas
+3. ✅ **Rest Day Fix** - Dias de descanso não têm botão "concluir treino"
+4. ✅ **Auto-ajuste Funcional** - API robusta + preserva histórico completo
+5. ✅ **UX Melhorada** - Alertas informativos, feedback visual claro
 
 ---
 

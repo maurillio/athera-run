@@ -70,10 +70,10 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
 
           {injuries.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {injuries.map((inj, idx) => (
+              {injuries.map((inj: string, idx: number) => (
                 <span key={idx} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm flex items-center gap-2">
                   {inj}
-                  <button onClick={() => setInjuries(injuries.filter((_, i) => i !== idx))}
+                  <button onClick={() => setInjuries(injuries.filter((_: string, i: number) => i !== idx))}
                     className="hover:text-red-900">×</button>
                 </span>
               ))}

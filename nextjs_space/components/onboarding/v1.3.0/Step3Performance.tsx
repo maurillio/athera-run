@@ -18,8 +18,7 @@ export default function Step3Performance({ data, onUpdate, onNext, onBack }: any
     if (!dist || !time.m) return;
     const totalSec = (parseInt(time.h || '0') * 3600) + (parseInt(time.m) * 60) + parseInt(time.s || '0');
     const timeStr = `${time.h || '0'}:${time.m.padStart(2,'0')}:${(time.s || '0').padStart(2,'0')}`;
-    const distMeters = distances.find(d => d.value === dist)?.meters || 0;
-    const vdot = calculateVDOTFromTime(distMeters, totalSec);
+    const vdot = calculateVDOTFromTime(dist as '5k' | '10k' | '21k' | '42k', totalSec);
     
     setBestTimes({ ...bestTimes, [dist]: { time: timeStr, vdot } });
     setTime({ h: '', m: '', s: '' });
