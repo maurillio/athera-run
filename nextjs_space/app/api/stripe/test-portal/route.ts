@@ -40,7 +40,7 @@ export async function GET() {
       try {
         const portal = await stripe.billingPortal.sessions.create({
           customer: subscription.stripeCustomerId,
-          return_url: `${process.env.NEXTAUTH_URL}/subscription`,
+          return_url: `${process.env.NEXTAUTH_URL}/perfil`,
         });
         test3 = { name: 'Create portal', passed: true, data: portal.url, error: null };
       } catch (error: any) {
