@@ -148,7 +148,8 @@ export interface AIGeneratedPlan {
 function prepareUserContext(profile: AIUserProfile): string { 
   const today = new Date();
   const raceDate = new Date(profile.targetRaceDate);
-  const weeksUntilRace = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
+  // Usar Math.ceil para incluir a semana da corrida (mesmo que seja parcial)
+  const weeksUntilRace = Math.ceil((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
   
   let context = `# PERFIL DO ATLETA\n\n`;
   
@@ -268,7 +269,8 @@ function prepareUserContext(profile: AIUserProfile): string {
     profile.raceGoals.forEach(race => {
       const raceDate = new Date(race.date);
       const daysUntilRace = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-      const weeksUntilRace = Math.floor(daysUntilRace / 7);
+      // Usar Math.ceil para incluir a semana da corrida (mesmo que seja parcial)
+      const weeksUntilRace = Math.ceil(daysUntilRace / 7);
 
       context += `\n### ${race.name} (Corrida ${race.priority})\n`;
       context += `- Distância: ${race.distance}\n`;
@@ -362,7 +364,8 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   
   const today = new Date();
   const raceDate = new Date(profile.targetRaceDate);
-  const weeksCalculated = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
+  // Usar Math.ceil para incluir a semana da corrida (mesmo que seja parcial)
+  const weeksCalculated = Math.ceil((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 7));
   
   // Garantir mínimo de 4 semanas para gerar um plano válido
   // Se a data da corrida já passou ou é muito próxima, usar valor padrão baseado na distância
