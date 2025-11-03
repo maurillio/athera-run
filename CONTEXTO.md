@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 03 de Novembro de 2025 17:56  
-**Versão:** 1.1.0  
-**Status:** 🟢 Produção Estável
+**Última atualização:** 03 de Novembro de 2025 20:30  
+**Versão:** 1.3.0 (Backend) / 1.2.0 (Frontend)  
+**Status:** 🟢 Produção Estável + 🔄 v1.3.0 em Deploy
 
 ---
 
@@ -411,6 +411,26 @@ git push origin main
 1. Verificar URL: `https://atherarun.com/api/stripe/webhook`
 2. Confirmar `STRIPE_WEBHOOK_SECRET` no Vercel
 3. Testar eventos no Dashboard Stripe
+
+---
+
+## 🚀 NOVIDADES v1.3.0 (03/Nov/2025)
+
+### ✅ Backend 100% Implementado
+- [x] **Schema expandido:** 38 campos (era 25)
+- [x] **5 Utility Libraries:** 60KB de lógica científica
+  - VDOT Calculator (Jack Daniels)
+  - Injury Analyzer (50+ exercícios)
+  - Recovery Adjuster (overtraining detection)
+  - Onboarding Validator (smart validation)
+  - AI Context Builder (100% data usage)
+- [x] **APIs atualizadas:** Create + Update com todos os campos
+- [x] **IA aprimorada:** Contexto completo (9 seções)
+
+### 🔄 Frontend em Progresso
+- [ ] Onboarding redesign (7 etapas)
+- [ ] Perfil com tabs (6 abas)
+- [ ] Componentes polidos
 
 ---
 
