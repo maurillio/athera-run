@@ -924,5 +924,66 @@
       "saturday": "Sábado",
       "sunday": "Domingo"
     }
+  },
+  "perfil": {
+    "title": "Meu Perfil",
+    "subtitle": "Gerencie suas informações e objetivos de treinamento",
+    "loading": "Carregando perfil...",
+    "error": "Erro ao carregar perfil",
+    "reloadPage": "Recarregar Página",
+    "tabs": {
+      "profile": "Perfil",
+      "medical": "Médico",
+      "races": "Corridas",
+      "actions": "Ações"
+    },
+    "profileTab": {
+      "title": "Informações do Atleta",
+      "description": "Gerencie todos os aspectos do seu perfil de corredor"
+    },
+    "actions": {
+      "title": "Ações do Sistema",
+      "description": "Operações avançadas para gerenciar seu plano e perfil",
+      "regeneratePlan": {
+        "title": "Regenerar Plano de Treino",
+        "description": "Gera um novo plano baseado nas suas informações atuais. O histórico de treinos será preservado.",
+        "button": "Regenerar Plano",
+        "buttonLoading": "Regenerando...",
+        "dialogTitle": "Regenerar Plano de Treino?",
+        "dialogDescription": "Esta ação irá deletar seu plano atual e gerar um novo baseado nas suas informações atualizadas. Treinos passados serão preservados.",
+        "successDeleted": "Plano deletado! Gerando novo plano...",
+        "successGenerated": "Novo plano gerado com sucesso!",
+        "errorDelete": "Erro ao deletar plano",
+        "errorGenerate": "Erro ao gerar novo plano",
+        "errorRegenerate": "Erro ao regenerar plano"
+      },
+      "deleteProfile": {
+        "title": "Excluir Perfil de Atleta",
+        "description": "Remove permanentemente todas as suas informações de atleta e plano de treino. Esta ação NÃO pode ser desfeita!",
+        "button": "Excluir Perfil",
+        "buttonLoading": "Excluindo...",
+        "dialogTitle": "Tem certeza absoluta?",
+        "dialogIntro": "Esta ação irá:",
+        "dialogItems": {
+          "deleteProfile": "Deletar seu perfil de atleta",
+          "deletePlan": "Deletar seu plano de treino",
+          "deleteHistory": "Deletar todo o histórico de treinos",
+          "redirect": "Redirecioná-lo para o onboarding"
+        },
+        "dialogWarning": "Esta ação NÃO pode ser desfeita!",
+        "confirmButton": "Sim, excluir tudo",
+        "success": "Perfil excluído! Redirecionando...",
+        "error": "Erro ao excluir perfil"
+      }
+    },
+    "toasts": {
+      "profileUpdated": "Perfil atualizado com sucesso!",
+      "adjustPlanQuestion": "Deseja ajustar seu plano de treino?",
+      "adjustPlanButton": "Ajustar",
+      "planAdjusted": "Plano ajustado automaticamente!",
+      "errorLoadingProfile": "Erro ao carregar perfil. Recarregue a página.",
+      "errorConnection": "Erro ao carregar perfil. Verifique sua conexão.",
+      "errorUpdatingProfile": "Erro ao atualizar perfil"
+    }
   }
 }

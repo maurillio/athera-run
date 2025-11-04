@@ -916,5 +916,66 @@
       "saturday": "Saturday",
       "sunday": "Sunday"
     }
+  },
+  "perfil": {
+    "title": "My Profile",
+    "subtitle": "Manage your information and training goals",
+    "loading": "Loading profile...",
+    "error": "Error loading profile",
+    "reloadPage": "Reload Page",
+    "tabs": {
+      "profile": "Profile",
+      "medical": "Medical",
+      "races": "Races",
+      "actions": "Actions"
+    },
+    "profileTab": {
+      "title": "Athlete Information",
+      "description": "Manage all aspects of your runner profile"
+    },
+    "actions": {
+      "title": "System Actions",
+      "description": "Advanced operations to manage your plan and profile",
+      "regeneratePlan": {
+        "title": "Regenerate Training Plan",
+        "description": "Generates a new plan based on your current information. Training history will be preserved.",
+        "button": "Regenerate Plan",
+        "buttonLoading": "Regenerating...",
+        "dialogTitle": "Regenerate Training Plan?",
+        "dialogDescription": "This action will delete your current plan and generate a new one based on your updated information. Past workouts will be preserved.",
+        "successDeleted": "Plan deleted! Generating new plan...",
+        "successGenerated": "New plan successfully generated!",
+        "errorDelete": "Error deleting plan",
+        "errorGenerate": "Error generating new plan",
+        "errorRegenerate": "Error regenerating plan"
+      },
+      "deleteProfile": {
+        "title": "Delete Athlete Profile",
+        "description": "Permanently removes all your athlete information and training plan. This action CANNOT be undone!",
+        "button": "Delete Profile",
+        "buttonLoading": "Deleting...",
+        "dialogTitle": "Are you absolutely sure?",
+        "dialogIntro": "This action will:",
+        "dialogItems": {
+          "deleteProfile": "Delete your athlete profile",
+          "deletePlan": "Delete your training plan",
+          "deleteHistory": "Delete all training history",
+          "redirect": "Redirect you to onboarding"
+        },
+        "dialogWarning": "This action CANNOT be undone!",
+        "confirmButton": "Yes, delete everything",
+        "success": "Profile deleted! Redirecting...",
+        "error": "Error deleting profile"
+      }
+    },
+    "toasts": {
+      "profileUpdated": "Profile successfully updated!",
+      "adjustPlanQuestion": "Would you like to adjust your training plan?",
+      "adjustPlanButton": "Adjust",
+      "planAdjusted": "Plan automatically adjusted!",
+      "errorLoadingProfile": "Error loading profile. Please reload the page.",
+      "errorConnection": "Error loading profile. Check your connection.",
+      "errorUpdatingProfile": "Error updating profile"
+    }
   }
 }
