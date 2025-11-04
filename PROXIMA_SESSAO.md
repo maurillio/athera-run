@@ -1,8 +1,8 @@
 # 🚀 PRÓXIMA SESSÃO - Guia de Início Rápido
 
-**Data última atualização:** 04/Nov/2025 21:25 UTC  
+**Data última atualização:** 04/Nov/2025 21:15 UTC  
 **Projeto:** Athera Run - i18n v1.4.0  
-**Status Atual:** Onboarding 100% Completo - 85% Total  
+**Status Atual:** Dashboard/Plano 100% Completo - 90% Total  
 
 ---
 
@@ -10,19 +10,19 @@
 
 ### Para IA - Cole Isso:
 ```
-Continuar i18n v1.4.0 - FASE 9.4 (Dashboard/Plano)
-Status: 85% completo
-Onboarding: ✅ 100% COMPLETO (7/7 steps) 🎉
-Próximo: Dashboard e Plano pages (3-4h)
+Continuar i18n v1.4.0 - FASE 9.5 (Perfil)
+Status: 90% completo
+Dashboard/Plano: ✅ 100% COMPLETO 🎉
+Próximo: Perfil page com 7 tabs (3-4h)
 Build: ✅ Passing
-Documento: SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md
+Documento: SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md
 ```
 
 ---
 
 ## 📊 STATUS ATUAL v1.4.0 (i18n)
 
-### ✅ Completo (85%)
+### ✅ Completo (90%)
 - [x] Build system corrigido (webpack alias)
 - [x] Path resolution funcionando (@/ imports)
 - [x] Estrutura lib/i18n/ completa
@@ -44,121 +44,144 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md
   - [x] Step5Goals (primary/secondary goals, motivations)
   - [x] Step6Availability (days, activities, infrastructure, preferences)
   - [x] Step7Review (summary, confirmation, generate plan)
+- [x] **Dashboard 100% COMPLETO** ⭐
+  - [x] Welcome section com nome do usuário
+  - [x] Generate plan card para novos usuários
+  - [x] Quick stats (4 cards: next workout, current week, goal, progress)
+  - [x] Upcoming workouts (hoje e amanhã com estados visuais)
+  - [x] Quick access menu (6 links)
+  - [x] Advanced features section
+  - [x] Workout log dialog componentizado
+- [x] **Plano 100% COMPLETO** ⭐
+  - [x] Summary cards (4 cards: goal, week, progress, duration)
+  - [x] Week navigation (anterior/próxima/atual)
+  - [x] Workout list com estados (completed/incomplete/pending)
+  - [x] Week focus section
+  - [x] Quick actions menu
+  - [x] No plan state
 - [x] Build ✅ Passing (warnings esperados)
+- [x] Total de ~2,750 translation keys em 3 idiomas
 
-### ⏳ Próximas Fases (15% restante)
+### ⏳ Próximas Fases (10% restante)
 - [x] FASE 9.3.1: Onboarding main page + Steps 1-2 (COMPLETO)
-- [x] **FASE 9.3.2: Onboarding Steps 3-7 (COMPLETO)** ✅
-  - [x] Step3Performance - Performance times & VDOT
-  - [x] Step4Health - Injuries & medical conditions
-  - [x] Step5Goals - Primary goal, race, target time
-  - [x] Step6Availability - Training days, times, activities
-  - [x] Step7Review - Final review & submit
-- [ ] **FASE 9.4: Dashboard/Plano (3-4h) → 90% - PRÓXIMO**
-  - [ ] Dashboard main page (stats, today workout)
-  - [ ] Plano week view (calendar, workout cards)
-  - [ ] Workout details & actions
-- [ ] FASE 9.5: Perfil completo (3-4h) → 95%
+- [x] FASE 9.3.2: Onboarding Steps 3-7 (COMPLETO) ✅
+- [x] **FASE 9.4: Dashboard/Plano (COMPLETO)** ✅ ⭐
+  - [x] Dashboard main page (stats, today workout)
+  - [x] Plano week view (calendar, workout cards)
+  - [x] Workout log dialog component
+- [ ] **FASE 9.5: Perfil completo (3-4h) → 95% - PRÓXIMO**
+  - [ ] Perfil main page com 7 tabs
+  - [ ] Profile actions (edit, save, cancel)
+  - [ ] ~200 translation keys
 - [ ] FASE 9.6: Components globais (2h) → 98%
-- [ ] FASE 9.7: Backend Integration (2h) → 99%
-- [ ] FASE 9.8: Build & Deploy (1-2h) → 100%
+  - [ ] Header com LanguageSwitcher visível
+  - [ ] Footer traduzido
+  - [ ] Global modals/dialogs
+- [ ] FASE 9.7: Backend Integration (1h) → 99%
+  - [ ] API responses i18n
+  - [ ] Error messages
+- [ ] FASE 9.8: Build & Deploy (1h) → 100%
+  - [ ] Final testing
+  - [ ] Production deployment
 
-**Total Estimado:** 11-15h (~2 sessões)
+**Total Estimado:** 7-10h (~1 sessão grande)
 
 ---
 
 ## 🎯 PRÓXIMAS AÇÕES (Em Ordem)
 
-### 1. FASE 9.4: Dashboard/Plano (3-4h) - **PRÓXIMO IMEDIATO**
+### 1. FASE 9.5: Perfil Completo (3-4h) - **PRÓXIMO IMEDIATO**
 
 **Status Atual:**
-- ✅ Onboarding 100% completo
+- ✅ Dashboard 100% completo
+- ✅ Plano 100% completo
 - ✅ Build passing
-- ✅ 900+ translation keys implementadas
-- ⏳ Dashboard/Plano: 0% (próximo)
+- ✅ ~2,750 translation keys implementadas
+- ⏳ Perfil: 0% (próximo)
 
 **Plano de Ação:**
-1. **Dashboard Main (1h)**
-   - Migrar `app/[locale]/page.tsx`
-   - Adicionar ~50 translation keys
-   - Traduzir stats (completed, upcoming, week, month)
-   - Traduzir "Today's Workout" section
+1. **Perfil Structure (1h)**
+   - Migrar `app/perfil/page.tsx` → `app/[locale]/perfil/page.tsx`
+   - Criar estrutura com 7 tabs
+   - Adicionar ~50 translation keys base
 
-2. **Plano Week View (1h)**
-   - Migrar `app/[locale]/plano/page.tsx`
-   - Migrar `components/plano/WeekView.tsx`
-   - Adicionar ~40 translation keys
-   - Traduzir workout types (easy, threshold, interval, long, rest)
-   - Traduzir intensity levels
+2. **Profile Tabs (2h)**
+   - Tab 1: Overview (visão geral)
+   - Tab 2: Dados Pessoais (age, gender, weight, height)
+   - Tab 3: Histórico Esportivo (running experience)
+   - Tab 4: Performance (best times, VDOT)
+   - Tab 5: Saúde (injuries, recovery)
+   - Tab 6: Objetivos (goals, races)
+   - Tab 7: Disponibilidade (training days, preferences)
+   - Adicionar ~150 translation keys
 
-3. **Plano Actions (1h)**
-   - Migrar `components/plano/WorkoutCard.tsx`
-   - Migrar `components/plano/AdjustModal.tsx`
-   - Adicionar ~30 translation keys
-   - Traduzir actions (mark-complete, skip, reschedule)
+3. **Profile Actions (30min)**
+   - Edit mode toggle
+   - Save/Cancel buttons
+   - Regenerate plan button
+   - Adicionar ~20 translation keys
 
 4. **Testing & Review (30min)**
-   - Testar rotas: `/pt-BR/plano`, `/en/plano`, `/es/plano`
-   - Verificar switch de idioma
+   - Testar todas as tabs
+   - Verificar edição/salvamento
    - Build & commit
 
 **Arquivos a modificar:**
-- `app/[locale]/page.tsx` (dashboard home)
-- `app/[locale]/plano/page.tsx` (plano main)
-- `components/plano/WeekView.tsx`
-- `components/plano/WorkoutCard.tsx`
-- `components/plano/WorkoutDetails.tsx`
-- `components/plano/AdjustModal.tsx`
-- `lib/i18n/translations/*.json` (~120 keys × 3 = 360 keys)
+- `app/perfil/page.tsx` → `app/[locale]/perfil/page.tsx`
+- `lib/i18n/translations/*.json` (~200 keys × 3 = 600 keys)
 
-### 2. FASE 9.5: Perfil Completo (3-4h)
+### 2. FASE 9.6: Components Globais (2h)
 - Header com LanguageSwitcher visível
-- Perfil com 7 tabs traduzidas (~200 keys)
-- Profile actions (edit, save, cancel)
+- Footer traduzido
+- Global modals/dialogs
 
 ---
 
 ## 📝 DOCUMENTOS IMPORTANTES
 
 ### Leitura Obrigatória
-1. **⭐ SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md** - Onboarding 100% (Steps 3-7)
-2. **SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md** - Onboarding Steps 1-2
-3. **CONTEXTO.md** - Visão geral do projeto
-4. **SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md** - Auth pages completas
-5. **SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md** - Infraestrutura (70%)
+1. **⭐ SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md** - Dashboard/Plano 100% (NOVO)
+2. **SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md** - Onboarding 100% (Steps 3-7)
+3. **SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md** - Onboarding Steps 1-2
+4. **CONTEXTO.md** - Visão geral do projeto
+5. **SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md** - Auth pages completas
+6. **SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md** - Infraestrutura (70%)
 
 ---
 
 ## 🚀 TEMPLATE DE INÍCIO
 
 ```
-Continuar i18n v1.4.0 - FASE 9.4 (Dashboard/Plano)
+Continuar i18n v1.4.0 - FASE 9.5 (Perfil)
 
 Status:
 - v1.3.0: 100% em produção ✅
-- i18n: 85% completo
+- i18n: 90% completo
 - Infraestrutura: ✅ Completa
 - Auth pages: ✅ Completas (login/signup em 3 idiomas)
 - Onboarding: ✅ 100% COMPLETO (7/7 steps) 🎉
-- Dashboard/Plano: ⏳ PRÓXIMO
+- Dashboard: ✅ 100% COMPLETO 🎉
+- Plano: ✅ 100% COMPLETO 🎉
+- Perfil: ⏳ PRÓXIMO
 
 Prioridades:
-1. Dashboard main (1h) - Stats e Today Workout
-2. Plano week view (1h) - Calendar e workout cards
-3. Plano actions (1h) - Complete, skip, reschedule
-4. Testing (30min) - 3 idiomas funcionais
+1. Migrar app/perfil/page.tsx → app/[locale]/perfil/page.tsx
+2. Criar estrutura com 7 tabs
+3. Adicionar ~200 translation keys × 3 idiomas
+4. Profile actions (edit, save, cancel)
+5. Testing completo
 
 Documentos lidos:
-- SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md ⭐
+- SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md ⭐
 - PROXIMA_SESSAO.md
 - CONTEXTO.md
 
-Pronto para FASE 9.4!
+Pronto para FASE 9.5!
 ```
 
 ---
 
 **© 2025 Athera Run - i18n v1.4.0**  
-**Status:** 85% Completo | Onboarding 100% (7/7) ✅ | Next: Dashboard/Plano  
-**Sessão Anterior:** 04/Nov/2025 20:44-21:24 UTC (40min, extremamente produtiva)  
-**Commits:** dbfa31b (onboarding 3-7), cb1dfd9 (onboarding 1-2), ad82161 (auth)
+**Status:** 90% Completo | Dashboard/Plano 100% ✅ | Next: Perfil  
+**Sessão Anterior:** 04/Nov/2025 21:05-21:15 UTC (10min, extremamente produtiva)  
+**Commits:** 83cd924 (dashboard/plano), dbfa31b (onboarding 3-7), cb1dfd9 (onboarding 1-2)
