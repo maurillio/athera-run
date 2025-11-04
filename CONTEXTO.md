@@ -2,13 +2,13 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 04 de Novembro de 2025 19:30 UTC  
+**Última atualização:** 04 de Novembro de 2025 19:45 UTC  
 **Versão Atual:** 1.3.0 (100% Implementado, Auditado e Testado + Onboarding Revisado)  
-**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (60%)  
-**Status:** ✅ v1.3.0 Produção Completa | 🔧 v1.4.0 Build Fix Aplicado
+**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (70%)  
+**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Infraestrutura Completa
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
-> **🌐 i18n v1.4.0:** Build System Corrigido - Ver: [SESSAO_04NOV2025_i18n_BUILD_FIX.md](./SESSAO_04NOV2025_i18n_BUILD_FIX.md)
+> **🌐 i18n v1.4.0:** Infraestrutura 100% - Ver: [SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md](./SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md)
 
 ### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
@@ -26,18 +26,23 @@
 13. ✅ **User Tested** - mmaurillio2@gmail.com confirmou funcionamento
 14. ✅ **Onboarding Revision** - 3 componentes atualizados, +290 linhas, 100% campos coletados
 
-### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 19:30)
+### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 19:45)
 1. ✅ **Build System Fix** - Webpack alias configurado corretamente
 2. ✅ **Path Resolution** - @/ imports funcionando (components, lib, hooks)
-3. ✅ **Infraestrutura Base** - lib/i18n/, config, hooks, translations (pt-BR, en, es)
-4. ⏳ **Translations Expansion** - Básicos feitos (282 linhas), expandir para ~1000
-5. ⏳ **Pages Migration** - Migrar para app/[locale]/* estrutura
-6. ⏳ **Components Translation** - Traduzir todos os componentes
-7. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
+3. ✅ **Infraestrutura Completa** - lib/i18n/, config, hooks, middleware
+4. ✅ **Translations COMPLETAS** - ~1000 linhas × 3 idiomas (pt-BR, en, es) = 1470+ keys
+5. ✅ **[locale] Structure** - app/[locale]/ layout e routing
+6. ✅ **LanguageSwitcher** - Component completo com cookie persistence
+7. ⏳ **Pages Migration** - Login/Signup → Dashboard → Onboarding → Perfil
+8. ⏳ **Components Translation** - Header, Footer, Profile tabs
+9. ⏳ **Backend Integration** - User.locale field, API updates
+10. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
 
-**Progresso:** 15% → 60% (Build fix = grande salto!)  
-**Documentação:** [SESSAO_04NOV2025_i18n_BUILD_FIX.md](./SESSAO_04NOV2025_i18n_BUILD_FIX.md)  
-**Próximo:** Expandir translations + Middleware completo
+**Progresso:** 15% → 70% (Infraestrutura completa!)  
+**Cobertura:** Common (35 keys), Auth (40+), Onboarding (200+), Profile (100+), Dashboard (40+), Plan (50+)  
+**Documentação:** [SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md](./SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md)  
+**Próximo:** FASE 9.2 - Implementar login/signup pages com i18n  
+**Estimativa:** 16-22h restantes (~3-4 sessões)
 
 ---
 
