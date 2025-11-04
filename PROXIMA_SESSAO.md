@@ -1,8 +1,8 @@
 # 🚀 PRÓXIMA SESSÃO - Guia de Início Rápido
 
-**Data última atualização:** 04/Nov/2025 21:50 UTC  
+**Data última atualização:** 04/Nov/2025 22:00 UTC  
 **Projeto:** Athera Run - i18n v1.4.0  
-**Status Atual:** Global Components 100% Completo - 95% Total  
+**Status Atual:** Backend Integration 100% Completo - 97% Total  
 
 ---
 
@@ -10,19 +10,19 @@
 
 ### Para IA - Cole Isso:
 ```
-Continuar i18n v1.4.0 - FASE 9.7 (Backend Integration)
-Status: 95% completo
-Global Components: ✅ 100% COMPLETO 🎉
-Próximo: User.locale field, API errors (2-3h)
+Continuar i18n v1.4.0 - FASE 9.8 (Testing & Polish)
+Status: 97% completo
+Backend Integration: ✅ 100% COMPLETO 🎉
+Próximo: Manual testing, edge cases, UI polish (1-2h)
 Build: ✅ Passing
-Documento: SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md
+Documento: SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md
 ```
 
 ---
 
 ## 📊 STATUS ATUAL v1.4.0 (i18n)
 
-### ✅ Completo (92%)
+### ✅ Completo (97%)
 - [x] Build system corrigido (webpack alias)
 - [x] Path resolution funcionando (@/ imports)
 - [x] Estrutura lib/i18n/ completa
@@ -69,10 +69,18 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md
   - [x] PaywallModal (benefits, CTA)
   - [x] Error pages (404, generic error)
   - [x] ~70 translation keys × 3 idiomas
+- [x] **Backend Integration 100% COMPLETO** ⭐
+  - [x] User.locale field no Prisma schema
+  - [x] Database migration criada
+  - [x] API route /api/user/locale
+  - [x] API utils com i18n (ApiResponse, getApiMessage)
+  - [x] 81 API messages (errors + success) × 3 idiomas
+  - [x] LanguageSwitcher salva no backend
+  - [x] getLocaleFromRequest utility
 - [x] Build ✅ Passing (warnings esperados)
-- [x] Total de ~3,200 translation keys em 3 idiomas
+- [x] Total de ~3,300 translation keys em 3 idiomas
 
-### ⏳ Próximas Fases (8% restante)
+### ⏳ Próximas Fases (3% restante)
 - [x] FASE 9.3.1: Onboarding main page + Steps 1-2 (COMPLETO)
 - [x] FASE 9.3.2: Onboarding Steps 3-7 (COMPLETO) ✅
 - [x] **FASE 9.4: Dashboard/Plano (COMPLETO)** ✅ ⭐
@@ -88,75 +96,83 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md
   - [x] PaywallModal traduzido
   - [x] Error pages (404, generic)
   - [x] 70 translation keys × 3 idiomas
-- [ ] **FASE 9.7: Backend Integration (2-3h) → 97% - PRÓXIMO**
-  - [ ] User.locale field no schema
-  - [ ] API error messages i18n
-  - [ ] Email templates (opcional)
-- [ ] FASE 9.8: Testing & Polish (1-2h) → 99%
-  - [ ] API responses i18n
-  - [ ] Error messages
-- [ ] FASE 9.8: Testing & Polish (1h) → 99%
-  - [ ] Testes em 3 idiomas
-  - [ ] Correções finais
+- [x] **FASE 9.7: Backend Integration (COMPLETO)** ✅ ⭐
+  - [x] User.locale field no schema
+  - [x] API error messages i18n
+  - [x] API utils with i18n support
+  - [x] LanguageSwitcher backend save
+- [ ] **FASE 9.8: Testing & Polish (1-2h) → 99% - PRÓXIMO**
+  - [ ] Manual testing em 3 idiomas
+  - [ ] Edge cases e fallbacks
+  - [ ] UI polish e correções
 - [ ] FASE 9.9: Build & Deploy (1h) → 100%
   - [ ] Deploy em produção
+  - [ ] Apply migration
   - [ ] Documentação final
 
-**Total Estimado:** 4-6h (~1 sessão)
+**Total Estimado:** 2-3h (1 sessão curta)
 
 ---
 
 ## 🎯 PRÓXIMAS AÇÕES (Em Ordem)
 
-### 1. FASE 9.7: Backend Integration (2-3h) - **PRÓXIMO IMEDIATO**
+### 1. FASE 9.8: Testing & Polish (1-2h) - **PRÓXIMO IMEDIATO**
 
 **Status Atual:**
-- ✅ Global Components 100% completo ⭐
+- ✅ Backend Integration 100% completo ⭐
 - ✅ Build passing
-- ✅ ~3,200 translation keys implementadas
-- ⏳ Backend Integration: 0% (próximo)
+- ✅ ~3,300 translation keys implementadas
+- ✅ User.locale field + migration
+- ✅ API utils com i18n
+- ⏳ Testing & Polish: 0% (próximo)
 
 **Plano de Ação:**
-1. **User.locale Field (1h)**
-   - Add `locale` field to Prisma schema
-   - Create migration
-   - Default to browser detection
-   - Update on language switcher change
-   - Persist user preference
+1. **Manual Testing (30-45min)**
+   - Test all 3 languages (pt-BR, en, es)
+   - Test language switcher (cookie + DB)
+   - Test auth flow in all languages
+   - Test onboarding in all languages
+   - Test dashboard/plano/perfil in all languages
+   - Test API responses with correct locale
 
-2. **API Error Messages (1h)**
-   - Translate API error responses
-   - Translate validation errors
-   - Translate success messages
-   - Update toast notifications
+2. **Edge Cases (15-30min)**
+   - Missing translations (fallback to pt-BR)
+   - Invalid locale in cookie
+   - Database error on locale save
+   - API errors with correct locale
+   - Locale persistence after logout/login
 
-3. **Email Templates (1h - opcional)**
-   - Welcome emails
-   - Password reset emails
-   - Notification emails
+3. **UI Polish (15-30min)**
+   - Text overflow issues
+   - Button sizing across languages
+   - Review translations quality
+   - Fix any UI issues found
+   - Date/time formatting per locale (if needed)
+   - Number formatting (1,000 vs 1.000) (if needed)
 
-**Arquivos a modificar:**
-- `prisma/schema.prisma`
-- `prisma/migrations/`
-- `lib/i18n/config.ts`
-- `app/api/*/route.ts`
-- Email templates (se existirem)
+**Arquivos a testar:**
+- All pages in `/[locale]/`
+- Language switcher behavior
+- API responses
+- Database persistence
 
-### 2. FASE 9.8: Testing & Polish (1-2h)
-- Manual testing em 3 idiomas
-- Edge cases e fallbacks
-- UI polish e correções
+### 2. FASE 9.9: Deploy & Documentation (1h)
+- Final build test
+- Apply database migration
+- Push to production
+- Verify on atherarun.com
+- Update documentation
 
 ---
 
 ## 📝 DOCUMENTOS IMPORTANTES
 
 ### Leitura Obrigatória
-1. **⭐ SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md** - Global Components 100% (NOVO)
-2. **SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md** - Perfil 100%
-3. **SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md** - Dashboard/Plano 100%
+1. **⭐ SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md** - Backend Integration 100% (NOVO)
+2. **SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md** - Global Components 100%
+3. **SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md** - Perfil 100%
 4. **CONTEXTO.md** - Visão geral do projeto
-5. **SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md** - Onboarding 100%
+5. **SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md** - Dashboard/Plano 100%
 6. **SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md** - Infraestrutura (70%)
 
 ---
@@ -164,11 +180,11 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md
 ## 🚀 TEMPLATE DE INÍCIO
 
 ```
-Continuar i18n v1.4.0 - FASE 9.7 (Backend Integration)
+Continuar i18n v1.4.0 - FASE 9.8 (Testing & Polish)
 
 Status:
 - v1.3.0: 100% em produção ✅
-- i18n: 95% completo
+- i18n: 97% completo
 - Infraestrutura: ✅ Completa
 - Auth pages: ✅ Completas (login/signup em 3 idiomas)
 - Onboarding: ✅ 100% COMPLETO (7/7 steps) 🎉
@@ -176,26 +192,27 @@ Status:
 - Plano: ✅ 100% COMPLETO 🎉
 - Perfil: ✅ 100% COMPLETO 🎉
 - Global Components: ✅ 100% COMPLETO 🎉
-- Backend Integration: ⏳ PRÓXIMO
+- Backend Integration: ✅ 100% COMPLETO 🎉
+- Testing & Polish: ⏳ PRÓXIMO
 
 Prioridades:
-1. Add User.locale field to Prisma schema
-2. Create migration and update User model
-3. Implement locale persistence on language switch
-4. Translate API error messages
-5. Update toast notifications
+1. Manual testing em 3 idiomas (pt-BR, en, es)
+2. Test language switcher (cookie + DB persistence)
+3. Test API responses with correct locale
+4. Edge cases (missing translations, fallbacks)
+5. UI polish (text overflow, button sizing)
 
 Documentos lidos:
-- SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md ⭐
+- SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md ⭐
 - PROXIMA_SESSAO.md
 - CONTEXTO.md
 
-Pronto para FASE 9.7!
+Pronto para FASE 9.8!
 ```
 
 ---
 
 **© 2025 Athera Run - i18n v1.4.0**  
-**Status:** 95% Completo | Global Components 100% ✅ | Next: Backend Integration  
-**Sessão Anterior:** 04/Nov/2025 21:38-21:50 UTC (12min, extremamente rápida)  
-**Commits:** 13c1353 (global components), b8954b5 (perfil), 83cd924 (dashboard/plano)
+**Status:** 97% Completo | Backend Integration 100% ✅ | Next: Testing & Polish  
+**Sessão Anterior:** 04/Nov/2025 21:50-22:00 UTC (10min, extremamente rápida)  
+**Commits:** b03f5a0 (backend), 13c1353 (global components), b8954b5 (perfil)

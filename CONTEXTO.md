@@ -2,13 +2,13 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 04 de Novembro de 2025 21:50 UTC  
+**Última atualização:** 04 de Novembro de 2025 22:00 UTC  
 **Versão Atual:** 1.3.0 (100% Implementado, Auditado e Testado)  
-**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (95%)  
-**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Global Components 100% ✅
+**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (97%)  
+**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Backend Integration 100% ✅
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
-> **🌐 i18n v1.4.0:** Global Components 100% Completo - Ver: [SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md](./SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md)
+> **🌐 i18n v1.4.0:** Backend Integration 100% Completo - Ver: [SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md](./SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md)
 
 ### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
@@ -26,13 +26,13 @@
 13. ✅ **User Tested** - mmaurillio2@gmail.com confirmou funcionamento
 14. ✅ **Onboarding Revision** - 3 componentes atualizados, +290 linhas, 100% campos coletados
 
-### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 21:30)
+### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 22:00)
 1. ✅ **Build System Fix** - Webpack alias configurado + TypeScript 5.9.3 instalado
 2. ✅ **Path Resolution** - @/ imports funcionando (components, lib, hooks)
 3. ✅ **Infraestrutura Completa** - lib/i18n/, config, hooks, middleware
 4. ✅ **Translations BASE** - 1000+ keys × 3 idiomas (pt-BR, en, es) = 3000+ keys
 5. ✅ **[locale] Structure** - app/[locale]/ layout e routing
-6. ✅ **LanguageSwitcher** - Component completo com cookie persistence
+6. ✅ **LanguageSwitcher** - Component completo com cookie + DB persistence
 7. ✅ **Login/Signup Pages** - 100% i18n em 3 idiomas, build passando
 8. ✅ **Onboarding 100% COMPLETO (7/7 steps)** ⭐
    - ✅ Main Page - Estrutura completa (7 steps, progress bar, navigation)
@@ -61,13 +61,20 @@
    - ✅ UserDropdown (login, signup, menu items)
    - ✅ PaywallModal (benefits, CTA)
    - ✅ Error pages (404, generic error)
-13. ⏳ **Backend Integration** - User.locale field, API errors (PRÓXIMO - 2-3h)
-14. ⏳ **Testing & Polish** - Manual testing, edge cases
-15. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
+13. ✅ **Backend Integration 100% COMPLETO** ⭐
+   - ✅ User.locale field no Prisma schema (default: 'pt-BR')
+   - ✅ Database migration criada (20251104215000_add_user_locale)
+   - ✅ API route /api/user/locale para persistir preferência
+   - ✅ API utils com i18n (ApiResponse, getApiMessage, getLocaleFromRequest)
+   - ✅ 81 API messages (15 errors + 12 success) × 3 idiomas
+   - ✅ LanguageSwitcher atualizado para salvar no backend
+   - ✅ Locale detection (priority: User.locale > Cookie > Accept-Language)
+14. ⏳ **Testing & Polish** - Manual testing, edge cases, UI polish (PRÓXIMO - 1-2h)
+15. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção (1h)
 
-**Progresso:** 15% → 95% (Global Components 100% completo) ⭐  
+**Progresso:** 15% → 97% (Backend Integration 100% completo) ⭐  
 **Rotas i18n:** Login, Signup, Onboarding, Dashboard, Plano, Perfil (6 rotas × 3 idiomas = 18 rotas)  
-**Translation Keys Totais:** ~3,200 implementadas  
+**Translation Keys Totais:** ~3,300 implementadas  
 **Cobertura Detalhada:**
   - Common: 40 keys × 3 = 120
   - Auth: 45 keys × 3 = 135
@@ -76,10 +83,11 @@
   - Plano: 70 keys × 3 = 210
   - Perfil: 60 keys × 3 = 180
   - Global: 70 keys × 3 = 210
-  - **Total: ~655 unique keys × 3 idiomas = ~1,965 translation keys**
-**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md](./SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md)  
-**Próximo:** FASE 9.7 - Backend Integration (User.locale, API errors) - 2-3h  
-**Estimativa:** 4-6h restantes (~1 sessão)  
+  - API: 27 keys × 3 = 81
+  - **Total: ~682 unique keys × 3 idiomas = ~2,046 translation keys + estrutura**
+**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md](./SESSAO_04NOV2025_i18n_FASE9.7_BACKEND.md)  
+**Próximo:** FASE 9.8 - Testing & Polish (manual testing, edge cases) - 1-2h  
+**Estimativa:** 2-3h restantes (~1 sessão curta)  
 **Build:** ✅ Passing (warnings esperados para páginas dinâmicas)
 
 ---
