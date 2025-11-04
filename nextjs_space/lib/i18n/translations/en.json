@@ -97,6 +97,8 @@
       "namePlaceholder": "How would you like to be called",
       "email": "Email",
       "emailPlaceholder": "your@email.com",
+      "age": "Age",
+      "agePlaceholder": "Ex: 32",
       "gender": "Gender",
       "genderOptions": {
         "male": "Male",
@@ -106,10 +108,33 @@
       },
       "birthDate": "Date of birth",
       "birthDatePlaceholder": "MM/DD/YYYY",
-      "weight": "Current weight",
-      "weightPlaceholder": "In kg",
-      "height": "Height",
-      "heightPlaceholder": "In cm",
+      "weight": "Weight (kg)",
+      "weightPlaceholder": "Ex: 70",
+      "height": "Height (cm)",
+      "heightPlaceholder": "Ex: 175",
+      "bmi": "Your BMI",
+      "physiological": {
+        "title": "Physiological Data",
+        "restingHR": "Resting HR (bpm)",
+        "restingHRNote": "upon waking",
+        "restingHRPlaceholder": "Ex: 60",
+        "sleepQuality": "Sleep Quality",
+        "sleepLevels": {
+          "poor": "Poor",
+          "fair": "Fair",
+          "good": "Good",
+          "veryGood": "Very Good",
+          "excellent": "Excellent"
+        },
+        "stressLevel": "Stress Level",
+        "stressLevels": {
+          "low": "Low",
+          "mild": "Mild",
+          "moderate": "Moderate",
+          "high": "High",
+          "veryHigh": "Very High"
+        }
+      },
       "errors": {
         "nameRequired": "Name is required",
         "emailRequired": "Email is required",

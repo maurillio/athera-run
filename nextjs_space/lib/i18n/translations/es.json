@@ -97,6 +97,8 @@
       "namePlaceholder": "¿Cómo te gustaría que te llamáramos?",
       "email": "Correo electrónico",
       "emailPlaceholder": "tu@email.com",
+      "age": "Edad",
+      "agePlaceholder": "Ej: 32",
       "gender": "Género",
       "genderOptions": {
         "male": "Masculino",
@@ -106,10 +108,33 @@
       },
       "birthDate": "Fecha de nacimiento",
       "birthDatePlaceholder": "DD/MM/AAAA",
-      "weight": "Peso actual",
-      "weightPlaceholder": "En kg",
-      "height": "Altura",
-      "heightPlaceholder": "En cm",
+      "weight": "Peso (kg)",
+      "weightPlaceholder": "Ej: 70",
+      "height": "Altura (cm)",
+      "heightPlaceholder": "Ej: 175",
+      "bmi": "Tu IMC",
+      "physiological": {
+        "title": "Datos Fisiológicos",
+        "restingHR": "FC en Reposo (bpm)",
+        "restingHRNote": "al despertar",
+        "restingHRPlaceholder": "Ej: 60",
+        "sleepQuality": "Calidad del Sueño",
+        "sleepLevels": {
+          "poor": "Mala",
+          "fair": "Regular",
+          "good": "Buena",
+          "veryGood": "Muy Buena",
+          "excellent": "Excelente"
+        },
+        "stressLevel": "Nivel de Estrés",
+        "stressLevels": {
+          "low": "Bajo",
+          "mild": "Leve",
+          "moderate": "Moderado",
+          "high": "Alto",
+          "veryHigh": "Muy Alto"
+        }
+      },
       "errors": {
         "nameRequired": "El nombre es obligatorio",
         "emailRequired": "El correo es obligatorio",

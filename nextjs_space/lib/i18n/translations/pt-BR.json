@@ -97,6 +97,8 @@
       "namePlaceholder": "Como você gostaria de ser chamado",
       "email": "E-mail",
       "emailPlaceholder": "seu@email.com",
+      "age": "Idade",
+      "agePlaceholder": "Ex: 32",
       "gender": "Gênero",
       "genderOptions": {
         "male": "Masculino",
@@ -106,10 +108,33 @@
       },
       "birthDate": "Data de nascimento",
       "birthDatePlaceholder": "DD/MM/AAAA",
-      "weight": "Peso atual",
-      "weightPlaceholder": "Em kg",
-      "height": "Altura",
-      "heightPlaceholder": "Em cm",
+      "weight": "Peso (kg)",
+      "weightPlaceholder": "Ex: 70",
+      "height": "Altura (cm)",
+      "heightPlaceholder": "Ex: 175",
+      "bmi": "Seu IMC",
+      "physiological": {
+        "title": "Dados Fisiológicos",
+        "restingHR": "FC Repouso (bpm)",
+        "restingHRNote": "ao acordar",
+        "restingHRPlaceholder": "Ex: 60",
+        "sleepQuality": "Qualidade do Sono",
+        "sleepLevels": {
+          "poor": "Ruim",
+          "fair": "Regular",
+          "good": "Bom",
+          "veryGood": "Muito Bom",
+          "excellent": "Ótimo"
+        },
+        "stressLevel": "Nível de Estresse",
+        "stressLevels": {
+          "low": "Baixo",
+          "mild": "Leve",
+          "moderate": "Moderado",
+          "high": "Alto",
+          "veryHigh": "Muito Alto"
+        }
+      },
       "errors": {
         "nameRequired": "Nome é obrigatório",
         "emailRequired": "E-mail é obrigatório",
@@ -126,6 +151,7 @@
     "step2": {
       "title": "Experiência em Corrida",
       "subtitle": "Conte-nos sobre sua experiência com corrida",
+      "hasRunBefore": "Já correu antes?",
       "experienceLevel": "Nível de experiência",
       "experienceLevelOptions": {
         "beginner": "Iniciante",
@@ -137,16 +163,23 @@
         "expert": "Especialista",
         "expertDesc": "Atleta competitivo"
       },
-      "yearsRunning": "Há quanto tempo você corre?",
-      "yearsRunningPlaceholder": "Em anos",
-      "weeklyVolume": "Volume semanal atual",
-      "weeklyVolumePlaceholder": "Km por semana",
+      "yearsRunning": "Há quantos anos corre?",
+      "yearsRunningPlaceholder": "Ex: 2",
+      "weeklyVolume": "Volume semanal atual (km)",
+      "weeklyVolumePlaceholder": "Ex: 30",
       "weeklyFrequency": "Frequência semanal",
       "weeklyFrequencyPlaceholder": "Treinos por semana",
-      "longestRun": "Maior distância já corrida",
-      "longestRunPlaceholder": "Em km",
+      "longestRun": "Maior corrida recente (km)",
+      "longestRunPlaceholder": "Ex: 15",
       "preferredPace": "Pace confortável",
       "preferredPacePlaceholder": "min/km (ex: 5:30)",
+      "otherSports": {
+        "title": "Outros Esportes",
+        "sports": "Quais esportes pratica/praticou?",
+        "sportsPlaceholder": "Ex: Natação, Ciclismo",
+        "years": "Por quantos anos?",
+        "yearsPlaceholder": "Ex: 5"
+      },
       "errors": {
         "experienceLevelRequired": "Selecione seu nível de experiência",
         "yearsRunningInvalid": "Informe um valor válido",
