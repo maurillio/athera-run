@@ -2,13 +2,13 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 04 de Novembro de 2025 20:15 UTC  
+**Última atualização:** 04 de Novembro de 2025 20:33 UTC  
 **Versão Atual:** 1.3.0 (100% Implementado, Auditado e Testado + Onboarding Revisado)  
-**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (75%)  
-**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Auth Pages Completas
+**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (78% parcial)  
+**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Onboarding 2/7 Steps
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
-> **🌐 i18n v1.4.0:** Auth Pages 100% - Ver: [SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md](./SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md)
+> **🌐 i18n v1.4.0:** Onboarding Steps 1-2 - Ver: [SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md](./SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md)
 
 ### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
@@ -26,7 +26,7 @@
 13. ✅ **User Tested** - mmaurillio2@gmail.com confirmou funcionamento
 14. ✅ **Onboarding Revision** - 3 componentes atualizados, +290 linhas, 100% campos coletados
 
-### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 20:15)
+### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 20:33)
 1. ✅ **Build System Fix** - Webpack alias configurado corretamente
 2. ✅ **Path Resolution** - @/ imports funcionando (components, lib, hooks)
 3. ✅ **Infraestrutura Completa** - lib/i18n/, config, hooks, middleware
@@ -34,18 +34,24 @@
 5. ✅ **[locale] Structure** - app/[locale]/ layout e routing
 6. ✅ **LanguageSwitcher** - Component completo com cookie persistence
 7. ✅ **Login/Signup Pages** - 100% i18n em 3 idiomas, build passando (130KB each)
-8. ⏳ **Onboarding Migration** - 2,323 linhas (dividido em 4 sub-fases)
-9. ⏳ **Dashboard/Perfil** - Migration para [locale]
-10. ⏳ **Components Translation** - Header, Footer, Profile tabs
-11. ⏳ **Backend Integration** - User.locale field, API updates
-12. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
+8. 🔄 **Onboarding Main Page** - Estrutura completa (7 steps, progress bar, navigation)
+9. ✅ **Onboarding Step1BasicData** - 100% i18n (age, gender, weight, height, physiological)
+10. ✅ **Onboarding Step2SportBackground** - 100% i18n (running experience, other sports)
+11. ⏳ **Onboarding Steps 3-7** - Performance, Health, Goals, Availability, Review (5 steps)
+12. ⚠️ **Build Issue** - Travou após 180s, necessita investigação
+13. ⏳ **Dashboard/Perfil** - Migration para [locale]
+14. ⏳ **Components Translation** - Header, Footer, Profile tabs
+15. ⏳ **Backend Integration** - User.locale field, API updates
+16. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
 
-**Progresso:** 15% → 75% (Auth pages completas!)  
-**Rotas i18n:** 6 rotas (/pt-BR/login, /en/login, /es/login, signup...)  
-**Cobertura:** Common (35 keys), Auth (40+), Onboarding (200+), Profile (100+), Dashboard (40+), Plan (50+)  
-**Documentação:** [SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md](./SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md)  
-**Próximo:** FASE 9.3 - Onboarding completo (dividido em 4 sub-fases)  
-**Estimativa:** 11-18h restantes (~2-3 sessões)
+**Progresso:** 15% → 78% (parcial - Onboarding 2/7 steps)  
+**Rotas i18n:** 6 rotas auth + estrutura onboarding criada  
+**Onboarding:** 2/7 steps completos (Step1, Step2) = 28.5%, 5 steps pendentes (72h estimado)  
+**Translation Keys:** ~120 implementadas, ~540 pendentes para Onboarding completo  
+**Cobertura:** Common (35 keys), Auth (40+), Onboarding Steps1-2 (45+), Onboarding Steps3-7 (160+ pendente)  
+**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md](./SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md)  
+**Próximo:** FASE 9.3.2 - Resolver build + Steps 3-7 (5-7h)  
+**Estimativa:** 12-18h restantes (~2-3 sessões)
 
 ---
 
