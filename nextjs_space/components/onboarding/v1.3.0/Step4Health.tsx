@@ -1,12 +1,21 @@
 'use client';
 import { useState } from 'react';
-
-const commonInjuries = [
-  'Canelite', 'Fascite Plantar', 'Tendinite Aquiles', 'Joelho Corredor',
-  'Lesão IT Band', 'Fratura Estresse', 'Distensão Muscular', 'Outro'
-];
+import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
+  const t = useTranslations('onboarding.step4');
+  const tCommon = useTranslations('common');
+  
+  const commonInjuries = [
+    t('injuries.shinSplints'),
+    t('injuries.plantarFasciitis'),
+    t('injuries.achillesTendinitis'),
+    t('injuries.runnersKnee'),
+    t('injuries.itBand'),
+    t('injuries.stressFracture'),
+    t('injuries.muscleStrain'),
+    t('injuries.other')
+  ];
   const [hasInjuryHistory, setHasInjuryHistory] = useState(data.hasInjuryHistory ?? false);
   const [injuries, setInjuries] = useState(data.injuryHistory || []);
   const [currentInjury, setCurrentInjury] = useState('');
@@ -62,27 +71,27 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Saúde e Histórico</h2>
-        <p className="text-gray-600">Informações importantes para prevenir lesões</p>
+        <h2 className="text-2xl font-bold">{t('title')}</h2>
+        <p className="text-gray-600">{t('subtitle')}</p>
       </div>
 
       <div>
-        <label className="block font-medium mb-2">Teve lesões de corrida recentemente?</label>
+        <label className="block font-medium mb-2">{t('hasInjuries')}</label>
         <div className="flex gap-4">
           <button onClick={() => setHasInjuryHistory(false)}
             className={`px-6 py-2 rounded-lg ${!hasInjuryHistory ? 'bg-blue-600 text-white' : 'border'}`}>
-            Não
+            {tCommon('no')}
           </button>
           <button onClick={() => setHasInjuryHistory(true)}
             className={`px-6 py-2 rounded-lg ${hasInjuryHistory ? 'bg-blue-600 text-white' : 'border'}`}>
-            Sim
+            {tCommon('yes')}
           </button>
         </div>
       </div>
 
       {hasInjuryHistory && (
         <div className="space-y-3">
-          <label className="block font-medium">Quais lesões?</label>
+          <label className="block font-medium">{t('whichInjuries')}</label>
           <div className="grid grid-cols-2 gap-2">
             {commonInjuries.map(inj => (
               <button key={inj}
@@ -95,7 +104,7 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
           
           <div className="flex gap-2">
             <input type="text" value={currentInjury} onChange={(e) => setCurrentInjury(e.target.value)}
-              placeholder="Outra lesão..." className="flex-1 px-4 py-2 border rounded-lg"
+              placeholder={t('otherInjuryPlaceholder')} className="flex-1 px-4 py-2 border rounded-lg"
               onKeyPress={(e) => e.key === 'Enter' && addInjury()} />
             <button onClick={addInjury} className="px-4 py-2 bg-blue-600 text-white rounded-lg">+</button>
           </div>
@@ -115,23 +124,23 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
           {/* v1.3.0 - Detalhes das Lesões */}
           {injuries.length > 0 && (
             <div className="border-t mt-6 pt-4 space-y-3">
-              <h4 className="font-semibold">Detalhes das Lesões (Opcional)</h4>
+              <h4 className="font-semibold">{t('injuryDetailsTitle')}</h4>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Status de Recuperação</label>
+                <label className="block text-sm font-medium mb-2">{t('recoveryStatus')}</label>
                 <select 
                   value={injuryRecoveryStatus} 
                   onChange={(e) => setInjuryRecoveryStatus(e.target.value)}
                   className="w-full px-4 py-2 border rounded-lg"
                 >
-                  <option value="recovered">✅ Totalmente recuperado</option>
-                  <option value="recovering">🔄 Em recuperação</option>
-                  <option value="chronic">⚠️ Crônica / Recorrente</option>
+                  <option value="recovered">✅ {t('statusOptions.recovered')}</option>
+                  <option value="recovering">🔄 {t('statusOptions.recovering')}</option>
+                  <option value="active">⚠️ {t('statusOptions.active')}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Data da última lesão</label>
+                <label className="block text-sm font-medium mb-2">{t('lastInjuryDate')}</label>
                 <input 
                   type="date" 
                   value={lastInjuryDate} 
@@ -173,37 +182,49 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         
         <div>
           <label className="block font-medium mb-2">
-            Frequência Cardíaca em Repouso (opcional)
-            <span className="text-sm text-gray-500 ml-2">40-80 bpm é normal para atletas</span>
+            {t('restingHR')} ({tCommon('optional')})
+            <span className="text-sm text-gray-500 ml-2">40-80 bpm</span>
           </label>
           <input type="number" value={restingHeartRate} onChange={(e) => setRestingHeartRate(e.target.value)}
-            placeholder="Ex: 60" min="40" max="100"
+            placeholder={t('restingHRPlaceholder')} min="40" max="100"
             className="w-full px-4 py-2 border rounded-lg" />
         </div>
 
         <div>
           <label className="block font-medium mb-2">
-            Qualidade do Sono
-            <span className="text-sm text-gray-500 ml-2">{sleepQuality === 1 ? '1-4h (Péssima)' : sleepQuality === 2 ? '4-6h (Ruim)' : sleepQuality === 3 ? '6-7h (Regular)' : sleepQuality === 4 ? '7-8h (Boa)' : '8h+ (Excelente)'}</span>
+            {t('sleepQuality')}
+            <span className="text-sm text-gray-500 ml-2">
+              {sleepQuality === 1 ? t('qualityLevels.veryPoor') : 
+               sleepQuality === 2 ? t('qualityLevels.poor') : 
+               sleepQuality === 3 ? t('qualityLevels.fair') : 
+               sleepQuality === 4 ? t('qualityLevels.good') : 
+               t('qualityLevels.excellent')}
+            </span>
           </label>
           <input type="range" min="1" max="5" value={sleepQuality} onChange={(e) => setSleepQuality(parseInt(e.target.value))}
             className="w-full" />
           <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Péssima</span>
-            <span>Excelente</span>
+            <span>{t('qualityLevels.veryPoor')}</span>
+            <span>{t('qualityLevels.excellent')}</span>
           </div>
         </div>
 
         <div>
           <label className="block font-medium mb-2">
-            Nível de Estresse
-            <span className="text-sm text-gray-500 ml-2">{stressLevel === 1 ? 'Muito Baixo' : stressLevel === 2 ? 'Baixo' : stressLevel === 3 ? 'Moderado' : stressLevel === 4 ? 'Alto' : 'Muito Alto'}</span>
+            {t('stressLevel')}
+            <span className="text-sm text-gray-500 ml-2">
+              {stressLevel === 1 ? t('qualityLevels.veryPoor') : 
+               stressLevel === 2 ? t('qualityLevels.poor') : 
+               stressLevel === 3 ? t('qualityLevels.fair') : 
+               stressLevel === 4 ? t('qualityLevels.good') : 
+               t('qualityLevels.veryGood')}
+            </span>
           </label>
           <input type="range" min="1" max="5" value={stressLevel} onChange={(e) => setStressLevel(parseInt(e.target.value))}
             className="w-full" />
           <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Muito Baixo</span>
-            <span>Muito Alto</span>
+            <span>{t('qualityLevels.veryPoor')}</span>
+            <span>{t('qualityLevels.veryGood')}</span>
           </div>
         </div>
       </div>
@@ -225,10 +246,10 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
       </div>
 
       <div className="flex justify-between pt-6">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg">Voltar</button>
+        <button onClick={onBack} className="px-6 py-2 border rounded-lg">{tCommon('back')}</button>
         <button onClick={handleNext} disabled={!doctorCleared}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
-          Próximo
+          {tCommon('next')}
         </button>
       </div>
     </div>

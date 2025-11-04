@@ -1,7 +1,10 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step6Availability({ data, onUpdate, onNext, onBack }: any) {
+  const t = useTranslations('onboarding.step6');
+  const tCommon = useTranslations('common');
   const [runDays, setRunDays] = useState(data.availableDays?.running || []);
   const [otherActivities, setOtherActivities] = useState(data.availableDays?.other || {});
   
@@ -24,12 +27,20 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     data.trainingPreferences?.indoorOutdoor || 'outdoor'
   );
   
-  const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  const days = [
+    t('daysOfWeek.sunday'),
+    t('daysOfWeek.monday'),
+    t('daysOfWeek.tuesday'),
+    t('daysOfWeek.wednesday'),
+    t('daysOfWeek.thursday'),
+    t('daysOfWeek.friday'),
+    t('daysOfWeek.saturday')
+  ];
   const activities = [
-    { key: 'gym', label: 'Musculação' },
-    { key: 'yoga', label: 'Yoga/Pilates' },
-    { key: 'cycling', label: 'Ciclismo' },
-    { key: 'swimming', label: 'Natação' },
+    { key: 'gym', label: t('activities.gym') },
+    { key: 'yoga', label: t('activities.yoga') },
+    { key: 'cycling', label: t('activities.cycling') },
+    { key: 'swimming', label: t('activities.swimming') },
   ];
 
   const toggleRunDay = (idx: number) => {
@@ -86,12 +97,12 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Disponibilidade Semanal</h2>
-        <p className="text-gray-600">Quais dias você pode treinar?</p>
+        <h2 className="text-2xl font-bold">{t('title')}</h2>
+        <p className="text-gray-600">{t('subtitle')}</p>
       </div>
 
       <div>
-        <label className="block font-semibold mb-3 text-blue-900">🏃 Dias para CORRIDA *</label>
+        <label className="block font-semibold mb-3 text-blue-900">🏃 {t('trainingDaysTitle')} *</label>
         <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
           {days.map((day, idx) => (
             <button key={idx}
@@ -290,10 +301,10 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
       </div>
 
       <div className="flex justify-between pt-6">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg">Voltar</button>
+        <button onClick={onBack} className="px-6 py-2 border rounded-lg">{tCommon('back')}</button>
         <button onClick={handleNext} disabled={runDays.length === 0}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50">
-          Próximo
+          {tCommon('next')}
         </button>
       </div>
     </div>
