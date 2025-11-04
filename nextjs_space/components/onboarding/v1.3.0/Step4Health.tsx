@@ -16,11 +16,30 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   const [restingHeartRate, setRestingHeartRate] = useState(data.restingHeartRate || '');
   const [sleepQuality, setSleepQuality] = useState(data.sleepQuality || 3);
   const [stressLevel, setStressLevel] = useState(data.stressLevel || 3);
+  
+  // v1.3.0 - Lesões Detalhadas
+  const [injuryDetails, setInjuryDetails] = useState<any[]>(data.injuryDetails || []);
+  const [injuryRecoveryStatus, setInjuryRecoveryStatus] = useState(data.injuryRecoveryStatus || 'recovered');
+  const [lastInjuryDate, setLastInjuryDate] = useState(data.lastInjuryDate || '');
 
   const addInjury = () => {
     if (!currentInjury.trim()) return;
     setInjuries([...injuries, currentInjury.trim()]);
     setCurrentInjury('');
+  };
+
+  const addDetailedInjury = (type: string) => {
+    const newInjury = {
+      type,
+      date: lastInjuryDate || new Date().toISOString().split('T')[0],
+      status: injuryRecoveryStatus,
+      recurringRisk: 'médio',
+    };
+    setInjuryDetails([...injuryDetails, newInjury]);
+  };
+
+  const removeDetailedInjury = (index: number) => {
+    setInjuryDetails(injuryDetails.filter((_, i) => i !== index));
   };
 
   const handleNext = () => {
@@ -32,6 +51,10 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
       restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
       sleepQuality,
       stressLevel,
+      // v1.3.0 - Lesões detalhadas
+      injuryDetails: injuryDetails.length > 0 ? injuryDetails : undefined,
+      injuryRecoveryStatus: hasInjuryHistory && injuries.length > 0 ? injuryRecoveryStatus : undefined,
+      lastInjuryDate: lastInjuryDate || undefined,
     });
     onNext();
   };
@@ -86,6 +109,59 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
                     className="hover:text-red-900">×</button>
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* v1.3.0 - Detalhes das Lesões */}
+          {injuries.length > 0 && (
+            <div className="border-t mt-6 pt-4 space-y-3">
+              <h4 className="font-semibold">Detalhes das Lesões (Opcional)</h4>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Status de Recuperação</label>
+                <select 
+                  value={injuryRecoveryStatus} 
+                  onChange={(e) => setInjuryRecoveryStatus(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg"
+                >
+                  <option value="recovered">✅ Totalmente recuperado</option>
+                  <option value="recovering">🔄 Em recuperação</option>
+                  <option value="chronic">⚠️ Crônica / Recorrente</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Data da última lesão</label>
+                <input 
+                  type="date" 
+                  value={lastInjuryDate} 
+                  onChange={(e) => setLastInjuryDate(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                  className="w-full px-4 py-2 border rounded-lg"
+                />
+              </div>
+
+              <button
+                onClick={() => injuries.forEach((inj: string) => addDetailedInjury(inj))}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                + Salvar detalhes para análise da IA
+              </button>
+
+              {injuryDetails.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  <p className="text-sm font-medium">Lesões salvas com detalhes:</p>
+                  {injuryDetails.map((detail, idx) => (
+                    <div key={idx} className="p-2 bg-yellow-50 border border-yellow-200 rounded text-sm flex justify-between items-center">
+                      <span>
+                        {detail.type} - {detail.status === 'recovered' ? '✅ Recuperado' : detail.status === 'recovering' ? '🔄 Recuperando' : '⚠️ Crônica'}
+                        {detail.date && ` (${new Date(detail.date).toLocaleDateString('pt-BR')})`}
+                      </span>
+                      <button onClick={() => removeDetailedInjury(idx)} className="text-red-600 hover:text-red-800">×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
