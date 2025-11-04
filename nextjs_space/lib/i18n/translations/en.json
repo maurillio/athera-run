@@ -1,0 +1,601 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "optional": "Optional",
+    "required": "Required",
+    "select": "Select",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "reset": "Reset",
+    "continue": "Continue",
+    "skip": "Skip",
+    "or": "or",
+    "and": "and",
+    "of": "of",
+    "to": "to",
+    "from": "from",
+    "at": "at",
+    "on": "on",
+    "in": "in",
+    "with": "with",
+    "without": "without",
+    "by": "by",
+    "per": "per"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "subtitle": "Welcome back to Athera Run",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Your password",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Create account",
+      "googleSignIn": "Sign in with Google",
+      "errors": {
+        "invalid": "Invalid email or password",
+        "network": "Connection error. Please try again.",
+        "unknown": "Unknown error. Please try again."
+      }
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start your journey with Athera Run",
+      "name": "Full name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Type password again",
+      "signUp": "Create account",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "googleSignUp": "Sign up with Google",
+      "terms": "By creating an account, you agree to our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "errors": {
+        "emailExists": "This email is already in use",
+        "passwordMismatch": "Passwords don't match",
+        "weakPassword": "Password must be at least 8 characters",
+        "invalidEmail": "Invalid email",
+        "network": "Connection error. Please try again.",
+        "unknown": "Error creating account. Please try again."
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Initial Setup",
+    "subtitle": "Let's create your personalized plan",
+    "progress": "Step {{current}} of {{total}}",
+    "step1": {
+      "title": "Basic Information",
+      "subtitle": "Let's start with basic information about you",
+      "name": "Full name",
+      "namePlaceholder": "How would you like to be called",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "gender": "Gender",
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say"
+      },
+      "birthDate": "Date of birth",
+      "birthDatePlaceholder": "MM/DD/YYYY",
+      "weight": "Current weight",
+      "weightPlaceholder": "In kg",
+      "height": "Height",
+      "heightPlaceholder": "In cm",
+      "errors": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Invalid email",
+        "genderRequired": "Select your gender",
+        "birthDateRequired": "Date of birth is required",
+        "birthDateInvalid": "Invalid date of birth",
+        "weightRequired": "Weight is required",
+        "weightInvalid": "Weight must be a valid number",
+        "heightRequired": "Height is required",
+        "heightInvalid": "Height must be a valid number"
+      }
+    },
+    "step2": {
+      "title": "Running Experience",
+      "subtitle": "Tell us about your running experience",
+      "experienceLevel": "Experience level",
+      "experienceLevelOptions": {
+        "beginner": "Beginner",
+        "beginnerDesc": "Less than 6 months running",
+        "intermediate": "Intermediate",
+        "intermediateDesc": "6 months to 2 years running",
+        "advanced": "Advanced",
+        "advancedDesc": "More than 2 years running regularly",
+        "expert": "Expert",
+        "expertDesc": "Competitive athlete"
+      },
+      "yearsRunning": "How long have you been running?",
+      "yearsRunningPlaceholder": "In years",
+      "weeklyVolume": "Current weekly volume",
+      "weeklyVolumePlaceholder": "Km per week",
+      "weeklyFrequency": "Weekly frequency",
+      "weeklyFrequencyPlaceholder": "Workouts per week",
+      "longestRun": "Longest distance run",
+      "longestRunPlaceholder": "In km",
+      "preferredPace": "Comfortable pace",
+      "preferredPacePlaceholder": "min/km (ex: 5:30)",
+      "errors": {
+        "experienceLevelRequired": "Select your experience level",
+        "yearsRunningInvalid": "Enter a valid value",
+        "weeklyVolumeInvalid": "Volume must be a valid number",
+        "weeklyFrequencyInvalid": "Frequency must be a valid number",
+        "longestRunInvalid": "Distance must be a valid number",
+        "preferredPaceInvalid": "Invalid pace (format: min:sec)"
+      }
+    },
+    "step3": {
+      "title": "Current Performance",
+      "subtitle": "Record your best times at different distances",
+      "addTime": "Add time",
+      "distance": "Distance",
+      "distanceOptions": {
+        "1k": "1 km",
+        "5k": "5 km",
+        "10k": "10 km",
+        "15k": "15 km",
+        "21k": "21 km (Half Marathon)",
+        "42k": "42 km (Marathon)",
+        "other": "Other distance"
+      },
+      "time": "Time",
+      "timePlaceholder": "HH:MM:SS",
+      "date": "Race date",
+      "datePlaceholder": "MM/DD/YYYY",
+      "raceName": "Race name (optional)",
+      "raceNamePlaceholder": "Ex: Boston Marathon",
+      "noTimes": "No times recorded yet",
+      "addFirstTime": "Add your first time",
+      "editTime": "Edit time",
+      "deleteTime": "Delete time",
+      "confirmDelete": "Are you sure you want to delete this time?",
+      "errors": {
+        "distanceRequired": "Select a distance",
+        "timeRequired": "Enter the time",
+        "timeInvalid": "Invalid time (format: HH:MM:SS)",
+        "dateInvalid": "Invalid date"
+      }
+    },
+    "step4": {
+      "title": "Health and Limitations",
+      "subtitle": "Tell us about injuries or conditions we should consider",
+      "hasInjuries": "Do you have or have had recent injuries?",
+      "addInjury": "Add injury",
+      "injuryType": "Injury type",
+      "injuryTypeOptions": {
+        "knee": "Knee",
+        "ankle": "Ankle",
+        "foot": "Foot",
+        "calf": "Calf",
+        "hamstring": "Hamstring",
+        "quad": "Quadriceps",
+        "hip": "Hip",
+        "back": "Back",
+        "shin": "Shin splints",
+        "achilles": "Achilles tendon",
+        "plantarFasciitis": "Plantar fasciitis",
+        "other": "Other"
+      },
+      "injuryDescription": "Injury description",
+      "injuryDescriptionPlaceholder": "Describe your injury in detail",
+      "injurySeverity": "Severity",
+      "injurySeverityOptions": {
+        "mild": "Mild",
+        "mildDesc": "Slight discomfort, doesn't prevent training",
+        "moderate": "Moderate",
+        "moderateDesc": "Requires care, limits some workouts",
+        "severe": "Severe",
+        "severeDesc": "Prevents normal training"
+      },
+      "injuryStatus": "Current status",
+      "injuryStatusOptions": {
+        "active": "Active",
+        "activeDesc": "Still feel pain/discomfort",
+        "recovering": "Recovering",
+        "recoveringDesc": "Gradually improving",
+        "recovered": "Recovered",
+        "recoveredDesc": "No pain, but being careful"
+      },
+      "injuryStartDate": "Start date",
+      "injuryStartDatePlaceholder": "When it started",
+      "medicalClearance": "Do you have medical clearance to run?",
+      "medicalClearanceYes": "Yes, I'm cleared",
+      "medicalClearanceNo": "No, I need medical evaluation",
+      "medicalNotes": "Additional medical notes",
+      "medicalNotesPlaceholder": "Any additional relevant information",
+      "noInjuries": "No injuries recorded",
+      "editInjury": "Edit injury",
+      "deleteInjury": "Delete injury",
+      "confirmDeleteInjury": "Are you sure you want to delete this injury?",
+      "errors": {
+        "injuryTypeRequired": "Select the injury type",
+        "injuryDescriptionRequired": "Describe the injury",
+        "injurySeverityRequired": "Select the severity",
+        "injuryStatusRequired": "Select the current status",
+        "injuryStartDateInvalid": "Invalid date",
+        "medicalClearanceRequired": "Inform if you have medical clearance"
+      }
+    },
+    "step5": {
+      "title": "Goals",
+      "subtitle": "What is your main goal?",
+      "primaryGoal": "Primary goal",
+      "primaryGoalOptions": {
+        "complete": "Complete a distance",
+        "completeDesc": "Finish my first race",
+        "improve": "Improve time",
+        "improveDesc": "Beat my personal record",
+        "fitness": "Maintain fitness",
+        "fitnessDesc": "Run regularly for health",
+        "weightLoss": "Lose weight",
+        "weightLossDesc": "Use running for weight loss",
+        "compete": "Compete",
+        "competeDesc": "Aim for podiums and rankings"
+      },
+      "targetRace": "Target race (optional)",
+      "targetRaceType": "Race type",
+      "targetRaceTypeOptions": {
+        "5k": "5 km",
+        "10k": "10 km",
+        "15k": "15 km",
+        "halfMarathon": "Half Marathon (21 km)",
+        "marathon": "Marathon (42 km)",
+        "ultraMarathon": "Ultra Marathon",
+        "trail": "Trail Run"
+      },
+      "targetRaceName": "Race name",
+      "targetRaceNamePlaceholder": "Ex: Boston Marathon",
+      "targetRaceDate": "Race date",
+      "targetRaceDatePlaceholder": "MM/DD/YYYY",
+      "targetTime": "Target time",
+      "targetTimePlaceholder": "HH:MM:SS",
+      "additionalGoals": "Secondary goals (optional)",
+      "additionalGoalsOptions": {
+        "consistency": "Maintain consistency",
+        "strength": "Gain strength",
+        "speed": "Increase speed",
+        "endurance": "Improve endurance",
+        "enjoyment": "Enjoy workouts more",
+        "injury": "Prevent injuries"
+      },
+      "errors": {
+        "primaryGoalRequired": "Select your primary goal",
+        "targetRaceTypeRequired": "Select the race type",
+        "targetRaceDateInvalid": "Invalid date",
+        "targetRaceDatePast": "Date must be in the future",
+        "targetTimeInvalid": "Invalid time (format: HH:MM:SS)"
+      }
+    },
+    "step6": {
+      "title": "Availability",
+      "subtitle": "When can you train?",
+      "daysPerWeek": "How many days per week can you train?",
+      "daysPerWeekOptions": {
+        "3": "3 days",
+        "4": "4 days",
+        "5": "5 days",
+        "6": "6 days",
+        "7": "7 days"
+      },
+      "preferredDays": "Preferred days",
+      "dayOptions": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "preferredTime": "Preferred time",
+      "preferredTimeOptions": {
+        "earlyMorning": "Early morning (5am-7am)",
+        "morning": "Morning (7am-10am)",
+        "lateMorning": "Late morning (10am-12pm)",
+        "afternoon": "Afternoon (12pm-5pm)",
+        "evening": "Evening (5pm-8pm)",
+        "night": "Night (8pm-11pm)",
+        "flexible": "Flexible"
+      },
+      "trainingLocation": "Where do you train?",
+      "trainingLocationOptions": {
+        "street": "Street/Sidewalk",
+        "park": "Park",
+        "track": "Track",
+        "treadmill": "Treadmill",
+        "trail": "Trail",
+        "beach": "Beach",
+        "mixed": "Various locations"
+      },
+      "hasGym": "Do you have access to a gym?",
+      "hasGymYes": "Yes, I can do strength training",
+      "hasGymNo": "No, only running workouts",
+      "equipment": "Available equipment",
+      "equipmentOptions": {
+        "gpsWatch": "GPS Watch",
+        "heartRate": "Heart rate monitor",
+        "treadmill": "Treadmill",
+        "weights": "Weights/gym",
+        "foamRoller": "Foam roller",
+        "none": "No equipment"
+      },
+      "errors": {
+        "daysPerWeekRequired": "Select how many days you can train",
+        "preferredDaysRequired": "Select at least one day",
+        "preferredTimeRequired": "Select your preferred time",
+        "trainingLocationRequired": "Select where you train"
+      }
+    },
+    "step7": {
+      "title": "Review",
+      "subtitle": "Check your information before finishing",
+      "personalInfo": "Personal Information",
+      "experience": "Experience",
+      "performance": "Performance",
+      "health": "Health",
+      "goals": "Goals",
+      "availability": "Availability",
+      "editSection": "Edit",
+      "allSet": "All set!",
+      "generating": "Generating your personalized plan...",
+      "generatingDesc": "This may take a few seconds",
+      "errors": {
+        "validationFailed": "Some fields need to be reviewed",
+        "saveFailed": "Error saving data. Please try again."
+      }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your information and preferences",
+    "tabs": {
+      "basic": "Basic Data",
+      "performance": "Performance",
+      "health": "Health",
+      "goals": "Goals",
+      "availability": "Availability",
+      "preferences": "Preferences"
+    },
+    "basic": {
+      "title": "Personal Data",
+      "name": "Name",
+      "email": "Email",
+      "gender": "Gender",
+      "birthDate": "Date of Birth",
+      "age": "Age",
+      "years": "years",
+      "weight": "Weight",
+      "height": "Height",
+      "bmi": "BMI",
+      "save": "Save changes",
+      "saved": "Data saved successfully!",
+      "error": "Error saving data"
+    },
+    "performance": {
+      "title": "Times and Records",
+      "personalBests": "Personal Bests",
+      "addTime": "Add time",
+      "recentRaces": "Recent Races",
+      "noTimes": "No times recorded",
+      "pace": "Pace",
+      "vdot": "Estimated VDOT"
+    },
+    "health": {
+      "title": "Health and Injuries",
+      "activeInjuries": "Active Injuries",
+      "injuryHistory": "History",
+      "medicalClearance": "Medical Clearance",
+      "cleared": "Cleared to train",
+      "notCleared": "Consult a doctor",
+      "noActiveInjuries": "No active injuries"
+    },
+    "goals": {
+      "title": "Goals and Targets",
+      "primaryGoal": "Primary Goal",
+      "targetRace": "Target Race",
+      "targetTime": "Target Time",
+      "raceDate": "Race Date",
+      "daysUntilRace": "days until race",
+      "noTargetRace": "No target race set",
+      "setTargetRace": "Set target race"
+    },
+    "availability": {
+      "title": "Training Availability",
+      "daysPerWeek": "Days per Week",
+      "preferredDays": "Preferred Days",
+      "preferredTime": "Preferred Time",
+      "trainingLocation": "Training Location",
+      "equipment": "Available Equipment"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "language": "Language",
+      "units": "Units",
+      "unitsOptions": {
+        "metric": "Metric (km)",
+        "imperial": "Imperial (mi)"
+      },
+      "notifications": "Notifications",
+      "notificationsOptions": {
+        "all": "All",
+        "important": "Important only",
+        "none": "None"
+      },
+      "theme": "Theme",
+      "themeOptions": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "privacy": "Privacy",
+      "profileVisibility": "Profile Visibility",
+      "profileVisibilityOptions": {
+        "public": "Public",
+        "private": "Private",
+        "friendsOnly": "Friends only"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {{name}}!",
+    "currentWeek": "Current Week",
+    "weekOf": "Week of {{date}}",
+    "weekProgress": "Week Progress",
+    "completed": "Completed",
+    "remaining": "Remaining",
+    "todayWorkout": "Today's Workout",
+    "noWorkoutToday": "No workout scheduled for today",
+    "restDay": "Rest Day",
+    "nextWorkout": "Next Workout",
+    "stats": {
+      "title": "Statistics",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month",
+      "totalDistance": "Total Distance",
+      "totalTime": "Total Time",
+      "avgPace": "Average Pace",
+      "workoutsCompleted": "Workouts Completed",
+      "consistency": "Consistency",
+      "streakDays": "Streak Days"
+    },
+    "recentActivities": {
+      "title": "Recent Activities",
+      "noActivities": "No activities recorded",
+      "viewAll": "View all"
+    },
+    "upcomingRaces": {
+      "title": "Upcoming Races",
+      "daysUntil": "in {{days}} days",
+      "noRaces": "No races scheduled",
+      "addRace": "Add race"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "logWorkout": "Log Workout",
+      "viewPlan": "View Plan",
+      "editProfile": "Edit Profile",
+      "syncStrava": "Sync Strava"
+    }
+  },
+  "plan": {
+    "title": "Training Plan",
+    "subtitle": "Your personalized plan",
+    "weekView": "Week View",
+    "monthView": "Month View",
+    "calendarView": "Calendar",
+    "week": "Week",
+    "phase": "Phase",
+    "phases": {
+      "base": "Base",
+      "build": "Build",
+      "peak": "Peak",
+      "taper": "Taper",
+      "recovery": "Recovery"
+    },
+    "workout": {
+      "type": "Type",
+      "distance": "Distance",
+      "duration": "Duration",
+      "pace": "Pace",
+      "intensity": "Intensity",
+      "description": "Description",
+      "warmup": "Warmup",
+      "main": "Main",
+      "cooldown": "Cooldown",
+      "notes": "Notes",
+      "completed": "Completed",
+      "pending": "Pending",
+      "skipped": "Skipped",
+      "markComplete": "Mark as complete",
+      "logActivity": "Log activity",
+      "viewDetails": "View details"
+    },
+    "workoutTypes": {
+      "easy": "Easy Run",
+      "long": "Long Run",
+      "tempo": "Tempo Run",
+      "intervals": "Intervals",
+      "hills": "Hill Repeats",
+      "recovery": "Recovery",
+      "race": "Race/Time Trial",
+      "cross": "Cross Training",
+      "rest": "Rest",
+      "strength": "Strength"
+    },
+    "intensityLevels": {
+      "veryEasy": "Very Easy",
+      "easy": "Easy",
+      "moderate": "Moderate",
+      "hard": "Hard",
+      "veryHard": "Very Hard"
+    },
+    "adjustPlan": "Adjust Plan",
+    "regeneratePlan": "Regenerate Plan",
+    "downloadPlan": "Download Plan"
+  },
+  "header": {
+    "dashboard": "Dashboard",
+    "plan": "Plan",
+    "profile": "Profile",
+    "logout": "Logout",
+    "menu": "Menu"
+  },
+  "footer": {
+    "about": "About",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "contact": "Contact",
+    "rights": "© {{year}} Athera Run. All rights reserved."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Connection error. Check your internet.",
+    "unauthorized": "You need to be logged in to access this page.",
+    "notFound": "Page not found.",
+    "serverError": "Server error. Please try again later.",
+    "validation": "Some fields need to be corrected.",
+    "retry": "Try again",
+    "goHome": "Go to home"
+  },
+  "loading": {
+    "pleaseWait": "Please wait...",
+    "loading": "Loading",
+    "processing": "Processing",
+    "saving": "Saving",
+    "deleting": "Deleting",
+    "uploading": "Uploading"
+  }
+}
