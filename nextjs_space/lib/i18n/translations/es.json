@@ -622,5 +622,154 @@
     "saving": "Guardando",
     "deleting": "Eliminando",
     "uploading": "Subiendo"
+  },
+  "onboarding": {
+    "step3": {
+      "title": "Rendimiento",
+      "subtitle": "Tus mejores tiempos (opcional pero recomendado)",
+      "addTime": "Agregar Tiempo",
+      "distancePlaceholder": "Distancia...",
+      "distance5k": "5km",
+      "distance10k": "10km",
+      "distance21k": "21km (Media)",
+      "distance42k": "42km (Maratón)",
+      "hoursPlaceholder": "H",
+      "minutesPlaceholder": "MM",
+      "secondsPlaceholder": "SS",
+      "yourTimes": "Tus Tiempos",
+      "yourVdot": "Tu VDOT"
+    },
+    "step4": {
+      "title": "Salud e Historial",
+      "subtitle": "Información importante para prevenir lesiones",
+      "hasInjuries": "¿Has tenido lesiones de carrera recientemente?",
+      "whichInjuries": "¿Qué lesiones?",
+      "otherInjuryPlaceholder": "Otra lesión...",
+      "injuries": {
+        "shinSplints": "Periostitis",
+        "plantarFasciitis": "Fascitis Plantar",
+        "achillesTendinitis": "Tendinitis de Aquiles",
+        "runnersKnee": "Rodilla del Corredor",
+        "itBand": "Lesión Banda IT",
+        "stressFracture": "Fractura por Estrés",
+        "muscleStrain": "Distensión Muscular",
+        "other": "Otro"
+      },
+      "injuryDetailsTitle": "Detalles de Lesiones (Opcional)",
+      "recoveryStatus": "Estado de Recuperación",
+      "statusOptions": {
+        "active": "Lesión Activa",
+        "recovering": "En Recuperación",
+        "recovered": "Recuperado"
+      },
+      "lastInjuryDate": "Fecha de Última Lesión",
+      "restingHR": "Frecuencia Cardíaca en Reposo",
+      "restingHRPlaceholder": "Ej: 60 bpm",
+      "sleepQuality": "Calidad del Sueño",
+      "stressLevel": "Nivel de Estrés",
+      "qualityLevels": {
+        "veryPoor": "Muy Malo",
+        "poor": "Malo",
+        "fair": "Regular",
+        "good": "Bueno",
+        "veryGood": "Muy Bueno",
+        "excellent": "Excelente"
+      }
+    },
+    "step5": {
+      "title": "Tu Objetivo Principal",
+      "subtitle": "¿Qué quieres lograr?",
+      "primaryGoal": "Objetivo Principal",
+      "secondaryGoals": "Objetivos Secundarios (opcional)",
+      "goals": {
+        "finish_first_race": "🎯 Completar mi primera carrera",
+        "improve_time": "⚡ Mejorar mi tiempo",
+        "health_fitness": "💪 Salud y bienestar",
+        "weight_loss": "🏃 Perder peso",
+        "challenge": "🏆 Completar desafío específico",
+        "consistency": "📅 Crear rutina consistente"
+      },
+      "goalDescriptions": {
+        "finish_first_race": "Enfoque en terminar con seguridad",
+        "improve_time": "Buscar nuevo PR",
+        "health_fitness": "Mantener forma física",
+        "weight_loss": "Adelgazamiento saludable",
+        "challenge": "Meta personal importante",
+        "consistency": "Hábito de entrenamiento regular"
+      },
+      "motivationTitle": "¿Qué más te motiva?",
+      "selectMultiple": "Selecciona todos los que apliquen"
+    },
+    "step6": {
+      "title": "Disponibilidad",
+      "subtitle": "¿Cuándo puedes entrenar?",
+      "trainingDaysTitle": "Días para Correr",
+      "selectDaysDescription": "Selecciona los días que puedes correr",
+      "daysOfWeek": {
+        "sunday": "Domingo",
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado"
+      },
+      "otherActivitiesTitle": "Otras Actividades (Opcional)",
+      "otherActivitiesDescription": "Marca otros entrenamientos complementarios",
+      "activities": {
+        "gym": "Gimnasio/Fuerza",
+        "yoga": "Yoga/Pilates",
+        "cycling": "Ciclismo",
+        "swimming": "Natación"
+      },
+      "infrastructureTitle": "Infraestructura Disponible",
+      "infrastructureDescription": "¿A qué tienes acceso?",
+      "access": {
+        "gym": "Gimnasio/Musculación",
+        "pool": "Piscina/Natación",
+        "track": "Pista de Atletismo"
+      },
+      "preferencesTitle": "Preferencias de Entrenamiento",
+      "trainingLocation": "¿Dónde prefieres entrenar?",
+      "locations": {
+        "street": "Calle/Asfalto",
+        "park": "Parque/Tierra",
+        "track": "Pista",
+        "treadmill": "Cinta"
+      },
+      "groupTraining": "¿Prefieres entrenar en grupo?",
+      "indoorOutdoor": "¿Entrenamiento Indoor o Outdoor?",
+      "options": {
+        "indoor": "Indoor",
+        "outdoor": "Outdoor",
+        "both": "Ambos"
+      },
+      "minDaysError": "Selecciona al menos 2 días para correr"
+    },
+    "step7": {
+      "title": "Revisión Final",
+      "subtitle": "Confirma tu información antes de generar el plan",
+      "profileTitle": "📊 Tu Perfil",
+      "years": "años",
+      "male": "Masculino",
+      "female": "Femenino",
+      "beginner": "Principiante",
+      "yearsRunning": "{{years}} años corriendo",
+      "kmPerWeek": "{{km}}km/semana actual",
+      "daysPerWeek": "{{days}} días/semana",
+      "bestTimesTitle": "🏃 Mejores Tiempos",
+      "injuryHistoryTitle": "⚠️ Historial de Lesiones",
+      "nextStepTitle": "✨ Próximo Paso",
+      "nextStepDescription": "¡Nuestra IA analizará toda esta información y creará un plan 100% personalizado para ti, respetando tus limitaciones y maximizando tus resultados!",
+      "generatePlan": "🚀 ¡Generar Mi Plan!",
+      "goalLabels": {
+        "finish_first_race": "Completar primera carrera",
+        "improve_time": "Mejorar tiempo",
+        "health_fitness": "Salud",
+        "weight_loss": "Perder peso",
+        "challenge": "Desafío específico",
+        "consistency": "Crear rutina"
+      }
+    }
   }
 }

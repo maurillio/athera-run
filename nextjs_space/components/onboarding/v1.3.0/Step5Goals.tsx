@@ -1,7 +1,10 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
+  const t = useTranslations('onboarding.step5');
+  const tCommon = useTranslations('common');
   const [goal, setGoal] = useState(data.primaryGoal || '');
   const [motivation, setMotivation] = useState(data.motivation || '');
   
@@ -17,12 +20,12 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   );
 
   const goals = [
-    { value: 'finish_first_race', label: '🎯 Completar minha primeira corrida', desc: 'Foco em terminar com segurança' },
-    { value: 'improve_time', label: '⚡ Melhorar meu tempo', desc: 'Buscar novo PR' },
-    { value: 'health_fitness', label: '💪 Saúde e bem-estar', desc: 'Manter forma física' },
-    { value: 'weight_loss', label: '🏃 Perder peso', desc: 'Emagrecimento saudável' },
-    { value: 'challenge', label: '🏆 Completar desafio específico', desc: 'Meta pessoal importante' },
-    { value: 'consistency', label: '📅 Criar rotina consistente', desc: 'Hábito de treino regular' },
+    { value: 'finish_first_race', label: t('goals.finish_first_race'), desc: t('goalDescriptions.finish_first_race') },
+    { value: 'improve_time', label: t('goals.improve_time'), desc: t('goalDescriptions.improve_time') },
+    { value: 'health_fitness', label: t('goals.health_fitness'), desc: t('goalDescriptions.health_fitness') },
+    { value: 'weight_loss', label: t('goals.weight_loss'), desc: t('goalDescriptions.weight_loss') },
+    { value: 'challenge', label: t('goals.challenge'), desc: t('goalDescriptions.challenge') },
+    { value: 'consistency', label: t('goals.consistency'), desc: t('goalDescriptions.consistency') },
   ];
 
   const toggleSecondary = (value: string) => {
@@ -55,8 +58,8 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Seu Objetivo Principal</h2>
-        <p className="text-gray-600">O que você quer alcançar?</p>
+        <h2 className="text-2xl font-bold">{t('title')}</h2>
+        <p className="text-gray-600">{t('subtitle')}</p>
       </div>
 
       <div className="grid gap-3">
@@ -154,10 +157,10 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       </div>
 
       <div className="flex justify-between pt-6">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg">Voltar</button>
+        <button onClick={onBack} className="px-6 py-2 border rounded-lg">{tCommon('back')}</button>
         <button onClick={handleNext} disabled={!goal}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50">
-          Próximo
+          {tCommon('next')}
         </button>
       </div>
     </div>

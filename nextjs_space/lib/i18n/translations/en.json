@@ -622,5 +622,154 @@
     "saving": "Saving",
     "deleting": "Deleting",
     "uploading": "Uploading"
+  },
+  "onboarding": {
+    "step3": {
+      "title": "Performance",
+      "subtitle": "Your best times (optional but recommended)",
+      "addTime": "Add Time",
+      "distancePlaceholder": "Distance...",
+      "distance5k": "5km",
+      "distance10k": "10km",
+      "distance21k": "21km (Half)",
+      "distance42k": "42km (Marathon)",
+      "hoursPlaceholder": "H",
+      "minutesPlaceholder": "MM",
+      "secondsPlaceholder": "SS",
+      "yourTimes": "Your Times",
+      "yourVdot": "Your VDOT"
+    },
+    "step4": {
+      "title": "Health & History",
+      "subtitle": "Important information to prevent injuries",
+      "hasInjuries": "Have you had running injuries recently?",
+      "whichInjuries": "Which injuries?",
+      "otherInjuryPlaceholder": "Other injury...",
+      "injuries": {
+        "shinSplints": "Shin Splints",
+        "plantarFasciitis": "Plantar Fasciitis",
+        "achillesTendinitis": "Achilles Tendinitis",
+        "runnersKnee": "Runner's Knee",
+        "itBand": "IT Band Injury",
+        "stressFracture": "Stress Fracture",
+        "muscleStrain": "Muscle Strain",
+        "other": "Other"
+      },
+      "injuryDetailsTitle": "Injury Details (Optional)",
+      "recoveryStatus": "Recovery Status",
+      "statusOptions": {
+        "active": "Active Injury",
+        "recovering": "Recovering",
+        "recovered": "Recovered"
+      },
+      "lastInjuryDate": "Last Injury Date",
+      "restingHR": "Resting Heart Rate",
+      "restingHRPlaceholder": "Ex: 60 bpm",
+      "sleepQuality": "Sleep Quality",
+      "stressLevel": "Stress Level",
+      "qualityLevels": {
+        "veryPoor": "Very Poor",
+        "poor": "Poor",
+        "fair": "Fair",
+        "good": "Good",
+        "veryGood": "Very Good",
+        "excellent": "Excellent"
+      }
+    },
+    "step5": {
+      "title": "Your Main Goal",
+      "subtitle": "What do you want to achieve?",
+      "primaryGoal": "Primary Goal",
+      "secondaryGoals": "Secondary Goals (optional)",
+      "goals": {
+        "finish_first_race": "🎯 Complete my first race",
+        "improve_time": "⚡ Improve my time",
+        "health_fitness": "💪 Health & fitness",
+        "weight_loss": "🏃 Lose weight",
+        "challenge": "🏆 Complete specific challenge",
+        "consistency": "📅 Build consistent routine"
+      },
+      "goalDescriptions": {
+        "finish_first_race": "Focus on finishing safely",
+        "improve_time": "Pursue new PR",
+        "health_fitness": "Maintain fitness",
+        "weight_loss": "Healthy weight loss",
+        "challenge": "Important personal goal",
+        "consistency": "Regular training habit"
+      },
+      "motivationTitle": "What else motivates you?",
+      "selectMultiple": "Select all that apply"
+    },
+    "step6": {
+      "title": "Availability",
+      "subtitle": "When can you train?",
+      "trainingDaysTitle": "Running Days",
+      "selectDaysDescription": "Select the days you can run",
+      "daysOfWeek": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+      },
+      "otherActivitiesTitle": "Other Activities (Optional)",
+      "otherActivitiesDescription": "Mark other complementary training",
+      "activities": {
+        "gym": "Gym/Strength",
+        "yoga": "Yoga/Pilates",
+        "cycling": "Cycling",
+        "swimming": "Swimming"
+      },
+      "infrastructureTitle": "Available Infrastructure",
+      "infrastructureDescription": "What do you have access to?",
+      "access": {
+        "gym": "Gym/Strength",
+        "pool": "Pool/Swimming",
+        "track": "Running Track"
+      },
+      "preferencesTitle": "Training Preferences",
+      "trainingLocation": "Where do you prefer to train?",
+      "locations": {
+        "street": "Street/Road",
+        "park": "Park/Trail",
+        "track": "Track",
+        "treadmill": "Treadmill"
+      },
+      "groupTraining": "Prefer group training?",
+      "indoorOutdoor": "Indoor or Outdoor training?",
+      "options": {
+        "indoor": "Indoor",
+        "outdoor": "Outdoor",
+        "both": "Both"
+      },
+      "minDaysError": "Select at least 2 running days"
+    },
+    "step7": {
+      "title": "Final Review",
+      "subtitle": "Confirm your information before generating the plan",
+      "profileTitle": "📊 Your Profile",
+      "years": "years",
+      "male": "Male",
+      "female": "Female",
+      "beginner": "Beginner",
+      "yearsRunning": "{{years}} years running",
+      "kmPerWeek": "{{km}}km/week current",
+      "daysPerWeek": "{{days}} days/week",
+      "bestTimesTitle": "🏃 Best Times",
+      "injuryHistoryTitle": "⚠️ Injury History",
+      "nextStepTitle": "✨ Next Step",
+      "nextStepDescription": "Our AI will analyze all this information and create a 100% personalized plan for you, respecting your limitations and maximizing your results!",
+      "generatePlan": "🚀 Generate My Plan!",
+      "goalLabels": {
+        "finish_first_race": "Complete first race",
+        "improve_time": "Improve time",
+        "health_fitness": "Health",
+        "weight_loss": "Lose weight",
+        "challenge": "Specific challenge",
+        "consistency": "Build routine"
+      }
+    }
   }
 }
