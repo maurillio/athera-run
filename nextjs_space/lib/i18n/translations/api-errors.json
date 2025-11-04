@@ -1,0 +1,110 @@
+{
+  "pt-BR": {
+    "api": {
+      "errors": {
+        "unauthorized": "Não autorizado. Faça login para continuar.",
+        "forbidden": "Você não tem permissão para acessar este recurso.",
+        "notFound": "Recurso não encontrado.",
+        "badRequest": "Requisição inválida. Verifique os dados enviados.",
+        "internalError": "Erro interno do servidor. Tente novamente mais tarde.",
+        "validationError": "Erro de validação. Verifique os dados enviados.",
+        "duplicateEntry": "Já existe um registro com estes dados.",
+        "invalidCredentials": "Credenciais inválidas. Verifique seu email e senha.",
+        "sessionExpired": "Sua sessão expirou. Faça login novamente.",
+        "rateLimitExceeded": "Muitas requisições. Aguarde um momento e tente novamente.",
+        "serviceUnavailable": "Serviço temporariamente indisponível. Tente novamente mais tarde.",
+        "invalidLocale": "Idioma inválido.",
+        "profileNotFound": "Perfil não encontrado.",
+        "planNotFound": "Plano não encontrado.",
+        "workoutNotFound": "Treino não encontrado.",
+        "subscriptionError": "Erro ao processar assinatura."
+      },
+      "success": {
+        "created": "Criado com sucesso!",
+        "updated": "Atualizado com sucesso!",
+        "deleted": "Excluído com sucesso!",
+        "saved": "Salvo com sucesso!",
+        "profileCreated": "Perfil criado com sucesso!",
+        "profileUpdated": "Perfil atualizado com sucesso!",
+        "profileDeleted": "Perfil excluído com sucesso!",
+        "planGenerated": "Plano gerado com sucesso!",
+        "planUpdated": "Plano atualizado com sucesso!",
+        "workoutCompleted": "Treino concluído com sucesso!",
+        "workoutLogged": "Treino registrado com sucesso!",
+        "localeUpdated": "Idioma atualizado com sucesso!"
+      }
+    }
+  },
+  "en": {
+    "api": {
+      "errors": {
+        "unauthorized": "Unauthorized. Please log in to continue.",
+        "forbidden": "You don't have permission to access this resource.",
+        "notFound": "Resource not found.",
+        "badRequest": "Invalid request. Please check the data sent.",
+        "internalError": "Internal server error. Please try again later.",
+        "validationError": "Validation error. Please check the data sent.",
+        "duplicateEntry": "A record with this data already exists.",
+        "invalidCredentials": "Invalid credentials. Please check your email and password.",
+        "sessionExpired": "Your session has expired. Please log in again.",
+        "rateLimitExceeded": "Too many requests. Please wait a moment and try again.",
+        "serviceUnavailable": "Service temporarily unavailable. Please try again later.",
+        "invalidLocale": "Invalid language.",
+        "profileNotFound": "Profile not found.",
+        "planNotFound": "Plan not found.",
+        "workoutNotFound": "Workout not found.",
+        "subscriptionError": "Error processing subscription."
+      },
+      "success": {
+        "created": "Created successfully!",
+        "updated": "Updated successfully!",
+        "deleted": "Deleted successfully!",
+        "saved": "Saved successfully!",
+        "profileCreated": "Profile created successfully!",
+        "profileUpdated": "Profile updated successfully!",
+        "profileDeleted": "Profile deleted successfully!",
+        "planGenerated": "Plan generated successfully!",
+        "planUpdated": "Plan updated successfully!",
+        "workoutCompleted": "Workout completed successfully!",
+        "workoutLogged": "Workout logged successfully!",
+        "localeUpdated": "Language updated successfully!"
+      }
+    }
+  },
+  "es": {
+    "api": {
+      "errors": {
+        "unauthorized": "No autorizado. Inicia sesión para continuar.",
+        "forbidden": "No tienes permiso para acceder a este recurso.",
+        "notFound": "Recurso no encontrado.",
+        "badRequest": "Solicitud no válida. Verifica los datos enviados.",
+        "internalError": "Error interno del servidor. Inténtalo de nuevo más tarde.",
+        "validationError": "Error de validación. Verifica los datos enviados.",
+        "duplicateEntry": "Ya existe un registro con estos datos.",
+        "invalidCredentials": "Credenciales no válidas. Verifica tu correo y contraseña.",
+        "sessionExpired": "Tu sesión ha expirado. Inicia sesión de nuevo.",
+        "rateLimitExceeded": "Demasiadas solicitudes. Espera un momento e inténtalo de nuevo.",
+        "serviceUnavailable": "Servicio temporalmente no disponible. Inténtalo de nuevo más tarde.",
+        "invalidLocale": "Idioma no válido.",
+        "profileNotFound": "Perfil no encontrado.",
+        "planNotFound": "Plan no encontrado.",
+        "workoutNotFound": "Entrenamiento no encontrado.",
+        "subscriptionError": "Error al procesar la suscripción."
+      },
+      "success": {
+        "created": "¡Creado con éxito!",
+        "updated": "¡Actualizado con éxito!",
+        "deleted": "¡Eliminado con éxito!",
+        "saved": "¡Guardado con éxito!",
+        "profileCreated": "¡Perfil creado con éxito!",
+        "profileUpdated": "¡Perfil actualizado con éxito!",
+        "profileDeleted": "¡Perfil eliminado con éxito!",
+        "planGenerated": "¡Plan generado con éxito!",
+        "planUpdated": "¡Plan actualizado con éxito!",
+        "workoutCompleted": "¡Entrenamiento completado con éxito!",
+        "workoutLogged": "¡Entrenamiento registrado con éxito!",
+        "localeUpdated": "¡Idioma actualizado con éxito!"
+      }
+    }
+  }
+}

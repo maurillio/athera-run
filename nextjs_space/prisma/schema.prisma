@@ -47,6 +47,9 @@ model User {
   password      String?   // For email/password auth
   image         String?
   
+  // User preferences
+  locale        String    @default("pt-BR") // User's preferred language (pt-BR, en, es)
+  
   // Subscription & Premium (deprecated - use Subscription model)
   isPremium     Boolean   @default(false)
   isAdmin       Boolean   @default(false)
