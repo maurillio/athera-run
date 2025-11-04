@@ -23,11 +23,24 @@ export default function LanguageSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLocaleChange = (newLocale: Locale) => {
+  const handleLocaleChange = async (newLocale: Locale) => {
     setIsOpen(false);
     
+    // Set cookie for immediate effect
     document.cookie = `atherarun_locale=${newLocale}; path=/; max-age=31536000`;
     
+    // Save to backend (if user is logged in)
+    try {
+      await fetch('/api/user/locale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale: newLocale }),
+      });
+    } catch (error) {
+      console.error('Failed to save locale preference:', error);
+    }
+    
+    // Navigate to new locale
     const pathWithoutLocale = pathname.replace(/^\/[^\/]+/, '');
     router.push(`/${newLocale}${pathWithoutLocale || '/'}`);
   };
