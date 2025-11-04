@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
+import LanguageSwitcher from '../../../components/LanguageSwitcher';
 
 export default async function Home({ params: { locale } }: { params: { locale: string } }) {
   const t = await getTranslations('home');

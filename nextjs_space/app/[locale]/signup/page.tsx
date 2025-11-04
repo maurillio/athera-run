@@ -1,19 +1,19 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import LanguageSwitcher from '../../../components/LanguageSwitcher';
 
-function LoginContent() {
+export default function SignupPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations('auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -23,12 +23,6 @@ function LoginContent() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
-    const errorParam = searchParams?.get('error');
-    if (errorParam) setError(t('loginError'));
-  }, [searchParams, mounted, t]);
-
   if (!mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,6 +31,21 @@ function LoginContent() {
     setError('');
 
     try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || t('signupError'));
+        setIsLoading(false);
+        return;
+      }
+
+      // Auto-login after signup
       const result = await signIn('credentials', {
         email,
         password,
@@ -47,11 +56,11 @@ function LoginContent() {
         setError(t('loginError'));
         setIsLoading(false);
       } else {
-        router.push(locale === 'pt-BR' ? '/dashboard' : `/${locale}/dashboard`);
+        router.push(locale === 'pt-BR' ? '/onboarding' : `/${locale}/onboarding`);
         router.refresh();
       }
     } catch (error) {
-      setError(t('loginError'));
+      setError(t('signupError'));
       setIsLoading(false);
     }
   };
@@ -61,11 +70,11 @@ function LoginContent() {
     setError('');
     try {
       await signIn('google', {
-        callbackUrl: locale === 'pt-BR' ? '/dashboard' : `/${locale}/dashboard`,
+        callbackUrl: locale === 'pt-BR' ? '/onboarding' : `/${locale}/onboarding`,
         redirect: true,
       });
     } catch (error) {
-      setError(t('loginError'));
+      setError(t('signupError'));
       setIsGoogleLoading(false);
     }
   };
@@ -77,8 +86,8 @@ function LoginContent() {
       </div>
 
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-center mb-2">{t('welcomeBack')}</h2>
-        <p className="text-center text-gray-600 mb-6">{t('login')}</p>
+        <h2 className="text-2xl font-bold text-center mb-2">{t('createAccount')}</h2>
+        <p className="text-center text-gray-600 mb-6">{t('signup')}</p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded mb-4">
@@ -87,6 +96,22 @@ function LoginContent() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium mb-2">
+              {locale === 'pt-BR' ? 'Nome' : locale === 'en-US' ? 'Name' : 'Nombre'}
+            </label>
+            <input
+              id="name"
+              type="text"
+              placeholder={locale === 'pt-BR' ? 'Seu nome' : locale === 'en-US' ? 'Your name' : 'Tu nombre'}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={isLoading}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2">{t('email')}</label>
             <input
@@ -110,9 +135,13 @@ function LoginContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
               disabled={isLoading}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              {locale === 'pt-BR' ? 'Mínimo 6 caracteres' : locale === 'en-US' ? 'Minimum 6 characters' : 'Mínimo 6 caracteres'}
+            </p>
           </div>
 
           <button
@@ -120,7 +149,7 @@ function LoginContent() {
             disabled={isLoading}
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {isLoading ? 'Loading...' : t('login')}
+            {isLoading ? 'Loading...' : t('signup')}
           </button>
         </form>
 
@@ -138,24 +167,16 @@ function LoginContent() {
           disabled={isGoogleLoading}
           className="w-full border border-gray-300 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50"
         >
-          {isGoogleLoading ? 'Loading...' : t('loginWithGoogle')}
+          {isGoogleLoading ? 'Loading...' : t('signupWithGoogle')}
         </button>
 
         <p className="text-sm text-center text-gray-600 mt-6">
-          {t('noAccount')}{' '}
-          <Link href={locale === 'pt-BR' ? '/signup' : `/${locale}/signup`} className="text-blue-600 hover:underline font-medium">
-            {t('signup')}
+          {t('hasAccount')}{' '}
+          <Link href={locale === 'pt-BR' ? '/login' : `/${locale}/login`} className="text-blue-600 hover:underline font-medium">
+            {t('login')}
           </Link>
         </p>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-      <LoginContent />
-    </Suspense>
   );
 }
