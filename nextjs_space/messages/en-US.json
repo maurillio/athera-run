@@ -66,7 +66,20 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Hello, {name}!",
-    "yourPlan": "Your Plan"
+    "yourPlan": "Your Plan",
+    "welcomeTo": "Welcome to your training dashboard",
+    "loading": "Loading...",
+    "daysPerWeek": "Days/Week",
+    "weeks": "Weeks",
+    "yourTrainingPlan": "Your Training Plan",
+    "viewPlan": "View Plan",
+    "noPlanYet": "You don't have a training plan yet",
+    "createPlan": "Create Plan",
+    "yourProfile": "Your Profile",
+    "manageInfo": "Manage your information and preferences",
+    "editProfile": "Edit Profile",
+    "comingSoon": "Coming Soon",
+    "comingSoonText": "Training logs, AI analysis, automatic adjustments and much more!"
   },
   "profile": {
     "title": "Profile",
