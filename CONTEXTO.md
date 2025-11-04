@@ -2,16 +2,16 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 04 de Novembro de 2025 00:08 UTC  
-**Versão:** 1.3.0 (100% Implementado, Auditado e Testado)  
+**Última atualização:** 04 de Novembro de 2025 12:56 UTC  
+**Versão:** 1.3.0 (100% Implementado, Auditado e Testado + Onboarding Revisado)  
 **Status:** ✅ Produção Completa - Sistema 100% Convergente e Operacional
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)
 
-### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED (04/Nov/2025 00:08)
+### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
 2. ✅ **Utility Libraries** - 1,795 linhas científicas (5 bibliotecas)
-3. ✅ **Onboarding v1.3.0** - 8 componentes, 7 fases completas
+3. ✅ **Onboarding v1.3.0** - 8 componentes, 7 fases, **100% COBERTURA CAMPOS** (revisado 04/Nov)
 4. ✅ **Profile Tabs v1.3.0** - 7 componentes integrados, -64% código
 5. ✅ **AI Context Builder** - 9 seções, 100% dados utilizados
 6. ✅ **APIs Updated** - Create, Update, Generate, Auto-Adjust
@@ -22,6 +22,7 @@
 11. ✅ **Mobile /perfil** - Corrigido (Safari iOS)
 12. ✅ **Production Ready** - Live at atherarun.com
 13. ✅ **User Tested** - mmaurillio2@gmail.com confirmou funcionamento
+14. ✅ **Onboarding Revision** - 3 componentes atualizados, +290 linhas, 100% campos coletados
 
 ---
 
@@ -75,32 +76,34 @@ Ao iniciar trabalho:
 | **Documentation** | ✅ 100% | Audit report completo |
 | **Production** | ✅ 100% | Live at atherarun.com |
 
-### Campos Novos v1.3.0 (13 total)
+### Campos Novos v1.3.0 (13 total) - ✅ 100% COLETADOS NO ONBOARDING
 
-**Fisiologia (3):**
-- `restingHeartRate` - FC repouso (40-80 bpm)
-- `sleepQuality` - Qualidade sono (1-5)
-- `stressLevel` - Nível estresse (1-5)
+**Fisiologia (3):** ✅
+- `restingHeartRate` - FC repouso (40-80 bpm) - Step4Health
+- `sleepQuality` - Qualidade sono (1-5) - Step4Health
+- `stressLevel` - Nível estresse (1-5) - Step4Health
 
-**Base Aeróbica (2):**
-- `otherSportsExperience` - Outros esportes
-- `otherSportsYears` - Anos em outros esportes
+**Base Aeróbica (2):** ✅
+- `otherSportsExperience` - Outros esportes - Step2SportBackground
+- `otherSportsYears` - Anos em outros esportes - Step2SportBackground
 
-**Lesões Detalhadas (3):**
-- `injuryDetails` - Array completo lesões
-- `injuryRecoveryStatus` - Status recuperação
-- `lastInjuryDate` - Data última lesão
+**Lesões Detalhadas (3):** ✅
+- `injuryDetails` - Array completo lesões - Step4Health (revisado 04/Nov)
+- `injuryRecoveryStatus` - Status recuperação - Step4Health (revisado 04/Nov)
+- `lastInjuryDate` - Data última lesão - Step4Health (revisado 04/Nov)
 
-**Performance (2):**
-- `bestTimes` - Melhores tempos por distância
-- `lastVDOTUpdate` - Última atualização VDOT
+**Performance (2):** ✅
+- `bestTimes` - Melhores tempos por distância - Step3Performance
+- `lastVDOTUpdate` - Última atualização VDOT - Auto-calculado
 
-**Infraestrutura (1):**
-- `hasTrackAccess` - Acesso pista atletismo
+**Infraestrutura (3):** ✅
+- `hasGymAccess` - Acesso academia/musculação - Step6Availability (adicionado 04/Nov)
+- `hasPoolAccess` - Acesso piscina/natação - Step6Availability (adicionado 04/Nov)
+- `hasTrackAccess` - Acesso pista atletismo - Step6Availability (adicionado 04/Nov)
 
-**Preferências (2):**
-- `trainingPreferences` - Preferências treino
-- `motivationFactors` - Motivação e objetivos
+**Preferências (2):** ✅
+- `trainingPreferences` - Preferências treino (locations, preferred, group, indoor) - Step6Availability (expandido 04/Nov)
+- `motivationFactors` - Motivação e objetivos (primary, secondary, goals) - Step5Goals (estruturado 04/Nov)
 
 ---
 

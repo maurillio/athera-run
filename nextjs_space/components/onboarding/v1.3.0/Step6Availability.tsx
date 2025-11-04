@@ -5,6 +5,25 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   const [runDays, setRunDays] = useState(data.availableDays?.running || []);
   const [otherActivities, setOtherActivities] = useState(data.availableDays?.other || {});
   
+  // v1.3.0 - Infraestrutura
+  const [hasGymAccess, setHasGymAccess] = useState(data.hasGymAccess ?? false);
+  const [hasPoolAccess, setHasPoolAccess] = useState(data.hasPoolAccess ?? false);
+  const [hasTrackAccess, setHasTrackAccess] = useState(data.hasTrackAccess ?? false);
+  
+  // v1.3.0 - Preferências de Treino
+  const [trainingLocations, setTrainingLocations] = useState<string[]>(
+    data.trainingPreferences?.locations || []
+  );
+  const [preferredLocation, setPreferredLocation] = useState(
+    data.trainingPreferences?.preferred || 'rua'
+  );
+  const [groupTraining, setGroupTraining] = useState(
+    data.trainingPreferences?.groupTraining ?? false
+  );
+  const [indoorOutdoor, setIndoorOutdoor] = useState(
+    data.trainingPreferences?.indoorOutdoor || 'outdoor'
+  );
+  
   const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   const activities = [
     { key: 'gym', label: 'Musculação' },
@@ -29,6 +48,14 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     });
   };
 
+  const toggleLocation = (location: string) => {
+    setTrainingLocations(prev => 
+      prev.includes(location) 
+        ? prev.filter(l => l !== location) 
+        : [...prev, location]
+    );
+  };
+
   const handleNext = () => {
     if (runDays.length === 0) return;
     
@@ -40,6 +67,17 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
       availableDays: {
         running: runDays,
         other: Object.keys(cleanOther).length > 0 ? cleanOther : undefined
+      },
+      // v1.3.0 - Infraestrutura
+      hasGymAccess,
+      hasPoolAccess,
+      hasTrackAccess,
+      // v1.3.0 - Preferências
+      trainingPreferences: {
+        locations: trainingLocations.length > 0 ? trainingLocations : ['rua'],
+        preferred: preferredLocation,
+        groupTraining,
+        indoorOutdoor,
       }
     });
     onNext();
@@ -99,6 +137,156 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
             </div>
           </div>
         ))}
+      </div>
+
+      {/* v1.3.0 - Infraestrutura Disponível */}
+      <div className="border-t pt-6 space-y-4">
+        <h3 className="font-semibold text-lg">🏗️ Infraestrutura Disponível</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          Marque os recursos que você tem acesso. Isso ajuda a IA a personalizar seu treino.
+        </p>
+        
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input
+              type="checkbox"
+              checked={hasGymAccess}
+              onChange={(e) => setHasGymAccess(e.target.checked)}
+              className="w-5 h-5"
+            />
+            <div>
+              <p className="font-medium">Academia / Musculação</p>
+              <p className="text-sm text-gray-600">Para treinos de força e fortalecimento</p>
+            </div>
+          </label>
+
+          <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input
+              type="checkbox"
+              checked={hasPoolAccess}
+              onChange={(e) => setHasPoolAccess(e.target.checked)}
+              className="w-5 h-5"
+            />
+            <div>
+              <p className="font-medium">Piscina / Natação</p>
+              <p className="text-sm text-gray-600">Para treinos complementares e recuperação</p>
+            </div>
+          </label>
+
+          <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input
+              type="checkbox"
+              checked={hasTrackAccess}
+              onChange={(e) => setHasTrackAccess(e.target.checked)}
+              className="w-5 h-5"
+            />
+            <div>
+              <p className="font-medium">Pista de Atletismo</p>
+              <p className="text-sm text-gray-600">Para treinos de velocidade e intervalados</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      {/* v1.3.0 - Preferências de Treino */}
+      <div className="border-t pt-6 space-y-4">
+        <h3 className="font-semibold text-lg">⚙️ Preferências de Treino</h3>
+        
+        <div>
+          <label className="block font-medium mb-2">Onde você prefere treinar?</label>
+          <p className="text-sm text-gray-600 mb-3">Pode selecionar mais de uma opção</p>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { value: 'rua', label: '🛣️ Rua / Asfalto' },
+              { value: 'pista', label: '🏃 Pista de Atletismo' },
+              { value: 'esteira', label: '🏋️ Esteira' },
+              { value: 'trilha', label: '🌲 Trilha / Terra' },
+            ].map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => toggleLocation(value)}
+                className={`px-4 py-3 text-sm rounded-lg transition-all ${
+                  trainingLocations.includes(value)
+                    ? 'bg-blue-600 text-white'
+                    : 'border border-gray-300 hover:border-blue-400'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {trainingLocations.length > 1 && (
+          <div>
+            <label className="block font-medium mb-2">Local preferido (principal)</label>
+            <select
+              value={preferredLocation}
+              onChange={(e) => setPreferredLocation(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg"
+            >
+              {trainingLocations.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc === 'rua' ? 'Rua / Asfalto' : 
+                   loc === 'pista' ? 'Pista de Atletismo' :
+                   loc === 'esteira' ? 'Esteira' : 'Trilha / Terra'}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div>
+          <label className="block font-medium mb-2">Preferência de treino</label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setGroupTraining(false)}
+              className={`px-4 py-3 text-sm rounded-lg transition-all ${
+                !groupTraining
+                  ? 'bg-blue-600 text-white'
+                  : 'border border-gray-300 hover:border-blue-400'
+              }`}
+            >
+              🏃 Solo
+            </button>
+            <button
+              onClick={() => setGroupTraining(true)}
+              className={`px-4 py-3 text-sm rounded-lg transition-all ${
+                groupTraining
+                  ? 'bg-blue-600 text-white'
+                  : 'border border-gray-300 hover:border-blue-400'
+              }`}
+            >
+              👥 Em Grupo
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-medium mb-2">Ambiente preferido</label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setIndoorOutdoor('outdoor')}
+              className={`px-4 py-3 text-sm rounded-lg transition-all ${
+                indoorOutdoor === 'outdoor'
+                  ? 'bg-blue-600 text-white'
+                  : 'border border-gray-300 hover:border-blue-400'
+              }`}
+            >
+              ☀️ Outdoor
+            </button>
+            <button
+              onClick={() => setIndoorOutdoor('indoor')}
+              className={`px-4 py-3 text-sm rounded-lg transition-all ${
+                indoorOutdoor === 'indoor'
+                  ? 'bg-blue-600 text-white'
+                  : 'border border-gray-300 hover:border-blue-400'
+              }`}
+            >
+              🏢 Indoor
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-between pt-6">
