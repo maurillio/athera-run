@@ -1,11 +1,11 @@
 # 🚀 CONTEXTO PARA PRÓXIMA SESSÃO
 
-**Data:** 04 de Novembro de 2025 14:35 UTC  
+**Data:** 04 de Novembro de 2025 15:00 UTC  
 **Versão Atual:** 1.3.0 (100% Completo ✅)  
-**Em Desenvolvimento:** 1.4.0 i18n (20% Completo 🔄)  
-**Status:** ✅ v1.3.0 PRODUCTION | 🔄 v1.4.0 EM PROGRESSO (Fase 1)  
+**Em Desenvolvimento:** 1.4.0 i18n (35% Completo 🔄)  
+**Status:** ✅ v1.3.0 PRODUCTION | 🔄 v1.4.0 EM PROGRESSO (Fase 2 Parcial)  
 **Branch Ativa:** `feature/i18n-multi-language`  
-**Último Commit:** 443b831
+**Último Commit:** a206dcf
 
 ---
 
@@ -13,59 +13,78 @@
 
 ### 🌐 **EM DESENVOLVIMENTO AGORA: i18n Multi-idioma**
 
-**Progresso:** 20% (Fase 1 Setup completo)
+**Progresso:** 35% (Setup + Fase 2 Parcial)
 
 **Leia PRIMEIRO:**
-1. **SESSAO_04NOV2025_i18n_SETUP.md** ⭐⭐⭐ (LEIA ISSO!)
-2. **PLANO_IMPLEMENTACAO_i18n.md** ⭐⭐ (Plano completo)
-3. **PROXIMA_SESSAO.md** ⭐ (Este arquivo)
+1. **SESSAO_04NOV2025_RESUMO.md** ⭐⭐⭐ (LEIA ISSO! - Resumo completo)
+2. **SESSAO_04NOV2025_i18n_FASE2.md** ⭐⭐ (Última fase)
+3. **PLANO_IMPLEMENTACAO_i18n.md** ⭐⭐ (Plano completo)
+4. **PROXIMA_SESSAO.md** ⭐ (Este arquivo)
 
 ---
 
 ## 🔄 STATUS ATUAL i18n v1.4.0
 
 ### ✅ FASE 1: SETUP COMPLETO (20%)
+### 🔄 FASE 2: LAYOUT E CORE (15% de 20%)
 
 ```
 Branch: feature/i18n-multi-language
-Commit: 443b831
+Commits: 443b831 (Fase 1), a206dcf (Fase 2 parcial)
 ```
 
 **O que está PRONTO:**
 - ✅ next-intl v4.4.0 instalado
 - ✅ i18n.ts configurado (3 idiomas)
-- ✅ messages/ criados (pt-BR, en-US, es-ES)
+- ✅ messages/ criados (246 strings)
 - ✅ middleware.ts atualizado (i18n + auth)
 - ✅ LanguageSwitcher component
-- ✅ app/[locale]/ folder criado
+- ✅ [locale]/layout.tsx criado
+- ✅ [locale]/page.tsx (home) criado
+- ✅ [locale]/login/page.tsx criado
+- ✅ Metadata dinâmica por idioma
+- ✅ generateStaticParams funcionando
 
-**O que FALTA (80%):**
-- ⏳ Migrar layout para [locale]/layout.tsx
-- ⏳ Migrar 24 páginas
-- ⏳ Migrar 50+ componentes
-- ⏳ Expandir messages/ (~2.000 strings)
-- ⏳ Backend: campo locale no schema
-- ⏳ IA multi-idioma
-- ⏳ Emails multi-idioma
-- ⏳ Testes completos
+**O que FALTA (65%):**
+- ⏳ Completar Fase 2: signup, dashboard (5%)
+- ⏳ Fase 3: Migrar páginas principais (20%)
+- ⏳ Fase 4: Migrar onboarding (15%)
+- ⏳ Fase 5: Migrar componentes restantes (10%)
+- ⏳ Fase 6: Backend + IA multi-idioma (10%)
+- ⏳ Fase 7: Emails + Deploy (5%)
 
 ---
 
-## 🎯 PRÓXIMA SESSÃO: FASE 2 - LAYOUT E CORE
+## 🎯 PRÓXIMA SESSÃO: COMPLETAR FASE 2 OU AVANÇAR
 
-### Objetivo
-Migrar layout e páginas principais para [locale]
+### Opção A: Completar Fase 2 (1-2h) ⭐ RECOMENDADO
+1. Checkout branch feature/i18n-multi-language
+2. Corrigir build errors restantes
+3. Criar [locale]/signup/page.tsx
+4. Criar [locale]/dashboard/page.tsx
+5. Expandir messages/ (~50 strings)
+6. Testar mudança de idioma funcionando
+7. Build success
+8. Commit Fase 2 COMPLETA
 
-### Tarefas (3-4 horas)
-1. ✅ Checkout branch feature/i18n-multi-language
-2. Migrar app/layout.tsx → [locale]/layout.tsx
-3. Migrar app/page.tsx (home)
-4. Migrar login/signup
-5. Expandir messages/ (~200 strings)
-6. Integrar LanguageSwitcher no header
-7. Testar mudança de idioma
-8. Build e validação
-9. Commit Fase 2
+**Output:** Core pages 100% funcionais em 3 idiomas
+
+### Opção B: Avançar para Fase 3 (3-4h)
+1. Migrar /perfil (6 tabs)
+2. Migrar /plano
+3. Migrar /tracking
+4. Expandir messages/ (~200 strings)
+5. Commit Fase 3
+
+**Output:** Páginas principais multi-idioma
+
+### Opção C: Pular para Fase 4 (3-4h)
+1. Migrar onboarding (8 components)
+2. Maior impacto visual
+3. Expandir messages/ (~300 strings)
+4. Commit Fase 4
+
+**Output:** Onboarding completo em 3 idiomas
 
 ### Comandos
 ```bash
@@ -82,10 +101,10 @@ npm run build  # validar
 ## 📋 ROADMAP i18n v1.4.0
 
 ```
-████░░░░░░░░░░░░░░░░ 20%
+███████░░░░░░░░░░░░░ 35%
 
 ✅ Fase 1: Setup (20%) - COMPLETO
-⏳ Fase 2: Layout/Core (20%) - PRÓXIMA
+🔄 Fase 2: Layout/Core (20%) - 75% COMPLETO
 ⏳ Fase 3: Páginas Principais (20%)
 ⏳ Fase 4: Onboarding (15%)
 ⏳ Fase 5: Componentes (10%)
@@ -93,7 +112,7 @@ npm run build  # validar
 ⏳ Fase 7: Emails/Deploy (5%)
 ```
 
-**Estimativa:** 4-5 sessões de 3-4h cada
+**Estimativa:** 3-4 sessões de 3-4h para completar
 
 ---
 
