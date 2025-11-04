@@ -2,13 +2,13 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 04 de Novembro de 2025 21:30 UTC  
+**Última atualização:** 04 de Novembro de 2025 21:50 UTC  
 **Versão Atual:** 1.3.0 (100% Implementado, Auditado e Testado)  
-**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (92%)  
-**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Perfil 100% ✅
+**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (95%)  
+**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Global Components 100% ✅
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
-> **🌐 i18n v1.4.0:** Perfil 100% Completo - Ver: [SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md](./SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md)
+> **🌐 i18n v1.4.0:** Global Components 100% Completo - Ver: [SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md](./SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md)
 
 ### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
@@ -57,13 +57,17 @@
    - ✅ 4 tabs (Profile, Medical, Races, Actions)
    - ✅ Regenerate Plan e Delete Profile actions
    - ✅ Toast messages e dialogs traduzidos
-12. ⏳ **Components Globais** - Header, Footer (PRÓXIMO - 2h)
-13. ⏳ **Backend Integration** - User.locale field, API updates
-14. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
+12. ✅ **Global Components 100% COMPLETO** ⭐
+   - ✅ UserDropdown (login, signup, menu items)
+   - ✅ PaywallModal (benefits, CTA)
+   - ✅ Error pages (404, generic error)
+13. ⏳ **Backend Integration** - User.locale field, API errors (PRÓXIMO - 2-3h)
+14. ⏳ **Testing & Polish** - Manual testing, edge cases
+15. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
 
-**Progresso:** 15% → 92% (Perfil 100% completo) ⭐  
+**Progresso:** 15% → 95% (Global Components 100% completo) ⭐  
 **Rotas i18n:** Login, Signup, Onboarding, Dashboard, Plano, Perfil (6 rotas × 3 idiomas = 18 rotas)  
-**Translation Keys Totais:** ~3,000 implementadas  
+**Translation Keys Totais:** ~3,200 implementadas  
 **Cobertura Detalhada:**
   - Common: 40 keys × 3 = 120
   - Auth: 45 keys × 3 = 135
@@ -71,10 +75,11 @@
   - Dashboard: 70 keys × 3 = 210
   - Plano: 70 keys × 3 = 210
   - Perfil: 60 keys × 3 = 180
-  - **Total: ~585 unique keys × 3 idiomas = ~1,755 translation keys**
-**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md](./SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md)  
-**Próximo:** FASE 9.6 - Components Globais (Header, Footer) - 2h  
-**Estimativa:** 5-7h restantes (~1 sessão)  
+  - Global: 70 keys × 3 = 210
+  - **Total: ~655 unique keys × 3 idiomas = ~1,965 translation keys**
+**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md](./SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md)  
+**Próximo:** FASE 9.7 - Backend Integration (User.locale, API errors) - 2-3h  
+**Estimativa:** 4-6h restantes (~1 sessão)  
 **Build:** ✅ Passing (warnings esperados para páginas dinâmicas)
 
 ---
