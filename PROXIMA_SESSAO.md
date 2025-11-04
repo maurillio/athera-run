@@ -1,8 +1,8 @@
 # 🚀 PRÓXIMA SESSÃO - Guia de Início Rápido
 
-**Data última atualização:** 04/Nov/2025 21:30 UTC  
+**Data última atualização:** 04/Nov/2025 21:50 UTC  
 **Projeto:** Athera Run - i18n v1.4.0  
-**Status Atual:** Perfil 100% Completo - 92% Total  
+**Status Atual:** Global Components 100% Completo - 95% Total  
 
 ---
 
@@ -10,12 +10,12 @@
 
 ### Para IA - Cole Isso:
 ```
-Continuar i18n v1.4.0 - FASE 9.6 (Components Globais)
-Status: 92% completo
-Perfil: ✅ 100% COMPLETO 🎉
-Próximo: Header, Footer, Components Globais (2h)
+Continuar i18n v1.4.0 - FASE 9.7 (Backend Integration)
+Status: 95% completo
+Global Components: ✅ 100% COMPLETO 🎉
+Próximo: User.locale field, API errors (2-3h)
 Build: ✅ Passing
-Documento: SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md
+Documento: SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md
 ```
 
 ---
@@ -64,8 +64,13 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md
   - [x] Regenerate Plan action
   - [x] Delete Profile action
   - [x] ~60 translation keys × 3 idiomas
+- [x] **Global Components 100% COMPLETO** ⭐
+  - [x] UserDropdown (login, signup, menu items)
+  - [x] PaywallModal (benefits, CTA)
+  - [x] Error pages (404, generic error)
+  - [x] ~70 translation keys × 3 idiomas
 - [x] Build ✅ Passing (warnings esperados)
-- [x] Total de ~3,000 translation keys em 3 idiomas
+- [x] Total de ~3,200 translation keys em 3 idiomas
 
 ### ⏳ Próximas Fases (8% restante)
 - [x] FASE 9.3.1: Onboarding main page + Steps 1-2 (COMPLETO)
@@ -78,11 +83,16 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md
   - [x] Perfil main page com 4 tabs
   - [x] Profile actions (regenerate, delete)
   - [x] 60 translation keys × 3 idiomas
-- [ ] **FASE 9.6: Components globais (2h) → 95% - PRÓXIMO**
-  - [ ] Header com LanguageSwitcher visível
-  - [ ] Footer traduzido
-  - [ ] Global modals/dialogs
-- [ ] FASE 9.7: Backend Integration (1h) → 97%
+- [x] **FASE 9.6: Components globais (COMPLETO)** ✅ ⭐
+  - [x] UserDropdown com i18n completo
+  - [x] PaywallModal traduzido
+  - [x] Error pages (404, generic)
+  - [x] 70 translation keys × 3 idiomas
+- [ ] **FASE 9.7: Backend Integration (2-3h) → 97% - PRÓXIMO**
+  - [ ] User.locale field no schema
+  - [ ] API error messages i18n
+  - [ ] Email templates (opcional)
+- [ ] FASE 9.8: Testing & Polish (1-2h) → 99%
   - [ ] API responses i18n
   - [ ] Error messages
 - [ ] FASE 9.8: Testing & Polish (1h) → 99%
@@ -92,62 +102,61 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md
   - [ ] Deploy em produção
   - [ ] Documentação final
 
-**Total Estimado:** 5-7h (~1 sessão)
+**Total Estimado:** 4-6h (~1 sessão)
 
 ---
 
 ## 🎯 PRÓXIMAS AÇÕES (Em Ordem)
 
-### 1. FASE 9.6: Components Globais (2h) - **PRÓXIMO IMEDIATO**
+### 1. FASE 9.7: Backend Integration (2-3h) - **PRÓXIMO IMEDIATO**
 
 **Status Atual:**
-- ✅ Dashboard 100% completo
-- ✅ Plano 100% completo
-- ✅ Perfil 100% completo ⭐
+- ✅ Global Components 100% completo ⭐
 - ✅ Build passing
-- ✅ ~3,000 translation keys implementadas
-- ⏳ Components Globais: 0% (próximo)
+- ✅ ~3,200 translation keys implementadas
+- ⏳ Backend Integration: 0% (próximo)
 
 **Plano de Ação:**
-1. **Header Component (1h)**
-   - Verificar Header atual
-   - Adicionar LanguageSwitcher visível
-   - Traduzir navigation items
-   - Traduzir user menu
-   - Adicionar ~30 translation keys
+1. **User.locale Field (1h)**
+   - Add `locale` field to Prisma schema
+   - Create migration
+   - Default to browser detection
+   - Update on language switcher change
+   - Persist user preference
 
-2. **Footer Component (30min)**
-   - Verificar se Footer existe
-   - Traduzir links
-   - Traduzir copyright
-   - Adicionar ~20 translation keys
+2. **API Error Messages (1h)**
+   - Translate API error responses
+   - Translate validation errors
+   - Translate success messages
+   - Update toast notifications
 
-3. **Global Components (30min)**
-   - Verificar modals/dialogs globais
-   - Traduzir mensagens de erro
-   - Traduzir loading states
-   - Adicionar ~20 translation keys
+3. **Email Templates (1h - opcional)**
+   - Welcome emails
+   - Password reset emails
+   - Notification emails
 
 **Arquivos a modificar:**
-- `components/header.tsx`
-- `components/footer.tsx` (se existir)
-- `lib/i18n/translations/*.json` (~70 keys × 3 = 210 keys)
+- `prisma/schema.prisma`
+- `prisma/migrations/`
+- `lib/i18n/config.ts`
+- `app/api/*/route.ts`
+- Email templates (se existirem)
 
-### 2. FASE 9.7: Backend Integration (1h)
-- Header com LanguageSwitcher visível
-- Footer traduzido
-- Global modals/dialogs
+### 2. FASE 9.8: Testing & Polish (1-2h)
+- Manual testing em 3 idiomas
+- Edge cases e fallbacks
+- UI polish e correções
 
 ---
 
 ## 📝 DOCUMENTOS IMPORTANTES
 
 ### Leitura Obrigatória
-1. **⭐ SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md** - Dashboard/Plano 100% (NOVO)
-2. **SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md** - Onboarding 100% (Steps 3-7)
-3. **SESSAO_04NOV2025_i18n_FASE9.3.1_ONBOARDING_START.md** - Onboarding Steps 1-2
+1. **⭐ SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md** - Global Components 100% (NOVO)
+2. **SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md** - Perfil 100%
+3. **SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md** - Dashboard/Plano 100%
 4. **CONTEXTO.md** - Visão geral do projeto
-5. **SESSAO_04NOV2025_i18n_AUTH_COMPLETE.md** - Auth pages completas
+5. **SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md** - Onboarding 100%
 6. **SESSAO_04NOV2025_i18n_FASE9_INFRAESTRUTURA.md** - Infraestrutura (70%)
 
 ---
@@ -155,36 +164,38 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md
 ## 🚀 TEMPLATE DE INÍCIO
 
 ```
-Continuar i18n v1.4.0 - FASE 9.5 (Perfil)
+Continuar i18n v1.4.0 - FASE 9.7 (Backend Integration)
 
 Status:
 - v1.3.0: 100% em produção ✅
-- i18n: 90% completo
+- i18n: 95% completo
 - Infraestrutura: ✅ Completa
 - Auth pages: ✅ Completas (login/signup em 3 idiomas)
 - Onboarding: ✅ 100% COMPLETO (7/7 steps) 🎉
 - Dashboard: ✅ 100% COMPLETO 🎉
 - Plano: ✅ 100% COMPLETO 🎉
-- Perfil: ⏳ PRÓXIMO
+- Perfil: ✅ 100% COMPLETO 🎉
+- Global Components: ✅ 100% COMPLETO 🎉
+- Backend Integration: ⏳ PRÓXIMO
 
 Prioridades:
-1. Migrar app/perfil/page.tsx → app/[locale]/perfil/page.tsx
-2. Criar estrutura com 7 tabs
-3. Adicionar ~200 translation keys × 3 idiomas
-4. Profile actions (edit, save, cancel)
-5. Testing completo
+1. Add User.locale field to Prisma schema
+2. Create migration and update User model
+3. Implement locale persistence on language switch
+4. Translate API error messages
+5. Update toast notifications
 
 Documentos lidos:
-- SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md ⭐
+- SESSAO_04NOV2025_i18n_FASE9.6_GLOBAL_COMPONENTS.md ⭐
 - PROXIMA_SESSAO.md
 - CONTEXTO.md
 
-Pronto para FASE 9.5!
+Pronto para FASE 9.7!
 ```
 
 ---
 
 **© 2025 Athera Run - i18n v1.4.0**  
-**Status:** 92% Completo | Perfil 100% ✅ | Next: Components Globais  
-**Sessão Anterior:** 04/Nov/2025 21:20-21:30 UTC (10min, extremamente rápida)  
-**Commits:** b8954b5 (perfil), 83cd924 (dashboard/plano), dbfa31b (onboarding 3-7)
+**Status:** 95% Completo | Global Components 100% ✅ | Next: Backend Integration  
+**Sessão Anterior:** 04/Nov/2025 21:38-21:50 UTC (12min, extremamente rápida)  
+**Commits:** 13c1353 (global components), b8954b5 (perfil), 83cd924 (dashboard/plano)
