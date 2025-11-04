@@ -2,13 +2,13 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 04 de Novembro de 2025 21:15 UTC  
+**Última atualização:** 04 de Novembro de 2025 21:30 UTC  
 **Versão Atual:** 1.3.0 (100% Implementado, Auditado e Testado)  
-**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (90%)  
-**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Dashboard/Plano 100% ✅
+**Próxima Versão:** 1.4.0 (Internacionalização - i18n) - EM IMPLEMENTAÇÃO (92%)  
+**Status:** ✅ v1.3.0 Produção Completa | 🌐 v1.4.0 Perfil 100% ✅
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
-> **🌐 i18n v1.4.0:** Dashboard/Plano 100% Completo - Ver: [SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md](./SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md)
+> **🌐 i18n v1.4.0:** Perfil 100% Completo - Ver: [SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md](./SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md)
 
 ### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
@@ -26,15 +26,15 @@
 13. ✅ **User Tested** - mmaurillio2@gmail.com confirmou funcionamento
 14. ✅ **Onboarding Revision** - 3 componentes atualizados, +290 linhas, 100% campos coletados
 
-### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 21:25)
+### 🌐 V1.4.0 EM ANDAMENTO - i18n Multi-idioma (04/Nov/2025 21:30)
 1. ✅ **Build System Fix** - Webpack alias configurado + TypeScript 5.9.3 instalado
 2. ✅ **Path Resolution** - @/ imports funcionando (components, lib, hooks)
 3. ✅ **Infraestrutura Completa** - lib/i18n/, config, hooks, middleware
-4. ✅ **Translations BASE** - 900+ keys × 3 idiomas (pt-BR, en, es) = 2700+ keys
+4. ✅ **Translations BASE** - 1000+ keys × 3 idiomas (pt-BR, en, es) = 3000+ keys
 5. ✅ **[locale] Structure** - app/[locale]/ layout e routing
 6. ✅ **LanguageSwitcher** - Component completo com cookie persistence
 7. ✅ **Login/Signup Pages** - 100% i18n em 3 idiomas, build passando
-8. ✅ **Onboarding 100% COMPLETO (7/7 steps)** ⭐ - Ver sessão completa abaixo
+8. ✅ **Onboarding 100% COMPLETO (7/7 steps)** ⭐
    - ✅ Main Page - Estrutura completa (7 steps, progress bar, navigation)
    - ✅ Step1BasicData - Age, gender, weight, height, physiological data
    - ✅ Step2SportBackground - Running experience, other sports
@@ -43,24 +43,38 @@
    - ✅ Step5Goals - Primary/secondary goals, motivations
    - ✅ Step6Availability - Training days, activities, infrastructure, preferences
    - ✅ Step7Review - Summary, confirmation, generate plan
-9. ⏳ **Dashboard/Plano** - Migration para [locale] (PRÓXIMO - 3-4h)
-10. ⏳ **Perfil Pages** - 7 tabs com translations (~200 keys)
-11. ⏳ **Components Translation** - Header, Footer, global components
-12. ⏳ **Backend Integration** - User.locale field, API updates
-13. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
+9. ✅ **Dashboard 100% COMPLETO** ⭐
+   - ✅ Welcome section, generate plan card, quick stats
+   - ✅ Upcoming workouts (hoje/amanhã)
+   - ✅ Quick access menu, advanced features
+   - ✅ Workout log dialog componentizado
+10. ✅ **Plano 100% COMPLETO** ⭐
+   - ✅ Summary cards (4: goal, week, progress, duration)
+   - ✅ Week navigation (anterior/próxima/atual)
+   - ✅ Workout list com estados visuais
+   - ✅ Week focus, quick actions, no plan state
+11. ✅ **Perfil 100% COMPLETO** ⭐
+   - ✅ 4 tabs (Profile, Medical, Races, Actions)
+   - ✅ Regenerate Plan e Delete Profile actions
+   - ✅ Toast messages e dialogs traduzidos
+12. ⏳ **Components Globais** - Header, Footer (PRÓXIMO - 2h)
+13. ⏳ **Backend Integration** - User.locale field, API updates
+14. ⏳ **Deploy e Testes** - 3 idiomas funcionais em produção
 
-**Progresso:** 15% → 85% (Onboarding 100% completo) ⭐  
-**Rotas i18n:** Login, Signup, Onboarding (3 idiomas × 3 rotas = 9 rotas funcionais)  
-**Onboarding:** 7/7 steps completos (100%) = 900+ translation keys  
-**Translation Keys Totais:** ~900 implementadas (common, auth, onboarding completo)  
+**Progresso:** 15% → 92% (Perfil 100% completo) ⭐  
+**Rotas i18n:** Login, Signup, Onboarding, Dashboard, Plano, Perfil (6 rotas × 3 idiomas = 18 rotas)  
+**Translation Keys Totais:** ~3,000 implementadas  
 **Cobertura Detalhada:**
   - Common: 40 keys × 3 = 120
   - Auth: 45 keys × 3 = 135
   - Onboarding: 300 keys × 3 = 900
-  - **Total: 385 unique keys × 3 idiomas = 1,155 translation keys**
-**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md](./SESSAO_04NOV2025_i18n_FASE9.3.2_ONBOARDING_COMPLETE.md)  
-**Próximo:** FASE 9.4 - Dashboard/Plano pages (3-4h)  
-**Estimativa:** 11-15h restantes (~2 sessões)  
+  - Dashboard: 70 keys × 3 = 210
+  - Plano: 70 keys × 3 = 210
+  - Perfil: 60 keys × 3 = 180
+  - **Total: ~585 unique keys × 3 idiomas = ~1,755 translation keys**
+**Documentação:** [SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md](./SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md)  
+**Próximo:** FASE 9.6 - Components Globais (Header, Footer) - 2h  
+**Estimativa:** 5-7h restantes (~1 sessão)  
 **Build:** ✅ Passing (warnings esperados para páginas dinâmicas)
 
 ---

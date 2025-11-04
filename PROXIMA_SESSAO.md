@@ -1,8 +1,8 @@
 # 🚀 PRÓXIMA SESSÃO - Guia de Início Rápido
 
-**Data última atualização:** 04/Nov/2025 21:15 UTC  
+**Data última atualização:** 04/Nov/2025 21:30 UTC  
 **Projeto:** Athera Run - i18n v1.4.0  
-**Status Atual:** Dashboard/Plano 100% Completo - 90% Total  
+**Status Atual:** Perfil 100% Completo - 92% Total  
 
 ---
 
@@ -10,19 +10,19 @@
 
 ### Para IA - Cole Isso:
 ```
-Continuar i18n v1.4.0 - FASE 9.5 (Perfil)
-Status: 90% completo
-Dashboard/Plano: ✅ 100% COMPLETO 🎉
-Próximo: Perfil page com 7 tabs (3-4h)
+Continuar i18n v1.4.0 - FASE 9.6 (Components Globais)
+Status: 92% completo
+Perfil: ✅ 100% COMPLETO 🎉
+Próximo: Header, Footer, Components Globais (2h)
 Build: ✅ Passing
-Documento: SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md
+Documento: SESSAO_04NOV2025_i18n_FASE9.5_PERFIL.md
 ```
 
 ---
 
 ## 📊 STATUS ATUAL v1.4.0 (i18n)
 
-### ✅ Completo (90%)
+### ✅ Completo (92%)
 - [x] Build system corrigido (webpack alias)
 - [x] Path resolution funcionando (@/ imports)
 - [x] Estrutura lib/i18n/ completa
@@ -59,78 +59,81 @@ Documento: SESSAO_04NOV2025_i18n_FASE9.4_DASHBOARD_PLANO.md
   - [x] Week focus section
   - [x] Quick actions menu
   - [x] No plan state
+- [x] **Perfil 100% COMPLETO** ⭐
+  - [x] 4 tabs (Profile, Medical, Races, Actions)
+  - [x] Regenerate Plan action
+  - [x] Delete Profile action
+  - [x] ~60 translation keys × 3 idiomas
 - [x] Build ✅ Passing (warnings esperados)
-- [x] Total de ~2,750 translation keys em 3 idiomas
+- [x] Total de ~3,000 translation keys em 3 idiomas
 
-### ⏳ Próximas Fases (10% restante)
+### ⏳ Próximas Fases (8% restante)
 - [x] FASE 9.3.1: Onboarding main page + Steps 1-2 (COMPLETO)
 - [x] FASE 9.3.2: Onboarding Steps 3-7 (COMPLETO) ✅
 - [x] **FASE 9.4: Dashboard/Plano (COMPLETO)** ✅ ⭐
   - [x] Dashboard main page (stats, today workout)
   - [x] Plano week view (calendar, workout cards)
   - [x] Workout log dialog component
-- [ ] **FASE 9.5: Perfil completo (3-4h) → 95% - PRÓXIMO**
-  - [ ] Perfil main page com 7 tabs
-  - [ ] Profile actions (edit, save, cancel)
-  - [ ] ~200 translation keys
-- [ ] FASE 9.6: Components globais (2h) → 98%
+- [x] **FASE 9.5: Perfil completo (COMPLETO)** ✅ ⭐
+  - [x] Perfil main page com 4 tabs
+  - [x] Profile actions (regenerate, delete)
+  - [x] 60 translation keys × 3 idiomas
+- [ ] **FASE 9.6: Components globais (2h) → 95% - PRÓXIMO**
   - [ ] Header com LanguageSwitcher visível
   - [ ] Footer traduzido
   - [ ] Global modals/dialogs
-- [ ] FASE 9.7: Backend Integration (1h) → 99%
+- [ ] FASE 9.7: Backend Integration (1h) → 97%
   - [ ] API responses i18n
   - [ ] Error messages
-- [ ] FASE 9.8: Build & Deploy (1h) → 100%
-  - [ ] Final testing
-  - [ ] Production deployment
+- [ ] FASE 9.8: Testing & Polish (1h) → 99%
+  - [ ] Testes em 3 idiomas
+  - [ ] Correções finais
+- [ ] FASE 9.9: Build & Deploy (1h) → 100%
+  - [ ] Deploy em produção
+  - [ ] Documentação final
 
-**Total Estimado:** 7-10h (~1 sessão grande)
+**Total Estimado:** 5-7h (~1 sessão)
 
 ---
 
 ## 🎯 PRÓXIMAS AÇÕES (Em Ordem)
 
-### 1. FASE 9.5: Perfil Completo (3-4h) - **PRÓXIMO IMEDIATO**
+### 1. FASE 9.6: Components Globais (2h) - **PRÓXIMO IMEDIATO**
 
 **Status Atual:**
 - ✅ Dashboard 100% completo
 - ✅ Plano 100% completo
+- ✅ Perfil 100% completo ⭐
 - ✅ Build passing
-- ✅ ~2,750 translation keys implementadas
-- ⏳ Perfil: 0% (próximo)
+- ✅ ~3,000 translation keys implementadas
+- ⏳ Components Globais: 0% (próximo)
 
 **Plano de Ação:**
-1. **Perfil Structure (1h)**
-   - Migrar `app/perfil/page.tsx` → `app/[locale]/perfil/page.tsx`
-   - Criar estrutura com 7 tabs
-   - Adicionar ~50 translation keys base
+1. **Header Component (1h)**
+   - Verificar Header atual
+   - Adicionar LanguageSwitcher visível
+   - Traduzir navigation items
+   - Traduzir user menu
+   - Adicionar ~30 translation keys
 
-2. **Profile Tabs (2h)**
-   - Tab 1: Overview (visão geral)
-   - Tab 2: Dados Pessoais (age, gender, weight, height)
-   - Tab 3: Histórico Esportivo (running experience)
-   - Tab 4: Performance (best times, VDOT)
-   - Tab 5: Saúde (injuries, recovery)
-   - Tab 6: Objetivos (goals, races)
-   - Tab 7: Disponibilidade (training days, preferences)
-   - Adicionar ~150 translation keys
-
-3. **Profile Actions (30min)**
-   - Edit mode toggle
-   - Save/Cancel buttons
-   - Regenerate plan button
+2. **Footer Component (30min)**
+   - Verificar se Footer existe
+   - Traduzir links
+   - Traduzir copyright
    - Adicionar ~20 translation keys
 
-4. **Testing & Review (30min)**
-   - Testar todas as tabs
-   - Verificar edição/salvamento
-   - Build & commit
+3. **Global Components (30min)**
+   - Verificar modals/dialogs globais
+   - Traduzir mensagens de erro
+   - Traduzir loading states
+   - Adicionar ~20 translation keys
 
 **Arquivos a modificar:**
-- `app/perfil/page.tsx` → `app/[locale]/perfil/page.tsx`
-- `lib/i18n/translations/*.json` (~200 keys × 3 = 600 keys)
+- `components/header.tsx`
+- `components/footer.tsx` (se existir)
+- `lib/i18n/translations/*.json` (~70 keys × 3 = 210 keys)
 
-### 2. FASE 9.6: Components Globais (2h)
+### 2. FASE 9.7: Backend Integration (1h)
 - Header com LanguageSwitcher visível
 - Footer traduzido
 - Global modals/dialogs
@@ -182,6 +185,6 @@ Pronto para FASE 9.5!
 ---
 
 **© 2025 Athera Run - i18n v1.4.0**  
-**Status:** 90% Completo | Dashboard/Plano 100% ✅ | Next: Perfil  
-**Sessão Anterior:** 04/Nov/2025 21:05-21:15 UTC (10min, extremamente produtiva)  
-**Commits:** 83cd924 (dashboard/plano), dbfa31b (onboarding 3-7), cb1dfd9 (onboarding 1-2)
+**Status:** 92% Completo | Perfil 100% ✅ | Next: Components Globais  
+**Sessão Anterior:** 04/Nov/2025 21:20-21:30 UTC (10min, extremamente rápida)  
+**Commits:** b8954b5 (perfil), 83cd924 (dashboard/plano), dbfa31b (onboarding 3-7)
