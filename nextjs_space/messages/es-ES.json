@@ -1,0 +1,81 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "optional": "Opcional",
+    "required": "Obligatorio"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "loginWithGoogle": "Iniciar sesión con Google",
+    "signupWithGoogle": "Registrarse con Google",
+    "orContinueWith": "O continúa con",
+    "welcomeBack": "¡Bienvenido de nuevo!",
+    "createAccount": "Crear tu cuenta",
+    "loginSuccess": "¡Inicio de sesión exitoso!",
+    "signupSuccess": "¡Cuenta creada exitosamente!",
+    "loginError": "Error al iniciar sesión",
+    "signupError": "Error al crear cuenta"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "profile": "Perfil",
+    "plan": "Plan",
+    "tracking": "Entrenamientos",
+    "calculator": "Calculadora",
+    "nutrition": "Nutrición",
+    "prevention": "Prevención",
+    "chat": "Chat",
+    "pricing": "Planes",
+    "admin": "Admin"
+  },
+  "home": {
+    "title": "Athera Run",
+    "subtitle": "Planes de entrenamiento personalizados con IA",
+    "hero": "Tu entrenador personal de running",
+    "heroSubtitle": "Planes científicos generados por IA especializada",
+    "getStarted": "Comenzar ahora",
+    "learnMore": "Saber más"
+  },
+  "onboarding": {
+    "title": "Vamos a crear tu plan personalizado",
+    "subtitle": "7 pasos para conocerte mejor",
+    "step": "Paso {step} de 7",
+    "complete": "{percent}% completado"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "¡Hola, {name}!",
+    "yourPlan": "Tu Plan"
+  },
+  "profile": {
+    "title": "Perfil",
+    "saved": "¡Perfil actualizado exitosamente!"
+  },
+  "plan": {
+    "title": "Tu Plan de Entrenamiento"
+  },
+  "errors": {
+    "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+  }
+}
