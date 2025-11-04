@@ -771,5 +771,150 @@
         "consistency": "Build routine"
       }
     }
+  },
+  "dashboard": {
+    "welcome": "Hello, {{name}}! 👋",
+    "welcomeDefault": "Hello, Runner! 👋",
+    "subtitle": "Welcome to your personalized training dashboard",
+    "createPlanSubtitle": "Let's create your personalized training plan",
+    "loading": "Loading...",
+    "generatePlan": {
+      "title": "Generate Your Personalized Plan",
+      "description": "Based on your profile, we will create a training plan fully adapted to your goals",
+      "button": "Generate My Plan Now",
+      "generating": "Generating Plan..."
+    },
+    "stats": {
+      "nextWorkout": "Next Workout",
+      "currentWeek": "Current Week",
+      "goal": "Goal",
+      "progress": "Progress",
+      "noWorkout": "No pending workouts",
+      "completed": "workouts"
+    },
+    "upcomingWorkouts": {
+      "title": "Your Upcoming Workouts",
+      "description": "Today and tomorrow's workouts",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "noWorkouts": "No workouts scheduled for today or tomorrow.",
+      "viewFullPlan": "View full plan",
+      "distance": "Distance:",
+      "duration": "Duration:",
+      "pace": "Pace:",
+      "confirmButton": "Confirm Workout Completed"
+    },
+    "quickAccess": {
+      "title": "Quick Access",
+      "description": "Navigate through main features",
+      "viewPlan": "View Full Plan",
+      "registerWorkout": "Register Workout",
+      "calculator": "VDOT Calculator",
+      "aiAnalysis": "AI Analysis"
+    },
+    "advancedFeatures": {
+      "title": "Advanced Features",
+      "description": "Make the most of your training",
+      "personalizedPlan": "100% Personalized Plan",
+      "personalizedPlanDesc": "Your plan was generated based on your unique profile",
+      "personalizedPlanDescFuture": "Will be generated based on your unique profile",
+      "aiAnalysis": "AI Analysis",
+      "aiAnalysisDesc": "Deep insights about your progress",
+      "stravaIntegration": "Strava Integration",
+      "stravaIntegrationDesc": "Automatic workout synchronization"
+    },
+    "workoutLog": {
+      "title": "Confirm Workout Completed",
+      "description": "Record how your workout went and share your perceptions",
+      "completed": "Did you complete this workout?",
+      "completedYes": "Yes, I completed the workout",
+      "completedNo": "No, I couldn't do it",
+      "feeling": "How did you feel during the workout?",
+      "feelings": {
+        "excellent": "😄 Excellent - I felt great!",
+        "good": "😊 Good - It was a positive workout",
+        "ok": "😐 Ok - Normal, nothing special",
+        "tired": "😓 Tired - It was difficult",
+        "bad": "😣 Bad - Very challenging"
+      },
+      "effort": "Perceived effort level (1-10)",
+      "effortEasy": "1 - Very easy",
+      "effortMax": "10 - Maximum effort",
+      "notes": "Observations and comments (optional)",
+      "notesPlaceholder": "How was the workout? Any difficulties? Did you feel any pain? Share your thoughts...",
+      "notesHelp": "Your observations help AI better personalize your training plan.",
+      "save": "Save Report",
+      "saving": "Saving..."
+    }
+  },
+  "plano": {
+    "title": "My Training Plan",
+    "subtitle": "Personalized plan for {{goal}}",
+    "loading": "Loading...",
+    "noPlan": {
+      "title": "No Plan Found",
+      "description": "You don't have a personalized training plan yet.",
+      "button": "Generate My Plan"
+    },
+    "summary": {
+      "goal": "Goal",
+      "currentWeek": "Current Week",
+      "progress": "Progress",
+      "completedWorkouts": "Workouts completed",
+      "totalDuration": "Total Duration",
+      "weeks": "weeks"
+    },
+    "weekNavigation": {
+      "week": "Week",
+      "of": "of",
+      "currentWeek": "Current Week",
+      "weekFocus": "Week Focus",
+      "noWorkouts": "No workouts available for this week",
+      "loadingWeek": "Loading week data..."
+    },
+    "workout": {
+      "distance": "{{distance}} km",
+      "duration": "{{duration}} min",
+      "pace": "Pace: {{pace}}"
+    },
+    "phases": {
+      "base": "Base",
+      "build": "Build",
+      "peak": "Peak",
+      "taper": "Taper",
+      "race": "Race"
+    },
+    "workoutTypes": {
+      "easy": "Easy Run",
+      "long": "Long Run",
+      "threshold": "Threshold Run",
+      "interval": "Interval Run",
+      "tempo": "Tempo Run",
+      "recovery": "Recovery",
+      "rest": "Rest",
+      "running": "Running",
+      "strength": "Strength",
+      "cross": "Cross-training"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "registerWorkout": "Register Workout",
+      "viewDashboard": "View Dashboard",
+      "manageRaces": "Manage Races"
+    },
+    "goalLabels": {
+      "10k": "10km",
+      "half_marathon": "Half Marathon",
+      "marathon": "Marathon"
+    },
+    "daysOfWeek": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
   }
 }
