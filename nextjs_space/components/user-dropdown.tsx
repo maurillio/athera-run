@@ -17,6 +17,7 @@ import { User, Settings, Shield, LogOut, Loader2, Crown } from 'lucide-react';
 import { useState } from 'react';
 import { usePremium } from '@/hooks/use-premium';
 import PremiumBadge from '@/components/subscription/premium-badge';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function UserDropdown() {
   const { data: session, status } = useSession();
@@ -24,6 +25,7 @@ export default function UserDropdown() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [open, setOpen] = useState(false);
   const { isPremium, status: subscriptionStatus } = usePremium();
+  const t = useTranslations('header.userMenu');
 
   if (status === 'loading') {
     return (
@@ -37,10 +39,10 @@ export default function UserDropdown() {
     return (
       <div className="flex items-center space-x-2">
         <Button variant="ghost" size="sm" onClick={() => router.push('/login')}>
-          Entrar
+          {t('login')}
         </Button>
         <Button size="sm" onClick={() => router.push('/signup')}>
-          Cadastrar
+          {t('signup')}
         </Button>
       </div>
     );
@@ -73,10 +75,10 @@ export default function UserDropdown() {
           type="button"
           onClick={() => setOpen(!open)}
           className="relative h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-          aria-label="Menu do usuário"
+          aria-label={t('label')}
           aria-haspopup="true"
           aria-expanded={open}
-          title="Menu do usuário"
+          title={t('label')}
           role="button"
         >
           <Avatar className="h-10 w-10 border-2 border-orange-200 hover:border-orange-300 transition-colors">
@@ -104,19 +106,19 @@ export default function UserDropdown() {
           <>
             <DropdownMenuItem onClick={() => router.push('/pricing')} className="cursor-pointer text-orange-600 font-medium">
               <Crown className="mr-2 h-4 w-4" />
-              <span>Fazer Upgrade</span>
+              <span>{t('upgrade')}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
         )}
         <DropdownMenuItem onClick={() => router.push('/perfil')} className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />
-          <span>Editar Perfil</span>
+          <span>{t('editProfile')}</span>
         </DropdownMenuItem>
         {session.user.isAdmin && (
           <DropdownMenuItem onClick={() => router.push('/admin')} className="cursor-pointer">
             <Shield className="mr-2 h-4 w-4" />
-            <span>Painel Administrativo</span>
+            <span>{t('adminPanel')}</span>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
@@ -128,12 +130,12 @@ export default function UserDropdown() {
           {isLoggingOut ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              <span>Saindo...</span>
+              <span>{t('loggingOut')}</span>
             </>
           ) : (
             <>
               <LogOut className="mr-2 h-4 w-4" />
-              <span>Sair</span>
+              <span>{t('logout')}</span>
             </>
           )}
         </DropdownMenuItem>

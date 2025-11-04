@@ -3,6 +3,7 @@
 import { Crown, X, Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 interface PaywallModalProps {
   isOpen: boolean;
@@ -12,13 +13,15 @@ interface PaywallModalProps {
 }
 
 export default function PaywallModal({ isOpen, onClose, feature, description }: PaywallModalProps) {
+  const t = useTranslations('paywall');
+  
   const benefits = [
-    'Integração completa com Strava',
-    'Auto-ajuste inteligente de treinos',
-    'Chat ilimitado com IA especializada',
-    'Analytics avançados e insights',
-    'Múltiplas metas simultâneas',
-    'Suporte prioritário',
+    t('benefits.strava'),
+    t('benefits.autoAdjust'),
+    t('benefits.aiChat'),
+    t('benefits.analytics'),
+    t('benefits.multipleGoals'),
+    t('benefits.priority'),
   ];
 
   return (
@@ -36,14 +39,14 @@ export default function PaywallModal({ isOpen, onClose, feature, description }: 
             <Crown className="w-6 h-6 text-white" />
           </div>
           <DialogTitle className="text-center text-2xl">
-            Recurso Premium
+            {t('title')}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              <strong className="text-foreground">{feature}</strong> é um recurso exclusivo para assinantes Premium.
+              <strong className="text-foreground">{feature}</strong> {t('description')}
             </p>
             {description && (
               <p className="text-sm text-muted-foreground mt-2">
@@ -53,7 +56,7 @@ export default function PaywallModal({ isOpen, onClose, feature, description }: 
           </div>
 
           <div className="bg-muted/50 rounded-lg p-4">
-            <p className="text-sm font-semibold mb-3">Com o Premium você tem:</p>
+            <p className="text-sm font-semibold mb-3">{t('withPremium')}</p>
             <ul className="space-y-2">
               {benefits.map((benefit, index) => (
                 <li key={index} className="flex items-center gap-2 text-sm">
@@ -70,7 +73,7 @@ export default function PaywallModal({ isOpen, onClose, feature, description }: 
               onClick={() => window.location.href = '/pricing'}
             >
               <Crown className="w-4 h-4 mr-2" />
-              Ver Planos Premium
+              {t('viewPlans')}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             <Button
@@ -78,7 +81,7 @@ export default function PaywallModal({ isOpen, onClose, feature, description }: 
               className="w-full"
               onClick={onClose}
             >
-              Talvez mais tarde
+              {t('maybeLater')}
             </Button>
           </div>
         </div>
