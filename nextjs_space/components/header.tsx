@@ -1,35 +1,22 @@
-
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { 
-  Calendar,
-  Calculator,
-  Apple,
-  Shield,
-  BookOpen,
-  Activity,
-  Trophy,
-  Target,
-  MessageCircle
-} from 'lucide-react';
+import { Calendar, Trophy, Target } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n/hooks';
 import UserDropdown from './user-dropdown';
-
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: Trophy },
-  { name: 'Plano', href: '/plano', icon: Calendar },
-  { name: 'Treinos', href: '/tracking', icon: Target },
-
-
-
-
-
-];
+import LanguageSwitcher from './i18n/LanguageSwitcher';
 
 export default function Header() {
   const pathname = usePathname();
+  const t = useTranslations('header');
+  
+  const navigation = [
+    { name: t('navigation.dashboard'), href: '/dashboard', icon: Trophy },
+    { name: t('navigation.plano'), href: '/plano', icon: Calendar },
+    { name: t('navigation.treinos'), href: '/tracking', icon: Target },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,9 +28,9 @@ export default function Header() {
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
-                Athera Run
+                {t('brand')}
               </h1>
-              <p className="text-xs text-muted-foreground -mt-1">Treinamento Inteligente</p>
+              <p className="text-xs text-muted-foreground -mt-1">{t('tagline')}</p>
             </div>
           </Link>
 
@@ -70,12 +57,13 @@ export default function Header() {
             })}
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             <div className="flex lg:hidden">
               <select 
                 className="px-3 py-1.5 text-sm border rounded-md bg-background"
                 value={pathname}
                 onChange={(e) => window.location.href = e.target.value}
+                aria-label={t('mobileSelect')}
               >
                 {navigation.map((item) => (
                   <option key={item.name} value={item.href}>
@@ -85,6 +73,7 @@ export default function Header() {
               </select>
             </div>
             
+            <LanguageSwitcher />
             <UserDropdown />
           </div>
         </div>

@@ -985,5 +985,52 @@
       "errorConnection": "Erro ao carregar perfil. Verifique sua conexão.",
       "errorUpdatingProfile": "Erro ao atualizar perfil"
     }
+  },
+  "header": {
+    "brand": "Athera Run",
+    "tagline": "Treinamento Inteligente",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "plano": "Plano",
+      "treinos": "Treinos"
+    },
+    "mobileSelect": "Navegação",
+    "userMenu": {
+      "label": "Menu do usuário",
+      "login": "Entrar",
+      "signup": "Cadastrar",
+      "editProfile": "Editar Perfil",
+      "adminPanel": "Painel Administrativo",
+      "upgrade": "Fazer Upgrade",
+      "logout": "Sair",
+      "loggingOut": "Saindo..."
+    }
+  },
+  "paywall": {
+    "title": "Recurso Premium",
+    "description": "é um recurso exclusivo para assinantes Premium.",
+    "withPremium": "Com o Premium você tem:",
+    "benefits": {
+      "strava": "Integração completa com Strava",
+      "autoAdjust": "Auto-ajuste inteligente de treinos",
+      "aiChat": "Chat ilimitado com IA especializada",
+      "analytics": "Analytics avançados e insights",
+      "multipleGoals": "Múltiplas metas simultâneas",
+      "priority": "Suporte prioritário"
+    },
+    "viewPlans": "Ver Planos Premium",
+    "maybeLater": "Talvez mais tarde"
+  },
+  "errors": {
+    "pageNotFound": {
+      "title": "Página não encontrada",
+      "description": "Desculpe, não conseguimos encontrar a página que você está procurando.",
+      "goHome": "Voltar para Home"
+    },
+    "genericError": {
+      "title": "Algo deu errado",
+      "description": "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+      "retry": "Tentar novamente"
+    }
   }
 }

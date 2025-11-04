@@ -977,5 +977,52 @@
       "errorConnection": "Error loading profile. Check your connection.",
       "errorUpdatingProfile": "Error updating profile"
     }
+  },
+  "header": {
+    "brand": "Athera Run",
+    "tagline": "Smart Training",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "plano": "Plan",
+      "treinos": "Workouts"
+    },
+    "mobileSelect": "Navigation",
+    "userMenu": {
+      "label": "User menu",
+      "login": "Login",
+      "signup": "Sign Up",
+      "editProfile": "Edit Profile",
+      "adminPanel": "Admin Panel",
+      "upgrade": "Upgrade",
+      "logout": "Logout",
+      "loggingOut": "Logging out..."
+    }
+  },
+  "paywall": {
+    "title": "Premium Feature",
+    "description": "is an exclusive feature for Premium subscribers.",
+    "withPremium": "With Premium you get:",
+    "benefits": {
+      "strava": "Full Strava integration",
+      "autoAdjust": "Intelligent auto-adjustment of workouts",
+      "aiChat": "Unlimited chat with specialized AI",
+      "analytics": "Advanced analytics and insights",
+      "multipleGoals": "Multiple simultaneous goals",
+      "priority": "Priority support"
+    },
+    "viewPlans": "View Premium Plans",
+    "maybeLater": "Maybe later"
+  },
+  "errors": {
+    "pageNotFound": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn't find the page you're looking for.",
+      "goHome": "Go to Home"
+    },
+    "genericError": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Please try again later.",
+      "retry": "Try again"
+    }
   }
 }
