@@ -1,315 +1,326 @@
 # 🚀 CONTEXTO PARA PRÓXIMA SESSÃO
 
-**Data:** 04 de Novembro de 2025 13:25 UTC  
-**Versão Atual:** 1.3.0 (100% Completo, Auditado e Onboarding Revisado)  
-**Próxima Versão:** 1.4.0 (Internacionalização - i18n)  
-**Status:** ✅ v1.3.0 PRODUCTION READY - 🟡 v1.4.0 PLANEJAMENTO COMPLETO  
-**Último Commit:** 47e37c2
+**Data:** 04 de Novembro de 2025 14:35 UTC  
+**Versão Atual:** 1.3.0 (100% Completo ✅)  
+**Em Desenvolvimento:** 1.4.0 i18n (20% Completo 🔄)  
+**Status:** ✅ v1.3.0 PRODUCTION | 🔄 v1.4.0 EM PROGRESSO (Fase 1)  
+**Branch Ativa:** `feature/i18n-multi-language`  
+**Último Commit:** 443b831
 
 ---
 
-## ⭐ COMECE AQUI
+## ⭐ COMECE AQUI - RETOMAR i18n v1.4.0
 
-### Arquivos Essenciais (Leia Nesta Ordem)
+### 🌐 **EM DESENVOLVIMENTO AGORA: i18n Multi-idioma**
 
-1. **PROXIMA_SESSAO.md** ⭐ (Este arquivo - overview rápido)
-2. **PLANO_IMPLEMENTACAO_i18n.md** ⭐⭐ (NOVA FEATURE - Leia isso!)
-3. **CONTEXTO.md** ⭐ (Visão geral completa do projeto)
-4. **AUDIT_V1.3.0_FINAL_COMPREHENSIVE.md** (Auditoria completa 100%)
-5. **SESSAO_04NOV2025_ONBOARDING_REVISION.md** (Última sessão)
+**Progresso:** 20% (Fase 1 Setup completo)
 
----
-
-## 🌐 PRÓXIMA FEATURE: INTERNACIONALIZAÇÃO (v1.4.0)
-
-### 🎯 Objetivo
-Adicionar suporte a **3 idiomas** no Athera Run:
-- 🇧🇷 Português (Brasil) - pt-BR (atual)
-- 🇺🇸 English (US) - en-US (novo)
-- 🇪🇸 Español - es-ES (novo)
-
-### 📋 O Que Será Traduzido
-✅ Interface completa (Frontend)  
-✅ Emails transacionais  
-✅ Planos de treino gerados pela IA  
-✅ Notificações  
-✅ Documentação do usuário
-
-### 🛠️ Stack Técnico
-- **Biblioteca:** next-intl v3.0.0
-- **Estrutura:** App Router com [locale] routing
-- **Traduções:** JSON files (pt-BR.json, en-US.json, es-ES.json)
-- **IA:** Multi-idioma com prompts localizados
-
-### ⏱️ Estimativa
-- **Prazo:** 5-7 dias úteis
-- **Horas:** ~42 horas
-- **Complexidade:** Média
-- **Risco:** Baixo (biblioteca madura)
-
-### 📁 Documento Completo
-**Leia:** `PLANO_IMPLEMENTACAO_i18n.md` (21KB, detalhado)
+**Leia PRIMEIRO:**
+1. **SESSAO_04NOV2025_i18n_SETUP.md** ⭐⭐⭐ (LEIA ISSO!)
+2. **PLANO_IMPLEMENTACAO_i18n.md** ⭐⭐ (Plano completo)
+3. **PROXIMA_SESSAO.md** ⭐ (Este arquivo)
 
 ---
 
-## ✅ RESUMO: O QUE ESTÁ PRONTO (v1.3.0)
+## 🔄 STATUS ATUAL i18n v1.4.0
 
-**V1.3.0 = 100% COMPLETO + AUDITADO**
-
-### Database ✅
-- 38 campos totais (25 → 38, +13 novos v1.3.0)
-- Schema atualizado e migrado
-- PostgreSQL 45.232.21.67 (compartilhado dev/prod)
-
-### Bibliotecas Científicas ✅
-- **5 bibliotecas** com 1,795 linhas
-- vdot-calculator.ts (253L)
-- injury-analyzer.ts (352L)
-- recovery-adjuster.ts (323L)
-- onboarding-validator.ts (359L)
-- ai-context-builder.ts (508L)
-
-### Frontend ✅
-- Onboarding v1.3.0: 8 componentes, 7 fases, **100% CAMPOS COLETADOS**
-- Profile Tabs v1.3.0: 7 componentes integrados
-- Código reduzido 64% (1,124 → 400 linhas)
-- **+290 linhas** adicionadas no onboarding (revisão 04/Nov)
-
-### APIs ✅
-- /api/profile/create ✅
-- /api/profile/update ✅
-- /api/plan/generate ✅
-- /api/plan/auto-adjust ✅
-
-### AI Integration ✅
-- buildComprehensiveContext (9 seções)
-- 100% dos dados utilizados (era 60%)
-
-### Build & Deploy ✅
-- TypeScript: Zero erros
-- Build: Success
-- Deploy: Live em atherarun.com
-- Audit Score: 73/73 = 100%
-
----
-
-## 📊 CAMPOS v1.3.0 (13 total) - ✅ 100% IMPLEMENTADOS
-
-**Fisiologia (3):** ✅
-- restingHeartRate, sleepQuality, stressLevel
-
-**Base Aeróbica (2):** ✅
-- otherSportsExperience, otherSportsYears
-
-**Lesões (3):** ✅
-- injuryDetails, injuryRecoveryStatus, lastInjuryDate
-
-**Performance (2):** ✅
-- bestTimes, lastVDOTUpdate
-
-**Infraestrutura (3):** ✅
-- hasGymAccess, hasPoolAccess, hasTrackAccess
-
-**Preferências (2):** ✅
-- trainingPreferences, motivationFactors
-
----
-
-## 🎯 ROADMAP
-
-### ✅ v1.3.0 (Completo - 04/Nov/2025)
-- Database: 38 campos (+13 novos)
-- Utility Libraries: 5 científicas
-- Onboarding: 100% campos coletados
-- Profile Tabs: 100% editáveis
-- AI: 9 seções de análise
-- Audit: 73/73 = 100%
-
-### 🟡 v1.4.0 (Planejado - Nov/2025)
-- **i18n Multi-idioma** (pt-BR, en-US, es-ES)
-- Interface traduzida completa
-- IA multi-idioma
-- Emails traduzidos
-- Language switcher
-
-### 🔮 v1.5.0 (Futuro - Dez/2025)
-- Garmin integration
-- Polar integration
-- Analytics avançados
-- Notificações push
-
-### 🔮 v2.0.0 (Futuro - Q1 2026)
-- App mobile nativo
-- Machine learning avançado
-- Social features
-- Marketplace de treinadores
-
----
-
-## 🔄 FLUXO DE DADOS ATUAL (100% Convergente)
+### ✅ FASE 1: SETUP COMPLETO (20%)
 
 ```
-USER INPUT (Onboarding)
-  ↓ [13 campos v1.3.0 coletados]
-API /profile/create
-  ↓ [14 campos aceitos e validados]
-DATABASE (PostgreSQL)
-  ↓ [38 campos salvos]
-API /plan/generate
-  ↓ [Profile completo carregado]
-buildComprehensiveContext()
-  ↓ [9 seções com 100% dos dados]
-OpenAI GPT-4o
-  ↓ [Contexto científico completo]
-AI PLAN GENERATION
-  ↓ [Plano personalizado científico]
-DATABASE (CustomTrainingPlan)
-  ↓ [Plano estruturado salvo]
-FRONTEND /plano
-  ↓ [Exibe plano ao usuário]
+Branch: feature/i18n-multi-language
+Commit: 443b831
 ```
 
-**Score:** 100% Convergente ✅
+**O que está PRONTO:**
+- ✅ next-intl v4.4.0 instalado
+- ✅ i18n.ts configurado (3 idiomas)
+- ✅ messages/ criados (pt-BR, en-US, es-ES)
+- ✅ middleware.ts atualizado (i18n + auth)
+- ✅ LanguageSwitcher component
+- ✅ app/[locale]/ folder criado
+
+**O que FALTA (80%):**
+- ⏳ Migrar layout para [locale]/layout.tsx
+- ⏳ Migrar 24 páginas
+- ⏳ Migrar 50+ componentes
+- ⏳ Expandir messages/ (~2.000 strings)
+- ⏳ Backend: campo locale no schema
+- ⏳ IA multi-idioma
+- ⏳ Emails multi-idioma
+- ⏳ Testes completos
 
 ---
 
-## 📁 ESTRUTURA DE ARQUIVOS (Atual)
+## 🎯 PRÓXIMA SESSÃO: FASE 2 - LAYOUT E CORE
 
-```
-athera-run/
-├── PLANO_IMPLEMENTACAO_i18n.md ⭐ (NOVO - Leia!)
-├── PROXIMA_SESSAO.md ⭐ (Este arquivo)
-├── CONTEXTO.md ⭐ (Atualizado)
-├── AUDIT_V1.3.0_FINAL_COMPREHENSIVE.md (Auditoria 100%)
-├── SESSAO_04NOV2025_ONBOARDING_REVISION.md (Última sessão)
-├── nextjs_space/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── onboarding/ (8 componentes v1.3.0)
-│   │   ├── perfil/ (ProfileTabs v1.3.0)
-│   │   └── ...
-│   ├── components/
-│   │   ├── onboarding/v1.3.0/ (8 arquivos)
-│   │   └── profile/v1.3.0/ (7 arquivos)
-│   ├── lib/
-│   │   ├── vdot-calculator.ts ✅
-│   │   ├── injury-analyzer.ts ✅
-│   │   ├── recovery-adjuster.ts ✅
-│   │   ├── onboarding-validator.ts ✅
-│   │   ├── ai-context-builder.ts ✅
-│   │   └── ai-plan-generator.ts ✅
-│   └── prisma/
-│       └── schema.prisma (38 campos) ✅
-```
+### Objetivo
+Migrar layout e páginas principais para [locale]
 
----
+### Tarefas (3-4 horas)
+1. ✅ Checkout branch feature/i18n-multi-language
+2. Migrar app/layout.tsx → [locale]/layout.tsx
+3. Migrar app/page.tsx (home)
+4. Migrar login/signup
+5. Expandir messages/ (~200 strings)
+6. Integrar LanguageSwitcher no header
+7. Testar mudança de idioma
+8. Build e validação
+9. Commit Fase 2
 
-## 💡 COMANDOS ÚTEIS
-
-### Verificar Status
+### Comandos
 ```bash
 cd /root/athera-run
-git status
-git log --oneline -10
-```
-
-### Build Local
-```bash
+git checkout feature/i18n-multi-language
+git pull origin feature/i18n-multi-language
 cd nextjs_space
-npm run build
+npm run dev  # testar local
+npm run build  # validar
 ```
 
-### Ver Documentação i18n
-```bash
-cat PLANO_IMPLEMENTACAO_i18n.md
+---
+
+## 📋 ROADMAP i18n v1.4.0
+
 ```
+████░░░░░░░░░░░░░░░░ 20%
+
+✅ Fase 1: Setup (20%) - COMPLETO
+⏳ Fase 2: Layout/Core (20%) - PRÓXIMA
+⏳ Fase 3: Páginas Principais (20%)
+⏳ Fase 4: Onboarding (15%)
+⏳ Fase 5: Componentes (10%)
+⏳ Fase 6: Backend/IA (10%)
+⏳ Fase 7: Emails/Deploy (5%)
+```
+
+**Estimativa:** 4-5 sessões de 3-4h cada
+
+---
+
+## 📚 ARQUIVOS ESSENCIAIS
+
+### Para Retomar i18n
+1. **SESSAO_04NOV2025_i18n_SETUP.md** - Resumo completo do que foi feito
+2. **PLANO_IMPLEMENTACAO_i18n.md** - Plano técnico detalhado
+3. **Branch:** `feature/i18n-multi-language`
+
+### Para Entender v1.3.0 (se necessário)
+1. CONTEXTO.md - Visão geral v1.3.0
+2. AUDIT_V1.3.0_FINAL_COMPREHENSIVE.md - Auditoria 100%
+3. SESSAO_04NOV2025_ONBOARDING_REVISION.md - Última sessão v1.3.0
+
+---
+
+## ✅ v1.3.0 - CONTEXTO (100% COMPLETO)
+
+**Status:** ✅ EM PRODUÇÃO (atherarun.com)
+
+### Database ✅
+- 38 campos (25 + 13 novos v1.3.0)
+- Schema migrado
+- PostgreSQL 45.232.21.67
+
+### Frontend ✅
+- Onboarding: 100% campos coletados
+- Profile Tabs: 100% editáveis
+- Código otimizado: -64%
+
+### AI ✅
+- buildComprehensiveContext (9 seções)
+- 100% dados utilizados
+- 5 bibliotecas científicas (1,795 linhas)
+
+### Audit ✅
+- Score: 73/73 = 100%
+- Build: Zero erros
+- Deploy: Live
+
+---
+
+## 🌐 COMO COMEÇAR NOVA SESSÃO - i18n
+
+### Opção 1: Continuar i18n (RECOMENDADO)
+
+```bash
+# 1. Clone/Pull
+cd /root/athera-run
+git checkout feature/i18n-multi-language
+git pull origin feature/i18n-multi-language
+
+# 2. Verificar status
+git status
+ls -la nextjs_space/messages/
+ls -la nextjs_space/app/[locale]/
+
+# 3. Ler documentação
+cat SESSAO_04NOV2025_i18n_SETUP.md
+cat PLANO_IMPLEMENTACAO_i18n.md
+
+# 4. Começar Fase 2
+# Migrar layout.tsx...
+```
+
+### Opção 2: Trabalhar em v1.3.0
+
+```bash
+# 1. Voltar para main
+git checkout main
+git pull origin main
+
+# 2. Criar nova feature
+git checkout -b feature/nova-feature
+
+# 3. Desenvolver...
+```
+
+---
+
+## 📊 FASES DETALHADAS i18n
+
+### ✅ Fase 1: Setup (COMPLETO)
+- Duração: 1h
+- Arquivos: 9
+- Linhas: ~500
+- Status: ✅ DONE
+
+### ⏳ Fase 2: Layout e Core (PRÓXIMA)
+- Duração: 3-4h
+- Páginas: 5 (layout, home, login, signup, dashboard)
+- Strings: ~200
+- Status: 🔄 NEXT
+
+### ⏳ Fase 3: Páginas Principais
+- Duração: 3-4h
+- Páginas: 6 (perfil, plano, tracking, etc)
+- Strings: ~300
+- Status: ⏳ TODO
+
+### ⏳ Fase 4: Onboarding
+- Duração: 3-4h
+- Componentes: 8 Steps
+- Strings: ~300
+- Status: ⏳ TODO
+
+### ⏳ Fase 5: Componentes Restantes
+- Duração: 2-3h
+- Páginas: 8 restantes
+- Strings: ~200
+- Status: ⏳ TODO
+
+### ⏳ Fase 6: Backend e IA
+- Duração: 3-4h
+- Schema: +1 campo
+- IA: Multi-idioma
+- APIs: Locale support
+- Status: ⏳ TODO
+
+### ⏳ Fase 7: Emails e Deploy
+- Duração: 2h
+- Templates: 3 idiomas
+- Testes: E2E
+- Deploy: Production
+- Status: ⏳ TODO
+
+---
+
+## 🎯 DECISÃO: QUAL SESSÃO FAZER?
+
+### A) Continuar i18n Fase 2 ⭐ RECOMENDADO
+- Migrar layout e core pages
+- 3-4 horas
+- 20% → 40% progresso
+- **Start:** `git checkout feature/i18n-multi-language`
+
+### B) Continuar i18n Fase 3+
+- Pular para páginas principais
+- Requer Fase 2 completa
+- **Start:** Verificar se Fase 2 foi feita
+
+### C) Nova feature em v1.3.0
+- v1.3.0 está estável
+- Pode trabalhar em paralelo
+- **Start:** `git checkout main && git checkout -b feature/nova`
+
+### D) Bug fix ou manutenção
+- v1.3.0 em produção
+- Se houver issues
+- **Start:** `git checkout main`
+
+---
+
+## 💡 DICA IMPORTANTE
+
+**Se quiser fazer i18n COMPLETO:**
+
+Planeje **4-5 sessões** de 3-4h cada:
+- Sessão 1: ✅ Setup (FEITO)
+- Sessão 2: Layout + Core
+- Sessão 3: Páginas principais
+- Sessão 4: Onboarding
+- Sessão 5: Backend + Deploy
+
+**Total:** ~16-20 horas para 100%
+
+Mas vale a pena! Mercado internacional é 3x maior 🌎
+
+---
+
+## 📈 MÉTRICAS ATUAIS
+
+### v1.3.0 (Produção)
+- Audit: 73/73 = 100% ✅
+- Campos: 38 ✅
+- Build: Zero erros ✅
+- Live: atherarun.com ✅
+
+### v1.4.0 i18n (Dev)
+- Progresso: 20% 🔄
+- Branch: feature/i18n-multi-language
+- Arquivos: 9 criados/modificados
+- Strings: 246 (82×3)
+- Fases restantes: 6
 
 ---
 
 ## ⚠️ INFORMAÇÕES CRÍTICAS
 
 ### Infraestrutura
-- **Database:** PostgreSQL 45.232.21.67 (compartilhado dev/prod)
-- **Hosting:** 100% Vercel (não há servidor local)
-- **Deploy:** Automático via Git push
-- **Domain:** atherarun.com (GoDaddy)
+- Database: PostgreSQL 45.232.21.67
+- Hosting: Vercel
+- Deploy: Automático via Git
+- Domain: atherarun.com
 
-### IA
-- **Provider:** OpenAI DIRETO (não Abacus!)
-- **Model:** GPT-4o
-- **API Key:** No Vercel env vars
+### Branch Atual
+- Main: v1.3.0 stable ✅
+- Feature: i18n 20% 🔄
+- PR: Não criado ainda
 
-### Auth
-- **Sistema:** NextAuth.js
-- **Métodos:** Email + Google OAuth
-- **Session:** PostgreSQL
-
----
-
-## ✅ CHECKLIST RÁPIDO
-
-### Ao Iniciar Nova Sessão
-
-- [ ] Li PROXIMA_SESSAO.md (este arquivo)
-- [ ] Li PLANO_IMPLEMENTACAO_i18n.md (para v1.4.0)
-- [ ] Li CONTEXTO.md (visão geral)
-- [ ] Verifiquei git status (branch main)
-- [ ] Confirmei última versão (1.3.0 completo, 1.4.0 planejado)
-- [ ] Entendi: v1.3.0 100% completo, próximo é i18n
-
-### Antes de Começar v1.4.0
-
-- [ ] Aprovação do plano i18n
-- [ ] Criar branch: `feature/i18n-multi-language`
-- [ ] Instalar next-intl: `npm install next-intl`
-- [ ] Começar Fase 1 (Setup de configuração)
+### Build Status
+- Main: ✅ Passing
+- Feature: ⏳ Incompleto (esperado)
 
 ---
 
-## 📈 IMPACTO v1.4.0 (Projetado)
+## 🚀 MENSAGEM FINAL
 
-### Mercado
-- **Expansão:** EUA + América Latina + Europa
-- **Público Potencial:** +200-300%
-- **Diferencial:** Concorrentes são só pt-BR
+**v1.3.0 está PERFEITO e EM PRODUÇÃO!** ✅
 
-### Técnico
-- **Biblioteca:** next-intl (madura, type-safe)
-- **Arquitetura:** [locale] routing
-- **Performance:** Bundle splitting por idioma
-- **SEO:** URLs multi-idioma (futuro)
+**i18n v1.4.0 está 20% pronto** - Setup completo! 🔄
 
-### Usuário
-- **Idiomas:** 3 (pt-BR, en-US, es-ES)
-- **UX:** Language switcher no header
-- **Persistência:** Idioma salvo no perfil
-- **IA:** Planos gerados no idioma escolhido
+**Próxima sessão:** Continuar Fase 2 (Layout e Core)
 
----
+**Ou:** Trabalhar em outra feature (v1.3.0 está estável)
 
-## 🎯 MENSAGEM FINAL
-
-**v1.3.0 ESTÁ 100% COMPLETO E EM PRODUÇÃO!** ✅
-
-O sistema passou de planos básicos para planos **verdadeiramente personalizados e científicos**.
-
-**Próximo passo:** Expansão internacional com **i18n (v1.4.0)**
-
-**Para iniciar:**
-1. Leia `PLANO_IMPLEMENTACAO_i18n.md`
-2. Aprove o plano
-3. Começar implementação Fase 1
-
-Sem pressa, sem bugs, sem pendências. Sistema estável para evoluir! 🚀
-
----
-
-**🚀 BOA SORTE NA PRÓXIMA SESSÃO!**
+**Escolha sua aventura!** 🎮
 
 ---
 
 **© 2025 Athera Run**  
-**Status v1.3.0:** ✅ 100% COMPLETO  
-**Status v1.4.0:** �� PLANEJAMENTO COMPLETO  
-**URL:** https://atherarun.com  
-**Atualizado:** 04/Nov/2025 13:25 UTC
+**Main:** v1.3.0 Production ✅  
+**Feature:** v1.4.0 i18n 20% ��  
+**Próximo:** Fase 2 - Layout e Core Pages  
+**Atualizado:** 04/Nov/2025 14:35 UTC
+
+---
+
+**BOA SORTE NA PRÓXIMA SESSÃO!** 🚀��
