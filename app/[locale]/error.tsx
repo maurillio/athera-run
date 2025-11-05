@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTranslations } from '@/lib/i18n/hooks';
+import { useTranslations, useLocale } from '@/lib/i18n/hooks';
 import { AlertCircle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -14,6 +14,7 @@ export default function Error({
   reset: () => void;
 }) {
   const t = useTranslations('errors.genericError');
+  const locale = useLocale();
 
   useEffect(() => {
     console.error('Error boundary caught:', error);
@@ -52,7 +53,7 @@ export default function Error({
             <RefreshCw className="h-4 w-4" />
             {t('retry')}
           </Button>
-          <Link href="/dashboard">
+          <Link href={`/${locale}/dashboard`}>
             <Button className="gap-2 w-full sm:w-auto">
               <Home className="h-4 w-4" />
               Ir para Home

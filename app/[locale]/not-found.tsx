@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useTranslations } from '@/lib/i18n/hooks';
+import { useTranslations, useLocale } from '@/lib/i18n/hooks';
 import { Home, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
   const t = useTranslations('errors.pageNotFound');
+  const locale = useLocale();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4">
@@ -32,7 +33,7 @@ export default function NotFound() {
             <ArrowLeft className="h-4 w-4" />
             Voltar
           </Button>
-          <Link href="/dashboard">
+          <Link href={`/${locale}/dashboard`}>
             <Button className="gap-2 w-full sm:w-auto">
               <Home className="h-4 w-4" />
               {t('goHome')}

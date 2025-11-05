@@ -22,11 +22,24 @@ export function useLocale(): Locale {
 }
 
 function interpolate(text: string, values?: Record<string, any>): string {
-  if (!values) return text;
-  // Support both {{key}} and {key} syntax
-  return text
-    .replace(/\{\{(\w+)\}\}/g, (_, key) => String(values[key] ?? `{{${key}}}`))
-    .replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? `{${key}}`));
+  if (!text || typeof text !== 'string') return text || '';
+  if (!values || Object.keys(values).length === 0) return text;
+  
+  let result = text;
+  
+  // First try {{key}} syntax (preferred)
+  result = result.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    const value = values[key];
+    return value !== undefined && value !== null ? String(value) : match;
+  });
+  
+  // Then try {key} syntax (fallback)
+  result = result.replace(/\{(\w+)\}/g, (match, key) => {
+    const value = values[key];
+    return value !== undefined && value !== null ? String(value) : match;
+  });
+  
+  return result;
 }
 
 export function useTranslations(namespace?: string): TranslationFunction {
