@@ -653,5 +653,10 @@
   "tracking": {
     "title": "Mis Entrenamientos",
     "subtitle": "Registra tus entrenamientos y sigue tu progreso"
+  },
+  "chat": {
+    "title": "Chat con Entrenador IA",
+    "subtitle": "Resuelve tus dudas sobre entrenamiento, nutrición, recuperación y preparación para carreras",
+    "instruction": "Haz clic en el botón flotante en la esquina inferior derecha para iniciar el chat 👇"
   }
 }
