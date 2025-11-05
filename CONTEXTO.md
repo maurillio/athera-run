@@ -108,6 +108,15 @@
 9. ✅ **Deploy:** Live at atherarun.com
 10. ✅ **Documentation:** Diagnóstico completo + Resposta Strava
 
+### 🔧 V1.5.2 HOTFIX - Vercel Build Configuration (05/Nov/2025 21:00) 🔄 EM DEPLOY
+1. ✅ **Vercel.json Fix** - Configuração corrigida para Prisma
+2. ✅ **Vercelignore Fix** - Ignorando apenas docs desnecessários  
+3. ✅ **Package.json Fix** - Adicionado prisma.schema path
+4. ✅ **Análise Completa** - TODO código estava correto, problema era cache/build
+5. ✅ **Diagnósticos** - 4 documentos criados com análise detalhada
+6. 🔄 **Build Vercel** - Em andamento, aguardando conclusão
+7. ⏳ **Teste Produção** - Pendente após deploy
+
 **Arquivos Criados (v1.5.1):**
 - EXECUCAO_COMPLETA_05NOV2025.md (Plano de execução completo)
 - DIAGNOSTICO_INTERPOLACAO_DATAS_05NOV2025.md (Análise técnica detalhada)
