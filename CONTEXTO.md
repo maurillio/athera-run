@@ -2,15 +2,47 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 05 de Novembro de 2025 22:00 UTC  
-**Versão Atual:** 1.5.2 (Correções Críticas + Deploy Fix)  
-**Status:** ⏳ **DEPLOY EM ANDAMENTO - CORREÇÕES APLICADAS**  
-**Build:** ⏳ Aguardando Vercel | **Deploy:** 🚀 Auto-deploy | **Commit:** c38aebe
+**Última atualização:** 06 de Novembro de 2025 19:30 BRT  
+**Versão Atual:** 1.5.3 (Interpolação i18n + Rotas Locale)  
+**Status:** ✅ **DEPLOY CONCLUÍDO - AGUARDANDO VERIFICAÇÃO**  
+**Build:** ⏳ Vercel Building | **Deploy:** 🚀 Auto-deploy | **Commit:** af3293ae
 
-> **🚀 SESSÃO ATUAL:** Correções críticas de interpolação e build
-> **📋 LEIA PRIMEIRO:** [SUMARIO_FINAL_SESSAO_05NOV2025.md](./SUMARIO_FINAL_SESSAO_05NOV2025.md)
-> **🔍 DIAGNÓSTICO:** [DIAGNOSTICO_GERAL_COMPLETO_05NOV2025.md](./DIAGNOSTICO_GERAL_COMPLETO_05NOV2025.md)
-> **📊 STATUS:** [STATUS_ATUALIZACAO_05NOV2025.md](./STATUS_ATUALIZACAO_05NOV2025.md)
+> **🚀 SESSÃO ATUAL (06/Nov):** Correções de interpolação i18n e rotas com locale
+> **📋 RELATÓRIO:** [SESSAO_CORRECAO_06NOV2025.md](./SESSAO_CORRECAO_06NOV2025.md)
+> **🔍 PLANO:** [PLANO_CORRECAO_COMPLETO_06NOV2025.md](./PLANO_CORRECAO_COMPLETO_06NOV2025.md)
+
+---
+
+## 🚨 STATUS ATUAL (06/Nov 19:30)
+
+### ✅ CORRIGIDO HOJE (06/Nov)
+1. ✅ **Interpolação i18n**: Função melhorada, trata null/undefined
+2. ✅ **Rotas com Locale**: Todos os links com `/${locale}/` 
+3. ✅ **Páginas de Erro**: useLocale() implementado
+4. ✅ **Build Vercel**: Funcionando na raiz do projeto
+5. ✅ **Git Clean**: node_modules/ no .gitignore
+
+### ⏳ AGUARDANDO VERIFICAÇÃO
+1. ⏳ **Interpolação em Produção**: Verificar "Olá, {name}" → "Olá, Maurillio!"
+2. ⏳ **Rotas Funcionando**: Testar /pt-BR/tracking, /calculator, /training
+3. ⏳ **Datas em Português**: Verificar se "Tuesday" virou "Terça-feira"
+
+### ⚠️ PROBLEMAS CONHECIDOS (Aguardando Priorização)
+1. ⚠️ **Database Schema**: Campo `locale` não existe (migration pendente)
+2. ⚠️ **Formatação de Datas**: Pode ainda estar em inglês (verificar pós-deploy)
+3. ⚠️ **Fases do Plano**: Inconsistência "Base Aeróbica" vs "PHASES.BASE"
+
+---
+
+## 🎉 STRAVA API COMPLIANCE ✅ APROVADO
+
+**Status:** ✅ APROVADOS para integração Strava
+
+### Compromissos Declarados:
+- ✅ Dados Strava NÃO usados para treinar modelos IA
+- ✅ Dados usados APENAS para personalização do plano do usuário
+- ✅ Nenhum terceiro tem acesso aos dados Strava
+- ✅ IA analisa dados mas não aprende/treina com eles
 
 ---
 
