@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle } from 'lucide-react';
+import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -149,10 +150,7 @@ export default function PlanoPage() {
     return t(`goalLabels.${distance}`, distance);
   };
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(locale, { day: '2-digit', month: '2-digit' });
-  };
+  // Removed - using formatShortDate from date-formatter.ts instead
 
   const getPhaseColor = (phase: string) => {
     const colors: Record<string, string> = {
@@ -256,7 +254,7 @@ export default function PlanoPage() {
                   <CardTitle>{t('weekNavigation.week')} {viewingWeek} {t('weekNavigation.of')} {plan.totalWeeks}</CardTitle>
                   {currentWeek && (
                     <CardDescription>
-                      {formatDate(currentWeek.startDate)} - {formatDate(currentWeek.endDate)}
+                      {formatShortDate(currentWeek.startDate, locale)} - {formatShortDate(currentWeek.endDate, locale)}
                       <Badge className={`${getPhaseColor(currentWeek.phase)} text-white ml-2`}>
                         {t(`phases.${currentWeek.phase}`, currentWeek.phase).toUpperCase()}
                       </Badge>
@@ -332,9 +330,7 @@ export default function PlanoPage() {
                                 ) : null}
                               </div>
                               <p className="text-sm text-muted-foreground mb-2">
-                                {dayjs(workout.date).tz(appTimezone).format(
-                                  locale === 'pt-BR' ? 'dddd, D [de] MMMM' : 'dddd, MMMM D'
-                                )}
+                                {formatLocalizedDate(workout.date, locale)}
                               </p>
                               <p className="text-sm">{workout.description}</p>
                               {workout.distance && (

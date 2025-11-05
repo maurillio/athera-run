@@ -23,7 +23,10 @@ export function useLocale(): Locale {
 
 function interpolate(text: string, values?: Record<string, any>): string {
   if (!values) return text;
-  return text.replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? `{${key}}`));
+  // Support both {{key}} and {key} syntax
+  return text
+    .replace(/\{\{(\w+)\}\}/g, (_, key) => String(values[key] ?? `{{${key}}}`))
+    .replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? `{${key}}`));
 }
 
 export function useTranslations(namespace?: string): TranslationFunction {
