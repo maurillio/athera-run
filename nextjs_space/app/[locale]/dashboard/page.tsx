@@ -16,6 +16,9 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import 'dayjs/locale/pt-br';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -101,6 +104,12 @@ export default function DashboardPage() {
       router.replace(`/${locale}/login`);
     }
   }, [status, router, locale]);
+
+  // Set dayjs locale based on user's selected locale
+  useEffect(() => {
+    const dayjsLocale = locale === 'pt-BR' ? 'pt-br' : locale === 'es' ? 'es' : 'en';
+    dayjs.locale(dayjsLocale);
+  }, [locale]);
 
   useEffect(() => {
     if (session?.user) {

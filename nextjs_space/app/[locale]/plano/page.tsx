@@ -16,6 +16,9 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import 'dayjs/locale/pt-br';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -70,6 +73,12 @@ export default function PlanoPage() {
       fetchPlan();
     }
   }, [session]);
+
+  // Set dayjs locale based on user's selected locale
+  useEffect(() => {
+    const dayjsLocale = locale === 'pt-BR' ? 'pt-br' : locale === 'es' ? 'es' : 'en';
+    dayjs.locale(dayjsLocale);
+  }, [locale]);
 
   const fetchPlan = async () => {
     try {
@@ -323,7 +332,9 @@ export default function PlanoPage() {
                                 ) : null}
                               </div>
                               <p className="text-sm text-muted-foreground mb-2">
-                                {dayjs(workout.date).tz(appTimezone).format('dddd, D [de] MMMM')}
+                                {dayjs(workout.date).tz(appTimezone).format(
+                                  locale === 'pt-BR' ? 'dddd, D [de] MMMM' : 'dddd, MMMM D'
+                                )}
                               </p>
                               <p className="text-sm">{workout.description}</p>
                               {workout.distance && (
