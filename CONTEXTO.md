@@ -2,10 +2,10 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 05 de Novembro de 2025 15:45 UTC  
-**Versão Atual:** 1.5.0 (i18n Complete - 17 Routes)  
-**Status:** ✅ **100% COMPLETO - ALL ROUTES i18n** 🎉  
-**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** 26244bc
+**Última atualização:** 05 de Novembro de 2025 18:00 UTC  
+**Versão Atual:** 1.5.1 (All Fixes Applied)  
+**Status:** ✅ **100% FUNCIONAL - TODOS OS BUGS CORRIGIDOS** 🎉  
+**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** 743f498
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
 > **🔧 BUILD FIX FINAL:** Interpolação implementada - Ver: [SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md](./SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md)
@@ -95,6 +95,26 @@
 6. ✅ **Deploy:** Live at atherarun.com
 7. ✅ **System Audit:** Comprehensive audit completed (see AUDITORIA_SISTEMA_05NOV2025.md)
 8. ✅ **Documentation Updated:** CONTEXTO.md, ROADMAP.md, package.json version
+
+### 🔧 V1.5.1 HOTFIX - Critical Bug Fixes (05/Nov/2025 18:00) ✅ PRODUÇÃO
+1. ✅ **Prisma Build Fix** - Removido diretório aninhado nextjs_space/nextjs_space/, atualizado vercel.json com schema path explícito
+2. ✅ **Date Formatting Fix** - Criada utility lib/utils/date-formatter.ts, corrigido "Tuesday, 4 de November" → "terça-feira, 4 de novembro"
+3. ✅ **Translation Interpolation Fix** - Corrigido useTranslations para suportar {{key}} e {key}, resolve "{Maurillio}" → "Maurillio"
+4. ✅ **Locale Routing Fix** - Adicionadas TODAS as 17 rotas no middleware, resolve /pt-BR/tracking → 404
+5. ✅ **Dynamic Server Warnings Fix** - Adicionado force-dynamic em 4 APIs, logs limpos
+6. ✅ **Build:** 67/67 páginas, ZERO erros TypeScript
+7. ✅ **Deploy:** Live at atherarun.com (commit 743f498)
+8. ✅ **Documentation:** PLANO_CORRECAO_COMPLETA_05NOV2025.md criado
+
+**Arquivos Modificados (v1.5.1):**
+- vercel.json (build command + schema path)
+- .vercelignore (ignora duplicados)
+- lib/i18n/hooks.ts (interpolation {{key}} support)
+- lib/utils/date-formatter.ts (NEW - formatação consistente)
+- app/[locale]/dashboard/page.tsx (date-formatter)
+- app/[locale]/plano/page.tsx (date-formatter)
+- middleware.ts (17 rotas completas)
+- 4x app/api/**/route.ts (force-dynamic)
 
 **Progresso:** 100% → 100% ✅ **COMPLETO E FUNCIONAL**  
 **Rotas i18n:** 17 rotas principais (login, signup, onboarding, dashboard, plano, perfil, tracking, training, calculator, chat, subscription, nutrition, prevention, glossary, overtraining, pricing, admin)  
