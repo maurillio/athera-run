@@ -42,6 +42,7 @@ export default withAuth(
 
     // Routes that have been migrated to i18n (exist in [locale] folder)
     const i18nRoutes = [
+      '/',
       '/dashboard',
       '/login',
       '/signup',
@@ -52,7 +53,13 @@ export default withAuth(
       '/training',
       '/calculator',
       '/chat',
-      '/'
+      '/subscription',
+      '/nutrition',
+      '/prevention',
+      '/glossary',
+      '/overtraining',
+      '/pricing',
+      '/admin'
     ];
 
     // Only redirect to locale if:
