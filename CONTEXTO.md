@@ -2,13 +2,30 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 05 de Novembro de 2025 20:30 UTC  
-**Versão Atual:** 1.5.1 (Hotfix Completo)  
-**Status:** ✅ **100% FUNCIONAL - HOTFIX APLICADO** 🎉  
-**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** bed4b06
+**Última atualização:** 05 de Novembro de 2025 22:00 UTC  
+**Versão Atual:** 1.5.2 (Correções Críticas + Deploy Fix)  
+**Status:** ⏳ **DEPLOY EM ANDAMENTO - CORREÇÕES APLICADAS**  
+**Build:** ⏳ Aguardando Vercel | **Deploy:** 🚀 Auto-deploy | **Commit:** c38aebe
 
-> **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
-> **🔧 BUILD FIX FINAL:** Interpolação implementada - Ver: [SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md](./SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md)
+> **🚀 SESSÃO ATUAL:** Correções críticas de interpolação e build
+> **📋 LEIA PRIMEIRO:** [SUMARIO_FINAL_SESSAO_05NOV2025.md](./SUMARIO_FINAL_SESSAO_05NOV2025.md)
+> **🔍 DIAGNÓSTICO:** [DIAGNOSTICO_GERAL_COMPLETO_05NOV2025.md](./DIAGNOSTICO_GERAL_COMPLETO_05NOV2025.md)
+> **📊 STATUS:** [STATUS_ATUALIZACAO_05NOV2025.md](./STATUS_ATUALIZACAO_05NOV2025.md)
+
+---
+
+## 🚨 ATENÇÃO - PROBLEMAS CONHECIDOS (05/Nov 22:00)
+
+### CRÍTICO - Em Investigação
+1. **Interpolação de dados**: Chaves literais `{name}`, `{distance}` aparecem no UI
+2. **Formatação de datas**: Datas em inglês no conteúdo português
+
+### RESOLVIDO HOJE
+1. ✅ **Vercel Build**: Corrigido `rootDirectory` em `vercel.json`
+2. ✅ **Fases do Plano**: Normalização de strings implementada
+3. ✅ **Strava API**: Aprovação recebida (conformidade garantida)
+
+---
 
 ### 🎉 V1.3.0 COMPLETO E TESTADO - AUDIT PASSED + ONBOARDING REVISADO (04/Nov/2025 12:56)
 1. ✅ **Database Schema** - 38 campos, 13 novos v1.3.0, migração aplicada
