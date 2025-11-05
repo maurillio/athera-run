@@ -1,0 +1,5 @@
+# Ignore .env files in root (Prisma should only use nextjs_space/.env)
+.env
+.env.*
+!nextjs_space/.env
+!nextjs_space/.env.example
