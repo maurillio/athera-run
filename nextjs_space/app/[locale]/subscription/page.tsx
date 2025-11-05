@@ -14,17 +14,20 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useLocale, useTranslations } from '@/lib/i18n/hooks';
 
 export default function SubscriptionPage() {
   const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('subscription');
   const [loading, setLoading] = useState(true);
   const [managingSubscription, setManagingSubscription] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     if (sessionStatus === 'unauthenticated') {
-      router.push('/login');
+      router.push(`/${locale}/login`);
       return;
     }
     if (sessionStatus === 'authenticated') {

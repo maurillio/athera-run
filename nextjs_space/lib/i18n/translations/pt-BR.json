@@ -707,5 +707,29 @@
     "title": "Chat com Treinador IA",
     "subtitle": "Tire suas dúvidas sobre treinamento, nutrição, recuperação e preparação para provas",
     "instruction": "Clique no botão flutuante no canto inferior direito para iniciar o chat 👇"
+  },
+  "nutrition": {
+    "title": "Guia de Nutrição",
+    "subtitle": "Estratégias nutricionais para corrida"
+  },
+  "prevention": {
+    "title": "Prevenção de Lesões",
+    "subtitle": "Mantenha-se saudável e correndo"
+  },
+  "glossary": {
+    "title": "Glossário",
+    "subtitle": "Termos e conceitos de corrida"
+  },
+  "overtraining": {
+    "title": "Overtraining",
+    "subtitle": "Entenda e previna o excesso de treinamento"
+  },
+  "pricing": {
+    "title": "Planos e Preços",
+    "subtitle": "Escolha o plano ideal para você"
+  },
+  "admin": {
+    "title": "Painel Admin",
+    "subtitle": "Gerenciar usuários e sistema"
   }
 }
