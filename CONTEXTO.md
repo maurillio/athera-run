@@ -2,27 +2,61 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 06 de Novembro de 2025 19:30 BRT  
-**Versão Atual:** 1.5.3 (Interpolação i18n + Rotas Locale)  
-**Status:** ✅ **DEPLOY CONCLUÍDO - AGUARDANDO VERIFICAÇÃO**  
-**Build:** ⏳ Vercel Building | **Deploy:** 🚀 Auto-deploy | **Commit:** af3293ae
+**Última atualização:** 06 de Novembro de 2025 20:35 BRT
+**Versão Atual:** 1.5.3 (Correção Deploy Vercel)
+**Status:** 🔴 **DEPLOY BLOQUEADO - AGUARDANDO CORREÇÃO DASHBOARD**
+**Build:** ❌ Vercel Error | **Deploy:** 🛑 Bloqueado | **Commit:** 1fc276f
 
-> **🚀 SESSÃO ATUAL (06/Nov):** Correções de interpolação i18n e rotas com locale
-> **📋 RELATÓRIO:** [SESSAO_CORRECAO_06NOV2025.md](./SESSAO_CORRECAO_06NOV2025.md)
+> **🚀 SESSÃO ATUAL (06/Nov):** Correção de deploy no Vercel (Root Directory)
+> **📋 GUIA DE CORREÇÃO:** [CORRECAO_VERCEL_DASHBOARD_06NOV2025.md](./CORRECAO_VERCEL_DASHBOARD_06NOV2025.md)
 > **🔍 PLANO:** [PLANO_CORRECAO_COMPLETO_06NOV2025.md](./PLANO_CORRECAO_COMPLETO_06NOV2025.md)
 
 ---
 
-## 🚨 STATUS ATUAL (06/Nov 19:30)
+## 🔴 PROBLEMA CRÍTICO - DEPLOY BLOQUEADO (06/Nov 20:35)
 
-### ✅ CORRIGIDO HOJE (06/Nov)
-1. ✅ **Interpolação i18n**: Função melhorada, trata null/undefined
-2. ✅ **Rotas com Locale**: Todos os links com `/${locale}/` 
-3. ✅ **Páginas de Erro**: useLocale() implementado
-4. ✅ **Build Vercel**: Funcionando na raiz do projeto
-5. ✅ **Git Clean**: node_modules/ no .gitignore
+### ❌ Erro Atual no Vercel
+```
+Build Failed
+The specified Root Directory "nextjs_space" does not exist.
+Please update your Project Settings.
+```
 
-### ⏳ AGUARDANDO VERIFICAÇÃO
+### ✅ CAUSA RAIZ IDENTIFICADA
+- O projeto foi reestruturado: `nextjs_space/` → raiz do repositório
+- **Código local:** ✅ Correto na raiz
+- **vercel.json:** ✅ Correto (sem rootDirectory)
+- **Build local:** ✅ Compilando com sucesso
+- **Dashboard Vercel:** ❌ Ainda configurado com `Root Directory: nextjs_space`
+
+### 🎯 SOLUÇÃO
+**AÇÃO MANUAL NECESSÁRIA:** Atualizar Vercel Dashboard
+
+1. Acesse: https://vercel.com/dashboard
+2. Projeto: `athera-run` → Settings → General
+3. **Root Directory:** DELETE `nextjs_space` → deixe vazio ou `.`
+4. Save e fazer redeploy
+
+**📋 Guia Completo:** [CORRECAO_VERCEL_DASHBOARD_06NOV2025.md](./CORRECAO_VERCEL_DASHBOARD_06NOV2025.md)
+
+---
+
+## 🚨 STATUS ATUAL (06/Nov 20:35)
+
+### ✅ VALIDADO LOCALMENTE (06/Nov)
+1. ✅ **Estrutura do Projeto**: Todos arquivos na raiz (package.json, app/, prisma/, etc.)
+2. ✅ **vercel.json**: Correto, sem rootDirectory
+3. ✅ **Build Local**: `npm run build` compila com sucesso
+4. ✅ **Prisma Client**: Gerado com sucesso (v6.18.0)
+5. ✅ **Next.js Compilation**: ✓ Compiled successfully
+6. ✅ **Dependencies**: Instaladas com npm install --force
+
+### 🔴 BLOQUEADO (Aguardando Ação Manual)
+1. 🔴 **Dashboard Vercel**: Precisa remover `Root Directory: nextjs_space`
+2. 🔴 **Deploy**: Bloqueado até correção do dashboard
+3. 🔴 **Produção**: atherarun.com offline/desatualizado
+
+### ⏳ APÓS CORREÇÃO DO DASHBOARD
 1. ⏳ **Interpolação em Produção**: Verificar "Olá, {name}" → "Olá, Maurillio!"
 2. ⏳ **Rotas Funcionando**: Testar /pt-BR/tracking, /calculator, /training
 3. ⏳ **Datas em Português**: Verificar se "Tuesday" virou "Terça-feira"
