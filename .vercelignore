@@ -1,14 +1,26 @@
 # Ignore .env files in root (Prisma should only use nextjs_space/.env)
 .env
 .env.*
-!nextjs_space/.env
-!nextjs_space/.env.example
 
 # Ignore nested duplicates
 nextjs_space/nextjs_space/
 
-# Ignore docs and scripts
-*.md
-!README.md
+# Ignore docs and scripts (but keep README)
+AUDITORIA_*.md
+DIAGNOSTICO_*.md
+EXECUCAO_*.md
+PLANO_*.md
+RELATORIO_*.md
+RESPOSTA_*.md
+RESUMO_*.md
+SESSAO_*.md
+CONTEXTO.md
+DOCUMENTACAO.md
+GUIA_*.md
+ROADMAP.md
+STRAVA_*.md
 scripts/
 docs/
+create_*.py
+fix-*.js
+test_*.sh
