@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useTranslations } from '@/lib/i18n/hooks';
+import { useLocale, useTranslations } from '@/lib/i18n/hooks';
 import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -49,7 +49,7 @@ interface CustomWeek {
 export default function PlanoPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { locale } = useTranslations();
+  const locale = useLocale();
   const t = useTranslations('plano');
   const tCommon = useTranslations('common');
   

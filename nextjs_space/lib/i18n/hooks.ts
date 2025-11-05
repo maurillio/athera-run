@@ -10,6 +10,8 @@ const translations = {
   'es': es,
 };
 
+export type TranslationFunction = (key: string) => string;
+
 export function useLocale(): Locale {
   try {
     const params = useParams();
@@ -19,12 +21,12 @@ export function useLocale(): Locale {
   }
 }
 
-export function useTranslations(namespace?: string) {
+export function useTranslations(namespace?: string): TranslationFunction {
   const locale = useLocale();
   const t = translations[locale];
 
   if (!namespace) {
-    return (key: string) => {
+    const translateFn = (key: string): string => {
       if (!key || typeof key !== 'string') return key || '';
       const keys = key.split('.');
       let value: any = t;
@@ -33,6 +35,7 @@ export function useTranslations(namespace?: string) {
       }
       return value || key;
     };
+    return translateFn;
   }
 
   // Handle nested namespaces like 'header.userMenu'
@@ -43,7 +46,7 @@ export function useTranslations(namespace?: string) {
   }
   namespaceData = namespaceData || {};
   
-  return (key: string) => {
+  const translateFn = (key: string): string => {
     if (!key || typeof key !== 'string') return key || '';
     const keys = key.split('.');
     let value: any = namespaceData;
@@ -52,6 +55,7 @@ export function useTranslations(namespace?: string) {
     }
     return value || key;
   };
+  return translateFn;
 }
 
 export function getTranslations(locale: Locale) {

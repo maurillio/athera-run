@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useTranslations } from '@/lib/i18n/hooks';
+import { useLocale } from '@/lib/i18n/hooks';
 
 export default function LocaleHome() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { locale } = useTranslations();
+  const locale = useLocale();
 
   useEffect(() => {
     if (status === 'loading') return;
