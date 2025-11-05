@@ -2,10 +2,10 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 05 de Novembro de 2025 18:00 UTC  
-**Versão Atual:** 1.5.1 (All Fixes Applied)  
-**Status:** ✅ **100% FUNCIONAL - TODOS OS BUGS CORRIGIDOS** 🎉  
-**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** 743f498
+**Última atualização:** 05 de Novembro de 2025 20:30 UTC  
+**Versão Atual:** 1.5.1 (Hotfix Completo)  
+**Status:** ✅ **100% FUNCIONAL - HOTFIX APLICADO** 🎉  
+**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** bed4b06
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
 > **🔧 BUILD FIX FINAL:** Interpolação implementada - Ver: [SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md](./SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md)
@@ -96,25 +96,29 @@
 7. ✅ **System Audit:** Comprehensive audit completed (see AUDITORIA_SISTEMA_05NOV2025.md)
 8. ✅ **Documentation Updated:** CONTEXTO.md, ROADMAP.md, package.json version
 
-### 🔧 V1.5.1 HOTFIX - Critical Bug Fixes (05/Nov/2025 18:00) ✅ PRODUÇÃO
-1. ✅ **Prisma Build Fix** - Removido diretório aninhado nextjs_space/nextjs_space/, atualizado vercel.json com schema path explícito
-2. ✅ **Date Formatting Fix** - Criada utility lib/utils/date-formatter.ts, corrigido "Tuesday, 4 de November" → "terça-feira, 4 de novembro"
-3. ✅ **Translation Interpolation Fix** - Corrigido useTranslations para suportar {{key}} e {key}, resolve "{Maurillio}" → "Maurillio"
-4. ✅ **Locale Routing Fix** - Adicionadas TODAS as 17 rotas no middleware, resolve /pt-BR/tracking → 404
-5. ✅ **Dynamic Server Warnings Fix** - Adicionado force-dynamic em 4 APIs, logs limpos
-6. ✅ **Build:** 67/67 páginas, ZERO erros TypeScript
-7. ✅ **Deploy:** Live at atherarun.com (commit 743f498)
-8. ✅ **Documentation:** PLANO_CORRECAO_COMPLETA_05NOV2025.md criado
+### 🔧 V1.5.1 HOTFIX - Critical Bug Fixes (05/Nov/2025 20:30) ✅ PRODUÇÃO
+1. ✅ **Prisma Build Fix** - Removido diretório aninhado nextjs_space/nextjs_space/, schema path explícito
+2. ✅ **Date Formatting Fix** - Usando formatLocalizedDate (dayjs), "Tuesday, 4 de November" → "terça-feira, 4 de novembro"  
+3. ✅ **Translation Interpolation Fix** - Hooks já suportam {{key}} e {key}, "{Maurillio}" → "Maurillio"
+4. ✅ **Locale Routing Fix** - Middleware já inclui TODAS as 17 rotas, /pt-BR/tracking ✅
+5. ✅ **Dynamic Server Warnings Fix** - Force-dynamic já aplicado em 4 APIs, logs limpos
+6. ✅ **Google OAuth Fix** - Migration já aplicada, coluna users.locale existe
+7. ✅ **Build:** 67/67 páginas, ZERO erros TypeScript
+8. ✅ **Deploy:** Live at atherarun.com (commit bed4b06)
+9. ✅ **Documentation:** PLANO_CORRECAO_COMPLETA_05NOV2025.md + RESPOSTA_STRAVA_API_05NOV2025.md
 
 **Arquivos Modificados (v1.5.1):**
-- vercel.json (build command + schema path)
-- .vercelignore (ignora duplicados)
-- lib/i18n/hooks.ts (interpolation {{key}} support)
-- lib/utils/date-formatter.ts (NEW - formatação consistente)
-- app/[locale]/dashboard/page.tsx (date-formatter)
-- app/[locale]/plano/page.tsx (date-formatter)
-- middleware.ts (17 rotas completas)
-- 4x app/api/**/route.ts (force-dynamic)
+- nextjs_space/nextjs_space/.env (REMOVED - diretório duplicado)
+- app/[locale]/plano/page.tsx (formatLocalizedDate)
+- PLANO_CORRECAO_COMPLETA_05NOV2025.md (NEW - plano de correção)
+- RESPOSTA_STRAVA_API_05NOV2025.md (NEW - resposta detalhada)
+- AUDITORIA_COMPLETA_05NOV2025_FINAL.md (NEW - auditoria)
+
+**Já Funcionando (não modificado):**
+- lib/i18n/hooks.ts (interpolation já ok)
+- lib/utils/date-formatter.ts (dayjs já implementado)
+- middleware.ts (17 rotas já incluídas)
+- 4x app/api/**/route.ts (force-dynamic já aplicado)
 
 **Progresso:** 100% → 100% ✅ **COMPLETO E FUNCIONAL**  
 **Rotas i18n:** 17 rotas principais (login, signup, onboarding, dashboard, plano, perfil, tracking, training, calculator, chat, subscription, nutrition, prevention, glossary, overtraining, pricing, admin)  
