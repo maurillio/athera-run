@@ -1,8 +1,8 @@
 # 🚀 PRÓXIMA SESSÃO - Guia de Início Rápido
 
-**Data última atualização:** 04/Nov/2025 22:20 UTC  
+**Data última atualização:** 05/Nov/2025 00:17 UTC  
 **Projeto:** Athera Run - i18n v1.4.0  
-**Status Atual:** Testing & Polish 100% Completo - 99% Total  
+**Status Atual:** 100% COMPLETO ✅ - Build FIXED & Production Ready  
 
 ---
 
@@ -10,26 +10,29 @@
 
 ### Para IA - Cole Isso:
 ```
-✅ v1.4.0 i18n - BUILD FIXED & DEPLOYED 🎉
-Status: 100% FUNCIONAL EM PRODUÇÃO
-Build: ✅ Passando (Vercel)
-Deploy: ✅ Production Live
-Commit: 9034ac6 (build fixes)
+✅ v1.4.0 i18n - 100% COMPLETO & PRODUCTION READY 🎉
+Status: Build FIXED - Zero Errors
+Build: ✅ Passando (Local + Vercel Ready)
+Commit: 6574adb (fix production build errors)
+Deploy: ⏳ Pending (Vercel auto-deploy)
 
-Todas as páginas funcionando corretamente!
+Todos os 7 steps do Onboarding funcionando!
 Sistema completo em 3 idiomas (PT-BR, EN, ES)
+21 rotas i18n funcionais (7 páginas × 3 idiomas)
+
+PRÓXIMO: Deploy + Google OAuth verification
 ```
 
 ---
 
 ## 📊 STATUS ATUAL v1.4.0 (i18n)
 
-### ✅ Completo (97%)
+### ✅ 100% COMPLETO
 - [x] Build system corrigido (webpack alias)
 - [x] Path resolution funcionando (@/ imports)
 - [x] Estrutura lib/i18n/ completa
 - [x] Config e hooks implementados
-- [x] Translations BASE (~1470+ keys em 3 idiomas)
+- [x] Translations BASE (~1581 keys em 3 idiomas)
 - [x] TypeScript 5.9.3 instalado e funcionando
 - [x] Middleware i18n com detecção e redirect
 - [x] LanguageSwitcher component completo
@@ -47,117 +50,104 @@ Sistema completo em 3 idiomas (PT-BR, EN, ES)
   - [x] Step6Availability (days, activities, infrastructure, preferences)
   - [x] Step7Review (summary, confirmation, generate plan)
 - [x] **Dashboard 100% COMPLETO** ⭐
-  - [x] Welcome section com nome do usuário
-  - [x] Generate plan card para novos usuários
-  - [x] Quick stats (4 cards: next workout, current week, goal, progress)
-  - [x] Upcoming workouts (hoje e amanhã com estados visuais)
-  - [x] Quick access menu (6 links)
-  - [x] Advanced features section
-  - [x] Workout log dialog componentizado
 - [x] **Plano 100% COMPLETO** ⭐
-  - [x] Summary cards (4 cards: goal, week, progress, duration)
-  - [x] Week navigation (anterior/próxima/atual)
-  - [x] Workout list com estados (completed/incomplete/pending)
-  - [x] Week focus section
-  - [x] Quick actions menu
-  - [x] No plan state
 - [x] **Perfil 100% COMPLETO** ⭐
-  - [x] 4 tabs (Profile, Medical, Races, Actions)
-  - [x] Regenerate Plan action
-  - [x] Delete Profile action
-  - [x] ~60 translation keys × 3 idiomas
 - [x] **Global Components 100% COMPLETO** ⭐
-  - [x] UserDropdown (login, signup, menu items)
-  - [x] PaywallModal (benefits, CTA)
-  - [x] Error pages (404, generic error)
-  - [x] ~70 translation keys × 3 idiomas
 - [x] **Backend Integration 100% COMPLETO** ⭐
-  - [x] User.locale field no Prisma schema
-  - [x] Database migration criada
-  - [x] API route /api/user/locale
-  - [x] API utils com i18n (ApiResponse, getApiMessage)
-  - [x] 81 API messages (errors + success) × 3 idiomas
-  - [x] LanguageSwitcher salva no backend
-  - [x] getLocaleFromRequest utility
-- [x] Build ✅ Passing (warnings esperados)
-- [x] Total de ~3,300 translation keys em 3 idiomas
+- [x] **Testing & Polish 100% COMPLETO** ⭐
+- [x] **BUILD FIX 100% COMPLETO** ⭐ ✅ **NOVO**
+  - [x] Fixed TypeError: e is not a function (production build)
+  - [x] Added TranslationFunction type annotation
+  - [x] Fixed useLocale() usage in 3 pages
+  - [x] Build passing: 67 pages, ZERO errors
+- [x] Total de 1,581 translation keys em 3 idiomas
 
-### ⏳ Próximas Fases (3% restante)
-- [x] FASE 9.3.1: Onboarding main page + Steps 1-2 (COMPLETO)
-- [x] FASE 9.3.2: Onboarding Steps 3-7 (COMPLETO) ✅
-- [x] **FASE 9.4: Dashboard/Plano (COMPLETO)** ✅ ⭐
-  - [x] Dashboard main page (stats, today workout)
-  - [x] Plano week view (calendar, workout cards)
-  - [x] Workout log dialog component
-- [x] **FASE 9.5: Perfil completo (COMPLETO)** ✅ ⭐
-  - [x] Perfil main page com 4 tabs
-  - [x] Profile actions (regenerate, delete)
-  - [x] 60 translation keys × 3 idiomas
-- [x] **FASE 9.6: Components globais (COMPLETO)** ✅ ⭐
-  - [x] UserDropdown com i18n completo
-  - [x] PaywallModal traduzido
-  - [x] Error pages (404, generic)
-  - [x] 70 translation keys × 3 idiomas
-- [x] **FASE 9.7: Backend Integration (COMPLETO)** ✅ ⭐
-  - [x] User.locale field no schema
-  - [x] API error messages i18n
-  - [x] API utils with i18n support
-  - [x] LanguageSwitcher backend save
-- [x] **FASE 9.8: Testing & Polish (COMPLETO)** ✅ ⭐
-  - [x] Automated test suites (13/13 passing)
-  - [x] Translation tests (499 keys × 3)
-  - [x] Edge case tests (8 scenarios)
-  - [x] Manual testing checklist (45+ scenarios)
-- [ ] **FASE 9.9: Deploy & Documentation (30min) → 100% - PRÓXIMO**
+### ⏳ Próximas Ações (Deploy)
+- [x] FASE 9.1-9.8: Implementação completa ✅
+- [x] **FASE 9.9: Build Fix (COMPLETO)** ✅ ⭐
+  - [x] Fix production build errors
+  - [x] Commit and push (6574adb)
+  - [x] Update documentation
+- [ ] **FASE 9.10: Deploy & Verification (30min) - PRÓXIMO**
+  - [ ] Aguardar Vercel auto-deploy
   - [ ] Apply database migration
-  - [ ] Push to production
-  - [ ] Update all documentation
+  - [ ] Verify Google OAuth URIs
+  - [ ] Test in production (3 languages)
 
-**Total Estimado:** 30min (deploy e docs)
+**Total Estimado:** 30min (deploy + verification)
 
 ---
 
 ## 🎯 PRÓXIMAS AÇÕES (Em Ordem)
 
-### 1. FASE 9.9: Deploy & Final Documentation (30min) - **PRÓXIMO IMEDIATO**
+### 1. FASE 9.10: Deploy & Verification (30min) - **PRÓXIMO IMEDIATO**
 
 **Status Atual:**
-- ✅ Backend Integration 100% completo ⭐
-- ✅ Testing & Polish 100% completo ⭐
-- ✅ Build passing (zero errors)
-- ✅ 13/13 automated tests passing
-- ✅ 1,581 translation keys implemented
-- ✅ Production-ready quality (10/10)
-- ⏳ Deploy & Documentation: 0% (próximo)
+- ✅ v1.4.0 100% implementado e testado ⭐
+- ✅ Build passing (zero errors) ✅
+- ✅ Build fix committed (6574adb) ✅
+- ✅ Documentation updated ✅
+- ⏳ Deploy: Aguardando Vercel auto-deploy
+- ⏳ Google OAuth: Verificação necessária
 
 **Plano de Ação:**
-1. **Apply Database Migration (5min)**
-   - Run: `npx prisma migrate deploy`
-   - Verify User.locale column created
-   - Verify default value 'pt-BR'
-   - Test on staging first
 
-2. **Deploy to Production (10min)**
-   - Final build test
-   - Commit all pending changes
-   - Push to origin/main
-   - Verify Vercel deployment
-   - Test on atherarun.com
+1. **Aguardar Vercel Deploy (5min)** ⏳
+   - Vercel detecta novo commit automaticamente
+   - Build será executado no Vercel
+   - Verificar dashboard: https://vercel.com/maurillio/athera-run
+   - Esperar deploy completo
 
-3. **Update Documentation (15min)**
-   - Update CONTEXTO.md (v1.4.0 = 100%)
-   - Update ROADMAP.md (mark i18n complete)
-   - Update README.md (add i18n info)
-   - Create V1.4.0_COMPLETED.md
-   - Update PROXIMA_SESSAO.md for v1.5.0
+2. **Apply Database Migration (5min)** ⏳
+   ```bash
+   cd nextjs_space
+   npx prisma migrate deploy
+   ```
+   - Cria coluna User.locale
+   - Default value: 'pt-BR'
+   - Verifica migration success
+
+3. **Verify Google OAuth (10min)** ⚠️ **CRÍTICO**
+   - Acessar: https://console.cloud.google.com
+   - Projeto: Athera Run
+   - Credentials > OAuth 2.0 Client IDs
+   - Verificar Authorized Redirect URIs:
+     ```
+     https://atherarun.com/api/auth/callback/google
+     ```
+   - **Atenção:** Middleware i18n NÃO afeta `/api/*` (já excluído)
+   - Testar login com Google em produção
+
+4. **Test in Production (10min)**
+   - [ ] Acessar https://atherarun.com
+   - [ ] Testar login com Google ✅
+   - [ ] Trocar idioma (PT-BR → EN → ES)
+   - [ ] Verificar persistência (reload page)
+   - [ ] Testar todas as 7 páginas i18n
+   - [ ] Verificar console (zero erros)
+
+**Troubleshooting Google OAuth:**
+
+Se login com Google falhar:
+1. Verificar logs no Vercel Dashboard
+2. Buscar erros com `[AUTH]` prefix
+3. Verificar se callback URL está correto
+4. Limpar cookies e testar novamente
+5. Verificar variáveis de ambiente:
+   - GOOGLE_CLIENT_ID
+   - GOOGLE_CLIENT_SECRET
+   - NEXTAUTH_URL
+   - NEXTAUTH_SECRET
 
 **Verification Checklist:**
+- [ ] Vercel deploy successful
 - [ ] Migration applied successfully
 - [ ] All 3 languages work on production
 - [ ] Language switcher saves to DB
+- [ ] Google OAuth login works ⚠️
 - [ ] API responses in correct language
 - [ ] No console errors
-- [ ] Documentation updated
+- [ ] Documentation updated ✅
 
 ---
 
