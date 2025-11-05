@@ -51,6 +51,7 @@ export default withAuth(
       '/tracking',
       '/training',
       '/calculator',
+      '/chat',
       '/'
     ];
 

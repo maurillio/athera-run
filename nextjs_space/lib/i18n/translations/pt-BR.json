@@ -702,5 +702,10 @@
     "rPaceDesc": "Repetições rápidas para melhorar forma de corrida, economia e velocidade neuromuscular. Uso limitado na maratona.",
     "distribution8020Title": "Distribuição 80/20",
     "distribution8020Desc": "80% do volume em E-Pace, 20% em intensidades moderadas/altas. Princípio fundamental para desenvolvimento aeróbico."
+  },
+  "chat": {
+    "title": "Chat com Treinador IA",
+    "subtitle": "Tire suas dúvidas sobre treinamento, nutrição, recuperação e preparação para provas",
+    "instruction": "Clique no botão flutuante no canto inferior direito para iniciar o chat 👇"
   }
 }

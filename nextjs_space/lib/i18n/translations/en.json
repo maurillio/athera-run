@@ -702,5 +702,10 @@
     "rPaceDesc": "Fast repetitions to improve running form, economy and neuromuscular speed. Limited use in marathon.",
     "distribution8020Title": "80/20 Distribution",
     "distribution8020Desc": "80% of volume at E-Pace, 20% at moderate/high intensities. Fundamental principle for aerobic development."
+  },
+  "chat": {
+    "title": "AI Coach Chat",
+    "subtitle": "Ask questions about training, nutrition, recovery and race preparation",
+    "instruction": "Click the floating button in the bottom right corner to start the chat 👇"
   }
 }
