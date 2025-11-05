@@ -535,11 +535,18 @@
       "pace": "Pace: {{pace}}"
     },
     "phases": {
-      "base": "Base",
+      "base": "Base Aeróbica",
       "build": "Construção",
       "peak": "Pico",
       "taper": "Polimento",
-      "race": "Corrida"
+      "race": "Corrida",
+      "baseaerobia": "Base Aeróbica",
+      "base aerobia": "Base Aeróbica",
+      "construcao": "Construção",
+      "construção": "Construção",
+      "pico": "Pico",
+      "polimento": "Polimento",
+      "corrida": "Corrida"
     },
     "workoutTypes": {
       "easy": "Treino Leve",
@@ -572,7 +579,8 @@
       "friday": "Sexta",
       "saturday": "Sábado",
       "sunday": "Domingo"
-    }
+    },
+    "goalDescription": "Plano personalizado para {{goal}}"
   },
   "perfil": {
     "title": "Meu Perfil",
