@@ -48,6 +48,7 @@ export default withAuth(
       '/onboarding',
       '/plano',
       '/perfil',
+      '/tracking',
       '/'
     ];
 
