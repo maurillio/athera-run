@@ -213,6 +213,8 @@ Ao iniciar trabalho:
 ### Hosting e Deploy
 - **100% Vercel** (não há servidor local de produção)
 - **CI/CD:** Git push → Vercel build automático → Deploy
+- **Build Command:** `npm install --force && npx prisma generate && npx prisma migrate deploy && npm run build`
+- **⚠️ IMPORTANTE:** Migrations são aplicadas AUTOMATICAMENTE no deploy (desde 05/Nov/2025)
 - **Domínio:** atherarun.com (via GoDaddy)
 - **Monitoramento:** Vercel Analytics
 
@@ -220,6 +222,7 @@ Ao iniciar trabalho:
 - **PostgreSQL** no servidor próprio: `45.232.21.67`
 - **Compartilhado:** Dev local e produção usam o MESMO banco
 - **ORM:** Prisma 6.18.0
+- **Migrations:** Aplicadas AUTOMATICAMENTE no Vercel deploy via `prisma migrate deploy`
 - **Futuro:** Migrar para solução escalável (Vercel Postgres, Supabase, etc)
 
 ### Variáveis de Ambiente
