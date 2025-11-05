@@ -416,20 +416,17 @@ export default function DashboardPage() {
                             <div className="flex flex-wrap gap-3 mb-3 text-sm">
                               {workout.distance && (
                                 <div className="flex items-center gap-1">
-                                  <span className="font-medium">📍 {t('upcomingWorkouts.distance')}</span>
-                                  <span>{workout.distance} km</span>
+                                  <span className="font-medium">📍 {tPlano('workout.distance', { distance: workout.distance })}</span>
                                 </div>
                               )}
                               {workout.duration && (
                                 <div className="flex items-center gap-1">
-                                  <span className="font-medium">⏱️ {t('upcomingWorkouts.duration')}</span>
-                                  <span>{workout.duration} min</span>
+                                  <span className="font-medium">⏱️ {tPlano('workout.duration', { duration: workout.duration })}</span>
                                 </div>
                               )}
                               {workout.targetPace && (
                                 <div className="flex items-center gap-1">
-                                  <span className="font-medium">🎯 {t('upcomingWorkouts.pace')}</span>
-                                  <span>{workout.targetPace}</span>
+                                  <span className="font-medium">🎯 {tPlano('workout.pace', { pace: workout.targetPace })}</span>
                                 </div>
                               )}
                             </div>
