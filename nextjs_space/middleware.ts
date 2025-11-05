@@ -1,10 +1,52 @@
 
+import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from 'next-auth/middleware';
-import { NextResponse } from 'next/server';
+import { defaultLocale, locales, type Locale } from './lib/i18n/config';
+
+// Get user's preferred locale
+function getLocale(request: NextRequest): Locale {
+  const cookieLocale = request.cookies.get('atherarun_locale')?.value;
+  if (cookieLocale && locales.includes(cookieLocale as Locale)) {
+    return cookieLocale as Locale;
+  }
+
+  const acceptLanguage = request.headers.get('accept-language');
+  if (acceptLanguage) {
+    const browserLocale = acceptLanguage.split(',')[0].split(';')[0].trim();
+    
+    if (browserLocale.startsWith('pt')) return 'pt-BR';
+    if (browserLocale.startsWith('es')) return 'es';
+    if (browserLocale.startsWith('en')) return 'en';
+  }
+
+  return defaultLocale;
+}
 
 export default withAuth(
   function middleware(req) {
-    // Let NextAuth handle the request
+    const pathname = req.nextUrl.pathname;
+
+    // Skip i18n redirect for API routes and static files
+    if (
+      pathname.startsWith('/api/') ||
+      pathname.startsWith('/_next/') ||
+      pathname.includes('.')
+    ) {
+      return NextResponse.next();
+    }
+
+    // Check if pathname already has locale
+    const pathnameHasLocale = locales.some(
+      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
+
+    // If no locale, redirect to locale-prefixed path
+    if (!pathnameHasLocale) {
+      const locale = getLocale(req);
+      const newUrl = new URL(`/${locale}${pathname}`, req.url);
+      return NextResponse.redirect(newUrl);
+    }
+
     return NextResponse.next();
   },
   {
