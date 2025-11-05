@@ -28,6 +28,17 @@ dayjs.extend(isSameOrBefore);
 
 const appTimezone = 'America/Sao_Paulo';
 
+// Helper function to normalize phase names for translation keys
+function normalizePhaseKey(phase: string): string {
+  const normalized = phase
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/\s+/g, ''); // Remove spaces
+  
+  return normalized;
+}
+
 interface CustomPlan {
   id: number;
   goalDistance: string;
@@ -208,7 +219,7 @@ export default function PlanoPage() {
                   {currentWeekNum}/{plan.totalWeeks}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {currentWeek && t(`phases.${currentWeek.phase}`, currentWeek.phase)}
+                  {currentWeek && t(`phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase)}
                 </p>
               </CardContent>
             </Card>
@@ -256,7 +267,7 @@ export default function PlanoPage() {
                     <CardDescription>
                       {formatShortDate(currentWeek.startDate, locale)} - {formatShortDate(currentWeek.endDate, locale)}
                       <Badge className={`${getPhaseColor(currentWeek.phase)} text-white ml-2`}>
-                        {t(`phases.${currentWeek.phase}`, currentWeek.phase).toUpperCase()}
+                        {t(`phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase).toUpperCase()}
                       </Badge>
                     </CardDescription>
                   )}
