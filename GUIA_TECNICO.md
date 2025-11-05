@@ -1540,16 +1540,46 @@ vercel logs
 
 ### Problemas Comuns
 
-#### 1. Erro de Build: "Module not found"
+#### 1. Vercel: "Root Directory does not exist" 🔴 CRÍTICO
+
+**Erro:**
+```
+Build Failed
+The specified Root Directory "nextjs_space" does not exist.
+Please update your Project Settings.
+```
+
+**Causa:** Dashboard do Vercel configurado com `Root Directory: nextjs_space`, mas projeto está na raiz.
+
+**Solução:**
+1. Acesse https://vercel.com/dashboard
+2. Projeto `athera-run` → Settings → General
+3. **Root Directory:** DELETE `nextjs_space` → deixe vazio ou `.`
+4. Save e redeploy
+
+**📋 Guia Completo:** Ver `CORRECAO_VERCEL_DASHBOARD_06NOV2025.md`
+
+**Validação Local:**
+```bash
+# Verificar estrutura (deve mostrar package.json, app/, etc na raiz)
+ls -la /root/athera-run
+
+# Testar build local
+npm install --force
+npx prisma generate
+npm run build
+```
+
+#### 2. Erro de Build: "Module not found"
 
 ```bash
 # Limpar cache e reinstalar
 rm -rf node_modules .next
-yarn install
-yarn build
+npm install --force
+npm run build
 ```
 
-#### 2. Prisma: "Can't reach database server"
+#### 3. Prisma: "Can't reach database server"
 
 ```bash
 # Verificar DATABASE_URL
