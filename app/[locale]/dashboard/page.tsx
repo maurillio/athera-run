@@ -483,19 +483,19 @@ export default function DashboardPage() {
                     </Button>
                   </Link>
                 )}
-                <Link href="/tracking">
+                <Link href={`/${locale}/tracking`}>
                   <Button variant="outline" className="w-full justify-start">
                     <Activity className="mr-2 h-4 w-4" />
                     {t('quickAccess.registerWorkout')}
                   </Button>
                 </Link>
-                <Link href="/calculator">
+                <Link href={`/${locale}/calculator`}>
                   <Button variant="outline" className="w-full justify-start">
                     <Target className="mr-2 h-4 w-4" />
                     {t('quickAccess.calculator')}
                   </Button>
                 </Link>
-                <Link href="/training">
+                <Link href={`/${locale}/training`}>
                   <Button variant="outline" className="w-full justify-start">
                     <TrendingUp className="mr-2 h-4 w-4" />
                     {t('quickAccess.aiAnalysis')}
