@@ -87,543 +87,6 @@
     }
   },
   "onboarding": {
-    "title": "Configuración Inicial",
-    "subtitle": "Vamos a crear tu plan personalizado",
-    "progress": "Paso {{current}} de {{total}}",
-    "step1": {
-      "title": "Datos Básicos",
-      "subtitle": "Empecemos con información básica sobre ti",
-      "name": "Nombre completo",
-      "namePlaceholder": "¿Cómo te gustaría que te llamáramos?",
-      "email": "Correo electrónico",
-      "emailPlaceholder": "tu@email.com",
-      "age": "Edad",
-      "agePlaceholder": "Ej: 32",
-      "gender": "Género",
-      "genderOptions": {
-        "male": "Masculino",
-        "female": "Femenino",
-        "other": "Otro",
-        "preferNotToSay": "Prefiero no decir"
-      },
-      "birthDate": "Fecha de nacimiento",
-      "birthDatePlaceholder": "DD/MM/AAAA",
-      "weight": "Peso (kg)",
-      "weightPlaceholder": "Ej: 70",
-      "height": "Altura (cm)",
-      "heightPlaceholder": "Ej: 175",
-      "bmi": "Tu IMC",
-      "physiological": {
-        "title": "Datos Fisiológicos",
-        "restingHR": "FC en Reposo (bpm)",
-        "restingHRNote": "al despertar",
-        "restingHRPlaceholder": "Ej: 60",
-        "sleepQuality": "Calidad del Sueño",
-        "sleepLevels": {
-          "poor": "Mala",
-          "fair": "Regular",
-          "good": "Buena",
-          "veryGood": "Muy Buena",
-          "excellent": "Excelente"
-        },
-        "stressLevel": "Nivel de Estrés",
-        "stressLevels": {
-          "low": "Bajo",
-          "mild": "Leve",
-          "moderate": "Moderado",
-          "high": "Alto",
-          "veryHigh": "Muy Alto"
-        }
-      },
-      "errors": {
-        "nameRequired": "El nombre es obligatorio",
-        "emailRequired": "El correo es obligatorio",
-        "emailInvalid": "Correo inválido",
-        "genderRequired": "Selecciona tu género",
-        "birthDateRequired": "La fecha de nacimiento es obligatoria",
-        "birthDateInvalid": "Fecha de nacimiento inválida",
-        "weightRequired": "El peso es obligatorio",
-        "weightInvalid": "El peso debe ser un número válido",
-        "heightRequired": "La altura es obligatoria",
-        "heightInvalid": "La altura debe ser un número válido"
-      }
-    },
-    "step2": {
-      "title": "Experiencia en Carrera",
-      "subtitle": "Cuéntanos sobre tu experiencia corriendo",
-      "experienceLevel": "Nivel de experiencia",
-      "experienceLevelOptions": {
-        "beginner": "Principiante",
-        "beginnerDesc": "Menos de 6 meses corriendo",
-        "intermediate": "Intermedio",
-        "intermediateDesc": "6 meses a 2 años corriendo",
-        "advanced": "Avanzado",
-        "advancedDesc": "Más de 2 años corriendo regularmente",
-        "expert": "Experto",
-        "expertDesc": "Atleta competitivo"
-      },
-      "yearsRunning": "¿Cuánto tiempo llevas corriendo?",
-      "yearsRunningPlaceholder": "En años",
-      "weeklyVolume": "Volumen semanal actual",
-      "weeklyVolumePlaceholder": "Km por semana",
-      "weeklyFrequency": "Frecuencia semanal",
-      "weeklyFrequencyPlaceholder": "Entrenamientos por semana",
-      "longestRun": "Mayor distancia corrida",
-      "longestRunPlaceholder": "En km",
-      "preferredPace": "Ritmo cómodo",
-      "preferredPacePlaceholder": "min/km (ej: 5:30)",
-      "errors": {
-        "experienceLevelRequired": "Selecciona tu nivel de experiencia",
-        "yearsRunningInvalid": "Ingresa un valor válido",
-        "weeklyVolumeInvalid": "El volumen debe ser un número válido",
-        "weeklyFrequencyInvalid": "La frecuencia debe ser un número válido",
-        "longestRunInvalid": "La distancia debe ser un número válido",
-        "preferredPaceInvalid": "Ritmo inválido (formato: min:seg)"
-      }
-    },
-    "step3": {
-      "title": "Rendimiento Actual",
-      "subtitle": "Registra tus mejores tiempos en diferentes distancias",
-      "addTime": "Agregar tiempo",
-      "distance": "Distancia",
-      "distanceOptions": {
-        "1k": "1 km",
-        "5k": "5 km",
-        "10k": "10 km",
-        "15k": "15 km",
-        "21k": "21 km (Media Maratón)",
-        "42k": "42 km (Maratón)",
-        "other": "Otra distancia"
-      },
-      "time": "Tiempo",
-      "timePlaceholder": "HH:MM:SS",
-      "date": "Fecha de la carrera",
-      "datePlaceholder": "DD/MM/AAAA",
-      "raceName": "Nombre de la carrera (opcional)",
-      "raceNamePlaceholder": "Ej: Maratón de Madrid",
-      "noTimes": "No hay tiempos registrados aún",
-      "addFirstTime": "Agrega tu primer tiempo",
-      "editTime": "Editar tiempo",
-      "deleteTime": "Eliminar tiempo",
-      "confirmDelete": "¿Estás seguro de que quieres eliminar este tiempo?",
-      "errors": {
-        "distanceRequired": "Selecciona una distancia",
-        "timeRequired": "Ingresa el tiempo",
-        "timeInvalid": "Tiempo inválido (formato: HH:MM:SS)",
-        "dateInvalid": "Fecha inválida"
-      }
-    },
-    "step4": {
-      "title": "Salud y Limitaciones",
-      "subtitle": "Infórmanos sobre lesiones o condiciones que debamos considerar",
-      "hasInjuries": "¿Tienes o has tenido lesiones recientemente?",
-      "addInjury": "Agregar lesión",
-      "injuryType": "Tipo de lesión",
-      "injuryTypeOptions": {
-        "knee": "Rodilla",
-        "ankle": "Tobillo",
-        "foot": "Pie",
-        "calf": "Pantorrilla",
-        "hamstring": "Isquiotibiales",
-        "quad": "Cuádriceps",
-        "hip": "Cadera",
-        "back": "Espalda",
-        "shin": "Periostitis tibial",
-        "achilles": "Tendón de Aquiles",
-        "plantarFasciitis": "Fascitis plantar",
-        "other": "Otra"
-      },
-      "injuryDescription": "Descripción de la lesión",
-      "injuryDescriptionPlaceholder": "Describe tu lesión en detalle",
-      "injurySeverity": "Severidad",
-      "injurySeverityOptions": {
-        "mild": "Leve",
-        "mildDesc": "Leve molestia, no impide entrenamientos",
-        "moderate": "Moderada",
-        "moderateDesc": "Requiere cuidados, limita algunos entrenamientos",
-        "severe": "Severa",
-        "severeDesc": "Impide entrenamientos normales"
-      },
-      "injuryStatus": "Estado actual",
-      "injuryStatusOptions": {
-        "active": "Activa",
-        "activeDesc": "Todavía siento dolor/molestia",
-        "recovering": "En recuperación",
-        "recoveringDesc": "Mejorando gradualmente",
-        "recovered": "Recuperada",
-        "recoveredDesc": "Sin dolor, pero con cuidado"
-      },
-      "injuryStartDate": "Fecha de inicio",
-      "injuryStartDatePlaceholder": "Cuándo comenzó",
-      "medicalClearance": "¿Tienes autorización médica para correr?",
-      "medicalClearanceYes": "Sí, estoy autorizado",
-      "medicalClearanceNo": "No, necesito evaluación médica",
-      "medicalNotes": "Notas médicas adicionales",
-      "medicalNotesPlaceholder": "Cualquier información adicional relevante",
-      "noInjuries": "No hay lesiones registradas",
-      "editInjury": "Editar lesión",
-      "deleteInjury": "Eliminar lesión",
-      "confirmDeleteInjury": "¿Estás seguro de que quieres eliminar esta lesión?",
-      "errors": {
-        "injuryTypeRequired": "Selecciona el tipo de lesión",
-        "injuryDescriptionRequired": "Describe la lesión",
-        "injurySeverityRequired": "Selecciona la severidad",
-        "injuryStatusRequired": "Selecciona el estado actual",
-        "injuryStartDateInvalid": "Fecha inválida",
-        "medicalClearanceRequired": "Informa si tienes autorización médica"
-      }
-    },
-    "step5": {
-      "title": "Objetivos",
-      "subtitle": "¿Cuál es tu objetivo principal?",
-      "primaryGoal": "Objetivo principal",
-      "primaryGoalOptions": {
-        "complete": "Completar una distancia",
-        "completeDesc": "Terminar mi primera carrera",
-        "improve": "Mejorar tiempo",
-        "improveDesc": "Batir mi récord personal",
-        "fitness": "Mantener forma",
-        "fitnessDesc": "Correr regularmente para salud",
-        "weightLoss": "Perder peso",
-        "weightLossDesc": "Usar carrera para adelgazar",
-        "compete": "Competir",
-        "competeDesc": "Buscar podios y clasificaciones"
-      },
-      "targetRace": "Carrera objetivo (opcional)",
-      "targetRaceType": "Tipo de carrera",
-      "targetRaceTypeOptions": {
-        "5k": "5 km",
-        "10k": "10 km",
-        "15k": "15 km",
-        "halfMarathon": "Media Maratón (21 km)",
-        "marathon": "Maratón (42 km)",
-        "ultraMarathon": "Ultra Maratón",
-        "trail": "Trail Run"
-      },
-      "targetRaceName": "Nombre de la carrera",
-      "targetRaceNamePlaceholder": "Ej: Maratón de Madrid",
-      "targetRaceDate": "Fecha de la carrera",
-      "targetRaceDatePlaceholder": "DD/MM/AAAA",
-      "targetTime": "Tiempo objetivo",
-      "targetTimePlaceholder": "HH:MM:SS",
-      "additionalGoals": "Objetivos secundarios (opcional)",
-      "additionalGoalsOptions": {
-        "consistency": "Mantener consistencia",
-        "strength": "Ganar fuerza",
-        "speed": "Aumentar velocidad",
-        "endurance": "Mejorar resistencia",
-        "enjoyment": "Disfrutar más los entrenamientos",
-        "injury": "Prevenir lesiones"
-      },
-      "errors": {
-        "primaryGoalRequired": "Selecciona tu objetivo principal",
-        "targetRaceTypeRequired": "Selecciona el tipo de carrera",
-        "targetRaceDateInvalid": "Fecha inválida",
-        "targetRaceDatePast": "La fecha debe ser futura",
-        "targetTimeInvalid": "Tiempo inválido (formato: HH:MM:SS)"
-      }
-    },
-    "step6": {
-      "title": "Disponibilidad",
-      "subtitle": "¿Cuándo puedes entrenar?",
-      "daysPerWeek": "¿Cuántos días por semana puedes entrenar?",
-      "daysPerWeekOptions": {
-        "3": "3 días",
-        "4": "4 días",
-        "5": "5 días",
-        "6": "6 días",
-        "7": "7 días"
-      },
-      "preferredDays": "Días preferidos",
-      "dayOptions": {
-        "monday": "Lunes",
-        "tuesday": "Martes",
-        "wednesday": "Miércoles",
-        "thursday": "Jueves",
-        "friday": "Viernes",
-        "saturday": "Sábado",
-        "sunday": "Domingo"
-      },
-      "preferredTime": "Horario preferido",
-      "preferredTimeOptions": {
-        "earlyMorning": "Madrugada (5h-7h)",
-        "morning": "Mañana (7h-10h)",
-        "lateMorning": "Fin de mañana (10h-12h)",
-        "afternoon": "Tarde (12h-17h)",
-        "evening": "Noche (17h-20h)",
-        "night": "Noche (20h-23h)",
-        "flexible": "Flexible"
-      },
-      "trainingLocation": "¿Dónde entrenas?",
-      "trainingLocationOptions": {
-        "street": "Calle/Acera",
-        "park": "Parque",
-        "track": "Pista",
-        "treadmill": "Cinta de correr",
-        "trail": "Sendero",
-        "beach": "Playa",
-        "mixed": "Varios lugares"
-      },
-      "hasGym": "¿Tienes acceso a gimnasio?",
-      "hasGymYes": "Sí, puedo hacer entrenamientos de fuerza",
-      "hasGymNo": "No, solo entrenamientos de carrera",
-      "equipment": "Equipamiento disponible",
-      "equipmentOptions": {
-        "gpsWatch": "Reloj GPS",
-        "heartRate": "Monitor de frecuencia cardíaca",
-        "treadmill": "Cinta de correr",
-        "weights": "Pesas/gimnasio",
-        "foamRoller": "Rodillo de masaje",
-        "none": "Sin equipamiento"
-      },
-      "errors": {
-        "daysPerWeekRequired": "Selecciona cuántos días puedes entrenar",
-        "preferredDaysRequired": "Selecciona al menos un día",
-        "preferredTimeRequired": "Selecciona tu horario preferido",
-        "trainingLocationRequired": "Selecciona dónde entrenas"
-      }
-    },
-    "step7": {
-      "title": "Revisión",
-      "subtitle": "Verifica tu información antes de finalizar",
-      "personalInfo": "Información Personal",
-      "experience": "Experiencia",
-      "performance": "Rendimiento",
-      "health": "Salud",
-      "goals": "Objetivos",
-      "availability": "Disponibilidad",
-      "editSection": "Editar",
-      "allSet": "¡Todo listo!",
-      "generating": "Generando tu plan personalizado...",
-      "generatingDesc": "Esto puede tardar unos segundos",
-      "errors": {
-        "validationFailed": "Algunos campos necesitan ser revisados",
-        "saveFailed": "Error al guardar datos. Inténtalo de nuevo."
-      }
-    }
-  },
-  "profile": {
-    "title": "Perfil",
-    "subtitle": "Gestiona tu información y preferencias",
-    "tabs": {
-      "basic": "Datos Básicos",
-      "performance": "Rendimiento",
-      "health": "Salud",
-      "goals": "Objetivos",
-      "availability": "Disponibilidad",
-      "preferences": "Preferencias"
-    },
-    "basic": {
-      "title": "Datos Personales",
-      "name": "Nombre",
-      "email": "Correo",
-      "gender": "Género",
-      "birthDate": "Fecha de Nacimiento",
-      "age": "Edad",
-      "years": "años",
-      "weight": "Peso",
-      "height": "Altura",
-      "bmi": "IMC",
-      "save": "Guardar cambios",
-      "saved": "¡Datos guardados con éxito!",
-      "error": "Error al guardar datos"
-    },
-    "performance": {
-      "title": "Tiempos y Récords",
-      "personalBests": "Mejores Tiempos",
-      "addTime": "Agregar tiempo",
-      "recentRaces": "Carreras Recientes",
-      "noTimes": "No hay tiempos registrados",
-      "pace": "Ritmo",
-      "vdot": "VDOT Estimado"
-    },
-    "health": {
-      "title": "Salud y Lesiones",
-      "activeInjuries": "Lesiones Activas",
-      "injuryHistory": "Historial",
-      "medicalClearance": "Autorización Médica",
-      "cleared": "Autorizado para entrenar",
-      "notCleared": "Consulta a un médico",
-      "noActiveInjuries": "Sin lesiones activas"
-    },
-    "goals": {
-      "title": "Objetivos y Metas",
-      "primaryGoal": "Objetivo Principal",
-      "targetRace": "Carrera Objetivo",
-      "targetTime": "Tiempo Objetivo",
-      "raceDate": "Fecha de la Carrera",
-      "daysUntilRace": "días hasta la carrera",
-      "noTargetRace": "No hay carrera objetivo definida",
-      "setTargetRace": "Definir carrera objetivo"
-    },
-    "availability": {
-      "title": "Disponibilidad para Entrenamientos",
-      "daysPerWeek": "Días por Semana",
-      "preferredDays": "Días Preferidos",
-      "preferredTime": "Horario Preferido",
-      "trainingLocation": "Lugar de Entrenamiento",
-      "equipment": "Equipamiento Disponible"
-    },
-    "preferences": {
-      "title": "Preferencias",
-      "language": "Idioma",
-      "units": "Unidades",
-      "unitsOptions": {
-        "metric": "Métrico (km)",
-        "imperial": "Imperial (mi)"
-      },
-      "notifications": "Notificaciones",
-      "notificationsOptions": {
-        "all": "Todas",
-        "important": "Solo importantes",
-        "none": "Ninguna"
-      },
-      "theme": "Tema",
-      "themeOptions": {
-        "light": "Claro",
-        "dark": "Oscuro",
-        "system": "Sistema"
-      },
-      "privacy": "Privacidad",
-      "profileVisibility": "Visibilidad del Perfil",
-      "profileVisibilityOptions": {
-        "public": "Público",
-        "private": "Privado",
-        "friendsOnly": "Solo amigos"
-      }
-    }
-  },
-  "dashboard": {
-    "title": "Tablero",
-    "welcome": "¡Bienvenido, {{name}}!",
-    "currentWeek": "Semana Actual",
-    "weekOf": "Semana del {{date}}",
-    "weekProgress": "Progreso de la Semana",
-    "completed": "Completados",
-    "remaining": "Restantes",
-    "todayWorkout": "Entrenamiento de Hoy",
-    "noWorkoutToday": "Sin entrenamiento programado para hoy",
-    "restDay": "Día de Descanso",
-    "nextWorkout": "Próximo Entrenamiento",
-    "stats": {
-      "title": "Estadísticas",
-      "thisWeek": "Esta Semana",
-      "thisMonth": "Este Mes",
-      "totalDistance": "Distancia Total",
-      "totalTime": "Tiempo Total",
-      "avgPace": "Ritmo Promedio",
-      "workoutsCompleted": "Entrenamientos Completados",
-      "consistency": "Consistencia",
-      "streakDays": "Días Consecutivos"
-    },
-    "recentActivities": {
-      "title": "Actividades Recientes",
-      "noActivities": "No hay actividades registradas",
-      "viewAll": "Ver todas"
-    },
-    "upcomingRaces": {
-      "title": "Próximas Carreras",
-      "daysUntil": "en {{days}} días",
-      "noRaces": "No hay carreras programadas",
-      "addRace": "Agregar carrera"
-    },
-    "quickActions": {
-      "title": "Acciones Rápidas",
-      "logWorkout": "Registrar Entrenamiento",
-      "viewPlan": "Ver Plan",
-      "editProfile": "Editar Perfil",
-      "syncStrava": "Sincronizar Strava"
-    }
-  },
-  "plan": {
-    "title": "Plan de Entrenamientos",
-    "subtitle": "Tu plan personalizado",
-    "weekView": "Vista Semanal",
-    "monthView": "Vista Mensual",
-    "calendarView": "Calendario",
-    "week": "Semana",
-    "phase": "Fase",
-    "phases": {
-      "base": "Base",
-      "build": "Construcción",
-      "peak": "Pico",
-      "taper": "Descarga",
-      "recovery": "Recuperación"
-    },
-    "workout": {
-      "type": "Tipo",
-      "distance": "Distancia",
-      "duration": "Duración",
-      "pace": "Ritmo",
-      "intensity": "Intensidad",
-      "description": "Descripción",
-      "warmup": "Calentamiento",
-      "main": "Principal",
-      "cooldown": "Enfriamiento",
-      "notes": "Notas",
-      "completed": "Completado",
-      "pending": "Pendiente",
-      "skipped": "Saltado",
-      "markComplete": "Marcar como completado",
-      "logActivity": "Registrar actividad",
-      "viewDetails": "Ver detalles"
-    },
-    "workoutTypes": {
-      "easy": "Carrera Suave",
-      "long": "Carrera Larga",
-      "tempo": "Tempo Run",
-      "intervals": "Intervalos",
-      "hills": "Subidas",
-      "recovery": "Recuperación",
-      "race": "Carrera/Simulacro",
-      "cross": "Cross Training",
-      "rest": "Descanso",
-      "strength": "Fuerza"
-    },
-    "intensityLevels": {
-      "veryEasy": "Muy Suave",
-      "easy": "Suave",
-      "moderate": "Moderado",
-      "hard": "Fuerte",
-      "veryHard": "Muy Fuerte"
-    },
-    "adjustPlan": "Ajustar Plan",
-    "regeneratePlan": "Regenerar Plan",
-    "downloadPlan": "Descargar Plan"
-  },
-  "header": {
-    "dashboard": "Tablero",
-    "plan": "Plan",
-    "profile": "Perfil",
-    "logout": "Cerrar sesión",
-    "menu": "Menú"
-  },
-  "footer": {
-    "about": "Acerca de",
-    "terms": "Términos",
-    "privacy": "Privacidad",
-    "contact": "Contacto",
-    "rights": "© {{year}} Athera Run. Todos los derechos reservados."
-  },
-  "errors": {
-    "generic": "Algo salió mal. Inténtalo de nuevo.",
-    "network": "Error de conexión. Verifica tu internet.",
-    "unauthorized": "Necesitas iniciar sesión para acceder a esta página.",
-    "notFound": "Página no encontrada.",
-    "serverError": "Error del servidor. Inténtalo más tarde.",
-    "validation": "Algunos campos necesitan ser corregidos.",
-    "retry": "Intentar de nuevo",
-    "goHome": "Ir al inicio"
-  },
-  "loading": {
-    "pleaseWait": "Por favor, espera...",
-    "loading": "Cargando",
-    "processing": "Procesando",
-    "saving": "Guardando",
-    "deleting": "Eliminando",
-    "uploading": "Subiendo"
-  },
-  "onboarding": {
     "step3": {
       "title": "Rendimiento",
       "subtitle": "Tus mejores tiempos (opcional pero recomendado)",
@@ -772,6 +235,97 @@
       }
     }
   },
+  "profile": {
+    "title": "Perfil",
+    "subtitle": "Gestiona tu información y preferencias",
+    "tabs": {
+      "basic": "Datos Básicos",
+      "performance": "Rendimiento",
+      "health": "Salud",
+      "goals": "Objetivos",
+      "availability": "Disponibilidad",
+      "preferences": "Preferencias"
+    },
+    "basic": {
+      "title": "Datos Personales",
+      "name": "Nombre",
+      "email": "Correo",
+      "gender": "Género",
+      "birthDate": "Fecha de Nacimiento",
+      "age": "Edad",
+      "years": "años",
+      "weight": "Peso",
+      "height": "Altura",
+      "bmi": "IMC",
+      "save": "Guardar cambios",
+      "saved": "¡Datos guardados con éxito!",
+      "error": "Error al guardar datos"
+    },
+    "performance": {
+      "title": "Tiempos y Récords",
+      "personalBests": "Mejores Tiempos",
+      "addTime": "Agregar tiempo",
+      "recentRaces": "Carreras Recientes",
+      "noTimes": "No hay tiempos registrados",
+      "pace": "Ritmo",
+      "vdot": "VDOT Estimado"
+    },
+    "health": {
+      "title": "Salud y Lesiones",
+      "activeInjuries": "Lesiones Activas",
+      "injuryHistory": "Historial",
+      "medicalClearance": "Autorización Médica",
+      "cleared": "Autorizado para entrenar",
+      "notCleared": "Consulta a un médico",
+      "noActiveInjuries": "Sin lesiones activas"
+    },
+    "goals": {
+      "title": "Objetivos y Metas",
+      "primaryGoal": "Objetivo Principal",
+      "targetRace": "Carrera Objetivo",
+      "targetTime": "Tiempo Objetivo",
+      "raceDate": "Fecha de la Carrera",
+      "daysUntilRace": "días hasta la carrera",
+      "noTargetRace": "No hay carrera objetivo definida",
+      "setTargetRace": "Definir carrera objetivo"
+    },
+    "availability": {
+      "title": "Disponibilidad para Entrenamientos",
+      "daysPerWeek": "Días por Semana",
+      "preferredDays": "Días Preferidos",
+      "preferredTime": "Horario Preferido",
+      "trainingLocation": "Lugar de Entrenamiento",
+      "equipment": "Equipamiento Disponible"
+    },
+    "preferences": {
+      "title": "Preferencias",
+      "language": "Idioma",
+      "units": "Unidades",
+      "unitsOptions": {
+        "metric": "Métrico (km)",
+        "imperial": "Imperial (mi)"
+      },
+      "notifications": "Notificaciones",
+      "notificationsOptions": {
+        "all": "Todas",
+        "important": "Solo importantes",
+        "none": "Ninguna"
+      },
+      "theme": "Tema",
+      "themeOptions": {
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema"
+      },
+      "privacy": "Privacidad",
+      "profileVisibility": "Visibilidad del Perfil",
+      "profileVisibilityOptions": {
+        "public": "Público",
+        "private": "Privado",
+        "friendsOnly": "Solo amigos"
+      }
+    }
+  },
   "dashboard": {
     "welcome": "¡Hola, {{name}}! 👋",
     "welcomeDefault": "¡Hola, Corredor! 👋",
@@ -846,6 +400,109 @@
       "save": "Guardar Informe",
       "saving": "Guardando..."
     }
+  },
+  "plan": {
+    "title": "Plan de Entrenamientos",
+    "subtitle": "Tu plan personalizado",
+    "weekView": "Vista Semanal",
+    "monthView": "Vista Mensual",
+    "calendarView": "Calendario",
+    "week": "Semana",
+    "phase": "Fase",
+    "phases": {
+      "base": "Base",
+      "build": "Construcción",
+      "peak": "Pico",
+      "taper": "Descarga",
+      "recovery": "Recuperación"
+    },
+    "workout": {
+      "type": "Tipo",
+      "distance": "Distancia",
+      "duration": "Duración",
+      "pace": "Ritmo",
+      "intensity": "Intensidad",
+      "description": "Descripción",
+      "warmup": "Calentamiento",
+      "main": "Principal",
+      "cooldown": "Enfriamiento",
+      "notes": "Notas",
+      "completed": "Completado",
+      "pending": "Pendiente",
+      "skipped": "Saltado",
+      "markComplete": "Marcar como completado",
+      "logActivity": "Registrar actividad",
+      "viewDetails": "Ver detalles"
+    },
+    "workoutTypes": {
+      "easy": "Carrera Suave",
+      "long": "Carrera Larga",
+      "tempo": "Tempo Run",
+      "intervals": "Intervalos",
+      "hills": "Subidas",
+      "recovery": "Recuperación",
+      "race": "Carrera/Simulacro",
+      "cross": "Cross Training",
+      "rest": "Descanso",
+      "strength": "Fuerza"
+    },
+    "intensityLevels": {
+      "veryEasy": "Muy Suave",
+      "easy": "Suave",
+      "moderate": "Moderado",
+      "hard": "Fuerte",
+      "veryHard": "Muy Fuerte"
+    },
+    "adjustPlan": "Ajustar Plan",
+    "regeneratePlan": "Regenerar Plan",
+    "downloadPlan": "Descargar Plan"
+  },
+  "header": {
+    "brand": "Athera Run",
+    "tagline": "Entrenamiento Inteligente",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "plano": "Plan",
+      "treinos": "Entrenamientos"
+    },
+    "mobileSelect": "Navegación",
+    "userMenu": {
+      "label": "Menú de usuario",
+      "login": "Iniciar sesión",
+      "signup": "Registrarse",
+      "editProfile": "Editar Perfil",
+      "adminPanel": "Panel Administrativo",
+      "upgrade": "Actualizar",
+      "logout": "Cerrar sesión",
+      "loggingOut": "Cerrando sesión..."
+    }
+  },
+  "footer": {
+    "about": "Acerca de",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "contact": "Contacto",
+    "rights": "© {{year}} Athera Run. Todos los derechos reservados."
+  },
+  "errors": {
+    "pageNotFound": {
+      "title": "Página no encontrada",
+      "description": "Lo sentimos, no pudimos encontrar la página que buscas.",
+      "goHome": "Volver al Inicio"
+    },
+    "genericError": {
+      "title": "Algo salió mal",
+      "description": "Ocurrió un error inesperado. Inténtalo de nuevo más tarde.",
+      "retry": "Intentar de nuevo"
+    }
+  },
+  "loading": {
+    "pleaseWait": "Por favor, espera...",
+    "loading": "Cargando",
+    "processing": "Procesando",
+    "saving": "Guardando",
+    "deleting": "Eliminando",
+    "uploading": "Subiendo"
   },
   "plano": {
     "title": "Mi Plan de Entrenamiento",
@@ -978,26 +635,6 @@
       "errorUpdatingProfile": "Error al actualizar perfil"
     }
   },
-  "header": {
-    "brand": "Athera Run",
-    "tagline": "Entrenamiento Inteligente",
-    "navigation": {
-      "dashboard": "Dashboard",
-      "plano": "Plan",
-      "treinos": "Entrenamientos"
-    },
-    "mobileSelect": "Navegación",
-    "userMenu": {
-      "label": "Menú de usuario",
-      "login": "Iniciar sesión",
-      "signup": "Registrarse",
-      "editProfile": "Editar Perfil",
-      "adminPanel": "Panel Administrativo",
-      "upgrade": "Actualizar",
-      "logout": "Cerrar sesión",
-      "loggingOut": "Cerrando sesión..."
-    }
-  },
   "paywall": {
     "title": "Función Premium",
     "description": "es una función exclusiva para suscriptores Premium.",
@@ -1013,16 +650,8 @@
     "viewPlans": "Ver Planes Premium",
     "maybeLater": "Tal vez más tarde"
   },
-  "errors": {
-    "pageNotFound": {
-      "title": "Página no encontrada",
-      "description": "Lo sentimos, no pudimos encontrar la página que buscas.",
-      "goHome": "Volver al Inicio"
-    },
-    "genericError": {
-      "title": "Algo salió mal",
-      "description": "Ocurrió un error inesperado. Inténtalo de nuevo más tarde.",
-      "retry": "Intentar de nuevo"
-    }
+  "tracking": {
+    "title": "Mis Entrenamientos",
+    "subtitle": "Registra tus entrenamientos y sigue tu progreso"
   }
 }
