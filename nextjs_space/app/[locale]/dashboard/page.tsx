@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -286,7 +287,7 @@ export default function DashboardPage() {
                     {nextWorkout ? (
                       <>
                         <div className="text-xl sm:text-2xl font-bold">
-                          {new Date(nextWorkout.date).toLocaleDateString(locale, { weekday: 'short' })}
+                          {formatShortDate(nextWorkout.date, locale)}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-1">
                           {nextWorkout.title}
@@ -321,7 +322,7 @@ export default function DashboardPage() {
                       {getDistanceLabel(plan.goalDistance)}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(plan.targetRaceDate).toLocaleDateString(locale)}
+                      {formatShortDate(plan.targetRaceDate, locale)}
                     </p>
                   </CardContent>
                 </Card>
@@ -405,11 +406,7 @@ export default function DashboardPage() {
                                 </div>
                                 <h4 className="font-medium text-lg">{workout.title}</h4>
                                 <p className="text-sm text-muted-foreground">
-                                  {new Date(workout.date).toLocaleDateString(locale, {
-                                    weekday: 'long',
-                                    day: 'numeric',
-                                    month: 'long',
-                                  })}
+                                  {formatLocalizedDate(workout.date, locale)}
                                 </p>
                               </div>
                             </div>

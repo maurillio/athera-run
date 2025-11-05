@@ -3,3 +3,12 @@
 .env.*
 !nextjs_space/.env
 !nextjs_space/.env.example
+
+# Ignore nested duplicates
+nextjs_space/nextjs_space/
+
+# Ignore docs and scripts
+*.md
+!README.md
+scripts/
+docs/

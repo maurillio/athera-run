@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install --force && npx prisma generate && npx prisma migrate deploy && npm run build",
+  "buildCommand": "cd nextjs_space && npm install --force && npx prisma generate --schema=./prisma/schema.prisma && npx prisma migrate deploy --schema=./prisma/schema.prisma && npm run build",
   "framework": "nextjs",
-  "installCommand": "npm install --force"
+  "installCommand": "cd nextjs_space && npm install --force"
 }
