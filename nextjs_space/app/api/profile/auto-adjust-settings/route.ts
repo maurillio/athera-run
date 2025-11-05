@@ -5,6 +5,8 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { isPremiumUser } from '@/lib/premium-check';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Obter configuração de ajuste automático
 export async function GET(request: Request) {
   try {
