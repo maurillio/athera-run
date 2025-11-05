@@ -1502,12 +1502,18 @@ Para melhor escalabilidade e redundância, migrar para:
 3. **AWS RDS** (enterprise)
 4. **Railway** (boa relação custo/benefício)
 
-#### Rodar Migrations
+#### Rodar Migrations Manualmente (Opcional)
 
 ```bash
-# Local ou CI/CD
+# Se precisar aplicar migrations fora do deploy
+cd nextjs_space
 npx prisma migrate deploy
+
+# Criar nova migration (local)
+npx prisma migrate dev --name descricao_da_mudanca
 ```
+
+**⚠️ NOTA:** Desde 05/Nov/2025, migrations são aplicadas AUTOMATICAMENTE no Vercel durante o build. Não é mais necessário rodar manualmente após cada deploy.
 
 ### CI/CD Automático
 
@@ -1515,6 +1521,7 @@ O Vercel gerencia todo o CI/CD:
 - **Push no `main`** → Deploy em produção (atherarun.com)
 - **Push em outras branches** → Preview deploys
 - **Build automático** com cache inteligente
+- **Migrations automáticas** ⭐ NOVO (desde 05/Nov/2025)
 - **Rollback fácil** pelo dashboard
 
 ### Verificação Pós-Deploy
