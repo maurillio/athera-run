@@ -1,0 +1,5 @@
+
+# Environment variables (root level - should not exist)
+/.env
+/.env.local
+/.env.*.local
