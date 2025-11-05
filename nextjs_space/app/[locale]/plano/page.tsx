@@ -192,7 +192,7 @@ export default function PlanoPage() {
                   {getDistanceLabel(plan.goalDistance)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {new Date(plan.targetRaceDate).toLocaleDateString(locale)}
+                  {formatLocalizedDate(plan.targetRaceDate, locale)}
                 </p>
               </CardContent>
             </Card>
