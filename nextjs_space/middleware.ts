@@ -40,11 +40,30 @@ export default withAuth(
       (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
     );
 
-    // If no locale, redirect to locale-prefixed path
+    // Routes that have been migrated to i18n (exist in [locale] folder)
+    const i18nRoutes = [
+      '/dashboard',
+      '/login',
+      '/signup',
+      '/onboarding',
+      '/plano',
+      '/perfil',
+      '/'
+    ];
+
+    // Only redirect to locale if:
+    // 1. Path doesn't have locale yet
+    // 2. Path is in the i18n routes list
     if (!pathnameHasLocale) {
-      const locale = getLocale(req);
-      const newUrl = new URL(`/${locale}${pathname}`, req.url);
-      return NextResponse.redirect(newUrl);
+      const shouldRedirect = i18nRoutes.some(route => 
+        pathname === route || pathname.startsWith(route + '/')
+      );
+
+      if (shouldRedirect) {
+        const locale = getLocale(req);
+        const newUrl = new URL(`/${locale}${pathname}`, req.url);
+        return NextResponse.redirect(newUrl);
+      }
     }
 
     return NextResponse.next();
