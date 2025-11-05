@@ -2,8 +2,8 @@
 
 > Planejamento de features, melhorias e evolução da plataforma
 
-**Última atualização:** 03 de Novembro de 2025  
-**Versão Atual:** 1.2.0
+**Última atualização:** 05 de Novembro de 2025  
+**Versão Atual:** 1.5.0
 
 ---
 
@@ -77,7 +77,7 @@ Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferec
 
 ### Novembro ✅ COMPLETO
 
-#### Features Implementadas (v1.2.0)
+#### v1.2.0 - Auto-Adjust & AI Features (03/Nov/2025)
 
 - [x] **Auto-Ajuste Progressivo (FREE)** ⭐ MAJOR UPDATE
   - Preserva histórico completo ao alterar disponibilidade
@@ -85,32 +85,45 @@ Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferec
   - Ajusta apenas futuro (semanas não iniciadas)
   - Transação atômica (rollback se falhar)
   - Feedback: "X semanas anteriores preservadas"
-  - **Status:** ✅ Implementado
-  - **Data:** 03/Nov/2025 19:41
 
 - [x] **IA em Dias de Descanso (FREE)**
   - Sugestões contextuais por fase (base/build/peak/taper)
   - Considera atividades disponíveis do usuário
   - Dicas de recuperação e prevenção de lesões
   - Mensagens específicas para pré-prova
-  - **Status:** ✅ Implementado
-  - **Data:** 03/Nov/2025
 
 - [x] **Análise Inteligente de Progresso (Premium)**
   - IA analisa taxa de conclusão de treinos
   - Detecta sinais de fadiga e overtraining
   - Sugestões automáticas de ajuste
   - Banner inteligente no dashboard
-  - Teaser para usuários FREE (upgrade prompt)
-  - **Status:** ✅ Implementado  
-  - **Data:** 03/Nov/2025
 
 - [x] **Correções de UX**
   - Botão "Confirmar Treino" oculto em descanso
   - Consistência título/descrição (km sincronizados)
   - Onboarding: apenas Masculino/Feminino
-  - **Status:** ✅ Implementado
-  - **Data:** 03/Nov/2025
+
+#### v1.3.0 - Google Auth Fix & Onboarding Revision (03/Nov/2025)
+
+- [x] **Google OAuth Restoration** - Fixed callback, admin access restored
+- [x] **Onboarding 100% Field Coverage** - 38 database fields, 7 steps mapped
+- [x] **Database Schema v1.3.0** - 13 new fields, User.locale for i18n
+
+#### v1.4.0 - i18n Base (04/Nov/2025)
+
+- [x] **i18n Infrastructure** - next-intl, 3 languages (pt-BR, en, es)
+- [x] **8 Main Routes i18n** - Login, Signup, Onboarding, Dashboard, Plano, Perfil, Homepage
+- [x] **~1000 Translation Keys** - Automated tests 13/13, manual QA 45+ scenarios
+- [x] **Backend Integration** - User.locale persistence, API messages, locale detection
+
+#### v1.5.0 - i18n Complete (05/Nov/2025) ⭐ LATEST
+
+- [x] **11 Additional Routes i18n** - tracking, training, calculator, chat, subscription, nutrition, prevention, glossary, overtraining, pricing, admin
+- [x] **17 Total Routes × 3 Languages** = 51 routes live
+- [x] **System Cleanup** - Removed 11 duplicated routes, -2MB build size
+- [x] **23/23 Namespaces Complete** - 2,964 translation keys validated
+- [x] **Documentation Updated** - CONTEXTO.md v1.5.0, ROADMAP.md, audit report
+- [x] **Production Ready** - Zero errors, live at atherarun.com
 
 #### Em Andamento
 
