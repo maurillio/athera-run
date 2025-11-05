@@ -2,10 +2,10 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 05 de Novembro de 2025 00:45 UTC  
-**Versão Atual:** 1.4.0 (Internacionalização - i18n)  
-**Status:** ✅ **100% COMPLETO - INTERPOLAÇÃO FIXED** 🎉  
-**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** 2043e4e
+**Última atualização:** 05 de Novembro de 2025 15:45 UTC  
+**Versão Atual:** 1.5.0 (i18n Complete - 17 Routes)  
+**Status:** ✅ **100% COMPLETO - ALL ROUTES i18n** 🎉  
+**Build:** ✅ Passando (67/67 páginas) | **Deploy:** 🚀 Auto-deploy | **Commit:** 26244bc
 
 > **🚀 NOVA SESSÃO?** Leia primeiro: [PROXIMA_SESSAO.md](./PROXIMA_SESSAO.md)  
 > **🔧 BUILD FIX FINAL:** Interpolação implementada - Ver: [SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md](./SESSAO_05NOV2025_v1.4.0_BUILD_FIX_FINAL.md)
@@ -86,14 +86,24 @@
    - ✅ Committed: 2043e4e - "fix(i18n): add interpolation support to useTranslations hook"
    - 🚀 Auto-deploy to Vercel in progress
 
-**Progresso:** 15% → 100% ✅ **COMPLETO E FUNCIONAL**  
-**Rotas i18n:** Login, Signup, Onboarding, Dashboard, Plano, Perfil, Homepage, Plano (8 rotas × 3 idiomas = 24 rotas)  
-**Translation Keys Totais:** ~2,740 implementadas e validadas  
+### 🚀 V1.5.0 COMPLETO - All Routes i18n (05/Nov/2025 15:45) ✅ PRODUÇÃO
+1. ✅ **11 Additional Routes Migrated** - tracking, training, calculator, chat, subscription, nutrition, prevention, glossary, overtraining, pricing, admin
+2. ✅ **Total Routes:** 17 routes × 3 locales = 51 routes
+3. ✅ **Duplicated Routes Removed** - Cleaned old app/ routes (app/admin, app/calculator, etc.)
+4. ✅ **Translation Coverage:** 23/23 namespaces in all 3 languages (pt-BR, en, es)
+5. ✅ **Build:** Zero errors, 67/67 pages compiled
+6. ✅ **Deploy:** Live at atherarun.com
+7. ✅ **System Audit:** Comprehensive audit completed (see AUDITORIA_SISTEMA_05NOV2025.md)
+8. ✅ **Documentation Updated:** CONTEXTO.md, ROADMAP.md, package.json version
+
+**Progresso:** 100% → 100% ✅ **COMPLETO E FUNCIONAL**  
+**Rotas i18n:** 17 rotas principais (login, signup, onboarding, dashboard, plano, perfil, tracking, training, calculator, chat, subscription, nutrition, prevention, glossary, overtraining, pricing, admin)  
+**Translation Keys Totais:** ~2,964 implementadas e validadas  
 **Cobertura Detalhada:**
-  - pt-BR: 918 keys (base completa)
-  - en: 911 keys (inglês)
-  - es: 911 keys (espanhol)
-  - **Total: ~2,740 translation keys** (100% validated ✅)
+  - pt-BR: 988 keys (base completa)
+  - en: 988 keys (inglês)
+  - es: 988 keys (espanhol)
+  - **Total: ~2,964 translation keys** (100% validated ✅)
 **Testes:**
   - Automated: 13/13 passing ✅
   - Manual: 45+ scenarios documented ✅
