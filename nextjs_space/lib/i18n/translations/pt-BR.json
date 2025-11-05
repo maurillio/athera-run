@@ -678,5 +678,29 @@
     "insights": "Insights",
     "recommendations": "Recomendações",
     "generatedAt": "Gerado em"
+  },
+  "calculator": {
+    "title": "Calculadora VDOT",
+    "description": "Calcule seus paces personalizados baseados no sistema Jack Daniels. Use seu tempo recente de 10km para determinar suas zonas de treinamento ideais.",
+    "vdotLevel": "VDOT 37-38",
+    "vdotLevelDesc": "Seu nível atual baseado no pace de 10km (5:40-5:50/km)",
+    "goalTitle": "Meta: 4h",
+    "goalDesc": "Pace alvo de maratona: 5:41/km - perfeitamente alcançável",
+    "zonesTitle": "5 Zonas",
+    "zonesDesc": "Easy, Marathon, Threshold, Interval, Repetition",
+    "understandingTitle": "Entendendo as Zonas de Treinamento",
+    "understandingDesc": "Cada zona tem um propósito específico no desenvolvimento da capacidade aeróbica",
+    "ePaceTitle": "E-Pace (Easy)",
+    "ePaceDesc": "Ritmo conversacional, usado em 80% do treinamento. Desenvolve base aeróbica e promove recuperação ativa.",
+    "mPaceTitle": "M-Pace (Marathon)",
+    "mPaceDesc": "Seu ritmo alvo de maratona. Usado em longões específicos para adaptar corpo e mente ao esforço da prova.",
+    "tPaceTitle": "T-Pace (Threshold)",
+    "tPaceDesc": "Ritmo \"confortavelmente difícil\". Melhora o limiar de lactato e a capacidade de sustentar esforços moderados.",
+    "iPaceTitle": "I-Pace (Interval)",
+    "iPaceDesc": "Intervalos para desenvolver VO2max. Usado em sessões de qualidade para melhorar potência aeróbica.",
+    "rPaceTitle": "R-Pace (Repetition)",
+    "rPaceDesc": "Repetições rápidas para melhorar forma de corrida, economia e velocidade neuromuscular. Uso limitado na maratona.",
+    "distribution8020Title": "Distribuição 80/20",
+    "distribution8020Desc": "80% do volume em E-Pace, 20% em intensidades moderadas/altas. Princípio fundamental para desenvolvimento aeróbico."
   }
 }
