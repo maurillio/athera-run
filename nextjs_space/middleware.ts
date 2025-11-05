@@ -49,6 +49,7 @@ export default withAuth(
       '/plano',
       '/perfil',
       '/tracking',
+      '/training',
       '/'
     ];
 

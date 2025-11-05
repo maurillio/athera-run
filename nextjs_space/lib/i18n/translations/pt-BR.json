@@ -653,5 +653,30 @@
   "tracking": {
     "title": "Meus Treinos",
     "subtitle": "Registre seus treinos e acompanhe sua evolução"
+  },
+  "training": {
+    "title": "Análises com IA",
+    "subtitle": "Insights profundos sobre seu progresso e performance",
+    "generateNew": "Gerar Nova Análise",
+    "selectPeriod": "Selecione o período e deixe a IA analisar seu progresso",
+    "lastWeek": "Última Semana",
+    "lastMonth": "Último Mês",
+    "analyzing": "Analisando...",
+    "generateAnalysis": "Gerar Análise",
+    "noAnalysis": "Nenhuma análise ainda",
+    "recordWorkouts": "Registre alguns treinos e gere sua primeira análise com IA",
+    "weeklyAnalysis": "Análise Semanal",
+    "monthlyAnalysis": "Análise Mensal",
+    "until": "até",
+    "withAlerts": "Com Alertas",
+    "normal": "Normal",
+    "summary": "Resumo",
+    "workouts": "Treinos",
+    "distance": "Distância",
+    "performance": "Performance",
+    "recovery": "Recuperação",
+    "insights": "Insights",
+    "recommendations": "Recomendações",
+    "generatedAt": "Gerado em"
   }
 }

@@ -653,5 +653,30 @@
   "tracking": {
     "title": "My Workouts",
     "subtitle": "Log your workouts and track your progress"
+  },
+  "training": {
+    "title": "AI Analysis",
+    "subtitle": "Deep insights about your progress and performance",
+    "generateNew": "Generate New Analysis",
+    "selectPeriod": "Select the period and let AI analyze your progress",
+    "lastWeek": "Last Week",
+    "lastMonth": "Last Month",
+    "analyzing": "Analyzing...",
+    "generateAnalysis": "Generate Analysis",
+    "noAnalysis": "No analysis yet",
+    "recordWorkouts": "Record some workouts and generate your first AI analysis",
+    "weeklyAnalysis": "Weekly Analysis",
+    "monthlyAnalysis": "Monthly Analysis",
+    "until": "until",
+    "withAlerts": "With Alerts",
+    "normal": "Normal",
+    "summary": "Summary",
+    "workouts": "Workouts",
+    "distance": "Distance",
+    "performance": "Performance",
+    "recovery": "Recovery",
+    "insights": "Insights",
+    "recommendations": "Recommendations",
+    "generatedAt": "Generated at"
   }
 }
