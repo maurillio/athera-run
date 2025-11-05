@@ -707,5 +707,29 @@
     "title": "AI Coach Chat",
     "subtitle": "Ask questions about training, nutrition, recovery and race preparation",
     "instruction": "Click the floating button in the bottom right corner to start the chat 👇"
+  },
+  "nutrition": {
+    "title": "Nutrition Guide",
+    "subtitle": "Nutritional strategies for running"
+  },
+  "prevention": {
+    "title": "Injury Prevention",
+    "subtitle": "Stay healthy and running"
+  },
+  "glossary": {
+    "title": "Glossary",
+    "subtitle": "Running terms and concepts"
+  },
+  "overtraining": {
+    "title": "Overtraining",
+    "subtitle": "Understand and prevent excessive training"
+  },
+  "pricing": {
+    "title": "Plans & Pricing",
+    "subtitle": "Choose the perfect plan for you"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "subtitle": "Manage users and system"
   }
 }
