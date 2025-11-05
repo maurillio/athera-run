@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { locales, localeNames, localeFlags, type Locale } from '@/lib/i18n/config';
-import { useTranslations } from '@/lib/i18n/hooks';
+import { useLocale } from '@/lib/i18n/hooks';
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
-  const { locale } = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
