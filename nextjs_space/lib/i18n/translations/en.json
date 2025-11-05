@@ -678,5 +678,29 @@
     "insights": "Insights",
     "recommendations": "Recommendations",
     "generatedAt": "Generated at"
+  },
+  "calculator": {
+    "title": "VDOT Calculator",
+    "description": "Calculate your personalized paces based on Jack Daniels system. Use your recent 10km time to determine your ideal training zones.",
+    "vdotLevel": "VDOT 37-38",
+    "vdotLevelDesc": "Your current level based on 10km pace (5:40-5:50/km)",
+    "goalTitle": "Goal: 4h",
+    "goalDesc": "Target marathon pace: 5:41/km - perfectly achievable",
+    "zonesTitle": "5 Zones",
+    "zonesDesc": "Easy, Marathon, Threshold, Interval, Repetition",
+    "understandingTitle": "Understanding Training Zones",
+    "understandingDesc": "Each zone has a specific purpose in developing aerobic capacity",
+    "ePaceTitle": "E-Pace (Easy)",
+    "ePaceDesc": "Conversational pace, used in 80% of training. Develops aerobic base and promotes active recovery.",
+    "mPaceTitle": "M-Pace (Marathon)",
+    "mPaceDesc": "Your target marathon pace. Used in specific long runs to adapt body and mind to race effort.",
+    "tPaceTitle": "T-Pace (Threshold)",
+    "tPaceDesc": "Comfortably hard pace. Improves lactate threshold and ability to sustain moderate efforts.",
+    "iPaceTitle": "I-Pace (Interval)",
+    "iPaceDesc": "Intervals to develop VO2max. Used in quality sessions to improve aerobic power.",
+    "rPaceTitle": "R-Pace (Repetition)",
+    "rPaceDesc": "Fast repetitions to improve running form, economy and neuromuscular speed. Limited use in marathon.",
+    "distribution8020Title": "80/20 Distribution",
+    "distribution8020Desc": "80% of volume at E-Pace, 20% at moderate/high intensities. Fundamental principle for aerobic development."
   }
 }

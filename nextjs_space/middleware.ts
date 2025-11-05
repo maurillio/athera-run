@@ -50,6 +50,7 @@ export default withAuth(
       '/perfil',
       '/tracking',
       '/training',
+      '/calculator',
       '/'
     ];
 
