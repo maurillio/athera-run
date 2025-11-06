@@ -127,6 +127,28 @@
         "weightInvalid": "El peso debe estar entre 30 y 200 kg",
         "heightRequired": "La altura es obligatoria",
         "heightInvalid": "La altura debe estar entre 120 y 250 cm"
+      },
+      "physiological": {
+        "title": "Datos Fisiológicos",
+        "restingHR": "FC en Reposo (lpm)",
+        "restingHRNote": "40-80 normal para atletas",
+        "restingHRPlaceholder": "Ej: 60",
+        "sleepQuality": "Calidad del Sueño",
+        "sleepLevels": {
+          "poor": "1-4h (Mala)",
+          "fair": "4-6h (Regular)",
+          "good": "6-7h (Buena)",
+          "veryGood": "7-8h (Muy Buena)",
+          "excellent": "8h+ (Excelente)"
+        },
+        "stressLevel": "Nivel de Estrés",
+        "stressLevels": {
+          "low": "Muy Bajo",
+          "mild": "Bajo",
+          "moderate": "Moderado",
+          "high": "Alto",
+          "veryHigh": "Muy Alto"
+        }
       }
     },
     "step2": {

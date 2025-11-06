@@ -127,6 +127,28 @@
         "weightInvalid": "Weight must be between 30 and 200 kg",
         "heightRequired": "Height is required",
         "heightInvalid": "Height must be between 120 and 250 cm"
+      },
+      "physiological": {
+        "title": "Physiological Data",
+        "restingHR": "Resting HR (bpm)",
+        "restingHRNote": "40-80 normal for athletes",
+        "restingHRPlaceholder": "Ex: 60",
+        "sleepQuality": "Sleep Quality",
+        "sleepLevels": {
+          "poor": "1-4h (Poor)",
+          "fair": "4-6h (Fair)",
+          "good": "6-7h (Good)",
+          "veryGood": "7-8h (Very Good)",
+          "excellent": "8h+ (Excellent)"
+        },
+        "stressLevel": "Stress Level",
+        "stressLevels": {
+          "low": "Very Low",
+          "mild": "Low",
+          "moderate": "Moderate",
+          "high": "High",
+          "veryHigh": "Very High"
+        }
       }
     },
     "step2": {
