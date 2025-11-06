@@ -94,24 +94,8 @@ export default function OnboardingPage() {
     
     switch (step) {
       case 1:
-        // Step1 valida: age, gender, weight, height
-        // Name vem da session e já está preenchido
-        if (!formData.age) {
-          setError(t('step1.errors.ageRequired'));
-          return false;
-        }
-        if (!formData.gender) {
-          setError(t('step1.errors.genderRequired'));
-          return false;
-        }
-        if (!formData.weight) {
-          setError(t('step1.errors.weightRequired'));
-          return false;
-        }
-        if (!formData.height) {
-          setError(t('step1.errors.heightRequired'));
-          return false;
-        }
+        // Step1BasicData já faz validação internamente
+        // Não precisa validar novamente aqui
         break;
       case 2:
         if (!formData.runningLevel) {
