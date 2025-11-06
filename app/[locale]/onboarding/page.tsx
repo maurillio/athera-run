@@ -92,31 +92,27 @@ export default function OnboardingPage() {
   const validateStep = (step: number): boolean => {
     setError('');
     
+    // Todos os steps fazem validação internamente
+    // Não precisa validar aqui para evitar race conditions
+    // Apenas steps 5 e 6 precisam de validação aqui pois não têm validação própria
+    
     switch (step) {
       case 1:
-        // Step1BasicData já faz validação internamente
-        // Não precisa validar novamente aqui
-        break;
       case 2:
-        if (!formData.runningLevel) {
-          setError(t('step2.errors.experienceLevelRequired'));
-          return false;
-        }
-        break;
       case 3:
-        // Performance is optional
-        break;
       case 4:
-        // Health is optional
+        // Steps 1-4 validam internamente
         break;
       case 5:
+        // Step5 - Goals (validação necessária)
         if (!formData.primaryGoal || !formData.targetDistance) {
           setError(t('step5.errors.primaryGoalRequired'));
           return false;
         }
         break;
       case 6:
-        if (formData.trainingDays.length === 0) {
+        // Step6 - Availability (validação necessária)
+        if (!formData.trainingDays || formData.trainingDays.length === 0) {
           setError(t('step6.errors.trainingDaysRequired'));
           return false;
         }
