@@ -2,15 +2,15 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 06 de Novembro de 2025 17:30 UTC
-**Versão Atual:** 1.5.4 (Onboarding i18n Fix)
-**Status:** 🟢 **SISTEMA 95% ESTÁVEL - FUNCIONANDO EM PRODUÇÃO**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 11267bc4
+**Última atualização:** 06 de Novembro de 2025 21:24 UTC
+**Versão Atual:** 1.5.1 (Critical Onboarding Fix)
+**Status:** 🟢 **SISTEMA FUNCIONANDO - ONBOARDING CORRIGIDO**
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 29333cbd
 
-> **🚀 SESSÃO ATUAL (06/Nov):** Análise profunda completa do sistema
-> **📋 STATUS ATUAL:** Deploy funcionando, i18n 85% completo, 17 arquivos pendentes de commit
-> **✅ PRODUÇÃO:** Online em https://atherarun.com (deploy 7h atrás - ● Ready)
-> **⚠️ AÇÃO NECESSÁRIA:** Commit trabalho pendente (1.274 linhas) para garantir segurança
+> **🚀 ÚLTIMA SESSÃO (06/Nov 21h):** Correção crítica do onboarding
+> **📋 STATUS ATUAL:** Onboarding restaurado, Race Goals funcionando, sistema completo
+> **✅ PRODUÇÃO:** Online em https://atherarun.com
+> **✅ CORREÇÃO IMPLEMENTADA:** Step5 agora coleta dados de corrida alvo necessários para gerar planos
 
 ---
 
@@ -80,6 +80,160 @@ vercel logs <url> --token=$VERCEL_TOKEN
 2. ⏳ Validar funcionalidades principais
 3. ⏳ Confirmar domínio atherarun.com ativo
 4. ⏳ Monitorar logs por 24h
+
+---
+
+## 🚨 CORREÇÃO CRÍTICA: RACE GOAL NO ONBOARDING (06/Nov 21:24)
+
+### 🔴 Problema Identificado
+Após a implementação da **v1.3.0** (estruturação avançada) e **v1.4.0** (multilinguagem), o onboarding estava completando com sucesso, mas os usuários **não conseguiam gerar planos de treino** porque faltava Race Goal.
+
+**Causa Raiz:**
+Durante a refatoração das versões 1.3.0 e 1.4.0, o **Step5Goals perdeu os campos essenciais**:
+- ❌ `goalDistance` (distância da corrida alvo)
+- ❌ `targetRaceDate` (data da prova)
+- ❌ `targetTime` (tempo alvo - opcional)
+
+**Impacto:**
+1. Profile criado sem Race Goal
+2. API não podia criar Race Goal automaticamente
+3. Sistema não conseguia gerar plano de treino
+4. Dashboard ficava vazio sem opções úteis
+5. **Usuário completava onboarding mas não tinha funcionalidade**
+
+### ✅ Solução Implementada
+
+**1. Restauração de Campos Críticos**
+```typescript
+// components/onboarding/v1.3.0/Step5Goals.tsx
+const [goalDistance, setGoalDistance] = useState(data.goalDistance || '');
+const [targetRaceDate, setTargetRaceDate] = useState(data.targetRaceDate || '');
+const [targetTime, setTargetTime] = useState(data.targetTime || '');
+```
+
+**2. Nova Seção Destacada na UI**
+- 🟧 Seção em laranja para enfatizar importância
+- 📋 Título: "🏁 Informações da Corrida Alvo"
+- 💡 Explicação: "Essas informações são necessárias para gerar seu plano"
+- ✅ Campos: Distance dropdown, Date picker, Target time input
+
+**3. Traduções Completas**
+Adicionadas 16 novas chaves em 3 idiomas:
+```json
+{
+  "primaryGoalLabel": "Qual é seu objetivo principal?",
+  "raceGoalTitle": "Informações da Corrida Alvo",
+  "raceGoalDescription": "Essas informações são necessárias...",
+  "distanceLabel": "Distância da Prova",
+  "selectDistance": "Selecione...",
+  "halfMarathon": "Meia Maratona (21km)",
+  "marathon": "Maratona (42km)",
+  "raceDateLabel": "Data da Prova",
+  "targetTimeLabel": "Tempo Alvo",
+  "optional": "Opcional",
+  "targetTimePlaceholder": "Ex: 45:00, 1:30:00, 3:45:00",
+  "targetTimeHelp": "Formato: MM:SS ou H:MM:SS"
+  // ... + 4 mais
+}
+```
+
+**4. Integração com API**
+```typescript
+onUpdate({ 
+  primaryGoal: goal,
+  goalDistance: goalDistance || undefined,      // ✅ Restaurado
+  targetRaceDate: targetRaceDate || undefined,  // ✅ Restaurado
+  targetTime: targetTime || undefined,          // ✅ Restaurado
+  motivationFactors: { /* ... */ }
+});
+```
+
+### 📊 Comparação: Antes vs Depois
+
+**ANTES (v1.4.0 - Bug):**
+```
+Step5 → Apenas objetivo genérico → Profile criado → ❌ SEM Race Goal
+       → Dashboard vazio → Usuário não consegue usar o sistema
+```
+
+**DEPOIS (v1.5.1 - Corrigido):**
+```
+Step5 → Objetivo + Distance + Date + Time → Profile + ✅ Race Goal criada
+       → Dashboard com opção de gerar plano → ✅ Sistema funcional completo
+```
+
+### 🔄 Fluxo de Dados Corrigido
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Step5Goals Component                                    │
+│  ├─ Primary Goal Selection                              │
+│  ├─ 🆕 Goal Distance (5k, 10k, 21k, 42k)               │
+│  ├─ 🆕 Target Race Date                                 │
+│  ├─ 🆕 Target Time (optional)                           │
+│  └─ Motivation & Structured Goals                       │
+└─────────────────────────────────────────────────────────┘
+                    ↓
+          onUpdate(formData)
+                    ↓
+┌─────────────────────────────────────────────────────────┐
+│ /api/profile/create                                     │
+│  ├─ Creates/Updates AthleteProfile                      │
+│  └─ ✅ Auto-creates RaceGoal if distance & date present │
+└─────────────────────────────────────────────────────────┘
+                    ↓
+          Dashboard (with Race Goal)
+                    ↓
+      User can generate training plan ✅
+```
+
+### 📝 Arquivos Modificados
+```
+components/onboarding/v1.3.0/Step5Goals.tsx  (+100 lines)
+lib/i18n/translations/pt-BR.json             (+16 keys)
+lib/i18n/translations/en.json                (+16 keys)
+lib/i18n/translations/es.json                (+16 keys)
+CORRECAO_ONBOARDING_06NOV2025.md            (nova documentação)
+```
+
+### 🧪 Testes Realizados
+- ✅ Build completo sem erros (npm run build)
+- ✅ Tradução funcionando nos 3 idiomas
+- ✅ Campos renderizando corretamente no Step5
+- ✅ Dados sendo passados para a API corretamente
+- ✅ Integração mantida com v1.3.0 motivation features
+
+### 🎯 Resultado Final
+**Onboarding agora:**
+1. ✅ Coleta todos os dados necessários do atleta
+2. ✅ Cria Race Goal automaticamente quando apropriado
+3. ✅ Permite geração de plano de treino personalizado
+4. ✅ Dashboard funciona com dados relevantes
+5. ✅ Sistema completo end-to-end funcional
+
+### 📚 Contexto Histórico
+- **v1.2.0 e anteriores**: Onboarding funcionava com Race Goal
+- **v1.3.0**: Refatoração extensa - campos de Race Goal removidos acidentalmente
+- **v1.4.0**: Implementação i18n - problema persistiu
+- **v1.5.1**: ✅ **Correção implementada e testada**
+
+### 🎯 Commit
+```bash
+commit 29333cbd
+Author: Athera Team
+Date:   Wed Nov 6 21:24:00 2025
+
+fix(onboarding): restore race goal fields in Step5 - critical for plan generation
+
+- Add race goal fields (distance, date, target time) to Step5Goals
+- Add highlighted orange section emphasizing importance  
+- Add 16 new translation keys (pt-BR, en, es)
+- Maintain all existing v1.3.0 motivation features
+- Fix regression from v1.3.0/1.4.0 refactoring
+```
+
+### 📖 Documentação Completa
+Ver arquivo detalhado: **[CORRECAO_ONBOARDING_06NOV2025.md](CORRECAO_ONBOARDING_06NOV2025.md)**
 
 ---
 
