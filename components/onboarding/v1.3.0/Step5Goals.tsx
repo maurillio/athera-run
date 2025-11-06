@@ -8,6 +8,11 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   const [goal, setGoal] = useState(data.primaryGoal || '');
   const [motivation, setMotivation] = useState(data.motivation || '');
   
+  // Race goal fields (critical for plan generation)
+  const [goalDistance, setGoalDistance] = useState(data.goalDistance || '');
+  const [targetRaceDate, setTargetRaceDate] = useState(data.targetRaceDate || '');
+  const [targetTime, setTargetTime] = useState(data.targetTime || '');
+  
   // v1.3.0 - Motivação estruturada
   const [primaryMotivation, setPrimaryMotivation] = useState(
     data.motivationFactors?.primary || ''
@@ -45,6 +50,10 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
     onUpdate({ 
       primaryGoal: goal, 
       motivation: motivation || undefined,
+      // Race goal data (required for plan generation)
+      goalDistance: goalDistance || undefined,
+      targetRaceDate: targetRaceDate || undefined,
+      targetTime: targetTime || undefined,
       // v1.3.0 - Estruturado
       motivationFactors: {
         primary: primaryMotivation || goal,
@@ -57,27 +66,86 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-3">
-        {goals.map(g => (
-          <button key={g.value}
-            onClick={() => setGoal(g.value)}
-            className={`text-left p-4 rounded-lg border-2 transition-all ${
-              goal === g.value 
-                ? 'border-blue-600 bg-blue-50' 
-                : 'border-gray-200 hover:border-blue-300'
-            }`}>
-            <div className="font-semibold text-lg">{g.label}</div>
-            <div className="text-sm text-gray-600 mt-1">{g.desc}</div>
-          </button>
-        ))}
+      {/* Primary Goal Selection */}
+      <div>
+        <label className="block font-semibold mb-3 text-blue-900">🎯 {t('primaryGoalLabel') || 'Qual é seu objetivo principal?'} *</label>
+        <div className="grid gap-3">
+          {goals.map(g => (
+            <button key={g.value}
+              onClick={() => setGoal(g.value)}
+              className={`text-left p-4 rounded-lg border-2 transition-all ${
+                goal === g.value 
+                  ? 'border-blue-600 bg-blue-50' 
+                  : 'border-gray-200 hover:border-blue-300'
+              }`}>
+              <div className="font-semibold text-lg">{g.label}</div>
+              <div className="text-sm text-gray-600 mt-1">{g.desc}</div>
+            </button>
+          ))}
+        </div>
       </div>
 
+      {/* Race Goal Information - CRITICAL for plan generation */}
+      <div className="border-t pt-6 space-y-4 bg-orange-50 p-4 rounded-lg">
+        <h3 className="font-semibold text-lg text-orange-900">🏁 {t('raceGoalTitle') || 'Informações da Corrida Alvo'}</h3>
+        <p className="text-sm text-orange-700">{t('raceGoalDescription') || 'Essas informações são necessárias para gerar seu plano de treino personalizado.'}</p>
+        
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-medium mb-2 text-gray-900">
+              {t('distanceLabel') || 'Distância da Prova'}
+            </label>
+            <select
+              value={goalDistance}
+              onChange={(e) => setGoalDistance(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg bg-white"
+            >
+              <option value="">{t('selectDistance') || 'Selecione...'}</option>
+              <option value="5k">5km</option>
+              <option value="10k">10km</option>
+              <option value="21k">{t('halfMarathon') || 'Meia Maratona (21km)'}</option>
+              <option value="42k">{t('marathon') || 'Maratona (42km)'}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-2 text-gray-900">
+              {t('raceDateLabel') || 'Data da Prova'} {goalDistance && '*'}
+            </label>
+            <input
+              type="date"
+              value={targetRaceDate}
+              onChange={(e) => setTargetRaceDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full px-4 py-2 border rounded-lg bg-white"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-medium mb-2 text-gray-900">
+            {t('targetTimeLabel') || 'Tempo Alvo'} ({t('optional') || 'Opcional'})
+          </label>
+          <input
+            type="text"
+            value={targetTime}
+            onChange={(e) => setTargetTime(e.target.value)}
+            placeholder={t('targetTimePlaceholder') || 'Ex: 45:00, 1:30:00, 3:45:00'}
+            className="w-full px-4 py-2 border rounded-lg bg-white"
+          />
+          <p className="text-xs text-gray-600 mt-1">
+            {t('targetTimeHelp') || 'Formato: MM:SS ou H:MM:SS'}
+          </p>
+        </div>
+      </div>
+
+      {/* Motivation */}
       <div className="border-t pt-6">
-        <label className="block font-medium mb-2">O que te motiva? (Opcional)</label>
+        <label className="block font-medium mb-2">{t('motivationLabel') || 'O que te motiva?'} ({t('optional') || 'Opcional'})</label>
         <textarea value={motivation} onChange={(e) => setMotivation(e.target.value)}
           className="w-full px-4 py-3 border rounded-lg h-24 resize-none"
-          placeholder="Ex: Quero correr uma meia maratona com meu irmão, é um sonho antigo..."/>
-        <p className="text-xs text-gray-500 mt-1">Quanto mais detalhes, mais personalizado será seu plano!</p>
+          placeholder={t('motivationPlaceholder') || "Ex: Quero correr uma meia maratona com meu irmão, é um sonho antigo..."}/>
+        <p className="text-xs text-gray-500 mt-1">{t('motivationHelp') || 'Quanto mais detalhes, mais personalizado será seu plano!'}</p>
       </div>
 
       {/* v1.3.0 - Motivação Estruturada */}
