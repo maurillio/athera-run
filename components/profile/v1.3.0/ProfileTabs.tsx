@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from '@/lib/i18n/hooks';
 import BasicDataTab from './BasicDataTab';
 import PerformanceTab from './PerformanceTab';
 import HealthTab from './HealthTab';
@@ -13,17 +14,18 @@ interface ProfileTabsProps {
 }
 
 export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
+  const t = useTranslations('profile');
   const [activeTab, setActiveTab] = useState('basic');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const tabs = [
-    { id: 'basic', label: '👤 Dados Básicos', component: BasicDataTab },
-    { id: 'performance', label: '⚡ Performance', component: PerformanceTab },
-    { id: 'health', label: '🏥 Saúde', component: HealthTab },
-    { id: 'goals', label: '🎯 Objetivos', component: GoalsTab },
-    { id: 'availability', label: '📅 Disponibilidade', component: AvailabilityTab },
-    { id: 'preferences', label: '⚙️ Preferências', component: PreferencesTab },
+    { id: 'basic', label: t('tabs.basic'), component: BasicDataTab },
+    { id: 'performance', label: t('tabs.performance'), component: PerformanceTab },
+    { id: 'health', label: t('tabs.health'), component: HealthTab },
+    { id: 'goals', label: t('tabs.goals'), component: GoalsTab },
+    { id: 'availability', label: t('tabs.availability'), component: AvailabilityTab },
+    { id: 'preferences', label: t('tabs.preferences'), component: PreferencesTab },
   ];
 
   const handleUpdate = async (data: any) => {
@@ -33,7 +35,7 @@ export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
       await onUpdate(data);
     } catch (err) {
       console.error('Error updating profile:', err);
-      setError('Erro ao atualizar perfil. Tente novamente.');
+      setError(t('errors.updateFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -45,7 +47,7 @@ export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
   if (!userData) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600">Erro: Dados do usuário não disponíveis</p>
+        <p className="text-red-600">{t('errors.dataUnavailable')}</p>
       </div>
     );
   }
@@ -82,7 +84,7 @@ export default function ProfileTabs({ userData, onUpdate }: ProfileTabsProps) {
       <div className="bg-white rounded-lg shadow-sm p-6">
         {isSaving && (
           <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-            <div className="text-blue-600 font-medium">Salvando...</div>
+            <div className="text-blue-600 font-medium">{t('saving')}</div>
           </div>
         )}
         <ActiveComponent userData={userData} onUpdate={handleUpdate} />

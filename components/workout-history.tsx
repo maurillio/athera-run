@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'; // New import
 import { History, Activity, Clock, Heart, TrendingUp, MoreVertical } from 'lucide-react';
 import WorkoutLogForm from './workout-log-form'; // New import
+import { useTranslations } from '@/lib/i18n/hooks';
 
 interface Workout {
   id: number;
@@ -30,6 +31,7 @@ interface WorkoutHistoryProps {
 }
 
 export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
+  const t = useTranslations('workoutHistory');
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // New state
@@ -54,7 +56,7 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
   };
 
   const handleDelete = async (workoutId: number) => { // Changed type to number
-    if (!confirm('Tem certeza que deseja excluir este treino?')) return;
+    if (!confirm(t('confirmDelete'))) return;
     try {
       const response = await fetch(`/api/workouts/${workoutId}`, {
         method: 'DELETE',
@@ -63,11 +65,11 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
         fetchWorkouts(); // Refresh the list
       } else {
         console.error('Erro ao excluir treino:', await response.json());
-        alert('Erro ao excluir treino.');
+        alert(t('deleteError'));
       }
     } catch (error) {
       console.error('Erro de rede ao excluir treino:', error);
-      alert('Erro de rede ao excluir treino.');
+      alert(t('networkError'));
     }
   };
 
@@ -91,26 +93,12 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
       });
     };
   const getTypeLabel = (type: string) => {
-    const labels: { [key: string]: string } = {
-      running: 'Corrida',
-      strength: 'Musculação',
-      swimming: 'Natação',
-      cross_training: 'Treino Cruzado',
-      rest: 'Descanso'
-    };
-    return labels[type] || type;
+    return t(`types.${type}` as any) || type;
   };
 
   const getSubtypeLabel = (subtype: string | null) => {
     if (!subtype) return '';
-    const labels: { [key: string]: string } = {
-      easy: 'Fácil',
-      tempo: 'Tempo',
-      intervals: 'Intervalado',
-      long: 'Longão',
-      recovery: 'Recuperação'
-    };
-    return labels[subtype] || subtype;
+    return t(`subtypes.${subtype}` as any) || subtype;
   };
 
   const getFeelingEmoji = (feeling: string | null) => {
@@ -142,13 +130,13 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History className="h-5 w-5" />
-            Histórico de Treinos
+            {t('title')}
           </CardTitle>
-          <CardDescription>Seus últimos 10 treinos registrados</CardDescription>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center h-32 text-muted-foreground">
-            <p>Nenhum treino registrado ainda. Comece a registrar seus treinos acima!</p>
+            <p>{t('noWorkouts')}</p>
           </div>
         </CardContent>
       </Card>
@@ -160,9 +148,9 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <History className="h-5 w-5" />
-          Histórico de Treinos
+          {t('title')}
         </CardTitle>
-        <CardDescription>Seus últimos 10 treinos registrados</CardDescription>
+        <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -191,17 +179,17 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Abrir menu</span>
+                        <span className="sr-only">{t('openMenu')}</span>
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleEdit(workout)}>
-                        Editar
+                        {t('edit')}
                       </DropdownMenuItem>
                       {workout.source === 'manual' && (
                         <DropdownMenuItem onClick={() => handleDelete(workout.id)}>
-                          Excluir
+                          {t('delete')}
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
@@ -240,7 +228,7 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
 
               {workout.perceivedEffort && (
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm text-muted-foreground">Esforço:</span>
+                  <span className="text-sm text-muted-foreground">{t('effort')}</span>
                   <div className="flex gap-1">
                     {[...Array(10)].map((_, i) => (
                       <div
@@ -269,7 +257,7 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Editar Treino</DialogTitle>
+            <DialogTitle>{t('editTitle')}</DialogTitle>
           </DialogHeader>
           {editingWorkout && (
             <WorkoutLogForm

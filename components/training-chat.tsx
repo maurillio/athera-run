@@ -12,6 +12,7 @@ import { Loader2, Send, Sparkles, User, Bot, MessageCircle, Crown } from 'lucide
 import { toast } from 'sonner';
 import { usePremium } from '@/hooks/use-premium';
 import PaywallModal from '@/components/subscription/paywall-modal';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -19,17 +20,10 @@ interface Message {
   timestamp: string;
 }
 
-const SUGGESTED_QUESTIONS = [
-  "Como devo me alimentar antes de uma prova longa?",
-  "O que fazer quando sentir dor no joelho durante o treino?",
-  "Qual a diferença entre treino de ritmo e intervalado?",
-  "Como melhorar minha velocidade na corrida?",
-  "Quantas horas de sono preciso para recuperar bem?"
-];
-
 const FREE_MESSAGE_LIMIT = 5;
 
 export default function TrainingChat() {
+  const t = useTranslations('chat');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,6 +31,14 @@ export default function TrainingChat() {
   const [showPaywall, setShowPaywall] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { isPremium, loading: premiumLoading } = usePremium();
+
+  const SUGGESTED_QUESTIONS = [
+    t('questions.nutrition'),
+    t('questions.kneePain'),
+    t('questions.paceVsInterval'),
+    t('questions.improveSpeed'),
+    t('questions.sleep')
+  ];
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -78,10 +80,10 @@ export default function TrainingChat() {
         })
       });
 
-      if (!response.ok) throw new Error('Erro ao enviar mensagem');
+      if (!response.ok) throw new Error(t('sendError'));
 
       const data = await response.json();
-      
+
       const assistantMessage: Message = {
         role: 'assistant',
         content: data.response,
@@ -91,7 +93,7 @@ export default function TrainingChat() {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
-      toast.error('Erro ao enviar mensagem');
+      toast.error(t('sendError'));
     } finally {
       setLoading(false);
     }
@@ -126,7 +128,7 @@ export default function TrainingChat() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5" />
-              <CardTitle className="text-lg">Treinador IA</CardTitle>
+              <CardTitle className="text-lg">{t('chatTitle')}</CardTitle>
             </div>
             <Button
               variant="ghost"
@@ -138,10 +140,10 @@ export default function TrainingChat() {
             </Button>
           </div>
           <CardDescription className="text-white/90 flex items-center justify-between">
-            <span>Tire suas dúvidas sobre treinamento</span>
+            <span>{t('chatDescription')}</span>
             {!isPremium && (
               <Badge variant="secondary" className="ml-2">
-                {remainingMessages} restantes
+                {remainingMessages} {t('messagesRemaining')}
               </Badge>
             )}
           </CardDescription>
@@ -153,15 +155,15 @@ export default function TrainingChat() {
             <div className="space-y-4">
               <div className="text-center text-muted-foreground py-8">
                 <Bot className="h-12 w-12 mx-auto mb-3 text-orange-500" />
-                <p className="font-medium mb-2">👋 Olá! Como posso ajudar?</p>
+                <p className="font-medium mb-2">{t('greeting')}</p>
                 <p className="text-sm">
-                  Pergunte sobre treinos, nutrição, recuperação e mais!
+                  {t('subGreeting')}
                 </p>
               </div>
-              
+
               <div className="space-y-2">
                 <p className="text-xs font-medium text-muted-foreground">
-                  Perguntas sugeridas:
+                  {t('suggestedQuestions')}
                 </p>
                 {SUGGESTED_QUESTIONS.map((question, index) => (
                   <Button
@@ -235,7 +237,7 @@ export default function TrainingChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Digite sua pergunta..."
+              placeholder={t('inputPlaceholder')}
               className="min-h-[60px] resize-none"
               disabled={loading}
             />
@@ -259,8 +261,8 @@ export default function TrainingChat() {
     <PaywallModal
       isOpen={showPaywall}
       onClose={() => setShowPaywall(false)}
-      feature="Chat Ilimitado com IA"
-      description="Continue tirando suas dúvidas sobre treinamento, nutrição e corrida sem limites"
+      feature={t('paywallFeature')}
+      description={t('paywallDescription')}
     />
     </>
   );

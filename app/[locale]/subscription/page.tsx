@@ -44,7 +44,7 @@ export default function SubscriptionPage() {
       }
     } catch (error) {
       console.error('Error fetching subscription:', error);
-      toast.error('Erro ao carregar dados');
+      toast.error(t('loadingError'));
     } finally {
       setLoading(false);
     }
@@ -63,16 +63,16 @@ export default function SubscriptionPage() {
         if (data.url) {
           window.location.href = data.url;
         } else {
-          toast.error('URL do portal não recebida');
+          toast.error(t('portalUrlError'));
         }
       } else {
         const error = await response.json();
         console.error('Erro da API:', error);
-        toast.error(`Erro ao abrir portal: ${error.error || 'Desconhecido'}`);
+        toast.error(t('portalOpenError', { error: error.error || 'Desconhecido' }));
       }
     } catch (error) {
       console.error('Erro ao processar:', error);
-      toast.error('Erro ao processar solicitação');
+      toast.error(t('requestError'));
     } finally {
       setManagingSubscription(false);
     }
@@ -97,16 +97,16 @@ export default function SubscriptionPage() {
 
   const isFree = !subscription.isPremium;
   const isPremium = subscription.isPremium;
-  const planName = subscription.subscription?.plan === 'PREMIUM_MONTHLY' 
-    ? 'Premium Mensal' 
-    : subscription.subscription?.plan === 'PREMIUM_ANNUAL' 
-    ? 'Premium Anual' 
-    : 'Gratuito';
-  const statusBadge = subscription.subscription?.status === 'ACTIVE' 
-    ? 'Ativo' 
-    : subscription.subscription?.status === 'TRIAL' 
-    ? 'Trial' 
-    : 'Gratuito';
+  const planName = subscription.subscription?.plan === 'PREMIUM_MONTHLY'
+    ? t('planMonthly')
+    : subscription.subscription?.plan === 'PREMIUM_ANNUAL'
+    ? t('planAnnual')
+    : t('planFree');
+  const statusBadge = subscription.subscription?.status === 'ACTIVE'
+    ? t('statusActive')
+    : subscription.subscription?.status === 'TRIAL'
+    ? t('statusTrial')
+    : t('statusFree');
 
   return (
     <>
@@ -114,8 +114,8 @@ export default function SubscriptionPage() {
       <main className="min-h-screen bg-gradient-to-b from-background to-muted/20 pt-20">
         <div className="container max-w-4xl py-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Gerenciar Assinatura</h1>
-            <p className="text-muted-foreground">Visualize e gerencie sua assinatura</p>
+            <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
+            <p className="text-muted-foreground">{t('subtitle')}</p>
           </div>
 
           <div className="grid gap-6">
@@ -125,7 +125,7 @@ export default function SubscriptionPage() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Crown className="w-5 h-5" />
-                      Plano Atual
+                      {t('currentPlan')}
                     </CardTitle>
                     <CardDescription className="mt-2">{planName}</CardDescription>
                   </div>
@@ -134,12 +134,12 @@ export default function SubscriptionPage() {
               </CardHeader>
               <CardContent>
                 {isFree ? (
-                  <Button 
+                  <Button
                     className="w-full bg-gradient-to-r from-yellow-500 to-amber-600"
-                    onClick={() => router.push('/pricing')}
+                    onClick={() => router.push(`/${locale}/pricing`)}
                   >
                     <Crown className="w-4 h-4 mr-2" />
-                    Assinar Premium
+                    {t('subscribePremium')}
                   </Button>
                 ) : (
                   <Button
@@ -151,12 +151,12 @@ export default function SubscriptionPage() {
                     {managingSubscription ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Abrindo...
+                        {t('opening')}
                       </>
                     ) : (
                       <>
                         <CreditCard className="w-4 h-4 mr-2" />
-                        Gerenciar Assinatura
+                        {t('manageSubscription')}
                       </>
                     )}
                   </Button>

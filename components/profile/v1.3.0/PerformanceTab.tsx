@@ -1,16 +1,18 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from '@/lib/i18n/hooks';
 import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 
 export default function PerformanceTab({ userData, onUpdate }: any) {
+  const t = useTranslations('profile');
   const [bestTimes, setBestTimes] = useState(userData.bestTimes || {});
   const [hasChanges, setHasChanges] = useState(false);
 
   const distances = [
-    { value: '5k', label: '5km', meters: 5000 },
-    { value: '10k', label: '10km', meters: 10000 },
-    { value: '21k', label: '21km', meters: 21097 },
-    { value: '42k', label: '42km', meters: 42195 },
+    { value: '5k', label: t('performance.distances.5k'), meters: 5000 },
+    { value: '10k', label: t('performance.distances.10k'), meters: 10000 },
+    { value: '21k', label: t('performance.distances.21k'), meters: 21097 },
+    { value: '42k', label: t('performance.distances.42k'), meters: 42195 },
   ];
 
   const handleSave = () => {
@@ -30,8 +32,8 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-2">Melhores Tempos</h3>
-        <p className="text-sm text-gray-600">Seus recordes pessoais em diferentes distâncias</p>
+        <h3 className="text-lg font-semibold mb-2">{t('performance.title')}</h3>
+        <p className="text-sm text-gray-600">{t('performance.description')}</p>
       </div>
 
       {Object.keys(bestTimes).length > 0 && (
@@ -55,7 +57,7 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
 
           {bestVDOT > 0 && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="font-semibold text-lg">Seu VDOT: {bestVDOT}</p>
+              <p className="font-semibold text-lg">{t('performance.bestVdot')}: {bestVDOT}</p>
               <p className="text-sm text-gray-700">{interpretVDOT(bestVDOT)}</p>
             </div>
           )}
@@ -64,15 +66,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
 
       {Object.keys(bestTimes).length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <p>Nenhum tempo registrado ainda</p>
-          <p className="text-sm mt-2">Adicione seus melhores tempos para melhorar a precisão do plano!</p>
+          <p>{t('performance.noTimes')}</p>
+          <p className="text-sm mt-2">{t('performance.addFirst')}</p>
         </div>
       )}
 
       {hasChanges && (
         <button onClick={handleSave}
           className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">
-          💾 Salvar Alterações
+          {t('saveChanges')}
         </button>
       )}
     </div>

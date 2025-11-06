@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Calendar, Target, RefreshCw, Loader2, Info, Pencil, Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 interface Race {
   id: number;
@@ -31,6 +32,7 @@ interface RaceManagementProps {
 }
 
 export default function RaceManagement({ races, onRacesUpdated }: RaceManagementProps) {
+  const t = useTranslations('raceManagement');
   const [isAddingRace, setIsAddingRace] = useState(false);
   const [isClassifying, setIsClassifying] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -70,11 +72,11 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
         onRacesUpdated();
       } else {
         const error = await response.json();
-        alert(error.error || 'Erro ao adicionar corrida');
+        alert(error.error || t('addError'));
       }
     } catch (error) {
       console.error('Error adding race:', error);
-      alert('Erro ao adicionar corrida');
+      alert(t('addError'));
     } finally {
       setIsAddingRace(false);
     }
@@ -100,7 +102,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
   };
 
   const handleDeleteRace = async (raceId: number) => {
-    if (!confirm('Tem certeza que deseja excluir esta corrida?')) return;
+    if (!confirm(t('confirmDelete'))) return;
 
     try {
       const response = await fetch(`/api/race-goals/${raceId}`, {
@@ -110,11 +112,11 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
       if (response.ok) {
         onRacesUpdated();
       } else {
-        alert('Erro ao excluir corrida');
+        alert(t('deleteError'));
       }
     } catch (error) {
       console.error('Error deleting race:', error);
-      alert('Erro ao excluir corrida');
+      alert(t('deleteError'));
     }
   };
 
@@ -159,11 +161,11 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
         onRacesUpdated();
       } else {
         const error = await response.json();
-        alert(error.error || 'Erro ao atualizar corrida');
+        alert(error.error || t('updateError'));
       }
     } catch (error) {
       console.error('Error updating race:', error);
-      alert('Erro ao atualizar corrida');
+      alert(t('updateError'));
     } finally {
       setIsAddingRace(false);
     }
@@ -179,12 +181,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
   };
 
   const getPriorityLabel = (priority: 'A' | 'B' | 'C') => {
-    const labels = {
-      'A': 'Objetivo Principal',
-      'B': 'Preparatória',
-      'C': 'Volume'
-    };
-    return labels[priority];
+    return t(`priorities.${priority}` as any);
   };
 
   return (
@@ -194,10 +191,10 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
           <div>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
-              Gestão de Corridas
+              {t('title')}
             </CardTitle>
             <CardDescription>
-              Adicione e gerencie suas corridas. O sistema classifica automaticamente em A, B ou C.
+              {t('description')}
             </CardDescription>
           </div>
           <div className="flex gap-2">
@@ -210,12 +207,12 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
               {isClassifying ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Classificando...
+                  {t('classifying')}
                 </>
               ) : (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  Re-classificar
+                  {t('reclassify')}
                 </>
               )}
             </Button>
@@ -224,52 +221,52 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
               <DialogTrigger asChild>
                 <Button size="sm">
                   <Plus className="mr-2 h-4 w-4" />
-                  Adicionar Corrida
+                  {t('addRace')}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Adicionar Nova Corrida</DialogTitle>
+                  <DialogTitle>{t('addRaceTitle')}</DialogTitle>
                   <DialogDescription>
-                    Adicione uma corrida e o sistema classificará automaticamente como A, B ou C
+                    {t('addRaceDesc')}
                   </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="raceName">Nome da Corrida *</Label>
+                    <Label htmlFor="raceName">{t('raceName')}</Label>
                     <Input
                       id="raceName"
                       value={formData.raceName}
                       onChange={(e) => setFormData({...formData, raceName: e.target.value})}
-                      placeholder="Ex: Maratona de São Paulo 2026"
+                      placeholder={t('raceNamePlaceholder')}
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="distance">Distância *</Label>
-                      <Select 
-                        value={formData.distance} 
+                      <Label htmlFor="distance">{t('distance')}</Label>
+                      <Select
+                        value={formData.distance}
                         onValueChange={(value) => setFormData({...formData, distance: value})}
                       >
                         <SelectTrigger id="distance">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="5k">5km</SelectItem>
-                          <SelectItem value="10k">10km</SelectItem>
-                          <SelectItem value="15k">15km</SelectItem>
-                          <SelectItem value="10mile">10 Milhas</SelectItem>
-                          <SelectItem value="half_marathon">Meia-Maratona</SelectItem>
-                          <SelectItem value="30k">30km</SelectItem>
-                          <SelectItem value="marathon">Maratona</SelectItem>
+                          <SelectItem value="5k">{t('distances.5k')}</SelectItem>
+                          <SelectItem value="10k">{t('distances.10k')}</SelectItem>
+                          <SelectItem value="15k">{t('distances.15k')}</SelectItem>
+                          <SelectItem value="10mile">{t('distances.10mile')}</SelectItem>
+                          <SelectItem value="half_marathon">{t('distances.half_marathon')}</SelectItem>
+                          <SelectItem value="30k">{t('distances.30k')}</SelectItem>
+                          <SelectItem value="marathon">{t('distances.marathon')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div>
-                      <Label htmlFor="raceDate">Data da Corrida *</Label>
+                      <Label htmlFor="raceDate">{t('raceDate')}</Label>
                       <Input
                         id="raceDate"
                         type="date"
@@ -281,28 +278,28 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="targetTime">Tempo Alvo (opcional)</Label>
+                      <Label htmlFor="targetTime">{t('targetTime')}</Label>
                       <Input
                         id="targetTime"
                         value={formData.targetTime}
                         onChange={(e) => setFormData({...formData, targetTime: e.target.value})}
-                        placeholder="Ex: 3:30:00"
+                        placeholder={t('targetTimePlaceholder')}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="location">Local (opcional)</Label>
+                      <Label htmlFor="location">{t('location')}</Label>
                       <Input
                         id="location"
                         value={formData.location}
                         onChange={(e) => setFormData({...formData, location: e.target.value})}
-                        placeholder="Ex: São Paulo, SP"
+                        placeholder={t('locationPlaceholder')}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="priority">Classificação da Corrida *</Label>
+                    <Label htmlFor="priority">{t('classification')}</Label>
                     <Select
                       value={formData.priority}
                       onValueChange={(value: 'A' | 'B' | 'C') => setFormData({...formData, priority: value})}
@@ -312,13 +309,13 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="A">
-                          <span className="font-semibold">Corrida A</span> - Objetivo Principal
+                          <span className="font-semibold">{t('priorityOptions.A.label')}</span> - {t('priorityOptions.A.description')}
                         </SelectItem>
                         <SelectItem value="B">
-                          <span className="font-semibold">Corrida B</span> - Preparatória/Teste
+                          <span className="font-semibold">{t('priorityOptions.B.label')}</span> - {t('priorityOptions.B.description')}
                         </SelectItem>
                         <SelectItem value="C">
-                          <span className="font-semibold">Corrida C</span> - Volume/Experiência
+                          <span className="font-semibold">{t('priorityOptions.C.label')}</span> - {t('priorityOptions.C.description')}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -327,11 +324,11 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                   <Alert>
                     <Info className="h-4 w-4" />
                     <AlertDescription className="text-xs">
-                      <strong>Sistema de Classificação Automática:</strong>
+                      <strong>{t('autoClassification.title')}</strong>
                       <ul className="list-disc list-inside mt-1 space-y-1">
-                        <li><strong>Corrida A:</strong> Seu objetivo principal - todo o plano é estruturado para esta corrida</li>
-                        <li><strong>Corrida B:</strong> Preparatórias (2-6 semanas antes da A) - use como teste de ritmo</li>
-                        <li><strong>Corrida C:</strong> Volume/experiência - substitui treino longo, sem taper</li>
+                        <li><strong>{t('priorityOptions.A.label')}</strong> {t('autoClassification.raceA')}</li>
+                        <li><strong>{t('priorityOptions.B.label')}</strong> {t('autoClassification.raceB')}</li>
+                        <li><strong>{t('priorityOptions.C.label')}</strong> {t('autoClassification.raceC')}</li>
                       </ul>
                     </AlertDescription>
                   </Alert>
@@ -345,17 +342,17 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                       {isAddingRace ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Adicionando...
+                          {t('adding')}
                         </>
                       ) : (
                         <>
                           <Plus className="mr-2 h-4 w-4" />
-                          Adicionar Corrida
+                          {t('addRaceButton')}
                         </>
                       )}
                     </Button>
                     <Button onClick={() => setShowAddDialog(false)} variant="outline">
-                      Cancelar
+                      {t('cancel')}
                     </Button>
                   </div>
                 </div>
@@ -366,26 +363,26 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
             <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Editar Corrida</DialogTitle>
+                  <DialogTitle>{t('editRaceTitle')}</DialogTitle>
                   <DialogDescription>
-                    Altere os dados da corrida e o sistema reclassificará automaticamente
+                    {t('editRaceDesc')}
                   </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="editRaceName">Nome da Corrida *</Label>
+                    <Label htmlFor="editRaceName">{t('raceName')}</Label>
                     <Input
                       id="editRaceName"
                       value={formData.raceName}
                       onChange={(e) => setFormData({...formData, raceName: e.target.value})}
-                      placeholder="Ex: Maratona de São Paulo 2026"
+                      placeholder={t('raceNamePlaceholder')}
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="editDistance">Distância *</Label>
+                      <Label htmlFor="editDistance">{t('distance')}</Label>
                       <Select
                         value={formData.distance}
                         onValueChange={(value) => setFormData({...formData, distance: value})}
@@ -394,19 +391,19 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="5k">5km</SelectItem>
-                          <SelectItem value="10k">10km</SelectItem>
-                          <SelectItem value="15k">15km</SelectItem>
-                          <SelectItem value="10mile">10 Milhas</SelectItem>
-                          <SelectItem value="half_marathon">Meia-Maratona</SelectItem>
-                          <SelectItem value="30k">30km</SelectItem>
-                          <SelectItem value="marathon">Maratona</SelectItem>
+                          <SelectItem value="5k">{t('distances.5k')}</SelectItem>
+                          <SelectItem value="10k">{t('distances.10k')}</SelectItem>
+                          <SelectItem value="15k">{t('distances.15k')}</SelectItem>
+                          <SelectItem value="10mile">{t('distances.10mile')}</SelectItem>
+                          <SelectItem value="half_marathon">{t('distances.half_marathon')}</SelectItem>
+                          <SelectItem value="30k">{t('distances.30k')}</SelectItem>
+                          <SelectItem value="marathon">{t('distances.marathon')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div>
-                      <Label htmlFor="editRaceDate">Data da Corrida *</Label>
+                      <Label htmlFor="editRaceDate">{t('raceDate')}</Label>
                       <Input
                         id="editRaceDate"
                         type="date"
@@ -418,28 +415,28 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="editTargetTime">Tempo Alvo (opcional)</Label>
+                      <Label htmlFor="editTargetTime">{t('targetTime')}</Label>
                       <Input
                         id="editTargetTime"
                         value={formData.targetTime}
                         onChange={(e) => setFormData({...formData, targetTime: e.target.value})}
-                        placeholder="Ex: 3:30:00"
+                        placeholder={t('targetTimePlaceholder')}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="editLocation">Local (opcional)</Label>
+                      <Label htmlFor="editLocation">{t('location')}</Label>
                       <Input
                         id="editLocation"
                         value={formData.location}
                         onChange={(e) => setFormData({...formData, location: e.target.value})}
-                        placeholder="Ex: São Paulo, SP"
+                        placeholder={t('locationPlaceholder')}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="editPriority">Classificação da Corrida *</Label>
+                    <Label htmlFor="editPriority">{t('classification')}</Label>
                     <Select
                       value={formData.priority}
                       onValueChange={(value: 'A' | 'B' | 'C') => setFormData({...formData, priority: value})}
@@ -449,13 +446,13 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="A">
-                          <span className="font-semibold">Corrida A</span> - Objetivo Principal
+                          <span className="font-semibold">{t('priorityOptions.A.label')}</span> - {t('priorityOptions.A.description')}
                         </SelectItem>
                         <SelectItem value="B">
-                          <span className="font-semibold">Corrida B</span> - Preparatória/Teste
+                          <span className="font-semibold">{t('priorityOptions.B.label')}</span> - {t('priorityOptions.B.description')}
                         </SelectItem>
                         <SelectItem value="C">
-                          <span className="font-semibold">Corrida C</span> - Volume/Experiência
+                          <span className="font-semibold">{t('priorityOptions.C.label')}</span> - {t('priorityOptions.C.description')}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -470,17 +467,17 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                       {isAddingRace ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Atualizando...
+                          {t('updating')}
                         </>
                       ) : (
                         <>
                           <Pencil className="mr-2 h-4 w-4" />
-                          Atualizar Corrida
+                          {t('updateRaceButton')}
                         </>
                       )}
                     </Button>
                     <Button onClick={() => setShowEditDialog(false)} variant="outline">
-                      Cancelar
+                      {t('cancel')}
                     </Button>
                   </div>
                 </div>
@@ -493,8 +490,8 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
         {races.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>Nenhuma corrida cadastrada ainda.</p>
-            <p className="text-sm mt-2">Adicione suas corridas para começar!</p>
+            <p>{t('noRaces')}</p>
+            <p className="text-sm mt-2">{t('noRacesDesc')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -519,7 +516,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                       size="sm"
                       onClick={() => handleEditRace(race)}
                       className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                      title="Editar corrida"
+                      title={t('editTooltip')}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -528,7 +525,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                       size="sm"
                       onClick={() => handleDeleteRace(race.id)}
                       className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                      title="Excluir corrida"
+                      title={t('deleteTooltip')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -537,10 +534,10 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                 
                 <div className="flex flex-wrap gap-2 text-sm mb-2">
                   <span>📍 {race.distance}</span>
-                  {race.targetTime && <span>🎯 Meta: {race.targetTime}</span>}
+                  {race.targetTime && <span>🎯 {t('goal')}: {race.targetTime}</span>}
                   {race.weeksBeforeA !== null && race.priority !== 'A' && (
                     <span className="text-muted-foreground">
-                      • {race.weeksBeforeA} semanas antes da corrida A
+                      • {t('weeksBeforeA', { weeks: race.weeksBeforeA })}
                     </span>
                   )}
                 </div>
