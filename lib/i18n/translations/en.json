@@ -83,7 +83,9 @@
         "invalidEmail": "Invalid email",
         "network": "Connection error. Please try again.",
         "unknown": "Error creating account. Please try again."
-      }
+      },
+      "orSignUpWith": "or sign up with email",
+      "creatingAccount": "Creating account..."
     }
   },
   "onboarding": {
@@ -149,7 +151,12 @@
           "high": "High",
           "veryHigh": "Very High"
         }
-      }
+      },
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female"
+      },
+      "bmi": "BMI"
     },
     "step2": {
       "title": "Sports Background",
@@ -157,7 +164,7 @@
       "hasRunBefore": "Have you run before?",
       "yes": "Yes",
       "no": "No",
-      "yearsRunning": "How many years have you been running?",
+      "yearsRunning": "Years running",
       "yearsRunningPlaceholder": "Ex: 2",
       "experienceLevel": "Experience level",
       "experienceLevels": {
@@ -185,6 +192,16 @@
         "yearsRunningRequired": "Years running is required when you have experience",
         "weeklyVolumeRequired": "Weekly volume is required",
         "weeklyVolumeInvalid": "Volume must be between 0 and 300 km"
+      },
+      "weeklyVolume": "Weekly volume (km)",
+      "longestRun": "Longest run (km)",
+      "longestRunPlaceholder": "Ex: 21",
+      "otherSports": {
+        "title": "Other Sports",
+        "sports": "Sport",
+        "sportsPlaceholder": "Ex: Swimming",
+        "years": "Years practicing",
+        "yearsPlaceholder": "Ex: 3"
       }
     },
     "step3": {
@@ -261,7 +278,10 @@
         "consistency": "Regular training habit"
       },
       "motivationTitle": "What else motivates you?",
-      "selectMultiple": "Select all that apply"
+      "selectMultiple": "Select all that apply",
+      "errors": {
+        "primaryGoalRequired": "Primary goal is required"
+      }
     },
     "step6": {
       "title": "Availability",
@@ -307,7 +327,10 @@
         "outdoor": "Outdoor",
         "both": "Both"
       },
-      "minDaysError": "Select at least 2 running days"
+      "minDaysError": "Select at least 2 running days",
+      "errors": {
+        "trainingDaysRequired": "Select at least 3 training days"
+      }
     },
     "step7": {
       "title": "Final Review",
