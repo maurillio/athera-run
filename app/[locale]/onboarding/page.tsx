@@ -148,11 +148,15 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
+      // Converter availableDays para trainingActivities (formato esperado pela API)
+      const trainingActivities = formData.availableDays?.running || [];
+      
       const response = await fetch('/api/profile/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          trainingActivities, // API espera este campo
           onboardingComplete: true,
           locale: session?.user?.locale || 'pt-BR',
         }),
@@ -299,7 +303,7 @@ export default function OnboardingPage() {
                     </>
                   ) : (
                     <>
-                      {t('step7.submitButton')}
+                      {t('submitButton')}
                       <CheckCircle className="ml-2 h-4 w-4" />
                     </>
                   )}
