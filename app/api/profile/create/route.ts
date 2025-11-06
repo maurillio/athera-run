@@ -7,8 +7,14 @@ import { prisma } from '@/lib/db';
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
+    
+    console.log('🔐 [PROFILE CREATE] Session:', {
+      userId: session?.user?.id,
+      email: session?.user?.email
+    });
 
     if (!session?.user?.id) {
+      console.log('❌ [PROFILE CREATE] Não autenticado');
       return NextResponse.json(
         { error: 'Não autenticado' },
         { status: 401 }
@@ -47,6 +53,13 @@ export async function POST(req: NextRequest) {
         { status: 200 }
       );
     }
+
+    console.log('📦 [PROFILE CREATE] Body recebido:', {
+      weight, height, age, gender,
+      trainingActivities,
+      availableDays: body.availableDays,
+      onboardingComplete: body.onboardingComplete
+    });
 
     const {
       weight,
@@ -189,9 +202,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ profile }, { status: existingProfile ? 200 : 201 });
 
   } catch (error) {
-    console.error('Profile creation error:', error);
+    console.error('❌ [PROFILE CREATE] Erro completo:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      userId: session?.user?.id
+    });
+    
     return NextResponse.json(
-      { error: 'Erro ao criar perfil' },
+      { 
+        error: 'Erro ao criar perfil',
+        details: error instanceof Error ? error.message : 'Erro desconhecido',
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     );
   }
