@@ -87,6 +87,84 @@
     }
   },
   "onboarding": {
+    "title": "Welcome to Athera Run",
+    "subtitle": "Let's create your personalized plan in 7 simple steps",
+    "progress": "Step {{current}} of {{total}}",
+    "step1": {
+      "title": "Basic Data",
+      "subtitle": "Essential information about you",
+      "name": "Full name",
+      "namePlaceholder": "Enter your name",
+      "age": "Age",
+      "agePlaceholder": "Ex: 30",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "weight": "Weight (kg)",
+      "weightPlaceholder": "Ex: 70",
+      "height": "Height (cm)",
+      "heightPlaceholder": "Ex: 175",
+      "restingHeartRate": "Resting Heart Rate (bpm)",
+      "restingHeartRatePlaceholder": "Ex: 60",
+      "sleepQuality": "Sleep Quality",
+      "sleepQualityPlaceholder": "Select...",
+      "stressLevel": "Stress Level",
+      "stressLevelPlaceholder": "Select...",
+      "qualityLevels": {
+        "veryPoor": "Very Poor",
+        "poor": "Poor",
+        "fair": "Fair",
+        "good": "Good",
+        "veryGood": "Very Good",
+        "excellent": "Excellent"
+      },
+      "errors": {
+        "nameRequired": "Name is required",
+        "ageRequired": "Age is required",
+        "ageInvalid": "Age must be between 16 and 100 years",
+        "genderRequired": "Gender is required",
+        "weightRequired": "Weight is required",
+        "weightInvalid": "Weight must be between 30 and 200 kg",
+        "heightRequired": "Height is required",
+        "heightInvalid": "Height must be between 120 and 250 cm"
+      }
+    },
+    "step2": {
+      "title": "Sports Background",
+      "subtitle": "Your experience with running and other sports",
+      "hasRunBefore": "Have you run before?",
+      "yes": "Yes",
+      "no": "No",
+      "yearsRunning": "How many years have you been running?",
+      "yearsRunningPlaceholder": "Ex: 2",
+      "experienceLevel": "Experience level",
+      "experienceLevels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "currentWeeklyVolume": "Current weekly volume (km)",
+      "weeklyVolumePlaceholder": "Ex: 30",
+      "hasOtherSports": "Do you practice other sports?",
+      "whichSports": "Which sports?",
+      "sports": {
+        "cycling": "Cycling",
+        "swimming": "Swimming",
+        "soccer": "Soccer",
+        "basketball": "Basketball",
+        "tennis": "Tennis",
+        "gym": "Gym/Strength",
+        "other": "Other"
+      },
+      "otherSportYears": "For how many years?",
+      "otherSportYearsPlaceholder": "Ex: 5",
+      "errors": {
+        "experienceLevelRequired": "Experience level is required",
+        "yearsRunningRequired": "Years running is required when you have experience",
+        "weeklyVolumeRequired": "Weekly volume is required",
+        "weeklyVolumeInvalid": "Volume must be between 0 and 300 km"
+      }
+    },
     "step3": {
       "title": "Performance",
       "subtitle": "Your best times (optional but recommended)",

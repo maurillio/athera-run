@@ -84,11 +84,6 @@ export default function Step3Performance({ data, onUpdate, onNext, onBack }: any
           )}
         </div>
       )}
-
-      <div className="flex justify-between pt-6">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg">{tCommon('back')}</button>
-        <button onClick={handleNext} className="px-6 py-2 bg-blue-600 text-white rounded-lg">{tCommon('next')}</button>
-      </div>
     </div>
   );
 }

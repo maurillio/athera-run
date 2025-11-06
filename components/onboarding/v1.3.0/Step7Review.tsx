@@ -74,14 +74,6 @@ export default function Step7Review({ data, onNext, onBack }: any) {
           {t('nextStepDescription')}
         </p>
       </div>
-
-      <div className="flex justify-between pt-6">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg">{tCommon('back')}</button>
-        <button onClick={onNext}
-          className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700">
-          {t('generatePlan')}
-        </button>
-      </div>
     </div>
   );
 }

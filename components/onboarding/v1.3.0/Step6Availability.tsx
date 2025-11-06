@@ -299,14 +299,6 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
           </div>
         </div>
       </div>
-
-      <div className="flex justify-between pt-6">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg">{tCommon('back')}</button>
-        <button onClick={handleNext} disabled={runDays.length === 0}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50">
-          {tCommon('next')}
-        </button>
-      </div>
     </div>
   );
 }
