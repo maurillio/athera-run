@@ -151,6 +151,12 @@ export default function OnboardingPage() {
       // Converter availableDays para trainingActivities (formato esperado pela API)
       const trainingActivities = formData.availableDays?.running || [];
       
+      console.log('📊 Dados do onboarding:', {
+        formData,
+        trainingActivities,
+        availableDays: formData.availableDays
+      });
+      
       const response = await fetch('/api/profile/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -163,16 +169,26 @@ export default function OnboardingPage() {
       });
 
       const data = await response.json();
+      
+      console.log('📡 Resposta da API:', {
+        status: response.status,
+        ok: response.ok,
+        data
+      });
 
       if (!response.ok) {
-        setError(data.error || tErrors('generic'));
+        const errorMsg = data.error || data.message || tErrors('generic');
+        console.error('❌ Erro ao criar perfil:', errorMsg, data);
+        setError(errorMsg);
         setLoading(false);
         return;
       }
 
+      console.log('✅ Perfil criado com sucesso! Redirecionando...');
       // Redirect to dashboard with locale
       router.push(`/${locale}/dashboard`);
     } catch (err) {
+      console.error('❌ Erro na requisição:', err);
       setError(tErrors('network'));
       setLoading(false);
     }
@@ -303,7 +319,7 @@ export default function OnboardingPage() {
                     </>
                   ) : (
                     <>
-                      {t('submitButton')}
+                      {t('step7.submitButton')}
                       <CheckCircle className="ml-2 h-4 w-4" />
                     </>
                   )}
