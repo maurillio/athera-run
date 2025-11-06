@@ -2,14 +2,14 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 06 de Novembro de 2025 21:20 BRT
-**Versão Atual:** 1.5.3 (Deploy Vercel CLI)
-**Status:** ✅ **DEPLOY CONCLUÍDO COM SUCESSO**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 1fc276fb
+**Última atualização:** 06 de Novembro de 2025 22:45 BRT
+**Versão Atual:** 1.5.4 (Onboarding i18n Fix)
+**Status:** ✅ **ONBOARDING CORRIGIDO - DEPLOY PENDENTE**
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** a1936537
 
-> **🚀 SESSÃO ATUAL (06/Nov):** Deploy via Vercel CLI - Projeto Original
-> **📋 PROBLEMA RESOLVIDO:** Root Directory removido manualmente no Dashboard
-> **✅ STATUS:** Produção funcionando em https://atherarun.com
+> **🚀 SESSÃO ATUAL (06/Nov):** Correção completa do onboarding i18n
+> **📋 PROBLEMA RESOLVIDO:** Onboarding desconfigurado pós implementação multilíngua
+> **✅ STATUS:** Pronto para deploy em produção
 
 ---
 
@@ -63,6 +63,76 @@
 2. ⏳ Validar funcionalidades principais
 3. ⏳ Confirmar domínio atherarun.com ativo
 4. ⏳ Monitorar logs por 24h
+
+---
+
+## ✅ CORREÇÃO ONBOARDING I18N (06/Nov 22:45)
+
+### 🔴 Problema Identificado
+Após implementação da multilíngua (i18n v1.4.0), o onboarding ficou **completamente desconfigurado**:
+- **Step 1 e 2**: Keys de tradução faltando (100% ausentes)
+- **Keys principais**: title, subtitle, progress não existiam
+- **Botões duplicados**: Steps 3-7 renderizavam botões próprios + página principal
+- **Redirect quebrado**: Perdia o idioma selecionado após conclusão
+- **Resultado**: Usuário via keys literais ("onboarding.step1.age") ao invés de textos traduzidos
+
+### ✅ Correções Implementadas
+
+**1. Traduções Adicionadas (Crítico)**
+```json
+// Adicionado em pt-BR.json, en.json, es.json
+{
+  "onboarding": {
+    "title": "Bem-vindo ao Athera Run",
+    "subtitle": "Vamos criar seu plano personalizado em 7 etapas simples",
+    "progress": "Etapa {{current}} de {{total}}",
+    "step1": { /* 25+ keys */ },
+    "step2": { /* 15+ keys */ }
+  }
+}
+```
+- ✅ Keys principais (title, subtitle, progress)
+- ✅ Step1 completo (25+ keys) - nome, idade, gênero, peso, altura, dados fisiológicos
+- ✅ Step2 completo (15+ keys) - experiência, esportes, volume semanal
+- ✅ Errors para validação de step1 e step2
+- ✅ **Total**: +231 lines adicionadas nos 3 idiomas
+
+**2. Correções de Código**
+```typescript
+// app/[locale]/onboarding/page.tsx
+import { useTranslations, useLocale } from '@/lib/i18n/hooks';
+
+const locale = useLocale();
+// Antes: router.push('/dashboard'); ❌
+// Depois: router.push(`/${locale}/dashboard`); ✅
+```
+- ✅ Redirect mantém locale selecionado
+- ✅ Botões duplicados removidos dos Steps 3-7
+- ✅ Navegação consistente gerenciada pela página principal
+
+**3. Arquivos Modificados**
+- `lib/i18n/translations/pt-BR.json` (+77 lines)
+- `lib/i18n/translations/en.json` (+77 lines)
+- `lib/i18n/translations/es.json` (+77 lines)
+- `app/[locale]/onboarding/page.tsx` (redirect fix)
+- `components/onboarding/v1.3.0/Step3Performance.tsx` (remove buttons)
+- `components/onboarding/v1.3.0/Step4Health.tsx` (remove buttons)
+- `components/onboarding/v1.3.0/Step5Goals.tsx` (remove buttons)
+- `components/onboarding/v1.3.0/Step6Availability.tsx` (remove buttons)
+- `components/onboarding/v1.3.0/Step7Review.tsx` (remove buttons)
+
+### 📊 Resultado
+- ✅ Onboarding 100% funcional em português, inglês e espanhol
+- ✅ Navegação limpa sem botões duplicados
+- ✅ Locale preservado após conclusão do onboarding
+- ✅ UI consistente em todos os steps
+- ✅ Validações funcionando com mensagens traduzidas
+
+### 🎯 Commit
+```
+commit a1936537
+fix: Corrigir onboarding desconfigurado pós implementação i18n
+```
 
 ---
 
