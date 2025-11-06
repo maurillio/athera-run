@@ -109,11 +109,8 @@ export default function OnboardingPage() {
         // targetDistance foi movido para outro step
         break;
       case 6:
-        // Step6 - Availability (validação necessária)
-        if (!formData.trainingDays || formData.trainingDays.length === 0) {
-          setError(t('step6.errors.trainingDaysRequired'));
-          return false;
-        }
+        // Step6 - Availability
+        // Step6 valida internamente com: if (runDays.length === 0) return;
         break;
       case 7:
         // Final review
