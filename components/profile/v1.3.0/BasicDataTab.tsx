@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from '@/lib/i18n/hooks';
 import { calculateIMC, interpretIMC, interpretRestingHR } from '@/lib/vdot-calculator';
 
 export default function BasicDataTab({ userData, onUpdate }: any) {
+  const t = useTranslations('profile');
   const [formData, setFormData] = useState({
     age: userData.age || '',
     gender: userData.gender || '',
@@ -41,28 +43,28 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Idade</label>
+          <label className="block text-sm font-medium mb-2">{t('basic.age')}</label>
           <input type="number" value={formData.age} onChange={(e) => handleChange('age', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Gênero</label>
+          <label className="block text-sm font-medium mb-2">{t('basic.gender')}</label>
           <select value={formData.gender} onChange={(e) => handleChange('gender', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg">
-            <option value="male">Masculino</option>
-            <option value="female">Feminino</option>
+            <option value="male">{t('basic.genderOptions.male')}</option>
+            <option value="female">{t('basic.genderOptions.female')}</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Peso (kg)</label>
+          <label className="block text-sm font-medium mb-2">{t('basic.weight')}</label>
           <input type="number" value={formData.weight} onChange={(e) => handleChange('weight', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" step="0.1" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Altura (cm)</label>
+          <label className="block text-sm font-medium mb-2">{t('basic.height')}</label>
           <input type="number" value={formData.height} onChange={(e) => handleChange('height', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
         </div>
@@ -76,8 +78,8 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
 
       <div className="border-t pt-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">FC Repouso (bpm)</label>
-          <input type="number" value={formData.restingHeartRate} 
+          <label className="block text-sm font-medium mb-2">{t('basic.restingHR')}</label>
+          <input type="number" value={formData.restingHeartRate}
             onChange={(e) => handleChange('restingHeartRate', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
           {formData.restingHeartRate && (
@@ -86,13 +88,13 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Qualidade do Sono: {formData.sleepQuality}/5</label>
+          <label className="block text-sm font-medium mb-2">{t('basic.sleepQuality')}: {formData.sleepQuality}/5</label>
           <input type="range" min="1" max="5" value={formData.sleepQuality}
             onChange={(e) => handleChange('sleepQuality', parseInt(e.target.value))} className="w-full" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Nível de Estresse: {formData.stressLevel}/5</label>
+          <label className="block text-sm font-medium mb-2">{t('basic.stressLevel')}: {formData.stressLevel}/5</label>
           <input type="range" min="1" max="5" value={formData.stressLevel}
             onChange={(e) => handleChange('stressLevel', parseInt(e.target.value))} className="w-full" />
         </div>
@@ -101,7 +103,7 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
       {hasChanges && (
         <button onClick={handleSave}
           className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">
-          💾 Salvar Alterações
+          {t('saveChanges')}
         </button>
       )}
     </div>

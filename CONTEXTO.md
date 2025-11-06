@@ -2,42 +2,59 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 06 de Novembro de 2025 22:45 BRT
+**Última atualização:** 06 de Novembro de 2025 17:30 UTC
 **Versão Atual:** 1.5.4 (Onboarding i18n Fix)
-**Status:** ✅ **ONBOARDING CORRIGIDO - DEPLOY PENDENTE**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** a1936537
+**Status:** 🟢 **SISTEMA 95% ESTÁVEL - FUNCIONANDO EM PRODUÇÃO**
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 11267bc4
 
-> **🚀 SESSÃO ATUAL (06/Nov):** Correção completa do onboarding i18n
-> **📋 PROBLEMA RESOLVIDO:** Onboarding desconfigurado pós implementação multilíngua
-> **✅ STATUS:** Pronto para deploy em produção
+> **🚀 SESSÃO ATUAL (06/Nov):** Análise profunda completa do sistema
+> **📋 STATUS ATUAL:** Deploy funcionando, i18n 85% completo, 17 arquivos pendentes de commit
+> **✅ PRODUÇÃO:** Online em https://atherarun.com (deploy 7h atrás - ● Ready)
+> **⚠️ AÇÃO NECESSÁRIA:** Commit trabalho pendente (1.274 linhas) para garantir segurança
 
 ---
 
-## ✅ SOLUÇÃO IMPLEMENTADA - VERCEL CLI (06/Nov 21:20)
+## ✅ VERCEL CLI CONFIGURADO (06/Nov 21:20 - Corrigido pela outra IA)
 
-### 🎯 Estratégia Final: Projeto Original + Dashboard Fix
-**Problema Original:** Dashboard Vercel travado com `Root Directory: nextjs_space`
-**Solução:** Remover configuração manualmente no Dashboard + Deploy via CLI
+### 🎯 Solução Implementada: Deploy via CLI
+**Problema Original:** Dashboard Vercel travado com `Root Directory: nextjs_space`  
+**Solução:** Remover configuração manualmente + Deploy via Vercel CLI
 
-### ✅ IMPLEMENTADO COM SUCESSO
-1. ✅ **Root Directory Removido**: Configuração deletada no Dashboard Vercel
+### ✅ CONFIGURAÇÃO ATUAL
+1. ✅ **Root Directory Corrigido**: Configuração removida do Dashboard
 2. ✅ **Vercel CLI Instalado**: v48.8.0
-3. ✅ **Token Seguro**: Guardado em `.env.local` (ignorado pelo Git)
-4. ✅ **Deploy Concluído**: Projeto original `athera-run`
-5. ✅ **Build Passando**: Estrutura correta na raiz
-6. ✅ **Status**: ● Ready (Production)
-7. ✅ **Duração**: 2 minutos
+3. ✅ **Token Configurado**: Armazenado em `.env.local` (gitignore protege)
+4. ✅ **Deploy Funcionando**: Último deploy 7h atrás (● Ready)
+5. ✅ **Build Passando**: Zero erros em produção
+6. ✅ **Estrutura Correta**: Código na raiz (sem nextjs_space aninhado)
 
-### 📊 URLs de Produção
-- **Dashboard**: https://vercel.com/maurillio-araujo-oliveiras-projects/athera-run
-- **Inspect**: https://vercel.com/maurillio-araujo-oliveiras-projects/athera-run/E8CxULrGYc4pVNpCiPEfsmiHzNns
-- **Production**: https://athera-e77xytydz-maurillio-araujo-oliveiras-projects.vercel.app
+### 📊 URLs de Produção (ATUAIS)
+- **Site Principal**: https://atherarun.com ✅ FUNCIONANDO
+- **Dashboard Vercel**: https://vercel.com/maurillio-araujo-oliveiras-projects/athera-run
+- **Último Deploy**: https://athera-mdgyb85ht-maurillio-araujo-oliveiras-projects.vercel.app (7h atrás)
+- **Aliases**: atherarun.com, www.atherarun.com, athera-run.vercel.app
 
 ### 🔐 Segurança do Token
-- Token salvo em: `/root/athera-run/.env.local`
-- ✅ Ignorado pelo Git (`.gitignore` configurado)
-- ✅ Não será commitado
-- ✅ Apenas local
+- **Localização**: `/root/athera-run/.env.local`
+- ✅ Protegido pelo `.gitignore`
+- ✅ Nunca será commitado
+- ✅ Acesso apenas local
+
+### 🚀 Como Usar Vercel CLI
+```bash
+# Deploy para produção (se necessário)
+source .env.local
+vercel --prod --token=$VERCEL_TOKEN
+
+# Listar deploys
+vercel ls --token=$VERCEL_TOKEN
+
+# Inspecionar deploy específico
+vercel inspect <url> --token=$VERCEL_TOKEN
+
+# Ver logs em tempo real
+vercel logs <url> --token=$VERCEL_TOKEN
+```
 
 ---
 

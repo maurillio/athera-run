@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, Clock } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 interface VdotData {
   vdot: number;
@@ -52,6 +53,7 @@ function calculateVdotFromTime(minutes: number, seconds: number): number {
 }
 
 export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
+  const t = useTranslations('calculator');
   const [raceTime, setRaceTime] = useState({ minutes: 57, seconds: 0 });
   const [calculatedVdot, setCalculatedVdot] = useState<number | null>(null);
   const [selectedVdot, setSelectedVdot] = useState<VdotData | null>(null);
@@ -66,34 +68,34 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
 
   const paceZones = selectedVdot ? [
     {
-      name: 'Easy (E-Pace)',
+      name: t('paceZones.easy.name'),
       range: `${selectedVdot.easy_pace_min} - ${selectedVdot.easy_pace_max}`,
       color: 'bg-blue-100 text-blue-800',
-      description: 'Corridas fáceis e recuperação'
+      description: t('paceZones.easy.description')
     },
     {
-      name: 'Marathon (M-Pace)',
+      name: t('paceZones.marathon.name'),
       range: `${selectedVdot.marathon_pace_min} - ${selectedVdot.marathon_pace_max}`,
       color: 'bg-orange-100 text-orange-800',
-      description: 'Ritmo alvo da maratona'
+      description: t('paceZones.marathon.description')
     },
     {
-      name: 'Threshold (T-Pace)',
+      name: t('paceZones.threshold.name'),
       range: `${selectedVdot.threshold_pace_min} - ${selectedVdot.threshold_pace_max}`,
       color: 'bg-green-100 text-green-800',
-      description: 'Treinos de limiar'
+      description: t('paceZones.threshold.description')
     },
     {
-      name: 'Interval (I-Pace)',
+      name: t('paceZones.interval.name'),
       range: `${selectedVdot.interval_pace_min} - ${selectedVdot.interval_pace_max}`,
       color: 'bg-red-100 text-red-800',
-      description: 'Intervalos para VO2max'
+      description: t('paceZones.interval.description')
     },
     {
-      name: 'Repetition (R-Pace)',
+      name: t('paceZones.repetition.name'),
       range: `${selectedVdot.repetition_pace_min} - ${selectedVdot.repetition_pace_max}`,
       color: 'bg-purple-100 text-purple-800',
-      description: 'Repetições rápidas'
+      description: t('paceZones.repetition.description')
     }
   ] : [];
 
@@ -104,16 +106,16 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calculator className="h-5 w-5" />
-            Calcular VDOT a partir do Tempo de 10km
+            {t('formTitle')}
           </CardTitle>
           <CardDescription>
-            Insira seu tempo recente de 10km para calcular seu VDOT e paces personalizados
+            {t('formDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-4">
             <div className="space-y-2">
-              <Label htmlFor="minutes">Minutos</Label>
+              <Label htmlFor="minutes">{t('minutes')}</Label>
               <Input
                 id="minutes"
                 type="number"
@@ -125,7 +127,7 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="seconds">Segundos</Label>
+              <Label htmlFor="seconds">{t('seconds')}</Label>
               <Input
                 id="seconds"
                 type="number"
@@ -139,7 +141,7 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
             <div className="space-y-2">
               <Label>&nbsp;</Label>
               <Button onClick={handleCalculate} className="bg-orange-600 hover:bg-orange-700">
-                Calcular
+                {t('calculate')}
               </Button>
             </div>
           </div>
@@ -148,12 +150,12 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
             <div className="p-4 bg-orange-50 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Clock className="h-5 w-5 text-orange-600" />
-                <span className="font-semibold">Resultado:</span>
+                <span className="font-semibold">{t('result')}</span>
               </div>
               <p className="text-sm">
-                Tempo: <strong>{raceTime.minutes}:{raceTime.seconds.toString().padStart(2, '0')}</strong> | 
-                VDOT: <strong>{calculatedVdot}</strong> | 
-                Pace médio: <strong>{secondsToTime((raceTime.minutes * 60 + raceTime.seconds) / 10)}/km</strong>
+                {t('time')} <strong>{raceTime.minutes}:{raceTime.seconds.toString().padStart(2, '0')}</strong> |
+                {t('vdot')} <strong>{calculatedVdot}</strong> |
+                {t('avgPace')} <strong>{secondsToTime((raceTime.minutes * 60 + raceTime.seconds) / 10)}/km</strong>
               </p>
             </div>
           )}
@@ -165,10 +167,10 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
         <Card>
           <CardHeader>
             <CardTitle>
-              Seus Paces de Treinamento (VDOT {selectedVdot.vdot})
+              {t('yourPacesTitle', { vdot: selectedVdot.vdot })}
             </CardTitle>
             <CardDescription>
-              Use estes paces para estruturar seus treinos de acordo com cada zona
+              {t('yourPacesDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -189,7 +191,7 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
             </div>
 
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-semibold mb-2">Projeção de Tempos para outras Distâncias:</h4>
+              <h4 className="font-semibold mb-2">{t('projectionTitle')}</h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div>
                   <span className="font-medium">5km:</span>
@@ -201,10 +203,10 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
                 </div>
                 <div>
                   <span className="font-medium">42km:</span>
-                  <div className="text-orange-600 font-medium">~4h00 (meta)</div>
+                  <div className="text-orange-600 font-medium">{t('projectionMeta')}</div>
                 </div>
                 <div>
-                  <span className="font-medium">Pace Maratona:</span>
+                  <span className="font-medium">{t('marathonPace')}</span>
                   <div className="text-orange-600 font-medium">5:41/km</div>
                 </div>
               </div>
@@ -216,9 +218,9 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
       {/* VDOT Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Tabela VDOT de Referência</CardTitle>
+          <CardTitle>{t('tableTitle')}</CardTitle>
           <CardDescription>
-            Compare diferentes níveis de VDOT e seus respectivos paces
+            {t('tableDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -226,11 +228,11 @@ export default function VdotCalculator({ vdotData }: VdotCalculatorProps) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-2">VDOT</th>
-                  <th className="text-left p-2">Easy</th>
-                  <th className="text-left p-2">Marathon</th>
-                  <th className="text-left p-2">Threshold</th>
-                  <th className="text-left p-2">Interval</th>
+                  <th className="text-left p-2">{t('tableHeaders.vdot')}</th>
+                  <th className="text-left p-2">{t('tableHeaders.easy')}</th>
+                  <th className="text-left p-2">{t('tableHeaders.marathon')}</th>
+                  <th className="text-left p-2">{t('tableHeaders.threshold')}</th>
+                  <th className="text-left p-2">{t('tableHeaders.interval')}</th>
                 </tr>
               </thead>
               <tbody>

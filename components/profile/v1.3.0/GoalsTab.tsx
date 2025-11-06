@@ -1,18 +1,20 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function GoalsTab({ userData, onUpdate }: any) {
+  const t = useTranslations('profile');
   const [primaryGoal, setPrimaryGoal] = useState(userData.primaryGoal || '');
   const [motivation, setMotivation] = useState(userData.motivation || '');
   const [hasChanges, setHasChanges] = useState(false);
 
   const goals = [
-    { value: 'finish_first_race', label: '�� Completar primeira corrida' },
-    { value: 'improve_time', label: '⚡ Melhorar tempo' },
-    { value: 'health_fitness', label: '💪 Saúde e bem-estar' },
-    { value: 'weight_loss', label: '🏃 Perder peso' },
-    { value: 'challenge', label: '🏆 Completar desafio específico' },
-    { value: 'consistency', label: '📅 Criar rotina consistente' },
+    { value: 'finish_first_race', label: t('goals.options.finish_first_race') },
+    { value: 'improve_time', label: t('goals.options.improve_time') },
+    { value: 'health_fitness', label: t('goals.options.health_fitness') },
+    { value: 'weight_loss', label: t('goals.options.weight_loss') },
+    { value: 'challenge', label: t('goals.options.challenge') },
+    { value: 'consistency', label: t('goals.options.consistency') },
   ];
 
   const handleSave = () => {
@@ -23,7 +25,7 @@ export default function GoalsTab({ userData, onUpdate }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block font-medium mb-3">Objetivo Principal</label>
+        <label className="block font-medium mb-3">{t('goals.primaryGoal')}</label>
         <div className="grid gap-2">
           {goals.map(g => (
             <button key={g.value}
@@ -38,16 +40,16 @@ export default function GoalsTab({ userData, onUpdate }: any) {
       </div>
 
       <div>
-        <label className="block font-medium mb-2">Motivação</label>
+        <label className="block font-medium mb-2">{t('goals.motivation')}</label>
         <textarea value={motivation} onChange={(e) => { setMotivation(e.target.value); setHasChanges(true); }}
           className="w-full px-4 py-3 border rounded-lg h-24 resize-none"
-          placeholder="O que te motiva?"/>
+          placeholder={t('goals.motivationPlaceholder')}/>
       </div>
 
       {hasChanges && (
         <button onClick={handleSave}
           className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">
-          💾 Salvar Alterações
+          {t('saveChanges')}
         </button>
       )}
     </div>

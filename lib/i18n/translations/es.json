@@ -728,14 +728,260 @@
     "viewPlans": "Ver Planes Premium",
     "maybeLater": "Tal vez más tarde"
   },
+  "subscription": {
+    "title": "Gestionar Suscripción",
+    "subtitle": "Ver y gestionar tu suscripción",
+    "currentPlan": "Plan Actual",
+    "status": "Estado",
+    "statusActive": "Activo",
+    "statusTrial": "Prueba",
+    "statusFree": "Gratuito",
+    "planFree": "Gratuito",
+    "planMonthly": "Premium Mensual",
+    "planAnnual": "Premium Anual",
+    "subscribePremium": "Suscribirse a Premium",
+    "manageSubscription": "Gestionar Suscripción",
+    "opening": "Abriendo...",
+    "loadingError": "Error al cargar datos",
+    "portalUrlError": "URL del portal no recibida",
+    "portalOpenError": "Error al abrir portal: {{error}}",
+    "requestError": "Error al procesar solicitud"
+  },
   "tracking": {
     "title": "Mis Entrenamientos",
     "subtitle": "Registra tus entrenamientos y sigue tu progreso"
   },
+  "training": {
+    "title": "Análisis con IA",
+    "subtitle": "Perspectivas profundas sobre tu progreso y rendimiento",
+    "generateNew": "Generar Nuevo Análisis",
+    "selectPeriod": "Selecciona el período y deja que la IA analice tu progreso",
+    "lastWeek": "Última Semana",
+    "lastMonth": "Último Mes",
+    "analyzing": "Analizando...",
+    "generateAnalysis": "Generar Análisis",
+    "noAnalysis": "Aún no hay análisis",
+    "recordWorkouts": "Registra algunos entrenamientos y genera tu primer análisis con IA",
+    "weeklyAnalysis": "Análisis Semanal",
+    "monthlyAnalysis": "Análisis Mensual",
+    "until": "hasta",
+    "withAlerts": "Con Alertas",
+    "normal": "Normal",
+    "summary": "Resumen",
+    "workouts": "Entrenamientos",
+    "distance": "Distancia",
+    "performance": "Rendimiento",
+    "recovery": "Recuperación",
+    "insights": "Perspectivas",
+    "recommendations": "Recomendaciones",
+    "generatedAt": "Generado en"
+  },
+  "calculator": {
+    "title": "Calculadora VDOT",
+    "description": "Calcula tus ritmos personalizados basados en el sistema Jack Daniels. Usa tu tiempo reciente de 10km para determinar tus zonas de entrenamiento ideales.",
+    "vdotLevel": "VDOT 37-38",
+    "vdotLevelDesc": "Tu nivel actual basado en el ritmo de 10km (5:40-5:50/km)",
+    "goalTitle": "Meta: 4h",
+    "goalDesc": "Ritmo objetivo de maratón: 5:41/km - perfectamente alcanzable",
+    "zonesTitle": "5 Zonas",
+    "zonesDesc": "Easy, Marathon, Threshold, Interval, Repetition",
+    "understandingTitle": "Entendiendo las Zonas de Entrenamiento",
+    "understandingDesc": "Cada zona tiene un propósito específico en el desarrollo de la capacidad aeróbica",
+    "ePaceTitle": "E-Pace (Easy)",
+    "ePaceDesc": "Ritmo conversacional, usado en 80% del entrenamiento. Desarrolla base aeróbica y promueve recuperación activa.",
+    "mPaceTitle": "M-Pace (Marathon)",
+    "mPaceDesc": "Tu ritmo objetivo de maratón. Usado en entrenamientos largos específicos para adaptar cuerpo y mente al esfuerzo de la carrera.",
+    "tPaceTitle": "T-Pace (Threshold)",
+    "tPaceDesc": "Ritmo \"cómodamente difícil\". Mejora el umbral de lactato y la capacidad de sostener esfuerzos moderados.",
+    "iPaceTitle": "I-Pace (Interval)",
+    "iPaceDesc": "Intervalos para desarrollar VO2max. Usado en sesiones de calidad para mejorar potencia aeróbica.",
+    "rPaceTitle": "R-Pace (Repetition)",
+    "rPaceDesc": "Repeticiones rápidas para mejorar forma de carrera, economía y velocidad neuromuscular. Uso limitado en maratón.",
+    "distribution8020Title": "Distribución 80/20",
+    "distribution8020Desc": "80% del volumen en E-Pace, 20% en intensidades moderadas/altas. Principio fundamental para desarrollo aeróbico.",
+    "formTitle": "Calcular VDOT desde Tiempo de 10km",
+    "formDescription": "Ingresa tu tiempo reciente de 10km para calcular tu VDOT y ritmos personalizados",
+    "minutes": "Minutos",
+    "seconds": "Segundos",
+    "calculate": "Calcular",
+    "result": "Resultado:",
+    "time": "Tiempo:",
+    "vdot": "VDOT:",
+    "avgPace": "Ritmo promedio:",
+    "yourPacesTitle": "Tus Ritmos de Entrenamiento (VDOT {{vdot}})",
+    "yourPacesDescription": "Usa estos ritmos para estructurar tus entrenamientos según cada zona",
+    "projectionTitle": "Proyección de Tiempos para otras Distancias:",
+    "projectionMeta": "~4h00 (meta)",
+    "marathonPace": "Ritmo Maratón:",
+    "tableTitle": "Tabla VDOT de Referencia",
+    "tableDescription": "Compara diferentes niveles de VDOT y sus respectivos ritmos",
+    "paceZones": {
+      "easy": {
+        "name": "Easy (E-Pace)",
+        "description": "Carreras fáciles y recuperación"
+      },
+      "marathon": {
+        "name": "Marathon (M-Pace)",
+        "description": "Ritmo objetivo de maratón"
+      },
+      "threshold": {
+        "name": "Threshold (T-Pace)",
+        "description": "Entrenamientos de umbral"
+      },
+      "interval": {
+        "name": "Interval (I-Pace)",
+        "description": "Intervalos para VO2max"
+      },
+      "repetition": {
+        "name": "Repetition (R-Pace)",
+        "description": "Repeticiones rápidas"
+      }
+    },
+    "tableHeaders": {
+      "vdot": "VDOT",
+      "easy": "Easy",
+      "marathon": "Marathon",
+      "threshold": "Threshold",
+      "interval": "Interval"
+    }
+  },
   "chat": {
     "title": "Chat con Entrenador IA",
     "subtitle": "Resuelve tus dudas sobre entrenamiento, nutrición, recuperación y preparación para carreras",
-    "instruction": "Haz clic en el botón flotante en la esquina inferior derecha para iniciar el chat 👇"
+    "instruction": "Haz clic en el botón flotante en la esquina inferior derecha para iniciar el chat 👇",
+    "chatTitle": "Entrenador IA",
+    "chatDescription": "Resuelve tus dudas sobre entrenamiento",
+    "messagesRemaining": "restantes",
+    "greeting": "👋 ¡Hola! ¿Cómo puedo ayudarte?",
+    "subGreeting": "¡Pregunta sobre entrenamientos, nutrición, recuperación y más!",
+    "suggestedQuestions": "Preguntas sugeridas:",
+    "inputPlaceholder": "Escribe tu pregunta...",
+    "sendError": "Error al enviar mensaje",
+    "paywallFeature": "Chat Ilimitado con IA",
+    "paywallDescription": "Continúa haciendo preguntas sobre entrenamiento, nutrición y running sin límites",
+    "questions": {
+      "nutrition": "¿Cómo debo alimentarme antes de una carrera larga?",
+      "kneePain": "¿Qué hacer cuando siento dolor en la rodilla durante el entrenamiento?",
+      "paceVsInterval": "¿Cuál es la diferencia entre entrenamiento de ritmo e intervalado?",
+      "improveSpeed": "¿Cómo mejorar mi velocidad en la carrera?",
+      "sleep": "¿Cuántas horas de sueño necesito para recuperarme bien?"
+    }
+  },
+  "strava": {
+    "title": "Integración con Strava",
+    "description": "Conecta tu cuenta de Strava para importar entrenamientos automáticamente",
+    "connected": "Conectado",
+    "notConnected": "No conectado",
+    "setupInfo": "Para activar la integración con Strava, primero debes configurar las credenciales de la API.",
+    "setupLink": "Ver instrucciones de configuración",
+    "connect": "Conectar con Strava",
+    "disconnect": "Desconectar",
+    "autoImportInfo": "Tus nuevas actividades de Strava se importarán automáticamente",
+    "syncActiveTitle": "¡Sincronización activa!",
+    "syncActiveDesc": "Los nuevos entrenamientos aparecen aquí automáticamente en tiempo real. Si quieres importar actividades antiguas, usa el botón de abajo.",
+    "importHistory": "Importar Historial (90 días)",
+    "importing": "Importando...",
+    "confirmImport": "¿Deseas importar las actividades de los últimos 90 días de Strava?",
+    "confirmDisconnect": "¿Estás seguro de que quieres desconectarte de Strava?",
+    "importSuccess": "¡Importación completada!\n\n✅ {{imported}} actividades importadas\n⏭️ {{skipped}} actividades omitidas (duplicadas)\n📊 Total analizado: {{total}}",
+    "importError": "Error al importar historial. Inténtalo de nuevo.",
+    "paywallFeature": "Integración con Strava",
+    "paywallDescription": "Sincroniza automáticamente tus entrenamientos de Strava y ten todos tus datos en un solo lugar"
+  },
+  "workoutHistory": {
+    "title": "Historial de Entrenamientos",
+    "description": "Tus últimos 10 entrenamientos registrados",
+    "noWorkouts": "Aún no hay entrenamientos registrados. ¡Comienza a registrar tus entrenamientos arriba!",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar este entrenamiento?",
+    "deleteError": "Error al eliminar entrenamiento.",
+    "networkError": "Error de red al eliminar entrenamiento.",
+    "openMenu": "Abrir menú",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "editTitle": "Editar Entrenamiento",
+    "effort": "Esfuerzo:",
+    "types": {
+      "running": "Carrera",
+      "strength": "Musculación",
+      "swimming": "Natación",
+      "cross_training": "Entrenamiento Cruzado",
+      "rest": "Descanso"
+    },
+    "subtypes": {
+      "easy": "Fácil",
+      "tempo": "Tempo",
+      "intervals": "Intervalos",
+      "long": "Carrera Larga",
+      "recovery": "Recuperación"
+    }
+  },
+  "raceManagement": {
+    "title": "Gestión de Carreras",
+    "description": "Añade y gestiona tus carreras. El sistema las clasifica automáticamente en A, B o C.",
+    "reclassify": "Re-clasificar",
+    "classifying": "Clasificando...",
+    "addRace": "Añadir Carrera",
+    "addRaceTitle": "Añadir Nueva Carrera",
+    "addRaceDesc": "Añade una carrera y el sistema la clasificará automáticamente como A, B o C",
+    "editRaceTitle": "Editar Carrera",
+    "editRaceDesc": "Cambia los datos de la carrera y el sistema la reclasificará automáticamente",
+    "raceName": "Nombre de la Carrera *",
+    "raceNamePlaceholder": "Ej: Maratón de São Paulo 2026",
+    "distance": "Distancia *",
+    "raceDate": "Fecha de la Carrera *",
+    "targetTime": "Tiempo Objetivo (opcional)",
+    "targetTimePlaceholder": "Ej: 3:30:00",
+    "location": "Ubicación (opcional)",
+    "locationPlaceholder": "Ej: São Paulo, SP",
+    "classification": "Clasificación de la Carrera *",
+    "adding": "Añadiendo...",
+    "updating": "Actualizando...",
+    "update": "Actualizar Carrera",
+    "cancel": "Cancelar",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar esta carrera?",
+    "addError": "Error al añadir carrera",
+    "updateError": "Error al actualizar carrera",
+    "deleteError": "Error al eliminar carrera",
+    "noRaces": "Aún no hay carreras registradas.",
+    "noRacesDesc": "¡Añade tus carreras para comenzar!",
+    "editTooltip": "Editar carrera",
+    "deleteTooltip": "Eliminar carrera",
+    "goal": "Meta:",
+    "weeksBeforeA": "semanas antes de la carrera A",
+    "priorities": {
+      "A": "Objetivo Principal",
+      "B": "Preparatoria",
+      "C": "Volumen"
+    },
+    "priorityOptions": {
+      "A": {
+        "label": "Carrera A",
+        "description": "Objetivo Principal"
+      },
+      "B": {
+        "label": "Carrera B",
+        "description": "Preparatoria/Prueba"
+      },
+      "C": {
+        "label": "Carrera C",
+        "description": "Volumen/Experiencia"
+      }
+    },
+    "autoClassification": {
+      "title": "Sistema de Clasificación Automática:",
+      "raceA": "Carrera A: Tu objetivo principal - todo el plan está estructurado para esta carrera",
+      "raceB": "Carrera B: Preparatorias (2-6 semanas antes de A) - usa como prueba de ritmo",
+      "raceC": "Carrera C: Volumen/experiencia - reemplaza entrenamiento largo, sin taper"
+    },
+    "distances": {
+      "5k": "5km",
+      "10k": "10km",
+      "15k": "15km",
+      "10mile": "10 Millas",
+      "half_marathon": "Media Maratón",
+      "30k": "30km",
+      "marathon": "Maratón"
+    }
   },
   "nutrition": {
     "title": "Guía de Nutrición",
@@ -760,5 +1006,105 @@
   "admin": {
     "title": "Panel Admin",
     "subtitle": "Gestionar usuarios y sistema"
+  },
+  "profile": {
+    "tabs": {
+      "basic": "👤 Datos Básicos",
+      "performance": "⚡ Rendimiento",
+      "health": "🏥 Salud",
+      "goals": "🎯 Objetivos",
+      "availability": "📅 Disponibilidad",
+      "preferences": "⚙️ Preferencias"
+    },
+    "errors": {
+      "updateFailed": "Error al actualizar perfil. Inténtalo de nuevo.",
+      "dataUnavailable": "Error: Datos del usuario no disponibles"
+    },
+    "saving": "Guardando...",
+    "saveChanges": "💾 Guardar Cambios",
+    "basic": {
+      "age": "Edad",
+      "gender": "Género",
+      "weight": "Peso (kg)",
+      "height": "Altura (cm)",
+      "restingHR": "FC Reposo (bpm)",
+      "sleepQuality": "Calidad del Sueño",
+      "stressLevel": "Nivel de Estrés",
+      "genderOptions": {
+        "male": "Masculino",
+        "female": "Femenino"
+      }
+    },
+    "performance": {
+      "title": "Mejores Tiempos",
+      "description": "Tus récords personales en diferentes distancias",
+      "addTimeTitle": "Añadir Tiempo",
+      "addTimeDescription": "Registra tu tiempo de carrera reciente",
+      "selectDistance": "Seleccionar Distancia",
+      "enterTime": "Introduce tu tiempo (HH:MM:SS o MM:SS)",
+      "timePlaceholder": "Ej: 45:30",
+      "addTime": "Añadir Tiempo",
+      "bestVdot": "Mejor VDOT",
+      "noTimes": "No hay tiempos registrados",
+      "addFirst": "¡Añade tu primer tiempo arriba!",
+      "distances": {
+        "5k": "5km",
+        "10k": "10km",
+        "21k": "21km",
+        "42k": "42km"
+      }
+    },
+    "goals": {
+      "primaryGoal": "Objetivo Principal",
+      "motivation": "Motivación",
+      "motivationPlaceholder": "¿Qué te motiva?",
+      "options": {
+        "finish_first_race": "🏁 Completar primera carrera",
+        "improve_time": "⚡ Mejorar tiempo",
+        "health_fitness": "💪 Salud y bienestar",
+        "weight_loss": "🏃 Perder peso",
+        "challenge": "🏆 Completar desafío específico",
+        "consistency": "📅 Crear rutina consistente"
+      }
+    },
+    "availability": {
+      "title": "Disponibilidad Semanal",
+      "howItWorks": "Cómo funciona la disponibilidad",
+      "fullControl": "✨ ¡Tienes 100% del control! Solo las actividades que marques se incluirán en tu plan.",
+      "runningRequired": "🏃 Los días de carrera son obligatorios. Las otras actividades son opcionales.",
+      "autoAdjust": "💾 Al guardar, tu plan se ajustará automáticamente desde hoy en adelante, preservando todo el historial.",
+      "runningDaysLabel": "🏃 Días de Carrera *",
+      "runningDaysDesc": "Selecciona los días de la semana en que puedes correr",
+      "daysSelected": "✅ {{count}} día(s) seleccionado(s)",
+      "minRecommended": "(mínimo recomendado: 3)",
+      "complementaryTitle": "Actividades Complementarias (Opcional)",
+      "complementaryDesc": "Marca solo las actividades que realmente haces. Si no marcas, no se incluirán en el plan.",
+      "strength": "💪 Entrenamiento de Fuerza",
+      "swimming": "🏊 Natación",
+      "crossTraining": "🚴 Cross Training (bici, elíptica, etc.)",
+      "yoga": "🧘 Yoga / Pilates",
+      "noDaysSelected": "Ningún día seleccionado",
+      "saveAndApply": "Guardar y Aplicar Ajuste Automático",
+      "savingAndAdjusting": "Guardando y ajustando plan...",
+      "adjustmentApplied": "✅ ¡Ajuste Aplicado!",
+      "workoutsDeleted": "• {{count}} entrenamientos futuros fueron eliminados",
+      "nextStep": "🔄 Próximo paso: Ve a la página \"Plan\" y haz clic en \"Regenerar Plan\" para crear nuevos entrenamientos.",
+      "historyPreserved": "🛡️ Historial Preservado: Todos los entrenamientos que ya completaste se mantendrán. Solo los entrenamientos futuros serán ajustados.",
+      "days": {
+        "0": "Dom",
+        "1": "Lun",
+        "2": "Mar",
+        "3": "Mié",
+        "4": "Jue",
+        "5": "Vie",
+        "6": "Sáb"
+      },
+      "toast": {
+        "updateSuccess": "✅ ¡Disponibilidad actualizada!",
+        "regenerateInfo": "🔄 Haz clic en \"Regenerar Plan\" en la página de perfil para aplicar los cambios.",
+        "adjustError": "Error al ajustar plan: {{error}}",
+        "saveError": "Error al guardar cambios"
+      }
+    }
   }
 }
