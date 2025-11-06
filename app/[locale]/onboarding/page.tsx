@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, AlertCircle, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
 
 // V1.3.0 Step Components with i18n
 import Step1BasicData from '@/components/onboarding/v1.3.0/Step1BasicData';
@@ -249,7 +249,7 @@ export default function OnboardingPage() {
           <CardContent>
             {renderStep()}
 
-            {/* Navigation Buttons (for steps 1-6) */}
+            {/* Navigation Buttons */}
             {currentStep < 7 && (
               <div className="flex gap-4 mt-8 pt-6 border-t">
                 {currentStep > 1 && (
@@ -270,6 +270,39 @@ export default function OnboardingPage() {
                 >
                   {tCommon('next')}
                   <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
+            {/* Step 7 - Submit Button */}
+            {currentStep === 7 && (
+              <div className="flex gap-4 mt-8 pt-6 border-t">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handlePrevious}
+                  className="flex-1"
+                >
+                  <ChevronLeft className="mr-2 h-4 w-4" />
+                  {tCommon('previous')}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {tCommon('loading')}
+                    </>
+                  ) : (
+                    <>
+                      {t('step7.submitButton')}
+                      <CheckCircle className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </div>
             )}
