@@ -1442,6 +1442,74 @@ atherarun.com (produção)
    - Deploy em ~2-3 minutos
    - Live em atherarun.com
 
+### 🆕 Deploy via Vercel CLI (Recomendado)
+
+**Implementado em:** 06/Nov/2025
+**Status:** ✅ Funcional e testado
+
+#### Por Que Usar CLI?
+1. **Bypass de problemas do dashboard**
+2. **Controle total via linha de comando**
+3. **Logs em tempo real**
+4. **Configuração via código** (`vercel.json`)
+5. **Facilita debugging**
+
+#### Instalação
+```bash
+# Vercel CLI já vem instalado com o projeto
+vercel --version  # 48.8.0+
+```
+
+#### Configurar Token
+1. Acesse: https://vercel.com/account/tokens
+2. Crie um novo token
+3. Salve em `.env.local` (ignorado pelo Git):
+```bash
+# .env.local
+VERCEL_TOKEN=seu-token-aqui
+```
+
+#### Deploy para Produção
+```bash
+# Deploy direto
+vercel --prod --token=$VERCEL_TOKEN --yes
+
+# Deploy com nome específico (criar projeto novo)
+vercel --name=nome-projeto --prod --token=$VERCEL_TOKEN --yes
+
+# Ver status de autenticação
+vercel whoami --token=$VERCEL_TOKEN
+
+# Listar projetos
+vercel list --token=$VERCEL_TOKEN
+```
+
+#### Projeto Atual
+**Projeto:** `athera-run-v2`
+**URL:** https://vercel.com/maurillio-araujo-oliveiras-projects/athera-run-v2
+
+#### Exemplo Completo
+```bash
+# 1. Ir para raiz do projeto
+cd /root/athera-run
+
+# 2. Deploy para produção
+vercel --prod --token=$VERCEL_TOKEN --yes
+
+# Output esperado:
+# ✓ Uploading [====================] (100%)
+# ✓ Building
+# ✓ Deployment ready
+# Production: https://atherarun.com
+```
+
+#### Troubleshooting CLI
+**Erro:** "Environment variable not found: DATABASE_URL"
+**Solução:** Configurar variáveis no Dashboard primeiro (ver próxima seção)
+
+**Erro:** "Root Directory does not exist"
+**Solução:** Criar projeto novo via CLI (adicionar `--name=novo-nome`)
+
 ### Configurar Variáveis de Ambiente (Vercel)
 
 **Dashboard da Vercel** → Settings → Environment Variables
