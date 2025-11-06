@@ -18,7 +18,8 @@ import { useLocale, useTranslations } from '@/lib/i18n/hooks';
 export default function SignupPage() {
   const router = useRouter();
   const locale = useLocale();
-  const t = useTranslations();
+  const t = useTranslations('auth.signup');
+  const tErrors = useTranslations('errors');
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -34,13 +35,13 @@ export default function SignupPage() {
     setError('');
 
     if (password !== confirmPassword) {
-      setError(t.auth?.signup?.passwordMismatch || 'Passwords do not match');
+      setError(t('errors.passwordMismatch'));
       setIsLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError(t.auth?.signup?.passwordTooShort || 'Password must be at least 6 characters');
+      setError(t('errors.passwordTooShort'));
       setIsLoading(false);
       return;
     }
@@ -55,7 +56,7 @@ export default function SignupPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || t.errors?.default || 'Error creating account');
+        setError(data.error || tErrors('default'));
         setIsLoading(false);
         return;
       }
@@ -68,14 +69,14 @@ export default function SignupPage() {
       });
 
       if (result?.error) {
-        setError(t.auth?.signup?.accountCreatedError || 'Account created but login failed');
+        setError(t('errors.accountCreatedError'));
         setIsLoading(false);
       } else {
         router.push(`/${locale}/onboarding`);
         router.refresh();
       }
     } catch (error) {
-      setError(t.errors?.default || 'An error occurred');
+      setError(tErrors('default'));
       setIsLoading(false);
     }
   };
@@ -89,7 +90,7 @@ export default function SignupPage() {
         redirect: true,
       });
     } catch (error) {
-      setError(t.auth?.signup?.googleError || 'Google sign up error');
+      setError(t('errors.googleError'));
       setIsGoogleLoading(false);
     }
   };
@@ -104,10 +105,10 @@ export default function SignupPage() {
             </div>
           </div>
           <CardTitle className="text-2xl text-center font-bold">
-            {t.auth?.signup?.title || 'Create your account'}
+            {t('title')}
           </CardTitle>
           <CardDescription className="text-center">
-            {t.auth?.signup?.subtitle || 'Start your marathon journey'}
+            {t('subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -129,7 +130,7 @@ export default function SignupPage() {
               ) : (
                 <>
                   <Chrome className="mr-2 h-4 w-4" />
-                  {t.auth?.signup?.googleSignUp || 'Google'}
+                  {t('googleSignUp')}
                 </>
               )}
             </Button>
@@ -141,20 +142,20 @@ export default function SignupPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                {t.auth?.signup?.orSignUpWith || 'or sign up with email'}
+                {t('orSignUpWith')}
               </span>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">{t.auth?.signup?.name || 'Full Name'}</Label>
+              <Label htmlFor="name">{t('name')}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="name"
                   type="text"
-                  placeholder={t.auth?.signup?.namePlaceholder || 'John Doe'}
+                  placeholder={t('namePlaceholder')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
@@ -165,13 +166,13 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">{t.auth?.signup?.email || 'Email'}</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t.auth?.signup?.emailPlaceholder || 'your@email.com'}
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -182,7 +183,7 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">{t.auth?.signup?.password || 'Password'}</Label>
+              <Label htmlFor="password">{t('password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -200,7 +201,7 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">{t.auth?.signup?.confirmPassword || 'Confirm Password'}</Label>
+              <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -225,19 +226,19 @@ export default function SignupPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t.auth?.signup?.creatingAccount || 'Creating account...'}
+                  {t('creatingAccount')}
                 </>
               ) : (
-                t.auth?.signup?.signUp || 'Create account'
+                t('signUp')
               )}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-center text-muted-foreground">
-            {t.auth?.signup?.hasAccount || 'Already have an account?'}{' '}
+            {t('hasAccount')}{' '}
             <Link href={`/${locale}/login`} className="text-orange-600 hover:text-orange-700 font-medium">
-              {t.auth?.signup?.signInLink || 'Sign in'}
+              {t('signInLink')}
             </Link>
           </div>
         </CardFooter>
