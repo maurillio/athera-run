@@ -97,8 +97,6 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   return (
     <div className="space-y-6">
       <div>
-
-      <div>
         <label className="block font-semibold mb-3 text-blue-900">🏃 {t('trainingDaysTitle')} *</label>
         <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
           {days.map((day, idx) => (

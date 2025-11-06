@@ -71,9 +71,6 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   return (
     <div className="space-y-6">
       <div>
-      </div>
-
-      <div>
         <label className="block font-medium mb-2">{t('hasInjuries')}</label>
         <div className="flex gap-4">
           <button onClick={() => setHasInjuryHistory(false)}

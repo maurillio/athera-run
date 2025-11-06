@@ -57,8 +57,6 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
 
   return (
     <div className="space-y-6">
-      <div>
-
       <div className="grid gap-3">
         {goals.map(g => (
           <button key={g.value}
