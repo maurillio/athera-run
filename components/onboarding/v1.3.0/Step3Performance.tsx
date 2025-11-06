@@ -38,9 +38,6 @@ export default function Step3Performance({ data, onUpdate, onNext, onBack }: any
 
   return (
     <div className="space-y-6">
-      <div>
-      </div>
-
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h3 className="font-semibold mb-3">{t('addTime')}</h3>
         <div className="grid md:grid-cols-2 gap-3">
