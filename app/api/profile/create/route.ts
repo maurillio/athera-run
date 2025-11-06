@@ -55,9 +55,11 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('📦 [PROFILE CREATE] Body recebido:', {
-      weight, height, age, gender,
-      trainingActivities,
+      keys: Object.keys(body),
+      trainingActivities: body.trainingActivities,
       availableDays: body.availableDays,
+      weight: body.weight,
+      age: body.age,
       onboardingComplete: body.onboardingComplete
     });
 
