@@ -37,13 +37,16 @@ export default function OnboardingPage() {
   
   // Form data aggregated from all steps
   const [formData, setFormData] = useState<any>({
-    // Step 1: Basic Data
-    name: '',
+    // Step 1: Basic Data (v1.3.0 usa age, não birthDate)
+    name: session?.user?.name || '',
     email: session?.user?.email || '',
     gender: '',
-    birthDate: '',
+    age: '', // Mudado de birthDate para age
     weight: '',
     height: '',
+    restingHeartRate: '',
+    sleepQuality: 3,
+    stressLevel: 3,
     
     // Step 2: Sport Background
     runningLevel: '',
@@ -91,8 +94,9 @@ export default function OnboardingPage() {
     
     switch (step) {
       case 1:
-        if (!formData.name || !formData.email || !formData.gender || !formData.birthDate || !formData.weight || !formData.height) {
-          setError(t('step1.errors.nameRequired'));
+        // Step1 agora usa 'age' em vez de 'birthDate', e name vem da session
+        if (!formData.gender || !formData.age || !formData.weight || !formData.height) {
+          setError(t('step1.errors.nameRequired')); // Reutilizando mensagem genérica
           return false;
         }
         break;
