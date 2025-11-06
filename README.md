@@ -3,9 +3,31 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Versão:** 1.2.0  
-**Última atualização:** 03 de Novembro de 2025  
+**Versão:** 1.5.1 (Critical Onboarding Fix)  
+**Última atualização:** 06 de Novembro de 2025  
 **Website:** https://atherarun.com
+**Status:** ✅ Sistema funcionando - Onboarding corrigido
+
+---
+
+## 🎯 Últimas Atualizações
+
+### v1.5.1 - Correção Crítica do Onboarding (06/Nov/2025)
+- ✅ **CRÍTICO**: Restaurados campos de Race Goal no Step5
+- ✅ Usuários agora podem gerar planos de treino após onboarding
+- ✅ Adicionadas 16 traduções em 3 idiomas
+- ✅ Sistema completo end-to-end funcional
+- 📄 Ver: [CORRECAO_ONBOARDING_06NOV2025.md](CORRECAO_ONBOARDING_06NOV2025.md)
+
+### v1.4.0 - Multilinguagem Completo (05/Nov/2025)
+- ✅ Sistema i18n completo (pt-BR, en, es)
+- ✅ 85% do sistema traduzido
+- ✅ Onboarding totalmente internacionalizado
+
+### v1.3.0 - Estruturação Avançada (03/Nov/2025)
+- ✅ Perfil atleta v1.3.0 com fisiologia avançada
+- ✅ Sistema de motivação estruturada
+- ✅ Infraestrutura e preferências de treino
 
 ---
 
