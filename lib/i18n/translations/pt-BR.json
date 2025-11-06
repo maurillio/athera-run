@@ -83,7 +83,9 @@
         "invalidEmail": "E-mail inválido",
         "network": "Erro de conexão. Tente novamente.",
         "unknown": "Erro ao criar conta. Tente novamente."
-      }
+      },
+      "orSignUpWith": "ou criar conta com e-mail",
+      "creatingAccount": "Criando conta..."
     }
   },
   "onboarding": {
@@ -149,15 +151,20 @@
           "high": "Alto",
           "veryHigh": "Muito Alto"
         }
-      }
+      },
+      "genderOptions": {
+        "male": "Masculino",
+        "female": "Feminino"
+      },
+      "bmi": "IMC"
     },
     "step2": {
       "title": "Base Esportiva",
       "subtitle": "Sua experiência com corrida e outros esportes",
-      "hasRunBefore": "Você já correu antes?",
+      "hasRunBefore": "Já correu antes?",
       "yes": "Sim",
       "no": "Não",
-      "yearsRunning": "Há quantos anos você corre?",
+      "yearsRunning": "Anos correndo",
       "yearsRunningPlaceholder": "Ex: 2",
       "experienceLevel": "Nível de experiência",
       "experienceLevels": {
@@ -185,6 +192,16 @@
         "yearsRunningRequired": "Anos correndo é obrigatório quando tem experiência",
         "weeklyVolumeRequired": "Volume semanal é obrigatório",
         "weeklyVolumeInvalid": "Volume deve estar entre 0 e 300 km"
+      },
+      "weeklyVolume": "Volume semanal (km)",
+      "longestRun": "Corrida mais longa (km)",
+      "longestRunPlaceholder": "Ex: 21",
+      "otherSports": {
+        "title": "Outros Esportes",
+        "sports": "Esporte",
+        "sportsPlaceholder": "Ex: Natação",
+        "years": "Anos praticando",
+        "yearsPlaceholder": "Ex: 3"
       }
     },
     "step3": {
@@ -261,7 +278,10 @@
         "consistency": "Hábito de treino regular"
       },
       "motivationTitle": "O que mais te motiva?",
-      "selectMultiple": "Selecione todos que se aplicam"
+      "selectMultiple": "Selecione todos que se aplicam",
+      "errors": {
+        "primaryGoalRequired": "Objetivo principal é obrigatório"
+      }
     },
     "step6": {
       "title": "Disponibilidade",
@@ -307,7 +327,10 @@
         "outdoor": "Outdoor",
         "both": "Ambos"
       },
-      "minDaysError": "Selecione pelo menos 2 dias para corrida"
+      "minDaysError": "Selecione pelo menos 2 dias para corrida",
+      "errors": {
+        "trainingDaysRequired": "Selecione pelo menos 3 dias de treino"
+      }
     },
     "step7": {
       "title": "Revisão Final",

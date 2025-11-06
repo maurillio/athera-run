@@ -71,7 +71,7 @@
       "signUp": "Crear cuenta",
       "hasAccount": "¿Ya tienes una cuenta?",
       "signInLink": "Iniciar sesión",
-      "googleSignUp": "Crear cuenta con Google",
+      "googleSignUp": "Registrarse con Google",
       "terms": "Al crear una cuenta, aceptas nuestros",
       "termsLink": "Términos de Servicio",
       "and": "y",
@@ -83,7 +83,9 @@
         "invalidEmail": "Correo inválido",
         "network": "Error de conexión. Inténtalo de nuevo.",
         "unknown": "Error al crear la cuenta. Inténtalo de nuevo."
-      }
+      },
+      "orSignUpWith": "o registrarse con email",
+      "creatingAccount": "Creando cuenta..."
     }
   },
   "onboarding": {
@@ -149,7 +151,12 @@
           "high": "Alto",
           "veryHigh": "Muy Alto"
         }
-      }
+      },
+      "genderOptions": {
+        "male": "Masculino",
+        "female": "Femenino"
+      },
+      "bmi": "IMC"
     },
     "step2": {
       "title": "Base Deportiva",
@@ -157,7 +164,7 @@
       "hasRunBefore": "¿Has corrido antes?",
       "yes": "Sí",
       "no": "No",
-      "yearsRunning": "¿Cuántos años llevas corriendo?",
+      "yearsRunning": "Años corriendo",
       "yearsRunningPlaceholder": "Ej: 2",
       "experienceLevel": "Nivel de experiencia",
       "experienceLevels": {
@@ -185,6 +192,16 @@
         "yearsRunningRequired": "Los años corriendo son obligatorios cuando tienes experiencia",
         "weeklyVolumeRequired": "El volumen semanal es obligatorio",
         "weeklyVolumeInvalid": "El volumen debe estar entre 0 y 300 km"
+      },
+      "weeklyVolume": "Volumen semanal (km)",
+      "longestRun": "Carrera más larga (km)",
+      "longestRunPlaceholder": "Ej: 21",
+      "otherSports": {
+        "title": "Otros Deportes",
+        "sports": "Deporte",
+        "sportsPlaceholder": "Ej: Natación",
+        "years": "Años practicando",
+        "yearsPlaceholder": "Ej: 3"
       }
     },
     "step3": {
@@ -261,7 +278,10 @@
         "consistency": "Hábito de entrenamiento regular"
       },
       "motivationTitle": "¿Qué más te motiva?",
-      "selectMultiple": "Selecciona todos los que apliquen"
+      "selectMultiple": "Selecciona todos los que apliquen",
+      "errors": {
+        "primaryGoalRequired": "El objetivo principal es obligatorio"
+      }
     },
     "step6": {
       "title": "Disponibilidad",
@@ -307,7 +327,10 @@
         "outdoor": "Outdoor",
         "both": "Ambos"
       },
-      "minDaysError": "Selecciona al menos 2 días para correr"
+      "minDaysError": "Selecciona al menos 2 días para correr",
+      "errors": {
+        "trainingDaysRequired": "Seleccione al menos 3 días de entrenamiento"
+      }
     },
     "step7": {
       "title": "Revisión Final",
