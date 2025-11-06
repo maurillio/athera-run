@@ -5,6 +5,13 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { triggerAutoAdjustIfEnabled } from '@/lib/auto-adjust-service';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+export async function OPTIONS(request: Request) {
+  return NextResponse.json({}, { status: 200 });
+}
+
 // GET - Obter relatos do atleta
 export async function GET(request: Request) {
   try {
@@ -14,8 +21,8 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit'));
-    const offset = parseInt(searchParams.get('offset'));
+    const limit = parseInt(searchParams.get('limit') || '10', 10);
+    const offset = parseInt(searchParams.get('offset') || '0', 10);
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
@@ -40,7 +47,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ logs, total });
   } catch (error) {
     console.error('Error fetching training logs:', error);
-    return NextResponse.json({ error: 'Erro ao buscar relatos' }, { status: 500 });
+    return NextResponse.json({ 
+      success: false,
+      error: 'Erro ao buscar relatos',
+      details: error instanceof Error ? error.message : 'Erro desconhecido'
+    }, { status: 500 });
   }
 }
 
@@ -98,6 +109,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ log }, { status: 201 });
   } catch (error) {
     console.error('Error creating training log:', error);
-    return NextResponse.json({ error: 'Erro ao criar relato' }, { status: 500 });
+    return NextResponse.json({ 
+      success: false,
+      error: 'Erro ao criar relato',
+      details: error instanceof Error ? error.message : 'Erro desconhecido'
+    }, { status: 500 });
   }
 }

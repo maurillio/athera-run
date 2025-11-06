@@ -2,11 +2,68 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/db';
+import prisma from '@/lib/db';
 
-export async function POST(req: NextRequest) {
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+export async function OPTIONS(req: NextRequest) {
+  return NextResponse.json({}, { status: 200 });
+}
+
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autenticado' },
+        { status: 401 }
+      );
+    }
+
+    // Check if profile exists
+    const existingProfile = await prisma.athleteProfile.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        customPlan: true
+      }
+    });
+
+    if (existingProfile) {
+      return NextResponse.json({ 
+        profile: {
+          ...existingProfile,
+          hasCustomPlan: existingProfile.hasCustomPlan || false
+        } 
+      }, { status: 200 });
+    }
+
+    return NextResponse.json(
+      { hasProfile: false, message: 'Por favor, complete seu perfil' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('❌ [PROFILE CREATE GET] Erro completo:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    
+    return NextResponse.json(
+      { 
+        error: 'Erro ao buscar perfil',
+        details: error instanceof Error ? error.message : 'Erro desconhecido'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  let session;
+  try {
+    session = await getServerSession(authOptions);
     
     console.log('🔐 [PROFILE CREATE] Session:', {
       userId: session?.user?.id,
@@ -201,7 +258,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ profile }, { status: existingProfile ? 200 : 201 });
+    console.log('✅ [PROFILE CREATE] Perfil criado/atualizado com sucesso:', profile.id);
+
+    return NextResponse.json({ 
+      success: true,
+      profile 
+    }, { status: existingProfile ? 200 : 201 });
 
   } catch (error) {
     console.error('❌ [PROFILE CREATE] Erro completo:', {
@@ -213,6 +275,7 @@ export async function POST(req: NextRequest) {
     
     return NextResponse.json(
       { 
+        success: false,
         error: 'Erro ao criar perfil',
         details: error instanceof Error ? error.message : 'Erro desconhecido',
         timestamp: new Date().toISOString()

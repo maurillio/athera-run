@@ -10,6 +10,11 @@ import {
 } from '@/lib/ai-plan-generator';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+export async function OPTIONS(request: NextRequest) {
+  return NextResponse.json({}, { status: 200 });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,7 +33,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (!user.athleteProfile) {
+      console.error('[AI PLAN] Perfil de atleta não encontrado para usuário:', user.id);
       return NextResponse.json({ 
+        success: false,
         error: 'Perfil de atleta não encontrado',
         message: 'Por favor, complete seu perfil no onboarding antes de gerar o plano.',
         redirectTo: '/onboarding'
@@ -36,6 +43,17 @@ export async function POST(request: NextRequest) {
     }
 
     const profile = user.athleteProfile;
+
+    // Validar dados essenciais do perfil
+    if (!profile.goalDistance) {
+      console.error('[AI PLAN] goalDistance não definido');
+      return NextResponse.json({
+        success: false,
+        error: 'Dados incompletos',
+        message: 'Por favor, defina sua distância objetivo no perfil.',
+        redirectTo: '/onboarding'
+      }, { status: 400 });
+    }
 
     console.log('[AI PLAN] Iniciando geração de plano com IA para:', session.user.email);
 
@@ -235,9 +253,10 @@ export async function POST(request: NextRequest) {
     console.error('[AI PLAN] Error generating plan:', error);
     console.error('[AI PLAN] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json({ 
+      success: false,
       error: 'Erro ao gerar plano com IA', 
       details: error instanceof Error ? error.message : 'Erro desconhecido',
-      stack: error instanceof Error ? error.stack : undefined
+      stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined
     }, { status: 500 });
   }
 }
