@@ -211,7 +211,7 @@ function LoginContent() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-center text-muted-foreground">
-            {t.auth?.login?.noAccount || "Don't have an account?"}{' '}
+            {t('noAccount')}{' '}
             <Link href={`/${locale}/signup`} className="text-orange-600 hover:text-orange-700 font-medium">
               {t('signUpLink')}
             </Link>
@@ -231,7 +231,7 @@ export default function LoginPage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
-          <p className="text-sm text-muted-foreground">{t.loading?.generic || 'Loading...'}</p>
+          <p className="text-sm text-muted-foreground">{t('loading', 'common.loading')}</p>
         </div>
       </div>
     }>
