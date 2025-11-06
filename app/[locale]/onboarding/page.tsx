@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from '@/lib/i18n/hooks';
+import { useTranslations, useLocale } from '@/lib/i18n/hooks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -27,6 +27,7 @@ export default function OnboardingPage() {
   const t = useTranslations('onboarding');
   const tCommon = useTranslations('common');
   const tErrors = useTranslations('errors');
+  const locale = useLocale();
   const { data: session } = useSession();
   const router = useRouter();
   
@@ -173,8 +174,8 @@ export default function OnboardingPage() {
         return;
       }
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect to dashboard with locale
+      router.push(`/${locale}/dashboard`);
     } catch (err) {
       setError(tErrors('network'));
       setLoading(false);

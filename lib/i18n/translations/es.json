@@ -87,6 +87,84 @@
     }
   },
   "onboarding": {
+    "title": "Bienvenido a Athera Run",
+    "subtitle": "Vamos a crear tu plan personalizado en 7 pasos simples",
+    "progress": "Paso {{current}} de {{total}}",
+    "step1": {
+      "title": "Datos Básicos",
+      "subtitle": "Información esencial sobre ti",
+      "name": "Nombre completo",
+      "namePlaceholder": "Ingresa tu nombre",
+      "age": "Edad",
+      "agePlaceholder": "Ej: 30",
+      "gender": "Género",
+      "male": "Masculino",
+      "female": "Femenino",
+      "weight": "Peso (kg)",
+      "weightPlaceholder": "Ej: 70",
+      "height": "Altura (cm)",
+      "heightPlaceholder": "Ej: 175",
+      "restingHeartRate": "Frecuencia Cardíaca en Reposo (bpm)",
+      "restingHeartRatePlaceholder": "Ej: 60",
+      "sleepQuality": "Calidad del Sueño",
+      "sleepQualityPlaceholder": "Selecciona...",
+      "stressLevel": "Nivel de Estrés",
+      "stressLevelPlaceholder": "Selecciona...",
+      "qualityLevels": {
+        "veryPoor": "Muy Malo",
+        "poor": "Malo",
+        "fair": "Regular",
+        "good": "Bueno",
+        "veryGood": "Muy Bueno",
+        "excellent": "Excelente"
+      },
+      "errors": {
+        "nameRequired": "El nombre es obligatorio",
+        "ageRequired": "La edad es obligatoria",
+        "ageInvalid": "La edad debe estar entre 16 y 100 años",
+        "genderRequired": "El género es obligatorio",
+        "weightRequired": "El peso es obligatorio",
+        "weightInvalid": "El peso debe estar entre 30 y 200 kg",
+        "heightRequired": "La altura es obligatoria",
+        "heightInvalid": "La altura debe estar entre 120 y 250 cm"
+      }
+    },
+    "step2": {
+      "title": "Base Deportiva",
+      "subtitle": "Tu experiencia con carrera y otros deportes",
+      "hasRunBefore": "¿Has corrido antes?",
+      "yes": "Sí",
+      "no": "No",
+      "yearsRunning": "¿Cuántos años llevas corriendo?",
+      "yearsRunningPlaceholder": "Ej: 2",
+      "experienceLevel": "Nivel de experiencia",
+      "experienceLevels": {
+        "beginner": "Principiante",
+        "intermediate": "Intermedio",
+        "advanced": "Avanzado"
+      },
+      "currentWeeklyVolume": "Volumen semanal actual (km)",
+      "weeklyVolumePlaceholder": "Ej: 30",
+      "hasOtherSports": "¿Practicas otros deportes?",
+      "whichSports": "¿Cuáles deportes?",
+      "sports": {
+        "cycling": "Ciclismo",
+        "swimming": "Natación",
+        "soccer": "Fútbol",
+        "basketball": "Baloncesto",
+        "tennis": "Tenis",
+        "gym": "Gimnasio/Fuerza",
+        "other": "Otro"
+      },
+      "otherSportYears": "¿Por cuántos años?",
+      "otherSportYearsPlaceholder": "Ej: 5",
+      "errors": {
+        "experienceLevelRequired": "El nivel de experiencia es obligatorio",
+        "yearsRunningRequired": "Los años corriendo son obligatorios cuando tienes experiencia",
+        "weeklyVolumeRequired": "El volumen semanal es obligatorio",
+        "weeklyVolumeInvalid": "El volumen debe estar entre 0 y 300 km"
+      }
+    },
     "step3": {
       "title": "Rendimiento",
       "subtitle": "Tus mejores tiempos (opcional pero recomendado)",
