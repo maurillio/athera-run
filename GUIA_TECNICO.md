@@ -1485,8 +1485,8 @@ vercel list --token=$VERCEL_TOKEN
 ```
 
 #### Projeto Atual
-**Projeto:** `athera-run-v2`
-**URL:** https://vercel.com/maurillio-araujo-oliveiras-projects/athera-run-v2
+**Projeto:** `athera-run`
+**URL:** https://vercel.com/maurillio-araujo-oliveiras-projects/athera-run
 
 #### Exemplo Completo
 ```bash
