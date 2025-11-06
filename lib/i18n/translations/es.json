@@ -314,94 +314,183 @@
     }
   },
   "profile": {
-    "title": "Perfil",
-    "subtitle": "Gestiona tu información y preferencias",
     "tabs": {
-      "basic": "Datos Básicos",
-      "performance": "Rendimiento",
-      "health": "Salud",
-      "goals": "Objetivos",
-      "availability": "Disponibilidad",
-      "preferences": "Preferencias"
+      "basic": "👤 Datos Básicos",
+      "performance": "⚡ Rendimiento",
+      "health": "🏥 Salud",
+      "goals": "🎯 Objetivos",
+      "availability": "📅 Disponibilidad",
+      "preferences": "⚙️ Preferencias"
     },
+    "errors": {
+      "updateFailed": "Error al actualizar perfil. Inténtalo de nuevo.",
+      "dataUnavailable": "Error: Datos del usuario no disponibles"
+    },
+    "saving": "Guardando...",
+    "saveChanges": "💾 Guardar Cambios",
     "basic": {
-      "title": "Datos Personales",
-      "name": "Nombre",
-      "email": "Correo",
-      "gender": "Género",
-      "birthDate": "Fecha de Nacimiento",
       "age": "Edad",
-      "years": "años",
-      "weight": "Peso",
-      "height": "Altura",
-      "bmi": "IMC",
-      "save": "Guardar cambios",
-      "saved": "¡Datos guardados con éxito!",
-      "error": "Error al guardar datos"
+      "gender": "Género",
+      "weight": "Peso (kg)",
+      "height": "Altura (cm)",
+      "restingHR": "FC Reposo (bpm)",
+      "sleepQuality": "Calidad del Sueño",
+      "stressLevel": "Nivel de Estrés",
+      "genderOptions": {
+        "male": "Masculino",
+        "female": "Femenino"
+      }
     },
     "performance": {
-      "title": "Tiempos y Récords",
-      "personalBests": "Mejores Tiempos",
-      "addTime": "Agregar tiempo",
-      "recentRaces": "Carreras Recientes",
+      "title": "Mejores Tiempos",
+      "description": "Tus récords personales en diferentes distancias",
+      "addTimeTitle": "Añadir Tiempo",
+      "addTimeDescription": "Registra tu tiempo de carrera reciente",
+      "selectDistance": "Seleccionar Distancia",
+      "enterTime": "Introduce tu tiempo (HH:MM:SS o MM:SS)",
+      "timePlaceholder": "Ej: 45:30",
+      "addTime": "Añadir Tiempo",
+      "bestVdot": "Mejor VDOT",
       "noTimes": "No hay tiempos registrados",
-      "pace": "Ritmo",
-      "vdot": "VDOT Estimado"
-    },
-    "health": {
-      "title": "Salud y Lesiones",
-      "activeInjuries": "Lesiones Activas",
-      "injuryHistory": "Historial",
-      "medicalClearance": "Autorización Médica",
-      "cleared": "Autorizado para entrenar",
-      "notCleared": "Consulta a un médico",
-      "noActiveInjuries": "Sin lesiones activas"
+      "addFirst": "¡Añade tu primer tiempo arriba!",
+      "distances": {
+        "5k": "5km",
+        "10k": "10km",
+        "21k": "21km",
+        "42k": "42km"
+      }
     },
     "goals": {
-      "title": "Objetivos y Metas",
       "primaryGoal": "Objetivo Principal",
-      "targetRace": "Carrera Objetivo",
-      "targetTime": "Tiempo Objetivo",
-      "raceDate": "Fecha de la Carrera",
-      "daysUntilRace": "días hasta la carrera",
-      "noTargetRace": "No hay carrera objetivo definida",
-      "setTargetRace": "Definir carrera objetivo"
+      "motivation": "Motivación",
+      "motivationPlaceholder": "¿Qué te motiva?",
+      "options": {
+        "finish_first_race": "🏁 Completar primera carrera",
+        "improve_time": "⚡ Mejorar tiempo",
+        "health_fitness": "💪 Salud y bienestar",
+        "weight_loss": "🏃 Perder peso",
+        "challenge": "🏆 Completar desafío específico",
+        "consistency": "📅 Crear rutina consistente"
+      }
     },
     "availability": {
-      "title": "Disponibilidad para Entrenamientos",
-      "daysPerWeek": "Días por Semana",
-      "preferredDays": "Días Preferidos",
-      "preferredTime": "Horario Preferido",
-      "trainingLocation": "Lugar de Entrenamiento",
-      "equipment": "Equipamiento Disponible"
+      "title": "Disponibilidad Semanal",
+      "howItWorks": "Cómo funciona la disponibilidad",
+      "fullControl": "✨ ¡Tienes 100% del control! Solo las actividades que marques se incluirán en tu plan.",
+      "runningRequired": "🏃 Los días de carrera son obligatorios. Las otras actividades son opcionales.",
+      "autoAdjust": "💾 Al guardar, tu plan se ajustará automáticamente desde hoy en adelante, preservando todo el historial.",
+      "runningDaysLabel": "🏃 Días de Carrera *",
+      "runningDaysDesc": "Selecciona los días de la semana en que puedes correr",
+      "daysSelected": "✅ {{count}} día(s) seleccionado(s)",
+      "minRecommended": "(mínimo recomendado: 3)",
+      "complementaryTitle": "Actividades Complementarias (Opcional)",
+      "complementaryDesc": "Marca solo las actividades que realmente haces. Si no marcas, no se incluirán en el plan.",
+      "strength": "💪 Entrenamiento de Fuerza",
+      "swimming": "🏊 Natación",
+      "crossTraining": "🚴 Cross Training (bici, elíptica, etc.)",
+      "yoga": "🧘 Yoga / Pilates",
+      "noDaysSelected": "Ningún día seleccionado",
+      "saveAndApply": "Guardar y Aplicar Ajuste Automático",
+      "savingAndAdjusting": "Guardando y ajustando plan...",
+      "adjustmentApplied": "✅ ¡Ajuste Aplicado!",
+      "workoutsDeleted": "• {{count}} entrenamientos futuros fueron eliminados",
+      "nextStep": "🔄 Próximo paso: Ve a la página \"Plan\" y haz clic en \"Regenerar Plan\" para crear nuevos entrenamientos.",
+      "historyPreserved": "🛡️ Historial Preservado: Todos los entrenamientos que ya completaste se mantendrán. Solo los entrenamientos futuros serán ajustados.",
+      "days": {
+        "0": "Dom",
+        "1": "Lun",
+        "2": "Mar",
+        "3": "Mié",
+        "4": "Jue",
+        "5": "Vie",
+        "6": "Sáb"
+      },
+      "toast": {
+        "updateSuccess": "✅ ¡Disponibilidad actualizada!",
+        "regenerateInfo": "🔄 Haz clic en \"Regenerar Plan\" en la página de perfil para aplicar los cambios.",
+        "adjustError": "Error al ajustar plan: {{error}}",
+        "saveError": "Error al guardar cambios"
+      }
+    },
+    "health": {
+      "title": "Salud y Acondicionamiento",
+      "injuryHistory": {
+        "label": "Historial de Lesiones",
+        "noInjuries": "Sin lesiones",
+        "withInjuries": "Con lesiones",
+        "remove": "Eliminar lesión"
+      },
+      "physiological": {
+        "title": "📊 Datos Fisiológicos",
+        "restingHR": {
+          "label": "FC en Reposo (lpm)",
+          "help": "40-80 normal para atletas",
+          "placeholder": "Ej: 60"
+        },
+        "sleepQuality": {
+          "label": "Calidad del Sueño",
+          "level1": "1-4h (Muy Mala)",
+          "level2": "4-6h (Mala)",
+          "level3": "6-7h (Regular)",
+          "level4": "7-8h (Buena)",
+          "level5": "8h+ (Excelente)"
+        },
+        "stressLevel": {
+          "label": "Nivel de Estrés",
+          "level1": "Muy Bajo",
+          "level2": "Bajo",
+          "level3": "Moderado",
+          "level4": "Alto",
+          "level5": "Muy Alto"
+        }
+      },
+      "medicalClearance": {
+        "label": "Autorización Médica",
+        "yes": "Tengo autorización médica",
+        "no": "No tengo autorización médica",
+        "warning": "⚠️ Recomendamos consulta médica antes de iniciar entrenamientos intensos"
+      }
     },
     "preferences": {
-      "title": "Preferencias",
-      "language": "Idioma",
-      "units": "Unidades",
-      "unitsOptions": {
-        "metric": "Métrico (km)",
-        "imperial": "Imperial (mi)"
+      "title": "Preferencias de Entrenamiento",
+      "location": {
+        "label": "🏃 ¿Dónde Prefieres Entrenar?",
+        "street": "calle",
+        "track": "pista",
+        "treadmill": "cinta",
+        "trail": "sendero"
       },
-      "notifications": "Notificaciones",
-      "notificationsOptions": {
-        "all": "Todas",
-        "important": "Solo importantes",
-        "none": "Ninguna"
+      "environment": {
+        "label": "☀️ Preferencia General",
+        "outdoor": "Al Aire Libre",
+        "indoor": "Interior"
       },
-      "theme": "Tema",
-      "themeOptions": {
-        "light": "Claro",
-        "dark": "Oscuro",
-        "system": "Sistema"
+      "groupTraining": {
+        "label": "👥 Me gusta entrenar en grupo"
       },
-      "privacy": "Privacidad",
-      "profileVisibility": "Visibilidad del Perfil",
-      "profileVisibilityOptions": {
-        "public": "Público",
-        "private": "Privado",
-        "friendsOnly": "Solo amigos"
-      }
+      "motivation": {
+        "title": "Motivación y Objetivos",
+        "primaryLabel": "💪 Motivación Principal",
+        "options": {
+          "health": "Salud y Bienestar",
+          "challenge": "Desafío Personal",
+          "competition": "Competición",
+          "social": "Socialización",
+          "aesthetics": "Estética"
+        }
+      },
+      "goals": {
+        "label": "🎯 Objetivos (opción múltiple)",
+        "options": {
+          "loseWeight": "adelgazar",
+          "compete": "competir",
+          "improveTime": "mejorar tiempo",
+          "increaseDistance": "aumentar distancia",
+          "preventInjuries": "prevenir lesiones",
+          "increaseEndurance": "aumentar resistencia"
+        }
+      },
+      "save": "💾 Guardar Preferencias"
     }
   },
   "dashboard": {
@@ -617,7 +706,14 @@
       "build": "Construcción",
       "peak": "Pico",
       "taper": "Tapering",
-      "race": "Carrera"
+      "race": "Carrera",
+      "baseaerobia": "Base Aeróbica",
+      "base aerobia": "Base Aeróbica",
+      "construcao": "Construcción",
+      "construção": "Construcción",
+      "pico": "Pico",
+      "polimento": "Pulimento",
+      "corrida": "Carrera"
     },
     "workoutTypes": {
       "easy": "Carrera Suave",
@@ -650,7 +746,8 @@
       "friday": "Viernes",
       "saturday": "Sábado",
       "sunday": "Domingo"
-    }
+    },
+    "goalDescription": "Plan personalizado para {{goal}}"
   },
   "perfil": {
     "title": "Mi Perfil",
@@ -1006,105 +1103,5 @@
   "admin": {
     "title": "Panel Admin",
     "subtitle": "Gestionar usuarios y sistema"
-  },
-  "profile": {
-    "tabs": {
-      "basic": "👤 Datos Básicos",
-      "performance": "⚡ Rendimiento",
-      "health": "🏥 Salud",
-      "goals": "🎯 Objetivos",
-      "availability": "📅 Disponibilidad",
-      "preferences": "⚙️ Preferencias"
-    },
-    "errors": {
-      "updateFailed": "Error al actualizar perfil. Inténtalo de nuevo.",
-      "dataUnavailable": "Error: Datos del usuario no disponibles"
-    },
-    "saving": "Guardando...",
-    "saveChanges": "💾 Guardar Cambios",
-    "basic": {
-      "age": "Edad",
-      "gender": "Género",
-      "weight": "Peso (kg)",
-      "height": "Altura (cm)",
-      "restingHR": "FC Reposo (bpm)",
-      "sleepQuality": "Calidad del Sueño",
-      "stressLevel": "Nivel de Estrés",
-      "genderOptions": {
-        "male": "Masculino",
-        "female": "Femenino"
-      }
-    },
-    "performance": {
-      "title": "Mejores Tiempos",
-      "description": "Tus récords personales en diferentes distancias",
-      "addTimeTitle": "Añadir Tiempo",
-      "addTimeDescription": "Registra tu tiempo de carrera reciente",
-      "selectDistance": "Seleccionar Distancia",
-      "enterTime": "Introduce tu tiempo (HH:MM:SS o MM:SS)",
-      "timePlaceholder": "Ej: 45:30",
-      "addTime": "Añadir Tiempo",
-      "bestVdot": "Mejor VDOT",
-      "noTimes": "No hay tiempos registrados",
-      "addFirst": "¡Añade tu primer tiempo arriba!",
-      "distances": {
-        "5k": "5km",
-        "10k": "10km",
-        "21k": "21km",
-        "42k": "42km"
-      }
-    },
-    "goals": {
-      "primaryGoal": "Objetivo Principal",
-      "motivation": "Motivación",
-      "motivationPlaceholder": "¿Qué te motiva?",
-      "options": {
-        "finish_first_race": "🏁 Completar primera carrera",
-        "improve_time": "⚡ Mejorar tiempo",
-        "health_fitness": "💪 Salud y bienestar",
-        "weight_loss": "🏃 Perder peso",
-        "challenge": "🏆 Completar desafío específico",
-        "consistency": "📅 Crear rutina consistente"
-      }
-    },
-    "availability": {
-      "title": "Disponibilidad Semanal",
-      "howItWorks": "Cómo funciona la disponibilidad",
-      "fullControl": "✨ ¡Tienes 100% del control! Solo las actividades que marques se incluirán en tu plan.",
-      "runningRequired": "🏃 Los días de carrera son obligatorios. Las otras actividades son opcionales.",
-      "autoAdjust": "💾 Al guardar, tu plan se ajustará automáticamente desde hoy en adelante, preservando todo el historial.",
-      "runningDaysLabel": "🏃 Días de Carrera *",
-      "runningDaysDesc": "Selecciona los días de la semana en que puedes correr",
-      "daysSelected": "✅ {{count}} día(s) seleccionado(s)",
-      "minRecommended": "(mínimo recomendado: 3)",
-      "complementaryTitle": "Actividades Complementarias (Opcional)",
-      "complementaryDesc": "Marca solo las actividades que realmente haces. Si no marcas, no se incluirán en el plan.",
-      "strength": "💪 Entrenamiento de Fuerza",
-      "swimming": "🏊 Natación",
-      "crossTraining": "🚴 Cross Training (bici, elíptica, etc.)",
-      "yoga": "🧘 Yoga / Pilates",
-      "noDaysSelected": "Ningún día seleccionado",
-      "saveAndApply": "Guardar y Aplicar Ajuste Automático",
-      "savingAndAdjusting": "Guardando y ajustando plan...",
-      "adjustmentApplied": "✅ ¡Ajuste Aplicado!",
-      "workoutsDeleted": "• {{count}} entrenamientos futuros fueron eliminados",
-      "nextStep": "🔄 Próximo paso: Ve a la página \"Plan\" y haz clic en \"Regenerar Plan\" para crear nuevos entrenamientos.",
-      "historyPreserved": "🛡️ Historial Preservado: Todos los entrenamientos que ya completaste se mantendrán. Solo los entrenamientos futuros serán ajustados.",
-      "days": {
-        "0": "Dom",
-        "1": "Lun",
-        "2": "Mar",
-        "3": "Mié",
-        "4": "Jue",
-        "5": "Vie",
-        "6": "Sáb"
-      },
-      "toast": {
-        "updateSuccess": "✅ ¡Disponibilidad actualizada!",
-        "regenerateInfo": "🔄 Haz clic en \"Regenerar Plan\" en la página de perfil para aplicar los cambios.",
-        "adjustError": "Error al ajustar plan: {{error}}",
-        "saveError": "Error al guardar cambios"
-      }
-    }
   }
 }
