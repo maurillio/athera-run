@@ -94,9 +94,22 @@ export default function OnboardingPage() {
     
     switch (step) {
       case 1:
-        // Step1 agora usa 'age' em vez de 'birthDate', e name vem da session
-        if (!formData.gender || !formData.age || !formData.weight || !formData.height) {
-          setError(t('step1.errors.nameRequired')); // Reutilizando mensagem genérica
+        // Step1 valida: age, gender, weight, height
+        // Name vem da session e já está preenchido
+        if (!formData.age) {
+          setError(t('step1.errors.ageRequired'));
+          return false;
+        }
+        if (!formData.gender) {
+          setError(t('step1.errors.genderRequired'));
+          return false;
+        }
+        if (!formData.weight) {
+          setError(t('step1.errors.weightRequired'));
+          return false;
+        }
+        if (!formData.height) {
+          setError(t('step1.errors.heightRequired'));
           return false;
         }
         break;
