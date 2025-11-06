@@ -14,8 +14,8 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const limit = parseInt(searchParams.get('limit'));
+    const offset = parseInt(searchParams.get('offset'));
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
