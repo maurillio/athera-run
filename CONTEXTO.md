@@ -2,15 +2,39 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 06 de Novembro de 2025 21:24 UTC
+**Última atualização:** 06 de Novembro de 2025 21:33 UTC
 **Versão Atual:** 1.5.1 (Critical Onboarding Fix)
 **Status:** 🟢 **SISTEMA FUNCIONANDO - ONBOARDING CORRIGIDO**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 29333cbd
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 26dc0eb8
 
-> **🚀 ÚLTIMA SESSÃO (06/Nov 21h):** Correção crítica do onboarding
+> **🚀 ÚLTIMA SESSÃO (06/Nov 21h-22h):** Correção crítica do onboarding + Documentação completa
 > **📋 STATUS ATUAL:** Onboarding restaurado, Race Goals funcionando, sistema completo
-> **✅ PRODUÇÃO:** Online em https://atherarun.com
+> **✅ PRODUÇÃO:** Online em https://atherarun.com (deploy em progresso)
 > **✅ CORREÇÃO IMPLEMENTADA:** Step5 agora coleta dados de corrida alvo necessários para gerar planos
+> **📚 HISTÓRICO COMPLETO:** Ver [INDICE_HISTORICO.md](docs/archive/INDICE_HISTORICO.md) - 51 documentos organizados
+
+---
+
+## 📚 Documentação e Histórico
+
+### Documentos Principais (Sempre Atualizados)
+- **[CONTEXTO.md](CONTEXTO.md)** (este arquivo) - Contexto completo e status atual
+- **[README.md](README.md)** - Visão geral do projeto
+- **[DOCUMENTACAO.md](DOCUMENTACAO.md)** - Documentação técnica completa
+- **[CHANGELOG.md](CHANGELOG.md)** - Histórico de versões (v1.0.0 → v1.5.1)
+- **[GUIA_TECNICO.md](GUIA_TECNICO.md)** - Guia para desenvolvedores
+- **[ROADMAP.md](ROADMAP.md)** - Planejamento futuro
+
+### Documentação Histórica Completa
+📖 **[ÍNDICE HISTÓRICO COMPLETO](docs/archive/INDICE_HISTORICO.md)**
+- 51 documentos organizados por data e categoria
+- Auditorias, diagnósticos, planos, correções, relatórios
+- Sessões de trabalho desde 05/Nov até 06/Nov/2025
+- Todo o histórico preservado e indexado
+
+### Última Sessão (06/Nov/2025)
+- **[RELATORIO_SESSAO_06NOV2025_FINAL.md](RELATORIO_SESSAO_06NOV2025_FINAL.md)** - Relatório completo da sessão
+- **[CORRECAO_ONBOARDING_06NOV2025.md](CORRECAO_ONBOARDING_06NOV2025.md)** - Correção crítica detalhada
 
 ---
 
@@ -1181,3 +1205,207 @@ Leia CONTEXTO.md
 ```
 
 Pronto! Você terá todo o contexto necessário. 🎯
+
+---
+
+## 📚 HISTÓRICO COMPLETO DE DOCUMENTAÇÃO
+
+> **Ver índice completo organizado:** [docs/archive/INDICE_HISTORICO.md](docs/archive/INDICE_HISTORICO.md)
+
+### Total: 51 Documentos Históricos
+
+#### Por Data
+- **06/Nov/2025**: 11 documentos (correção crítica onboarding)
+- **05/Nov/2025**: 35 documentos (i18n, auditorias, diagnósticos)
+- **Anteriores**: 5 documentos (features, integrações)
+
+#### Por Categoria
+- 🔍 **Auditorias**: 6 docs - Auditorias completas do sistema
+- 🔧 **Correções**: 2 docs - Fixes críticos e urgentes
+- 📊 **Diagnósticos**: 5 docs - Análises detalhadas
+- 📋 **Planos**: 6 docs - Estratégias e planejamento
+- 📈 **Progresso**: 2 docs - Acompanhamento de execução
+- 📝 **Sessões**: 5 docs - Relatórios de trabalho
+- 📄 **Relatórios**: 4 docs - Consolidações gerais
+- 🎯 **Resumos**: 4 docs - Sumários executivos
+- 🔄 **Status**: 2 docs - Estados e atualizações
+- 🔌 **Integrações**: 5 docs - APIs externas (Strava)
+- 🌐 **i18n**: 5 docs - Internacionalização
+- 🚀 **Deploy**: 2 docs - Infraestrutura
+
+### Documentos Principais por Versão
+
+#### v1.5.1 (Atual - 06/Nov/2025)
+- ⭐ **CORRECAO_ONBOARDING_06NOV2025.md** - Correção crítica
+- ⭐ **RELATORIO_SESSAO_06NOV2025_FINAL.md** - Sessão completa
+- RESUMO_CORRECOES_v1.5.1.md
+
+#### v1.5.0 (06/Nov/2025)
+- AUDITORIA_FINAL_05NOV2025_v1.5.1.md
+- RELATORIO_SESSAO_FINAL_06NOV2025.md
+
+#### v1.4.0 (05/Nov/2025)
+- PLANO_CORRECAO_I18N_COMPLETO_05NOV2025.md
+- I18N_PROGRESS_06NOV2025.md
+- RACE_MANAGEMENT_I18N_SUMMARY.md
+
+#### v1.3.0 e anteriores
+- PROGRESSO_FASE_A_05NOV2025.md
+- RESUMO_EXECUTIVO_FASE_A.md
+
+### Sessões de Trabalho Documentadas
+
+**06 de Novembro de 2025:**
+1. **RELATORIO_SESSAO_06NOV2025_FINAL.md** - Correção crítica onboarding (21h-22h)
+2. RELATORIO_SESSAO_06NOV2025_VERCEL_FIX.md - Fix Vercel Dashboard
+3. RELATORIO_SESSAO_FINAL_06NOV2025.md - Sessão final
+4. SESSAO_COMPLETA_06NOV2025.md - Detalhes completos
+5. SESSAO_CORRECAO_06NOV2025.md - Foco em correções
+
+**05 de Novembro de 2025:**
+- SUMARIO_EXECUTIVO_SESSAO_05NOV2025.md - Sumário executivo
+- SUMARIO_FINAL_SESSAO_05NOV2025.md - Sumário final
+- EXECUCAO_COMPLETA_05NOV2025.md - Execução detalhada
+
+### Auditorias Completas
+
+1. **AUDITORIA_COMPLETA_05NOV2025_FINAL.md** - Auditoria final completa
+2. **AUDITORIA_FINAL_05NOV2025_v1.5.1.md** - Auditoria v1.5.1
+3. AUDITORIA_POS_CORRECOES_05NOV2025.md - Pós-correções
+4. AUDITORIA_SISTEMA_05NOV2025.md - Sistema geral
+5. RELATORIO_AUDITORIA_COMPLETA_FINAL.md - Relatório consolidado
+6. RELATORIO_AUDITORIA_I18N_05NOV2025.md - Auditoria i18n específica
+
+### Diagnósticos Técnicos
+
+1. **DIAGNOSTICO_FINAL_COMPLETO_06NOV2025.md** - Diagnóstico final (mais recente)
+2. DIAGNOSTICO_COMPLETO_05NOV2025.md - Completo sistema
+3. DIAGNOSTICO_GERAL_COMPLETO_05NOV2025.md - Geral
+4. DIAGNOSTICO_INTERPOLACAO_DATAS_05NOV2025.md - Interpolação de datas
+5. DIAGNOSTICO_TRADUCAO_DETALHADO.md - Traduções
+
+### Planos de Correção
+
+1. **PLANO_CORRECAO_COMPLETO_06NOV2025.md** - Plano completo (mais recente)
+2. PLANO_CORRECAO_COMPLETA_05NOV2025.md - Correção completa
+3. PLANO_CORRECAO_CRITICO.md - Correções críticas
+4. PLANO_CORRECAO_GERAL_05NOV2025.md - Geral
+5. PLANO_CORRECAO_I18N_COMPLETO_05NOV2025.md - i18n específico
+6. PLANO_EXECUCAO_COMPLETO_05NOV2025.md - Execução
+
+### Integrações e APIs
+
+**Strava API:**
+1. RESPOSTA_STRAVA_API_05NOV2025.md - Análise da API
+2. RESPOSTA_STRAVA_API_DETALHADA_05NOV2025.md - Detalhes
+3. RESPOSTA_STRAVA_API_USO_IA_05NOV2025.md - Uso com IA
+4. STRAVA_API_RESPONSE.md - Resposta da API
+
+**Outras:**
+- INTEGRACAO_PACES.md - Integração de paces
+
+### Features e Funcionalidades
+
+- RACE_MANAGEMENT_I18N_SUMMARY.md - Gerenciamento de corridas i18n
+- I18N_PROGRESS_06NOV2025.md - Progresso multilinguagem
+
+### Infraestrutura e Deploy
+
+1. **CORRECAO_VERCEL_DASHBOARD_06NOV2025.md** - Correção dashboard Vercel
+2. SOLUCAO_VERCEL_ALTERNATIVAS.md - Soluções alternativas
+
+---
+
+## 🔍 Como Encontrar Documentação Específica
+
+### Por Tipo de Informação
+
+**Precisa entender um problema?**
+→ Veja **Diagnósticos** (5 documentos)
+
+**Precisa ver como foi corrigido?**
+→ Veja **Correções** (2 documentos) e **Planos** (6 documentos)
+
+**Precisa revisar uma sessão de trabalho?**
+→ Veja **Sessões** (5 documentos) e **Relatórios** (4 documentos)
+
+**Precisa validar o sistema?**
+→ Veja **Auditorias** (6 documentos)
+
+**Precisa entender i18n/multilinguagem?**
+→ Veja **i18n** (5 documentos)
+
+**Precisa revisar integrações?**
+→ Veja **Integrações** (5 documentos)
+
+### Por Data
+
+**Trabalho mais recente (06/Nov)?**
+→ RELATORIO_SESSAO_06NOV2025_FINAL.md
+→ CORRECAO_ONBOARDING_06NOV2025.md
+
+**Trabalho anterior (05/Nov)?**
+→ Ver seção "05 de Novembro de 2025" no índice
+
+**Histórico completo?**
+→ [docs/archive/INDICE_HISTORICO.md](docs/archive/INDICE_HISTORICO.md)
+
+---
+
+## 📖 Guia de Leitura Recomendado
+
+### Para Novos Desenvolvedores
+
+1. **README.md** - Comece aqui para visão geral
+2. **CONTEXTO.md** (este arquivo) - Entenda o estado atual
+3. **DOCUMENTACAO.md** - Documentação técnica completa
+4. **GUIA_TECNICO.md** - Guia de desenvolvimento
+5. **CHANGELOG.md** - História de mudanças
+
+### Para Entender Problema Específico
+
+1. **docs/archive/INDICE_HISTORICO.md** - Encontre documentos por categoria
+2. **Diagnóstico relevante** - Entenda o problema
+3. **Plano de correção** - Veja estratégia
+4. **Correção implementada** - Veja solução
+5. **Auditoria pós-correção** - Valide resultado
+
+### Para Continuar Desenvolvimento
+
+1. **CONTEXTO.md** - Estado atual (sempre leia primeiro)
+2. **ROADMAP.md** - Próximos passos planejados
+3. **Último RELATORIO_SESSAO** - Última sessão de trabalho
+4. **CHANGELOG.md** - Mudanças recentes
+
+---
+
+## ⚠️ Manutenção da Documentação
+
+### Regras para Manter Histórico
+
+1. **NUNCA DELETE** documentação histórica
+2. **SEMPRE CRIE** novos documentos para novas sessões
+3. **ATUALIZE** índice histórico quando adicionar novo doc
+4. **USE PADRÃO** de nomenclatura: TIPO_DESCRICAO_DDMMMYYYY.md
+5. **REFERENCIE** docs relacionados nos novos documentos
+
+### Documentos Que São Sempre Atualizados
+
+- **CONTEXTO.md** - Sempre reflete estado atual
+- **README.md** - Sempre tem overview atualizado
+- **DOCUMENTACAO.md** - Sempre tem doc técnica atual
+- **CHANGELOG.md** - Sempre tem última versão no topo
+- **ROADMAP.md** - Sempre tem planos futuros
+
+### Documentos Históricos (Não Atualizar)
+
+- Todos os documentos com data (DDMMMYYYY)
+- Mantém snapshot do momento
+- Valiosos para entender decisões passadas
+
+---
+
+**Documentação mantida em:** 06 de Novembro de 2025 21:33 UTC
+**Total de documentos:** 57 (6 principais + 51 históricos)
+**Próxima atualização:** Após próxima sessão de trabalho
+
