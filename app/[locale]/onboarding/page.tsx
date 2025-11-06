@@ -104,11 +104,9 @@ export default function OnboardingPage() {
         // Steps 1-4 validam internamente
         break;
       case 5:
-        // Step5 - Goals (validação necessária)
-        if (!formData.primaryGoal || !formData.targetDistance) {
-          setError(t('step5.errors.primaryGoalRequired'));
-          return false;
-        }
+        // Step5 - Goals
+        // Step5 valida internamente, apenas 'goal' é obrigatório
+        // targetDistance foi movido para outro step
         break;
       case 6:
         // Step6 - Availability (validação necessária)
