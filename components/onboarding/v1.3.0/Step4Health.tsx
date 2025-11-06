@@ -71,8 +71,6 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">{t('title')}</h2>
-        <p className="text-gray-600">{t('subtitle')}</p>
       </div>
 
       <div>

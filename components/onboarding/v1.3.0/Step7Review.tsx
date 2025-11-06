@@ -33,10 +33,6 @@ export default function Step7Review({ data, onNext, onBack }: any) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">{t('title')}</h2>
-        <p className="text-gray-600">{t('subtitle')}</p>
-      </div>
 
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
         <h3 className="font-bold text-lg mb-4 text-blue-900">{t('profileTitle')}</h3>
