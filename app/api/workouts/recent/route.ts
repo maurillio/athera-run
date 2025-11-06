@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const athleteId = searchParams.get('athleteId');
-    const limit = searchParams.get('limit') || '30';
+    const limit = searchParams.get('limit');
 
     if (!athleteId) {
       return NextResponse.json({ error: 'Missing athleteId' }, { status: 400 });

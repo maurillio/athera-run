@@ -19,7 +19,8 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const locale = useLocale();
-  const t = useTranslations();
+  const t = useTranslations('auth.login');
+  const tErrors = useTranslations('errors');
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,16 +41,16 @@ function LoginContent() {
     const errorParam = searchParams?.get('error');
     if (errorParam) {
       const errorMessages: { [key: string]: string } = {
-        'OAuthSignin': t.errors?.oauthSignin || 'OAuth signin error',
-        'OAuthCallback': t.errors?.oauthCallback || 'OAuth callback error',
-        'OAuthCreateAccount': t.errors?.oauthCreateAccount || 'OAuth create account error',
-        'EmailCreateAccount': t.errors?.emailCreateAccount || 'Email create account error',
-        'Callback': t.errors?.callback || 'Callback error',
-        'OAuthAccountNotLinked': t.errors?.accountLinked || 'Account already linked',
-        'EmailSignin': t.errors?.emailSignin || 'Email signin error',
-        'CredentialsSignin': t.errors?.invalidCredentials || 'Invalid credentials',
-        'SessionRequired': t.errors?.sessionRequired || 'Session required',
-        'Default': t.errors?.default || 'An error occurred'
+        'OAuthSignin': tErrors('oauthSignin'),
+        'OAuthCallback': tErrors('oauthCallback'),
+        'OAuthCreateAccount': tErrors('oauthCreateAccount'),
+        'EmailCreateAccount': tErrors('emailCreateAccount'),
+        'Callback': tErrors('callback'),
+        'OAuthAccountNotLinked': tErrors('accountLinked'),
+        'EmailSignin': tErrors('emailSignin'),
+        'CredentialsSignin': tErrors('invalidCredentials'),
+        'SessionRequired': tErrors('sessionRequired'),
+        'Default': tErrors('default')
       };
       setError(errorMessages[errorParam] || errorMessages['Default']);
     }
@@ -72,14 +73,14 @@ function LoginContent() {
       });
 
       if (result?.error) {
-        setError(t.auth?.login?.invalidCredentials || 'Invalid credentials');
+        setError(t('invalidCredentials'));
         setIsLoading(false);
       } else {
         router.push(`/${locale}/dashboard`);
         router.refresh();
       }
     } catch (error) {
-      setError(t.errors?.default || 'An error occurred');
+      setError(tErrors('default'));
       setIsLoading(false);
     }
   };
@@ -95,12 +96,12 @@ function LoginContent() {
 
       if (result?.error) {
         console.error('Google sign in error:', result.error);
-        setError(t.auth?.login?.googleError || 'Google sign in error');
+        setError(t('googleError'));
         setIsGoogleLoading(false);
       }
     } catch (error) {
       console.error('Google sign in exception:', error);
-      setError(t.auth?.login?.googleError || 'Google sign in error');
+      setError(t('googleError'));
       setIsGoogleLoading(false);
     }
   };
@@ -115,10 +116,10 @@ function LoginContent() {
             </div>
           </div>
           <CardTitle className="text-2xl text-center font-bold">
-            {t.auth?.login?.title || 'Welcome back!'}
+            {t('title')}
           </CardTitle>
           <CardDescription className="text-center">
-            {t.auth?.login?.subtitle || 'Sign in to continue your training'}
+            {t('subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -130,13 +131,13 @@ function LoginContent() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{t.auth?.login?.email || 'Email'}</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t.auth?.login?.emailPlaceholder || 'your@email.com'}
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -147,7 +148,7 @@ function LoginContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">{t.auth?.login?.password || 'Password'}</Label>
+              <Label htmlFor="password">{t('password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -171,10 +172,10 @@ function LoginContent() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t.auth?.login?.signingIn || 'Signing in...'}
+                  {t('signingIn')}
                 </>
               ) : (
-                t.auth?.login?.signIn || 'Sign In'
+                t('signIn')
               )}
             </Button>
           </form>
@@ -185,7 +186,7 @@ function LoginContent() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                {t.auth?.login?.orContinueWith || 'or continue with'}
+                {t('orContinueWith')}
               </span>
             </div>
           </div>
@@ -202,7 +203,7 @@ function LoginContent() {
               ) : (
                 <>
                   <Chrome className="mr-2 h-4 w-4" />
-                  {t.auth?.login?.googleSignIn || 'Google'}
+                  {t('googleSignIn')}
                 </>
               )}
             </Button>
@@ -212,7 +213,7 @@ function LoginContent() {
           <div className="text-sm text-center text-muted-foreground">
             {t.auth?.login?.noAccount || "Don't have an account?"}{' '}
             <Link href={`/${locale}/signup`} className="text-orange-600 hover:text-orange-700 font-medium">
-              {t.auth?.login?.signUpLink || 'Sign up'}
+              {t('signUpLink')}
             </Link>
           </div>
         </CardFooter>
@@ -222,7 +223,8 @@ function LoginContent() {
 }
 
 export default function LoginPage() {
-  const t = useTranslations();
+  const t = useTranslations('auth.login');
+  const tErrors = useTranslations('errors');
   
   return (
     <Suspense fallback={
