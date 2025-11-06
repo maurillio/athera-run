@@ -281,7 +281,22 @@
       "selectMultiple": "Select all that apply",
       "errors": {
         "primaryGoalRequired": "Primary goal is required"
-      }
+      },
+      "primaryGoalLabel": "What is your main goal?",
+      "raceGoalTitle": "Target Race Information",
+      "raceGoalDescription": "This information is needed to generate your personalized training plan.",
+      "distanceLabel": "Race Distance",
+      "selectDistance": "Select...",
+      "halfMarathon": "Half Marathon (21km)",
+      "marathon": "Marathon (42km)",
+      "raceDateLabel": "Race Date",
+      "targetTimeLabel": "Target Time",
+      "optional": "Optional",
+      "targetTimePlaceholder": "E.g.: 45:00, 1:30:00, 3:45:00",
+      "targetTimeHelp": "Format: MM:SS or H:MM:SS",
+      "motivationLabel": "What motivates you?",
+      "motivationPlaceholder": "E.g.: I want to run a half marathon with my brother, it's a longtime dream...",
+      "motivationHelp": "The more details, the more personalized your plan will be!"
     },
     "step6": {
       "title": "Availability",
@@ -355,7 +370,8 @@
         "weight_loss": "Lose weight",
         "challenge": "Specific challenge",
         "consistency": "Build routine"
-      }
+      },
+      "submitButton": "Finish and Create My Plan"
     }
   },
   "profile": {

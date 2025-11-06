@@ -281,7 +281,22 @@
       "selectMultiple": "Selecione todos que se aplicam",
       "errors": {
         "primaryGoalRequired": "Objetivo principal é obrigatório"
-      }
+      },
+      "primaryGoalLabel": "Qual é seu objetivo principal?",
+      "raceGoalTitle": "Informações da Corrida Alvo",
+      "raceGoalDescription": "Essas informações são necessárias para gerar seu plano de treino personalizado.",
+      "distanceLabel": "Distância da Prova",
+      "selectDistance": "Selecione...",
+      "halfMarathon": "Meia Maratona (21km)",
+      "marathon": "Maratona (42km)",
+      "raceDateLabel": "Data da Prova",
+      "targetTimeLabel": "Tempo Alvo",
+      "optional": "Opcional",
+      "targetTimePlaceholder": "Ex: 45:00, 1:30:00, 3:45:00",
+      "targetTimeHelp": "Formato: MM:SS ou H:MM:SS",
+      "motivationLabel": "O que te motiva?",
+      "motivationPlaceholder": "Ex: Quero correr uma meia maratona com meu irmão, é um sonho antigo...",
+      "motivationHelp": "Quanto mais detalhes, mais personalizado será seu plano!"
     },
     "step6": {
       "title": "Disponibilidade",
@@ -355,7 +370,8 @@
         "weight_loss": "Perder peso",
         "challenge": "Desafio específico",
         "consistency": "Criar rotina"
-      }
+      },
+      "submitButton": "Finalizar e Criar Meu Plano"
     }
   },
   "profile": {
