@@ -171,18 +171,34 @@ export default function PerfilPage() {
       const response = await fetch('/api/profile/delete', { method: 'DELETE' });
       const data = await response.json();
 
-      if (response.ok) {
-        toast.success(t('actions.deleteProfile.success'));
+      if (response.ok && data.success) {
+        toast.success(t('actions.deleteProfile.success'), {
+          description: data.message,
+          duration: 3000
+        });
+        
+        // Limpar cache local
+        if (typeof window !== 'undefined') {
+          sessionStorage.clear();
+          localStorage.removeItem('athleteProfile');
+        }
+        
+        // Redirecionar para onboarding
+        const redirectPath = data.redirectTo || '/onboarding';
         setTimeout(() => {
-          router.push('/onboarding');
-          router.refresh();
+          window.location.href = redirectPath; // Hard redirect para limpar estado
         }, 1500);
       } else {
-        toast.error(data.error || t('actions.deleteProfile.error'));
+        toast.error(data.error || t('actions.deleteProfile.error'), {
+          description: data.details
+        });
         setDeletingProfile(false);
       }
     } catch (error) {
-      toast.error(t('actions.deleteProfile.error'));
+      console.error('[DELETE PROFILE] Erro:', error);
+      toast.error(t('actions.deleteProfile.error'), {
+        description: error instanceof Error ? error.message : 'Erro desconhecido'
+      });
       setDeletingProfile(false);
     }
   };

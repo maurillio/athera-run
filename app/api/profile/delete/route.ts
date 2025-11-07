@@ -27,75 +27,101 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (!user.athleteProfile) {
-      return NextResponse.json({ error: 'Perfil de atleta não encontrado' }, { status: 404 });
+      return NextResponse.json({ 
+        success: true,
+        message: 'Nenhum perfil encontrado. Redirecionando para onboarding...',
+        redirectTo: '/onboarding'
+      }, { status: 200 });
     }
 
     const athleteId = user.athleteProfile.id;
+    const customPlanId = user.athleteProfile.customPlanId;
 
     console.log(`[DELETE PROFILE] Iniciando exclusão completa do perfil do atleta ${athleteId}`);
 
-    // 1. Deletar CustomWorkouts relacionados aos CustomWeeks do plano
-    if (user.athleteProfile.customPlanId) {
-      const weeks = await prisma.customWeek.findMany({
-        where: { planId: user.athleteProfile.customPlanId },
-        select: { id: true }
-      });
+    // Usar transação para garantir atomicidade
+    const result = await prisma.$transaction(async (tx) => {
+      let deletedRacesCount = 0;
+      let deletedWorkoutsCount = 0;
+      let deletedFeedbackCount = 0;
+      let deletedWeeksCount = 0;
 
-      if (weeks.length > 0) {
-        const weekIds = weeks.map(w => w.id);
-        await prisma.customWorkout.deleteMany({
-          where: { weekId: { in: weekIds } }
+      // 1. Deletar CustomWorkouts relacionados aos CustomWeeks do plano
+      if (customPlanId) {
+        const weeks = await tx.customWeek.findMany({
+          where: { planId: customPlanId },
+          select: { id: true }
         });
-        console.log(`[DELETE PROFILE] Deletados workouts de ${weeks.length} semanas`);
+
+        if (weeks.length > 0) {
+          const weekIds = weeks.map(w => w.id);
+          await tx.customWorkout.deleteMany({
+            where: { weekId: { in: weekIds } }
+          });
+          console.log(`[DELETE PROFILE] Deletados workouts de ${weeks.length} semanas`);
+
+          // 2. Deletar CustomWeeks
+          await tx.customWeek.deleteMany({
+            where: { planId: customPlanId }
+          });
+          deletedWeeksCount = weeks.length;
+          console.log(`[DELETE PROFILE] Deletadas ${weeks.length} semanas do plano`);
+        }
+
+        // 3. Deletar CustomTrainingPlan
+        await tx.customTrainingPlan.delete({
+          where: { id: customPlanId }
+        });
+        console.log(`[DELETE PROFILE] Plano customizado deletado`);
       }
 
-      // 2. Deletar CustomWeeks
-      await prisma.customWeek.deleteMany({
-        where: { planId: user.athleteProfile.customPlanId }
+      // 4. Deletar RaceGoals (corridas cadastradas)
+      const deletedRaces = await tx.raceGoal.deleteMany({
+        where: { athleteId }
       });
-      console.log(`[DELETE PROFILE] Deletadas ${weeks.length} semanas do plano`);
+      deletedRacesCount = deletedRaces.count;
+      console.log(`[DELETE PROFILE] Deletadas ${deletedRaces.count} corridas`);
 
-      // 3. Deletar CustomTrainingPlan
-      await prisma.customTrainingPlan.delete({
-        where: { id: user.athleteProfile.customPlanId }
+      // 5. Deletar CompletedWorkouts (treinos registrados/completados)
+      const deletedWorkouts = await tx.completedWorkout.deleteMany({
+        where: { athleteId }
       });
-      console.log(`[DELETE PROFILE] Plano customizado deletado`);
-    }
+      deletedWorkoutsCount = deletedWorkouts.count;
+      console.log(`[DELETE PROFILE] Deletados ${deletedWorkouts.count} treinos registrados`);
 
-    // 4. Deletar RaceGoals (corridas cadastradas)
-    const deletedRaces = await prisma.raceGoal.deleteMany({
-      where: { athleteId }
-    });
-    console.log(`[DELETE PROFILE] Deletadas ${deletedRaces.count} corridas`);
+      // 6. Deletar AthleteFeedback (feedbacks do atleta)
+      const deletedFeedback = await tx.athleteFeedback.deleteMany({
+        where: { userId: user.id }
+      });
+      deletedFeedbackCount = deletedFeedback.count;
+      console.log(`[DELETE PROFILE] Deletados ${deletedFeedback.count} feedbacks`);
 
-    // 5. Deletar CompletedWorkouts (treinos registrados/completados)
-    const deletedWorkouts = await prisma.completedWorkout.deleteMany({
-      where: { athleteId }
-    });
-    console.log(`[DELETE PROFILE] Deletados ${deletedWorkouts.count} treinos registrados`);
+      // 7. Por último, deletar o AthleteProfile
+      await tx.athleteProfile.delete({
+        where: { id: athleteId }
+      });
+      console.log(`[DELETE PROFILE] Perfil do atleta deletado`);
 
-    // 6. Deletar AthleteFeedback (feedbacks do atleta)
-    const deletedFeedback = await prisma.athleteFeedback.deleteMany({
-      where: { userId: user.id }
+      return {
+        races: deletedRacesCount,
+        workouts: deletedWorkoutsCount,
+        feedback: deletedFeedbackCount,
+        weeks: deletedWeeksCount
+      };
     });
-    console.log(`[DELETE PROFILE] Deletados ${deletedFeedback.count} feedbacks`);
-
-    // 7. Por último, deletar o AthleteProfile
-    await prisma.athleteProfile.delete({
-      where: { id: athleteId }
-    });
-    console.log(`[DELETE PROFILE] Perfil do atleta deletado`);
 
     console.log(`[DELETE PROFILE] ✅ Exclusão completa concluída com sucesso!`);
 
     return NextResponse.json({
       success: true,
       message: 'Perfil excluído com sucesso. Você será redirecionado para criar um novo perfil.',
+      redirectTo: '/onboarding',
       deletedData: {
         profile: true,
-        races: deletedRaces.count,
-        workouts: deletedWorkouts.count,
-        feedback: deletedFeedback.count
+        races: result.races,
+        workouts: result.workouts,
+        feedback: result.feedback,
+        weeks: result.weeks
       }
     });
 
