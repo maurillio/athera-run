@@ -160,15 +160,15 @@ export async function POST(req: NextRequest) {
     } = body;
 
     const profileData = {
-      weight: parseFloat(weight),
-      height: parseFloat(height),
+      weight: parseFloat(weight) || 0,
+      height: parseFloat(height) || 0,
       age: age ? parseInt(age) : null,
       gender: gender || null,
-      runningLevel,
+      runningLevel: runningLevel || 'beginner',
       currentWeeklyKm: currentWeeklyKm ? parseFloat(currentWeeklyKm) : null,
       longestRun: longestRun ? parseFloat(longestRun) : null,
       experienceDescription: experienceDescription || null,
-      goalDistance: goalDistance || null, // Made optional to allow progressive onboarding
+      goalDistance: goalDistance || null, // v1.5.4 - Explicit null handling
       targetRaceDate: targetRaceDate ? new Date(targetRaceDate) : null,
       targetTime: targetTime || null,
       // Sistema flexível de atividades de treino
@@ -198,6 +198,13 @@ export async function POST(req: NextRequest) {
       trainingPreferences: trainingPreferences || null,
       motivationFactors: motivationFactors || null,
     };
+
+    // v1.5.4 - Validate critical fields for plan generation
+    if (!goalDistance || !targetRaceDate) {
+      console.log('⚠️ [PROFILE CREATE] Missing race goal data - profile cannot generate plan');
+      // Allow profile creation but mark as incomplete
+      profileData.hasCustomPlan = false;
+    }
 
     let profile;
 
