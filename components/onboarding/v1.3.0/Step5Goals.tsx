@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
@@ -23,6 +23,25 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   const [multipleGoals, setMultipleGoals] = useState<string[]>(
     data.motivationFactors?.goals || []
   );
+
+  // Auto-save crítico para goalDistance e targetRaceDate
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onUpdate({
+        primaryGoal: goal || undefined,
+        motivation: motivation || undefined,
+        goalDistance: goalDistance || undefined,
+        targetRaceDate: targetRaceDate || undefined,
+        targetTime: targetTime || undefined,
+        motivationFactors: {
+          primary: primaryMotivation || goal,
+          secondary: secondaryMotivations.length > 0 ? secondaryMotivations : undefined,
+          goals: multipleGoals.length > 0 ? multipleGoals : undefined,
+        }
+      });
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [goal, motivation, goalDistance, targetRaceDate, targetTime, primaryMotivation, secondaryMotivations, multipleGoals, onUpdate]);
 
   const goals = [
     { value: 'finish_first_race', label: t('goals.finish_first_race'), desc: t('goalDescriptions.finish_first_race') },

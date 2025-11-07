@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step2SportBackground({ data, onUpdate, onNext, onBack, onPrevious }: any) {
@@ -13,6 +13,21 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
     otherSportsExperience: data.otherSportsExperience || '',
     otherSportsYears: data.otherSportsYears || '',
   });
+
+  // Auto-save com debounce
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onUpdate({
+        hasRunBefore: formData.hasRunBefore,
+        runningYears: formData.runningYears ? parseInt(formData.runningYears) : undefined,
+        currentWeeklyKm: formData.currentWeeklyKm ? parseFloat(formData.currentWeeklyKm) : undefined,
+        longestRun: formData.longestRun ? parseFloat(formData.longestRun) : undefined,
+        otherSportsExperience: formData.otherSportsExperience || undefined,
+        otherSportsYears: formData.otherSportsYears ? parseInt(formData.otherSportsYears) : undefined,
+      });
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [formData, onUpdate]);
 
   const handleNext = () => {
     onUpdate({
