@@ -107,6 +107,131 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
 
   return (
     <div className="space-y-6">
+      {/* 📅 RESUMO VISUAL - SEMPRE VISÍVEL */}
+      <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+          📅 Resumo da Disponibilidade
+        </h3>
+        
+        {/* Dias de Corrida */}
+        <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-2xl">🏃</span>
+            <span className="font-semibold">Dias de Corrida:</span>
+          </div>
+          <div className="flex flex-wrap gap-2 ml-10">
+            {runDays.length > 0 ? (
+              runDays.map((dayIdx: number) => (
+                <span key={dayIdx} className="px-3 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                  {days[dayIdx]}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-500 italic">Nenhum dia selecionado</span>
+            )}
+          </div>
+        </div>
+
+        {/* DIA DO LONGÃO - DESTAQUE ESPECIAL */}
+        {longRunDay !== null && longRunDay !== undefined && (
+          <div className="mb-4 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-300 shadow-sm">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">🏃‍♂️</span>
+              <div>
+                <div className="font-bold text-lg text-amber-900">
+                  Dia do Longão: {days[longRunDay]}
+                </div>
+                <div className="text-sm text-amber-700">
+                  Seu treino mais longo da semana será sempre neste dia
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Outras Atividades */}
+        {(strengthDays.length > 0 || swimmingDays.length > 0 || yogaDays.length > 0 || crossTrainingDays.length > 0) && (
+          <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold mb-3">Outras Atividades:</div>
+            <div className="space-y-2 ml-2">
+              {strengthDays.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">💪</span>
+                  <span className="font-medium">Musculação:</span>
+                  <span>{strengthDays.map((d: number) => days[d]).join(', ')}</span>
+                </div>
+              )}
+              {swimmingDays.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🏊</span>
+                  <span className="font-medium">Natação:</span>
+                  <span>{swimmingDays.map((d: number) => days[d]).join(', ')}</span>
+                </div>
+              )}
+              {yogaDays.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🧘</span>
+                  <span className="font-medium">Yoga:</span>
+                  <span>{yogaDays.map((d: number) => days[d]).join(', ')}</span>
+                </div>
+              )}
+              {crossTrainingDays.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🚴</span>
+                  <span className="font-medium">Cross Training:</span>
+                  <span>{crossTrainingDays.map((d: number) => days[d]).join(', ')}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Infraestrutura Disponível */}
+        <div className="p-4 bg-white rounded-lg shadow-sm">
+          <div className="font-semibold mb-3">Infraestrutura Disponível:</div>
+          <div className="grid grid-cols-3 gap-3">
+            {/* Academia */}
+            <div className={`p-4 rounded-lg text-center border-2 transition-all ${
+              userData.hasGymAccess 
+                ? 'bg-green-50 border-green-400 shadow-md' 
+                : 'bg-gray-50 border-gray-300'
+            }`}>
+              <div className="text-3xl mb-2">💪</div>
+              <div className="font-medium text-sm">Academia</div>
+              <div className="text-xs mt-1 font-semibold">
+                {userData.hasGymAccess ? '✅ Disponível' : '❌ Não disponível'}
+              </div>
+            </div>
+
+            {/* Piscina */}
+            <div className={`p-4 rounded-lg text-center border-2 transition-all ${
+              userData.hasPoolAccess 
+                ? 'bg-blue-50 border-blue-400 shadow-md' 
+                : 'bg-gray-50 border-gray-300'
+            }`}>
+              <div className="text-3xl mb-2">🏊</div>
+              <div className="font-medium text-sm">Piscina</div>
+              <div className="text-xs mt-1 font-semibold">
+                {userData.hasPoolAccess ? '✅ Disponível' : '❌ Não disponível'}
+              </div>
+            </div>
+
+            {/* Pista */}
+            <div className={`p-4 rounded-lg text-center border-2 transition-all ${
+              userData.hasTrackAccess 
+                ? 'bg-purple-50 border-purple-400 shadow-md' 
+                : 'bg-gray-50 border-gray-300'
+            }`}>
+              <div className="text-3xl mb-2">🏃</div>
+              <div className="font-medium text-sm">Pista</div>
+              <div className="text-xs mt-1 font-semibold">
+                {userData.hasTrackAccess ? '✅ Disponível' : '❌ Não disponível'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Alerta Importante */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start gap-3">
