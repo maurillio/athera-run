@@ -2,14 +2,14 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 07 de Novembro de 2025 12:00 UTC
-**Versão Atual:** 1.5.1 (Critical Onboarding Fix)
+**Última atualização:** 07 de Novembro de 2025 12:20 UTC
+**Versão Atual:** 1.5.2 (Onboarding goalDistance Optional)
 **Status:** 🟢 **SISTEMA FUNCIONANDO - BANCO MIGRADO PARA NEON**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** bf132c6e
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 986d892a
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-> **🚀 ÚLTIMA SESSÃO (07/Nov 12h):** Migração completa para Neon Database
-> **📋 STATUS ATUAL:** Banco em produção no Neon, 40-100x mais rápido, alta disponibilidade
+> **🚀 ÚLTIMA CORREÇÃO (07/Nov 12h20):** goalDistance opcional - onboarding funcionando
+> **📋 STATUS ATUAL:** Onboarding completo, perfil criado com sucesso, banco no Neon
 > **✅ PRODUÇÃO:** Online em https://atherarun.com
 > **🌩️ DATABASE:** Neon (ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech)
 > **📚 HISTÓRICO COMPLETO:** Ver [INDICE_HISTORICO.md](docs/archive/INDICE_HISTORICO.md) - 51 documentos organizados
@@ -34,6 +34,7 @@
 - Todo o histórico preservado e indexado
 
 ### Última Sessão (07/Nov/2025)
+- **[CORRECAO_ONBOARDING_07NOV2025.md](CORRECAO_ONBOARDING_07NOV2025.md)** - ✅ goalDistance opcional - correção crítica
 - **[MIGRACAO_NEON_07NOV2025.md](MIGRACAO_NEON_07NOV2025.md)** - Migração completa para Neon Database
 
 ### Sessões Anteriores

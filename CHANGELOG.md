@@ -7,6 +7,40 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.5.2] - 2025-11-07 12:20
+
+### 🔧 CORREÇÃO CRÍTICA - Onboarding goalDistance Opcional
+
+#### Corrigido
+- **[BLOCKER]** Campo `goalDistance` tornador opcional no schema Prisma
+  - **Problema:** Onboarding travava ao tentar criar perfil
+  - **Erro:** `Argument 'goalDistance' is missing` - HTTP 500
+  - **Causa:** Schema exigia campo obrigatório mas onboarding permitia vazio
+  - **Impacto:** 100% novos usuários não conseguiam completar cadastro
+
+#### Modificado
+- `prisma/schema.prisma` - `goalDistance: String?` (opcional)
+- `components/onboarding/v1.3.0/Step5Goals.tsx`
+  - Validação melhorada com avisos amigáveis
+  - Permite continuar sem corrida alvo definida
+- `app/api/profile/create/route.ts`
+  - Tratamento explícito: `goalDistance || null`
+  - Race goal criada apenas se distância E data fornecidos
+
+#### Adicionado
+- Migration `20251107121746_make_goal_distance_optional`
+- Validação: Aviso se distância sem data
+- Validação: Objetivo principal obrigatório
+- Documentação completa: `CORRECAO_ONBOARDING_07NOV2025.md`
+- Suporte para onboarding progressivo (sem corrida definida)
+
+#### Comportamento
+- ✅ **COM corrida alvo:** Perfil + Race Goal criados
+- ✅ **SEM corrida alvo:** Apenas perfil criado (pode adicionar depois)
+- ⚠️  **Distância sem data:** Aviso amigável, usuário confirma
+
+---
+
 ## [1.5.1.1] - 2025-11-07
 
 ### 🌩️ MIGRAÇÃO - Database para Neon
