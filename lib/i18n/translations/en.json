@@ -405,6 +405,23 @@
     "performance": {
       "title": "Best Times",
       "description": "Your personal records at different distances",
+      "experienceTitle": "Running Experience",
+      "runningLevel": "Running Level",
+      "levels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "yearsRunning": "Years Running",
+      "yearsHelp": "How many years have you been running regularly?",
+      "currentWeeklyKm": "Current Weekly Volume (km)",
+      "weeklyKmHelp": "How many km do you currently run per week?",
+      "longestRun": "Longest Run (km)",
+      "longestRunHelp": "What was your longest training run ever?",
+      "otherSports": "Other Sports",
+      "otherSportsPlaceholder": "Ex: Swimming 2x/week, Cycling on weekends",
+      "otherSportsHelp": "Other physical activities you practice",
+      "saveChanges": "Save Changes",
       "addTimeTitle": "Add Time",
       "addTimeDescription": "Record your recent race time",
       "selectDistance": "Select Distance",

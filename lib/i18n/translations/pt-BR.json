@@ -405,6 +405,23 @@
     "performance": {
       "title": "Melhores Tempos",
       "description": "Seus recordes pessoais em diferentes distâncias",
+      "experienceTitle": "Experiência de Corrida",
+      "runningLevel": "Nível de Corrida",
+      "levels": {
+        "beginner": "Iniciante",
+        "intermediate": "Intermediário",
+        "advanced": "Avançado"
+      },
+      "yearsRunning": "Anos Correndo",
+      "yearsHelp": "Há quantos anos você corre regularmente?",
+      "currentWeeklyKm": "Volume Semanal (km)",
+      "weeklyKmHelp": "Quantos km você corre por semana atualmente?",
+      "longestRun": "Longão Mais Longo (km)",
+      "longestRunHelp": "Qual foi o treino mais longo que você já fez?",
+      "otherSports": "Outros Esportes",
+      "otherSportsPlaceholder": "Ex: Natação 2x/semana, Ciclismo aos finais de semana",
+      "otherSportsHelp": "Outras atividades físicas que você pratica",
+      "saveChanges": "Salvar Alterações",
       "addTimeTitle": "Adicionar Tempo",
       "addTimeDescription": "Registre seu tempo recente de corrida",
       "selectDistance": "Selecionar Distância",

@@ -4,19 +4,43 @@ import { useTranslations } from '@/lib/i18n/hooks';
 import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 
 export default function PerformanceTab({ userData, onUpdate }: any) {
-  const t = useTranslations('profile');
+  const t = useTranslations('profile.performance');
+  
+  // Estados de experiência de corrida
+  const [runningLevel, setRunningLevel] = useState(userData.runningLevel || 'beginner');
+  const [runningYears, setRunningYears] = useState(userData.runningYears || 0);
+  const [currentWeeklyKm, setCurrentWeeklyKm] = useState(userData.currentWeeklyKm || 0);
+  const [longestRun, setLongestRun] = useState(userData.longestRun || 0);
+  const [otherSportsExperience, setOtherSportsExperience] = useState(userData.otherSportsExperience || '');
+  
+  // Estados de performance (já existentes)
   const [bestTimes, setBestTimes] = useState(userData.bestTimes || {});
   const [hasChanges, setHasChanges] = useState(false);
 
   const distances = [
-    { value: '5k', label: t('performance.distances.5k'), meters: 5000 },
-    { value: '10k', label: t('performance.distances.10k'), meters: 10000 },
-    { value: '21k', label: t('performance.distances.21k'), meters: 21097 },
-    { value: '42k', label: t('performance.distances.42k'), meters: 42195 },
+    { value: '5k', label: t('distances.5k'), meters: 5000 },
+    { value: '10k', label: t('distances.10k'), meters: 10000 },
+    { value: '21k', label: t('distances.21k'), meters: 21097 },
+    { value: '42k', label: t('distances.42k'), meters: 42195 },
+  ];
+  
+  const levels = [
+    { value: 'beginner', label: t('levels.beginner') },
+    { value: 'intermediate', label: t('levels.intermediate') },
+    { value: 'advanced', label: t('levels.advanced') },
   ];
 
   const handleSave = () => {
-    onUpdate({ bestTimes: Object.keys(bestTimes).length > 0 ? bestTimes : null });
+    onUpdate({ 
+      // Experiência de corrida
+      runningLevel,
+      runningYears: runningYears ? parseInt(runningYears.toString()) : null,
+      currentWeeklyKm: currentWeeklyKm ? parseFloat(currentWeeklyKm.toString()) : null,
+      longestRun: longestRun ? parseFloat(longestRun.toString()) : null,
+      otherSportsExperience: otherSportsExperience || null,
+      // Melhores tempos
+      bestTimes: Object.keys(bestTimes).length > 0 ? bestTimes : null 
+    });
     setHasChanges(false);
   };
 
@@ -30,10 +54,91 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
     t.vdot > max ? t.vdot : max, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* SEÇÃO 1: EXPERIÊNCIA DE CORRIDA */}
+      <div className="border-b pb-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          🏃 {t('experienceTitle')}
+        </h3>
+        
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Nível */}
+          <div>
+            <label className="block text-sm font-medium mb-2">{t('runningLevel')}</label>
+            <select 
+              value={runningLevel}
+              onChange={(e) => { setRunningLevel(e.target.value); setHasChanges(true); }}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+              {levels.map(level => (
+                <option key={level.value} value={level.value}>{level.label}</option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Anos */}
+          <div>
+            <label className="block text-sm font-medium mb-2">{t('yearsRunning')}</label>
+            <input
+              type="number"
+              value={runningYears}
+              onChange={(e) => { setRunningYears(e.target.value); setHasChanges(true); }}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="0"
+              max="50"
+            />
+            <p className="text-xs text-gray-600 mt-1">{t('yearsHelp')}</p>
+          </div>
+          
+          {/* Volume Semanal */}
+          <div>
+            <label className="block text-sm font-medium mb-2">{t('currentWeeklyKm')}</label>
+            <input
+              type="number"
+              value={currentWeeklyKm}
+              onChange={(e) => { setCurrentWeeklyKm(e.target.value); setHasChanges(true); }}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="0"
+              step="0.1"
+            />
+            <p className="text-xs text-gray-600 mt-1">{t('weeklyKmHelp')}</p>
+          </div>
+          
+          {/* Longão */}
+          <div>
+            <label className="block text-sm font-medium mb-2">{t('longestRun')}</label>
+            <input
+              type="number"
+              value={longestRun}
+              onChange={(e) => { setLongestRun(e.target.value); setHasChanges(true); }}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="0"
+              step="0.1"
+            />
+            <p className="text-xs text-gray-600 mt-1">{t('longestRunHelp')}</p>
+          </div>
+        </div>
+        
+        {/* Outros Esportes */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium mb-2">{t('otherSports')}</label>
+          <textarea
+            value={otherSportsExperience}
+            onChange={(e) => { setOtherSportsExperience(e.target.value); setHasChanges(true); }}
+            placeholder={t('otherSportsPlaceholder')}
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            rows={3}
+          />
+          <p className="text-xs text-gray-600 mt-1">{t('otherSportsHelp')}</p>
+        </div>
+      </div>
+
+      {/* SEÇÃO 2: MELHORES TEMPOS */}
       <div>
-        <h3 className="text-lg font-semibold mb-2">{t('performance.title')}</h3>
-        <p className="text-sm text-gray-600">{t('performance.description')}</p>
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          🏆 {t('title')}
+        </h3>
+        <p className="text-sm text-gray-600 mb-4">{t('description')}</p>
       </div>
 
       {Object.keys(bestTimes).length > 0 && (
@@ -71,10 +176,11 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
         </div>
       )}
 
+      {/* Botão Salvar */}
       {hasChanges && (
         <button onClick={handleSave}
-          className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">
-          {t('saveChanges')}
+          className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+          💾 {t('saveChanges')}
         </button>
       )}
     </div>
