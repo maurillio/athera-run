@@ -175,6 +175,36 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
           respeitando suas limitações e maximizando seus resultados!
         </p>
       </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-3 pt-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onBack}
+          disabled={loading}
+          className="flex-1"
+        >
+          <ChevronLeft className="w-4 h-4 mr-2" />
+          {tCommon('previous')}
+        </Button>
+        
+        <Button
+          type="button"
+          onClick={onSubmit}
+          disabled={loading || !hasRequiredData}
+          className="flex-1 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700 text-white"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              {tCommon('processing')}
+            </>
+          ) : (
+            <>✨ {tCommon('finishAndCreatePlan')}</>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

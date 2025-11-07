@@ -159,18 +159,43 @@ export async function POST(req: NextRequest) {
       motivationFactors,
     } = body;
 
+    // Validar campos obrigatórios
+    if (!goalDistance) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Distância da corrida é obrigatória',
+          field: 'goalDistance',
+          timestamp: new Date().toISOString()
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!targetRaceDate) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Data da prova é obrigatória',
+          field: 'targetRaceDate',
+          timestamp: new Date().toISOString()
+        },
+        { status: 400 }
+      );
+    }
+
     const profileData = {
-      weight: parseFloat(weight) || 0,
-      height: parseFloat(height) || 0,
+      weight: parseFloat(weight) || 70, // Default 70kg
+      height: parseFloat(height) || 170, // Default 170cm
       age: age ? parseInt(age) : null,
       gender: gender || null,
       runningLevel: runningLevel || 'beginner',
       currentWeeklyKm: currentWeeklyKm ? parseFloat(currentWeeklyKm) : null,
       longestRun: longestRun ? parseFloat(longestRun) : null,
       experienceDescription: experienceDescription || null,
-      // v1.5.4 - Critical fields validation
-      goalDistance: goalDistance || null,
-      targetRaceDate: targetRaceDate ? new Date(targetRaceDate) : null,
+      // v1.5.4 - Critical fields (REQUIRED)
+      goalDistance: goalDistance,
+      targetRaceDate: new Date(targetRaceDate),
       targetTime: targetTime || null,
       // Sistema flexível de atividades de treino
       trainingActivities: trainingActivities || [],
@@ -198,8 +223,8 @@ export async function POST(req: NextRequest) {
       hasTrackAccess: hasTrackAccess === true || hasTrackAccess === 'true',
       trainingPreferences: trainingPreferences || null,
       motivationFactors: motivationFactors || null,
-      // v1.5.4 - Mark if ready for plan generation
-      hasCustomPlan: !!(goalDistance && targetRaceDate),
+      // v1.5.4 - Mark as ready for plan generation
+      hasCustomPlan: true, // Always true if we got here (validated above)
     };
 
     console.log('🔍 [PROFILE CREATE] Profile data to save:', {

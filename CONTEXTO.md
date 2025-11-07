@@ -2,22 +2,22 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 07 de Novembro de 2025 13:45 UTC
-**Versão Atual:** 1.5.4 (Onboarding Critical Fix - Complete Resolution)
-**Status:** 🟢 **SISTEMA FUNCIONANDO - ONBOARDING 100% OPERACIONAL**
+**Última atualização:** 07 de Novembro de 2025 14:50 UTC
+**Versão Atual:** 1.5.5 (Onboarding Complete Fix + Security)
+**Status:** 🟢 **SISTEMA 100% FUNCIONAL - DADOS SENDO SALVOS**
 **Build:** ✅ Production Ready | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-> **🚨 CORREÇÃO CRÍTICA v1.5.4 (07/Nov 13h45):** 
-> - ✅ Problema do resumo vazio no Step 7 CORRIGIDO
-> - ✅ goalDistance e targetRaceDate agora salvos corretamente
-> - ✅ Botões duplicados removidos
-> - ✅ Validação em múltiplas camadas (UI, Submit, API)
-> - ✅ Logs de debug adicionados para troubleshooting
-> - ✅ Campo longRunDay exibido no resumo
-> - ✅ Suporte a múltiplos formatos de dados de treino
-> - ✅ API com tratamento robusto de valores null
-> - ✅ 100% dos novos usuários podem completar onboarding
+> **🚨 CORREÇÃO CRÍTICA v1.5.5 (07/Nov 14:50):** 
+> - ✅ Dados do onboarding sendo salvos corretamente no banco
+> - ✅ API validando goalDistance e targetRaceDate antes de salvar
+> - ✅ Defaults inteligentes para weight (70kg) e height (170cm)
+> - ✅ Step7Review com resumo completo funcionando
+> - ✅ Botão único "Finalizar e Criar Plano" (removidos duplicatas)
+> - ✅ RaceGoal criada automaticamente após onboarding
+> - ✅ hasCustomPlan = true quando perfil completo
+> - ✅ Redirecionamento para dashboard após sucesso
+> - ✅ GitGuardian alert resolvido (credenciais nunca mais expostas)
 
 > **📋 IMPACTO v1.5.4:** 
 > - Taxa de erro onboarding: 100% → 0%
