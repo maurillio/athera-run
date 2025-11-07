@@ -1,16 +1,27 @@
 'use client';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Check, AlertCircle } from 'lucide-react';
+import { Loader2, Check, AlertCircle, Calendar } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function AvailabilityTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
-  const [runDays, setRunDays] = useState(userData.availableDays?.running || []);
+  
+  // v1.6.0 - Padronização: ler apenas de trainingActivities
+  const [runDays, setRunDays] = useState(
+    userData.trainingActivities || []
+  );
   const [strengthDays, setStrengthDays] = useState(userData.availableDays?.strength || []);
   const [swimmingDays, setSwimmingDays] = useState(userData.availableDays?.swimming || []);
   const [crossTrainingDays, setCrossTrainingDays] = useState(userData.availableDays?.crossTraining || []);
   const [yogaDays, setYogaDays] = useState(userData.availableDays?.yoga || []);
+  
+  // v1.6.0 - Dia do Longão
+  const [longRunDay, setLongRunDay] = useState<number | null>(
+    userData.longRunDay !== undefined && userData.longRunDay !== null 
+      ? userData.longRunDay 
+      : null
+  );
 
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -31,8 +42,19 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
       ? currentDays.filter((d: number) => d !== dayIdx)
       : [...currentDays, dayIdx].sort();
     setter(newDays);
+    
+    // Se removeu o dia do longão, resetar
+    if (longRunDay === dayIdx && !newDays.includes(dayIdx)) {
+      setLongRunDay(null);
+    }
+    
     setHasChanges(true);
     setAdjustmentStatus(null);
+  };
+  
+  const toggleLongRunDay = (dayIdx: number) => {
+    setLongRunDay(dayIdx);
+    setHasChanges(true);
   };
 
   const handleSave = async () => {
@@ -40,15 +62,16 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
     setAdjustmentStatus(null);
 
     try {
-      // Atualizar disponibilidade
+      // Atualizar disponibilidade (v1.6.0 - Apenas trainingActivities)
       await onUpdate({
+        trainingActivities: runDays,
         availableDays: {
-          running: runDays,
           strength: strengthDays.length > 0 ? strengthDays : null,
           swimming: swimmingDays.length > 0 ? swimmingDays : null,
           crossTraining: crossTrainingDays.length > 0 ? crossTrainingDays : null,
           yoga: yogaDays.length > 0 ? yogaDays : null
-        }
+        },
+        longRunDay: longRunDay, // v1.6.0
       });
 
       // Aplicar auto-ajuste no plano
@@ -121,6 +144,52 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
           {t('availability.daysSelected', { count: runDays.length })} {runDays.length < 3 && <span className="text-orange-600">{t('availability.minRecommended')}</span>}
         </p>
       </div>
+
+      {/* v1.6.0 - Dia do Longão */}
+      {runDays.length > 0 && (
+        <div className="border-t pt-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Calendar className="h-6 w-6 text-orange-600" />
+            <div>
+              <h3 className="font-semibold text-lg">{t('availability.longRunDay')}</h3>
+              <p className="text-sm text-gray-600">{t('availability.longRunDayDesc')}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-2">
+            {runDays.map((dayIdx: number) => (
+              <button 
+                key={dayIdx} 
+                onClick={() => toggleLongRunDay(dayIdx)}
+                className={`px-2 py-3 text-sm font-medium rounded-lg transition-all ${
+                  longRunDay === dayIdx
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg ring-2 ring-orange-300'
+                    : 'border-2 border-gray-300 hover:border-orange-400 hover:bg-orange-50'
+                }`}
+              >
+                {days[dayIdx]}
+                {longRunDay === dayIdx && <div className="text-xs mt-1">🏃‍♂️ Longão</div>}
+              </button>
+            ))}
+          </div>
+          
+          {longRunDay !== null && longRunDay !== undefined && (
+            <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <p className="text-sm text-orange-900 font-medium">
+                ✅ Seu treino longo será sempre {days[longRunDay]}
+              </p>
+            </div>
+          )}
+          
+          {!longRunDay && longRunDay !== 0 && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-900">
+                ⚠️ Selecione o dia preferido para o seu treino longo (longão)
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="border-t pt-6">
         <h3 className="font-semibold mb-4 text-lg">{t('availability.complementaryTitle')}</h3>

@@ -491,7 +491,9 @@
         "regenerateInfo": "🔄 Haz clic en \"Regenerar Plan\" en la página de perfil para aplicar los cambios.",
         "adjustError": "Error al ajustar plan: {{error}}",
         "saveError": "Error al guardar cambios"
-      }
+      },
+      "longRunDay": "🏃‍♂️ Día del Rodaje Largo",
+      "longRunDayDesc": "Elige tu día preferido para el rodaje largo"
     },
     "health": {
       "title": "Salud y Acondicionamiento",
