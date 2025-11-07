@@ -62,7 +62,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       return;
     }
     
-    onUpdate({ 
+    const updateData = { 
       primaryGoal: goal, 
       motivation: motivation || undefined,
       // Race goal data - REQUIRED for plan generation (v1.5.4)
@@ -75,7 +75,10 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
         secondary: secondaryMotivations.length > 0 ? secondaryMotivations : undefined,
         goals: multipleGoals.length > 0 ? multipleGoals : undefined,
       }
-    });
+    };
+    
+    console.log('📤 Step5Goals - Sending data:', updateData);
+    onUpdate(updateData);
     onNext();
   };
 
@@ -259,6 +262,16 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Next Button */}
+      <div className="flex justify-end pt-6 border-t">
+        <button
+          onClick={handleNext}
+          className="px-6 py-3 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700 text-white rounded-lg font-semibold transition-all"
+        >
+          {tCommon('next') || 'Próximo'} →
+        </button>
       </div>
     </div>
   );
