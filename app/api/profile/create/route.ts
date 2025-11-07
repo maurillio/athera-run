@@ -191,6 +191,10 @@ export async function POST(req: NextRequest) {
       return value;
     };
 
+    console.log('🧹 [PROFILE CREATE] Cleaning strings - Before:', {
+      gender, runningLevel, experienceDescription
+    });
+
     const profileData = {
       weight: parseFloat(weight) || 70, // Default 70kg
       height: parseFloat(height) || 170, // Default 170cm
@@ -238,7 +242,9 @@ export async function POST(req: NextRequest) {
       goalDistance: profileData.goalDistance,
       targetRaceDate: profileData.targetRaceDate,
       hasCustomPlan: profileData.hasCustomPlan,
-      trainingActivities: profileData.trainingActivities
+      trainingActivities: profileData.trainingActivities,
+      gender: profileData.gender,
+      runningLevel: profileData.runningLevel
     });
 
     let profile;
