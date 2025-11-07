@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step6Availability({ data, onUpdate, onNext, onBack }: any) {
@@ -66,6 +66,35 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
         : [...prev, location]
     );
   };
+
+  // Auto-save com debounce quando os dados mudam
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      const cleanOther = Object.fromEntries(
+        Object.entries(otherActivities).filter(([_, days]: [string, any]) => days && days.length > 0)
+      );
+
+      onUpdate({
+        availableDays: {
+          running: runDays,
+          other: Object.keys(cleanOther).length > 0 ? cleanOther : undefined
+        },
+        hasGymAccess,
+        hasPoolAccess,
+        hasTrackAccess,
+        trainingPreferences: {
+          locations: trainingLocations.length > 0 ? trainingLocations : ['rua'],
+          preferred: preferredLocation,
+          groupTraining,
+          indoorOutdoor,
+        }
+      });
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [
+    runDays, otherActivities, hasGymAccess, hasPoolAccess, hasTrackAccess,
+    trainingLocations, preferredLocation, groupTraining, indoorOutdoor, onUpdate
+  ]);
 
   const handleNext = () => {
     if (runDays.length === 0) return;

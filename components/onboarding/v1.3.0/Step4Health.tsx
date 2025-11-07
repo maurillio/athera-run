@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 
 export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
@@ -50,6 +50,28 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   const removeDetailedInjury = (index: number) => {
     setInjuryDetails(injuryDetails.filter((_, i) => i !== index));
   };
+
+  // Auto-save com debounce quando os dados mudam
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onUpdate({
+        hasInjuryHistory,
+        injuryHistory: hasInjuryHistory && injuries.length > 0 ? injuries : undefined,
+        medicalClearance: doctorCleared,
+        restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
+        sleepQuality,
+        stressLevel,
+        injuryDetails: injuryDetails.length > 0 ? injuryDetails : undefined,
+        injuryRecoveryStatus: hasInjuryHistory && injuries.length > 0 ? injuryRecoveryStatus : undefined,
+        lastInjuryDate: lastInjuryDate || undefined,
+      });
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [
+    hasInjuryHistory, injuries, doctorCleared, restingHeartRate, 
+    sleepQuality, stressLevel, injuryDetails, injuryRecoveryStatus, 
+    lastInjuryDate, onUpdate
+  ]);
 
   const handleNext = () => {
     onUpdate({
