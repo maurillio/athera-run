@@ -55,6 +55,30 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
 
   return (
     <div className="space-y-8">
+      {/* RESUMO RÁPIDO */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+          <p className="text-sm text-blue-700 font-medium">Nível Atual</p>
+          <p className="text-2xl font-bold text-blue-900 mt-1">
+            {levels.find(l => l.value === runningLevel)?.label || 'Não definido'}
+          </p>
+        </div>
+        
+        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+          <p className="text-sm text-green-700 font-medium">Tempos Salvos</p>
+          <p className="text-2xl font-bold text-green-900 mt-1">
+            {Object.keys(bestTimes).length}
+          </p>
+        </div>
+        
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
+          <p className="text-sm text-purple-700 font-medium">Melhor VDOT</p>
+          <p className="text-2xl font-bold text-purple-900 mt-1">
+            {bestVDOT > 0 ? bestVDOT : 'N/A'}
+          </p>
+        </div>
+      </div>
+      
       {/* SEÇÃO 1: EXPERIÊNCIA DE CORRIDA */}
       <div className="border-b pb-6">
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">

@@ -491,7 +491,9 @@
         "regenerateInfo": "🔄 Click \"Regenerate Plan\" on the profile page to apply changes.",
         "adjustError": "Error adjusting plan: {{error}}",
         "saveError": "Error saving changes"
-      }
+      },
+      "longRunDay": "🏃‍♂️ Long Run Day",
+      "longRunDayDesc": "Choose your preferred day for the long run"
     },
     "health": {
       "title": "Health and Conditioning",

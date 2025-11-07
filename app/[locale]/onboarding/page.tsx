@@ -188,9 +188,8 @@ export default function OnboardingPage() {
         currentWeeklyKm: formData.weeklyVolume, // Mapear weeklyVolume → currentWeeklyKm
         longestRun: formData.longestRun,
         preferredPace: formData.preferredPace,
-        otherSportsExperience: Array.isArray(formData.otherSports) 
-          ? (formData.otherSports.length > 0 ? formData.otherSports.join(', ') : null)
-          : (formData.otherSports || null), // Converter array para string ou null
+        otherSportsExperience: formData.otherSportsExperience || null, // Sempre string ou null
+        otherSportsYears: formData.otherSportsYears || null,
         
         // Performance (Step 3)
         bestTimes: (formData.personalBests && Object.keys(formData.personalBests).length > 0) 

@@ -491,7 +491,9 @@
         "regenerateInfo": "🔄 Clique em \"Regenerar Plano\" na página do perfil para aplicar as mudanças.",
         "adjustError": "Erro ao ajustar plano: {{error}}",
         "saveError": "Erro ao salvar alterações"
-      }
+      },
+      "longRunDay": "🏃‍♂️ Dia do Longão",
+      "longRunDayDesc": "Escolha o dia preferido para o seu treino longo (longão)"
     },
     "health": {
       "title": "Saúde e Condicionamento",

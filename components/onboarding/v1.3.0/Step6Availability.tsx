@@ -80,8 +80,9 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
       );
 
       onUpdate({
+        // v1.6.0 - Padronização: usar apenas trainingActivities
+        trainingActivities: runDays,
         availableDays: {
-          running: runDays,
           other: Object.keys(cleanOther).length > 0 ? cleanOther : undefined
         },
         longRunDay: longRunDay, // v1.6.0
@@ -110,8 +111,9 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     );
 
     onUpdate({
+      // v1.6.0 - Padronização: usar apenas trainingActivities
+      trainingActivities: runDays,
       availableDays: {
-        running: runDays,
         other: Object.keys(cleanOther).length > 0 ? cleanOther : undefined
       },
       // v1.6.0 - Dia do Longão

@@ -44,18 +44,50 @@ export async function POST(request: NextRequest) {
 
     const profile = user.athleteProfile;
 
-    // Validar dados essenciais do perfil
+    // v1.6.0 - Validação completa de dados essenciais do perfil
+    const missingFields: string[] = [];
+    
     if (!profile.goalDistance) {
-      console.error('[AI PLAN] goalDistance não definido');
+      missingFields.push('goalDistance (distância objetivo)');
+    }
+    
+    if (!profile.targetRaceDate) {
+      missingFields.push('targetRaceDate (data da prova)');
+    }
+    
+    if (!profile.runningLevel) {
+      missingFields.push('runningLevel (nível de corrida)');
+    }
+    
+    // Validar trainingActivities
+    const activities = (profile.trainingActivities as any) || [];
+    const hasRunningDays = Array.isArray(activities) && activities.length > 0;
+    
+    if (!hasRunningDays) {
+      missingFields.push('trainingActivities (dias disponíveis para treino)');
+    }
+    
+    if (missingFields.length > 0) {
+      console.error('[AI PLAN] Dados incompletos no perfil:', missingFields);
       return NextResponse.json({
         success: false,
-        error: 'Dados incompletos',
-        message: 'Por favor, defina sua distância objetivo no perfil.',
-        redirectTo: '/onboarding'
+        error: 'Dados incompletos no perfil',
+        message: `Por favor, complete os seguintes campos no perfil: ${missingFields.join(', ')}`,
+        missingFields,
+        redirectTo: '/perfil'
       }, { status: 400 });
+    }
+    
+    // Recomendar longRunDay se não configurado
+    if (profile.longRunDay === null || profile.longRunDay === undefined) {
+      console.warn('⚠️ [AI PLAN] longRunDay não configurado. Usando heurística (último dia disponível)');
+      // Usar último dia disponível como padrão (geralmente final de semana)
+      profile.longRunDay = Math.max(...activities);
     }
 
     console.log('[AI PLAN] Iniciando geração de plano com IA para:', session.user.email);
+    console.log('[AI PLAN] Dias de treino:', activities);
+    console.log('[AI PLAN] Dia do longão:', profile.longRunDay);
 
     // Buscar corridas cadastradas (RaceGoals)
     const raceGoals = await prisma.raceGoal.findMany({
@@ -83,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Detectar acesso a piscina baseado nas atividades configuradas
-    const activities = (profile.trainingActivities as any) || [];
+    // (reutilizando a variável activities já definida na validação)
     const hasPoolAccess = activities.some((a: any) =>
       a.id === 'swimming' || a.id === 'natação' || a.id === 'natacao'
     );
