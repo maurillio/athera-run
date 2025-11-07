@@ -7,6 +7,48 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.5.3] - 2025-11-07 12:40
+
+### 🚨 CORREÇÃO CRÍTICA - Onboarding + Segurança Database
+
+#### Fixed
+- **[BLOCKER]** Onboarding completamente travado - `Argument 'goalDistance' is missing`
+  - Problema: `CustomTrainingPlan.goalDistance` obrigatório mas Step5 permitia vazio
+  - Root cause: Inconsistência schema (AthleteProfile opcional, CustomTrainingPlan obrigatório)
+  - Solução: Tornar `goalDistance` e `targetRaceDate` opcionais em `CustomTrainingPlan`
+  - Migration: `20251107_make_training_plan_fields_optional_v1_5_3`
+
+#### Security
+- **[CRITICAL]** Exposição de credenciais detectada por GitGuardian
+  - Credenciais PostgreSQL expostas no histórico Git
+  - Atualizado `.gitignore` com proteção robusta de segredos
+  - Migrado banco para Neon Database (serverless PostgreSQL)
+  - Credenciais antigas revogadas
+
+#### Changed
+- **Database Migration:** PostgreSQL self-hosted → Neon Database
+  - Nova conexão: `ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech`
+  - Região: us-east-1 (mesmo que Vercel - menor latência)
+  - SSL obrigatório + channel binding + connection pooling
+  - Backups automáticos point-in-time
+
+#### Schema Changes
+```prisma
+model CustomTrainingPlan {
+- goalDistance   String    // Era obrigatório
++ goalDistance   String?   // Agora opcional
+- targetRaceDate DateTime  // Era obrigatório  
++ targetRaceDate DateTime? // Agora opcional
+}
+```
+
+#### Documentation
+- Criado `CORRECAO_ONBOARDING_CRITICA_V1_5_3.md` - análise profunda
+- Atualizado `MIGRACAO_NEON_07NOV2025.md` - detalhes migração
+- Documentado histórico: v1.3.0 (funcionava) → v1.4.0 (quebrou) → v1.5.3 (corrigido)
+
+---
+
 ## [1.5.2] - 2025-11-07 12:20
 
 ### 🔧 CORREÇÃO CRÍTICA - Onboarding goalDistance Opcional

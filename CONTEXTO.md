@@ -2,17 +2,29 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 07 de Novembro de 2025 12:20 UTC
-**Versão Atual:** 1.5.2 (Onboarding goalDistance Optional)
-**Status:** 🟢 **SISTEMA FUNCIONANDO - BANCO MIGRADO PARA NEON**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Commit:** 986d892a
+**Última atualização:** 07 de Novembro de 2025 12:40 UTC
+**Versão Atual:** 1.5.3 (Onboarding + Security Fix)
+**Status:** 🟢 **SISTEMA FUNCIONANDO - BANCO NEON - ONBOARDING CORRIGIDO**
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-> **🚀 ÚLTIMA CORREÇÃO (07/Nov 12h20):** goalDistance opcional - onboarding funcionando
-> **📋 STATUS ATUAL:** Onboarding completo, perfil criado com sucesso, banco no Neon
+> **🚨 ÚLTIMA CORREÇÃO CRÍTICA (07/Nov 12h40):** 
+> - ✅ goalDistance e targetRaceDate opcionais em CustomTrainingPlan
+> - ✅ Onboarding desbloqueado - usuários podem completar sem corrida
+> - ✅ Credenciais protegidas - .gitignore robusto implementado
+> - ✅ Database migrado para Neon com SSL + backups automáticos
+
+> **📋 STATUS ATUAL:** 
+> - Onboarding funcional com/sem corrida alvo
+> - Perfil criado com sucesso
+> - Segurança aprimorada (GitGuardian resolvido)
+> - Migration v1.5.3 pronta para deploy
+
 > **✅ PRODUÇÃO:** Online em https://atherarun.com
 > **🌩️ DATABASE:** Neon (ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech)
-> **📚 HISTÓRICO COMPLETO:** Ver [INDICE_HISTORICO.md](docs/archive/INDICE_HISTORICO.md) - 51 documentos organizados
+> **📚 DOCUMENTAÇÃO:** [CORRECAO_ONBOARDING_CRITICA_V1_5_3.md](./CORRECAO_ONBOARDING_CRITICA_V1_5_3.md)
+
+
 
 ---
 
