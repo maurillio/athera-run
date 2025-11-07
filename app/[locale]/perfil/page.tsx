@@ -176,7 +176,8 @@ export default function PerfilPage() {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        cache: 'no-store' // Forçar sem cache
       });
       
       console.log('[FRONTEND] 📥 Response status:', response.status, response.statusText);
@@ -195,24 +196,24 @@ export default function PerfilPage() {
         // Limpar TODOS os caches
         console.log('[FRONTEND] 🧹 Limpando caches...');
         if (typeof window !== 'undefined') {
+          // Limpar storages
           sessionStorage.clear();
-          localStorage.clear(); // Limpar tudo, não só athleteProfile
+          localStorage.clear();
           
-          // Limpar cookies se necessário
-          document.cookie.split(";").forEach((c) => {
-            document.cookie = c
-              .replace(/^ +/, "")
-              .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+          // Limpar cookies relacionados ao atleta
+          const cookiesToClear = ['athleteProfile', 'onboardingData', 'planData'];
+          cookiesToClear.forEach(name => {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
           });
         }
         
         console.log('[FRONTEND] 🔄 Redirecionando para:', data.redirectTo);
         
-        // Redirecionar para onboarding
+        // Redirecionar para onboarding (hard redirect)
         const redirectPath = data.redirectTo || '/onboarding';
         setTimeout(() => {
           console.log('[FRONTEND] 🎯 Executando redirect...');
-          window.location.href = redirectPath; // Hard redirect para limpar estado
+          window.location.replace(redirectPath); // Use replace em vez de href
         }, 1500);
       } else {
         console.error('[FRONTEND] ❌ Erro na resposta:', data);
