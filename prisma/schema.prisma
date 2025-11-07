@@ -232,7 +232,7 @@ model AthleteProfile {
   longestRun            Float?
   experienceDescription String?
   experienceAnalysis    String?
-  goalDistance          String
+  goalDistance          String?
   targetRaceDate        DateTime?
   targetTime            String?
   currentVDOT           Float?

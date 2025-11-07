@@ -168,7 +168,7 @@ export async function POST(req: NextRequest) {
       currentWeeklyKm: currentWeeklyKm ? parseFloat(currentWeeklyKm) : null,
       longestRun: longestRun ? parseFloat(longestRun) : null,
       experienceDescription: experienceDescription || null,
-      goalDistance,
+      goalDistance: goalDistance || null, // Made optional to allow progressive onboarding
       targetRaceDate: targetRaceDate ? new Date(targetRaceDate) : null,
       targetTime: targetTime || null,
       // Sistema flexível de atividades de treino
