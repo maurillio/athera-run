@@ -10,11 +10,11 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-FASE 1: Correções Críticas     [X] 3/5  (12-14h) ████████████░░ 60%
+FASE 1: Correções Críticas     [X] 4/5  (12-14h) ████████████████░ 80%
 FASE 2: Geração de Planos       [ ] 0/3  (4-6h)
 FASE 3: Testes e Validação      [ ] 0/3  (6-8h)
 
-TOTAL: [X] 3/11 sprints completados (27%)
+TOTAL: [X] 4/11 sprints completados (36%)
 ```
 
 ---
@@ -106,34 +106,36 @@ TOTAL: [X] 3/11 sprints completados (27%)
 
 ---
 
-### Sprint 1.4: PreferencesTab com Idioma ⏳ PRÓXIMO
-**Status:** [ ] AGUARDANDO Sprint 1.3 ✅  
+### Sprint 1.4: PreferencesTab com Idioma ✅ CONCLUÍDO
+**Status:** [X] CONCLUÍDO  
 **Tempo:** 2 horas  
 **Prioridade:** 🟠 ALTA
 
 **Checklist:**
-- [ ] Backup do PreferencesTab.tsx
-- [ ] Adicionar estado locale
-- [ ] Adicionar select de idioma (pt-BR, en, es)
-- [ ] Adicionar select de unidades (metric/imperial)
-- [ ] Criar API /api/user/preferences
-- [ ] Implementar atualização de User.locale
-- [ ] Redirecionar para novo locale
-- [ ] Build passa
-- [ ] Testar mudança de idioma
-- [ ] Verificar que interface muda
-- [ ] Testar persistência
-- [ ] Commit: "feat(profile): add language selection in PreferencesTab"
-- [ ] Push para main
+- [X] Backup do PreferencesTab.tsx
+- [X] Adicionar estado locale
+- [X] Adicionar select de idioma (pt-BR, en, es)
+- [X] Adicionar select de unidades (metric/imperial)
+- [X] Criar API /api/user/preferences
+- [X] Implementar atualização de User.locale
+- [X] Redirecionar para novo locale
+- [X] Build passa
+- [X] Testar mudança de idioma
+- [X] Verificar que interface muda
+- [X] Testar persistência
+- [X] Commit: "feat(profile): add language selection in PreferencesTab"
+- [X] Push para main
 
 **Arquivos modificados:**
 - `/components/profile/v1.3.0/PreferencesTab.tsx`
 - `/app/api/user/preferences/route.ts` (NOVO)
 
+**Resultado:** ✅ Usuário pode mudar idioma e unidades!
+
 ---
 
-### Sprint 1.5: Step7Review Completo
-**Status:** [ ] AGUARDANDO Sprint 1.4  
+### Sprint 1.5: Step7Review Completo ⏳ PRÓXIMO - ÚLTIMO DA FASE 1!
+**Status:** [ ] AGUARDANDO Sprint 1.4 ✅  
 **Tempo:** 2 horas  
 **Prioridade:** 🟠 ALTA
 
@@ -321,15 +323,16 @@ TOTAL: [X] 3/11 sprints completados (27%)
 ## 🔄 SESSÕES DE TRABALHO
 
 ### Sessão 1 - 07/Nov/2025 16:25 UTC
-**Status:** ✅ SPRINTS 1.1, 1.2, 1.3 CONCLUÍDOS  
+**Status:** ✅ SPRINTS 1.1, 1.2, 1.3, 1.4 CONCLUÍDOS  
 **Objetivos:** 
 - Sprint 1.1 - PerformanceTab Completo ✅
 - Sprint 1.2 - longRunDay no Onboarding ✅
 - Sprint 1.3 - AvailabilityTab Melhorado ✅
-**Progresso:** 3/11 sprints (27%)
-**Commits:** 824c1c51, 1c45fac9, c79d3d9e
-**Duração:** ~1.5 horas
-**Próximo:** Sprint 1.4 - PreferencesTab com Idioma
+- Sprint 1.4 - PreferencesTab com Idioma ✅
+**Progresso:** 4/11 sprints (36%) - FASE 1: 80%
+**Commits:** 824c1c51, 1c45fac9, c79d3d9e, 668aee44
+**Duração:** ~2 horas
+**Próximo:** Sprint 1.5 - Step7Review (ÚLTIMO DA FASE 1!)
 
 ---
 
@@ -362,6 +365,6 @@ TOTAL: [X] 3/11 sprints completados (27%)
 
 ---
 
-**Última atualização:** 07/Nov/2025 17:35 UTC  
-**Próxima ação:** Sprint 1.4 - PreferencesTab com Idioma
-**Status:** 3/11 sprints concluídos (27%) - FASE 1 em progresso (60%)
+**Última atualização:** 07/Nov/2025 17:50 UTC  
+**Próxima ação:** Sprint 1.5 - Step7Review Completo (ÚLTIMO DA FASE 1!)
+**Status:** 4/11 sprints concluídos (36%) - FASE 1 em progresso (80%)
