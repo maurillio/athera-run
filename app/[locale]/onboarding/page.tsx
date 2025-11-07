@@ -150,9 +150,20 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
+      // Debug: Log formData completo
+      console.log('🔍 [ONBOARDING] formData completo:', formData);
+      console.log('🔍 [ONBOARDING] goalDistance:', formData.goalDistance);
+      console.log('🔍 [ONBOARDING] targetRaceDate:', formData.targetRaceDate);
+      
       // Validar dados críticos antes de submeter
       if (!formData.goalDistance || !formData.targetRaceDate) {
-        setError('Por favor, volte ao Step 5 e preencha a distância e data da prova.');
+        const missingFields = [];
+        if (!formData.goalDistance) missingFields.push('Distância da corrida');
+        if (!formData.targetRaceDate) missingFields.push('Data da prova');
+        
+        const errorMsg = `Dados incompletos no Step 5. Faltam: ${missingFields.join(', ')}. Por favor, volte e preencha esses campos obrigatórios.`;
+        console.error('❌ [ONBOARDING] Validação falhou:', errorMsg);
+        setError(errorMsg);
         setLoading(false);
         return;
       }
