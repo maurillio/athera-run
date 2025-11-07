@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 import { useTranslations } from '@/lib/i18n/hooks';
 
@@ -30,6 +30,16 @@ export default function Step3Performance({ data, onUpdate, onNext, onBack }: any
 
   const bestVDOT = Object.values(bestTimes).reduce((max: number, t: any) => 
     t.vdot > max ? t.vdot : max, 0);
+
+  // Auto-save com debounce quando os dados mudam
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onUpdate({ 
+        bestTimes: Object.keys(bestTimes).length > 0 ? bestTimes : undefined 
+      });
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [bestTimes, onUpdate]);
 
   const handleNext = () => {
     onUpdate({ bestTimes: Object.keys(bestTimes).length > 0 ? bestTimes : undefined });
