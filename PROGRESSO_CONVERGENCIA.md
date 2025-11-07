@@ -19,9 +19,9 @@ Alcançar **100% de convergência** entre:
 ## 📈 PROGRESSO GERAL
 
 ```
-████░░░░░░░░░░░░░░░░ 9% (1/11 sprints)
+████████░░░░░░░░░░░░ 18% (2/11 sprints)
 
-FASE 1: ██░░░░░░░░ 20% (1/5)  ⏳ EM PROGRESSO
+FASE 1: ████████░░ 40% (2/5)  ⏳ EM PROGRESSO
 FASE 2: ░░░░░░░░░░  0% (0/3)  ⏰ AGUARDANDO
 FASE 3: ░░░░░░░░░░  0% (0/3)  ⏰ AGUARDANDO
 ```
@@ -41,37 +41,50 @@ FASE 3: ░░░░░░░░░░  0% (0/3)  ⏰ AGUARDANDO
 - ✅ Build passou com sucesso
 - ✅ PerformanceTab mostra 100% dos dados
 
+### ✅ Sprint 1.2: Coletar longRunDay no Onboarding
+**Data:** 07/Nov/2025 17:15 UTC  
+**Commit:** 1c45fac9  
+**Tempo:** 20 minutos  
+
+**Resultado:**
+- ✅ Campo select adicionado em Step6
+- ✅ Só mostra dias disponíveis
+- ✅ Auto-save funcionando
+- ✅ Traduções completas
+- ✅ longRunDay agora coletado!
+
 ---
 
 ## ⏳ SPRINT ATUAL
 
-### Sprint 1.2: Coletar longRunDay no Onboarding
+### Sprint 1.3: AvailabilityTab Melhorado
 **Início:** Aguardando início  
-**Tempo Estimado:** 2 horas  
+**Tempo Estimado:** 3 horas  
 **Tempo Decorrido:** 0 min  
 
-**Status:** ⏰ AGUARDANDO PRÓXIMA SESSÃO
+**Status:** ⏰ INICIANDO AGORA
 
 **Próximas ações:**
-1. Backup do Step6Availability.tsx
-2. Adicionar estado longRunDay
-3. Adicionar campo select
-4. Salvar no banco
+1. Backup do AvailabilityTab.tsx
+2. Adicionar resumo visual no topo
+3. Mostrar dias claramente
+4. Mostrar dia do longão
+5. Adicionar cards de infraestrutura
 
 ---
 
 ## 📊 ESTATÍSTICAS
 
-### Arquivos Modificados: 4
-### Commits: 2
-### Builds: 1 de 1 ✅
+### Arquivos Modificados: 8
+### Commits: 4
+### Builds: 2 de 2 ✅
 ### Testes: Aprovado ✅
 
 ---
 
 ## 🐛 PROBLEMAS ENCONTRADOS
 
-*Nenhum problema encontrado - Sprint 1.1 executado sem issues*
+*Nenhum problema encontrado - Execução perfeita até agora!*
 
 ---
 
