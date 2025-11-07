@@ -10,6 +10,15 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
   const getSummary = () => {
     const items = [];
     
+    console.log('📊 Step7Review - data received:', {
+      goalDistance: data.goalDistance,
+      targetRaceDate: data.targetRaceDate,
+      primaryGoal: data.primaryGoal,
+      age: data.age,
+      weight: data.weight,
+      allData: data
+    });
+    
     // Dados básicos
     if (data.age) items.push(`${data.age} anos`);
     if (data.gender) items.push(data.gender === 'male' ? 'Masculino' : 'Feminino');
@@ -62,9 +71,20 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       items.push(`⏱️ Tempo alvo: ${data.targetTime}`);
     }
     
-    // Disponibilidade
-    if (data.availableDays?.running && data.availableDays.running.length > 0) {
-      items.push(`${data.availableDays.running.length} dias de treino por semana`);
+    // Disponibilidade - verificar múltiplos formatos
+    const trainingDaysCount = 
+      data.availableDays?.running?.length || 
+      data.trainingDays?.length || 
+      (data.trainingActivities?.length > 0 ? data.trainingActivities.length : 0);
+      
+    if (trainingDaysCount > 0) {
+      items.push(`${trainingDaysCount} dias de treino por semana`);
+    }
+    
+    // Dia do longão
+    if (data.longRunDay !== null && data.longRunDay !== undefined) {
+      const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      items.push(`Longão: ${days[data.longRunDay]}`);
     }
     
     return items;
@@ -154,37 +174,6 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
           Nossa IA vai analisar todas essas informações e criar um plano 100% personalizado para você,
           respeitando suas limitações e maximizando seus resultados!
         </p>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex gap-4 mt-6 pt-6 border-t">
-        {onBack && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onBack}
-            disabled={loading}
-            className="flex-1"
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            {tCommon('previous') || 'Voltar'}
-          </Button>
-        )}
-        <Button
-          type="button"
-          onClick={onSubmit}
-          disabled={loading || !hasRequiredData}
-          className="flex-1 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Criando seu plano...
-            </>
-          ) : (
-            <>Finalizar e Criar Plano</>
-          )}
-        </Button>
       </div>
     </div>
   );

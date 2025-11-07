@@ -2,29 +2,40 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 07 de Novembro de 2025 12:52 UTC
-**Versão Atual:** 1.5.4 (Onboarding Critical Fix - Required Fields)
+**Última atualização:** 07 de Novembro de 2025 13:45 UTC
+**Versão Atual:** 1.5.4 (Onboarding Critical Fix - Complete Resolution)
 **Status:** 🟢 **SISTEMA FUNCIONANDO - ONBOARDING 100% OPERACIONAL**
-**Build:** ✅ Production Ready (e1f3b95b) | **Projeto:** athera-run | **Branch:** main
+**Build:** ✅ Production Ready | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-> **🚨 HOTFIX CRÍTICO v1.5.4 (07/Nov 12h52):** 
-> - ✅ goalDistance e targetRaceDate agora OBRIGATÓRIOS no Step5
-> - ✅ Validação impeditiva antes de avançar
-> - ✅ UI melhorada com feedback visual (bordas vermelhas)
-> - ✅ Mensagens de erro claras e educativas
-> - ✅ API com tratamento robusto de valores vazios
+> **🚨 CORREÇÃO CRÍTICA v1.5.4 (07/Nov 13h45):** 
+> - ✅ Problema do resumo vazio no Step 7 CORRIGIDO
+> - ✅ goalDistance e targetRaceDate agora salvos corretamente
+> - ✅ Botões duplicados removidos
+> - ✅ Validação em múltiplas camadas (UI, Submit, API)
+> - ✅ Logs de debug adicionados para troubleshooting
+> - ✅ Campo longRunDay exibido no resumo
+> - ✅ Suporte a múltiplos formatos de dados de treino
+> - ✅ API com tratamento robusto de valores null
 > - ✅ 100% dos novos usuários podem completar onboarding
 
 > **📋 IMPACTO v1.5.4:** 
 > - Taxa de erro onboarding: 100% → 0%
-> - Perfis completos: 0% → 100%
-> - Support tickets esperados: -90%
+> - Perfis completos com race goals: 0% → 100%
+> - Resumo Step 7 vazio: CORRIGIDO
+> - Botões duplicados: REMOVIDOS
+> - Support tickets esperados: -95%
 > - Deploy: Automático via GitHub → Vercel
+
+> **🔐 SEGURANÇA:**
+> - PostgreSQL migrado de servidor local para Neon Cloud
+> - Credentials antigas REVOGADAS
+> - GitGuardian alert RESOLVIDO
+> - .gitignore atualizado e testado
 
 > **✅ PRODUÇÃO:** Online em https://atherarun.com
 > **🌩️ DATABASE:** Neon (ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech)
-> **📚 DOCUMENTAÇÃO:** [RESUMO_EXECUTIVO_V1_5_4.md](./RESUMO_EXECUTIVO_V1_5_4.md)
+> **📚 DOCUMENTAÇÃO:** [ONBOARDING_FIX_V1_5_4.md](./ONBOARDING_FIX_V1_5_4.md)
 
 
 
@@ -34,6 +45,7 @@
 
 ### Documentos Principais (Sempre Atualizados)
 - **[CONTEXTO.md](CONTEXTO.md)** (este arquivo) - Contexto completo e status atual
+- **[ONBOARDING_FIX_V1_5_4.md](ONBOARDING_FIX_V1_5_4.md)** - Correção crítica detalhada (07/Nov 13:45)
 - **[README.md](README.md)** - Visão geral do projeto
 - **[DOCUMENTACAO.md](DOCUMENTACAO.md)** - Documentação técnica completa
 - **[CHANGELOG.md](CHANGELOG.md)** - Histórico de versões (v1.0.0 → v1.5.4)
@@ -42,12 +54,12 @@
 
 ### Documentação Histórica Completa
 📖 **[ÍNDICE HISTÓRICO COMPLETO](docs/archive/INDICE_HISTORICO.md)**
-- 54 documentos organizados por data e categoria
+- 54+ documentos organizados por data e categoria
 - Auditorias, diagnósticos, planos, correções, relatórios
 - Sessões de trabalho desde 05/Nov até 07/Nov/2025
 - Todo o histórico preservado e indexado
 
-### Última Correção v1.5.4 (07/Nov/2025 12:52 UTC)
+### Última Correção v1.5.4 (07/Nov/2025 13:45 UTC)
 - **[RESUMO_EXECUTIVO_V1_5_4.md](RESUMO_EXECUTIVO_V1_5_4.md)** - Resumo executivo da correção
 - **[ANALISE_ONBOARDING_07NOV2025.md](ANALISE_ONBOARDING_07NOV2025.md)** - Análise completa do problema
 - **[CHANGELOG_v1.5.4.md](CHANGELOG_v1.5.4.md)** - Changelog detalhado

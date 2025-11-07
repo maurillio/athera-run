@@ -148,13 +148,23 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
+      // Validar dados críticos antes de submeter
+      if (!formData.goalDistance || !formData.targetRaceDate) {
+        setError('Por favor, volte ao Step 5 e preencha a distância e data da prova.');
+        setLoading(false);
+        return;
+      }
+      
       // Converter availableDays para trainingActivities (formato esperado pela API)
       const trainingActivities = formData.availableDays?.running || [];
       
       console.log('📊 Dados do onboarding:', {
         formData,
         trainingActivities,
-        availableDays: formData.availableDays
+        availableDays: formData.availableDays,
+        goalDistance: formData.goalDistance,
+        targetRaceDate: formData.targetRaceDate,
+        primaryGoal: formData.primaryGoal
       });
       
       const response = await fetch('/api/profile/create', {
@@ -301,6 +311,7 @@ export default function OnboardingPage() {
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
+                  disabled={loading}
                   className="flex-1"
                 >
                   <ChevronLeft className="mr-2 h-4 w-4" />
@@ -309,8 +320,8 @@ export default function OnboardingPage() {
                 <Button
                   type="button"
                   onClick={handleSubmit}
-                  disabled={loading}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+                  disabled={loading || !formData.goalDistance || !formData.targetRaceDate}
+                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>
