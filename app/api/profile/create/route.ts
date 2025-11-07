@@ -184,19 +184,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Helper para limpar strings vazias
+    const cleanString = (value: any) => {
+      if (value === '' || value === undefined || value === null) return null;
+      if (typeof value === 'string') return value.trim() || null;
+      return value;
+    };
+
     const profileData = {
       weight: parseFloat(weight) || 70, // Default 70kg
       height: parseFloat(height) || 170, // Default 170cm
       age: age ? parseInt(age) : null,
-      gender: gender || null,
-      runningLevel: runningLevel || 'beginner',
+      gender: cleanString(gender),
+      runningLevel: cleanString(runningLevel) || 'beginner',
       currentWeeklyKm: currentWeeklyKm ? parseFloat(currentWeeklyKm) : null,
       longestRun: longestRun ? parseFloat(longestRun) : null,
-      experienceDescription: experienceDescription || null,
+      experienceDescription: cleanString(experienceDescription),
       // v1.5.4 - Critical fields (REQUIRED)
-      goalDistance: goalDistance,
+      goalDistance: cleanString(goalDistance) || 'unknown',
       targetRaceDate: new Date(targetRaceDate),
-      targetTime: targetTime || null,
+      targetTime: cleanString(targetTime),
       // Sistema flexível de atividades de treino
       trainingActivities: trainingActivities || [],
       // Dia preferido para treino longo
@@ -211,10 +218,10 @@ export async function POST(req: NextRequest) {
       restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
       sleepQuality: sleepQuality ? parseInt(sleepQuality) : null,
       stressLevel: stressLevel ? parseInt(stressLevel) : null,
-      otherSportsExperience: otherSportsExperience || null,
+      otherSportsExperience: cleanString(otherSportsExperience),
       otherSportsYears: otherSportsYears ? parseInt(otherSportsYears) : null,
       injuryDetails: injuryDetails || null,
-      injuryRecoveryStatus: injuryRecoveryStatus || null,
+      injuryRecoveryStatus: cleanString(injuryRecoveryStatus),
       lastInjuryDate: lastInjuryDate ? new Date(lastInjuryDate) : null,
       bestTimes: bestTimes || null,
       lastVDOTUpdate: bestTimes ? new Date() : null,
