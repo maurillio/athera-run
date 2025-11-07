@@ -51,19 +51,23 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       return;
     }
     
-    // Warn if race goal info is missing
-    if (goalDistance && !targetRaceDate) {
-      if (!confirm(t('confirmNoRaceDate') || 'Você selecionou uma distância mas não informou a data da prova. Deseja continuar?')) {
-        return;
-      }
+    // v1.5.4 - CRITICAL: goalDistance and targetRaceDate are required for plan generation
+    if (!goalDistance) {
+      alert(t('selectDistanceRequired') || 'Por favor, selecione a distância da sua corrida alvo. Essa informação é necessária para gerar seu plano de treino personalizado.');
+      return;
+    }
+    
+    if (!targetRaceDate) {
+      alert(t('selectRaceDateRequired') || 'Por favor, informe a data aproximada da sua prova. Não precisa ser a data exata, mas precisamos saber quando você pretende correr para planejar seu treino adequadamente.');
+      return;
     }
     
     onUpdate({ 
       primaryGoal: goal, 
       motivation: motivation || undefined,
-      // Race goal data - send only if goalDistance is selected
-      goalDistance: goalDistance || undefined,
-      targetRaceDate: targetRaceDate || undefined,
+      // Race goal data - REQUIRED for plan generation (v1.5.4)
+      goalDistance: goalDistance,
+      targetRaceDate: targetRaceDate,
       targetTime: targetTime || undefined,
       // v1.3.0 - Estruturado
       motivationFactors: {
@@ -97,19 +101,34 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       </div>
 
       {/* Race Goal Information - CRITICAL for plan generation */}
-      <div className="border-t pt-6 space-y-4 bg-orange-50 p-4 rounded-lg">
-        <h3 className="font-semibold text-lg text-orange-900">🏁 {t('raceGoalTitle') || 'Informações da Corrida Alvo'}</h3>
-        <p className="text-sm text-orange-700">{t('raceGoalDescription') || 'Essas informações são necessárias para gerar seu plano de treino personalizado.'}</p>
+      <div className="border-t pt-6 space-y-4 bg-orange-50 p-4 rounded-lg border-2 border-orange-300">
+        <div className="flex items-start gap-2">
+          <span className="text-2xl">🏁</span>
+          <div className="flex-1">
+            <h3 className="font-semibold text-lg text-orange-900">
+              {t('raceGoalTitle') || 'Informações da Corrida Alvo'} <span className="text-red-600">*</span>
+            </h3>
+            <p className="text-sm text-orange-700 mt-1">
+              {t('raceGoalDescription') || 'Essas informações são necessárias para gerar seu plano de treino personalizado.'}
+            </p>
+            <p className="text-xs text-orange-600 mt-1 font-medium">
+              ⚠️ Campos obrigatórios para continuar
+            </p>
+          </div>
+        </div>
         
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-2 text-gray-900">
-              {t('distanceLabel') || 'Distância da Prova'}
+              {t('distanceLabel') || 'Distância da Prova'} <span className="text-red-600">*</span>
             </label>
             <select
               value={goalDistance}
               onChange={(e) => setGoalDistance(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg bg-white"
+              className={`w-full px-4 py-2 border-2 rounded-lg bg-white ${
+                !goalDistance ? 'border-red-300 focus:border-red-500' : 'border-gray-300'
+              }`}
+              required
             >
               <option value="">{t('selectDistance') || 'Selecione...'}</option>
               <option value="5k">5km</option>
@@ -117,19 +136,31 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
               <option value="21k">{t('halfMarathon') || 'Meia Maratona (21km)'}</option>
               <option value="42k">{t('marathon') || 'Maratona (42km)'}</option>
             </select>
+            {!goalDistance && (
+              <p className="text-xs text-red-600 mt-1">Campo obrigatório</p>
+            )}
           </div>
 
           <div>
             <label className="block font-medium mb-2 text-gray-900">
-              {t('raceDateLabel') || 'Data da Prova'} {goalDistance && '*'}
+              {t('raceDateLabel') || 'Data da Prova'} <span className="text-red-600">*</span>
             </label>
             <input
               type="date"
               value={targetRaceDate}
               onChange={(e) => setTargetRaceDate(e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-2 border rounded-lg bg-white"
+              className={`w-full px-4 py-2 border-2 rounded-lg bg-white ${
+                !targetRaceDate ? 'border-red-300 focus:border-red-500' : 'border-gray-300'
+              }`}
+              required
             />
+            {!targetRaceDate && (
+              <p className="text-xs text-red-600 mt-1">Campo obrigatório</p>
+            )}
+            <p className="text-xs text-gray-600 mt-1">
+              💡 Não precisa ser a data exata, uma estimativa já ajuda
+            </p>
           </div>
         </div>
 
