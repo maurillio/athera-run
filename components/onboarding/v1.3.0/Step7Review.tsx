@@ -235,13 +235,30 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
             {summary.availability.length > 0 && (
               <div className="pt-3 border-t border-blue-200">
                 <h4 className="font-semibold text-blue-800 mb-2">📅 Disponibilidade</h4>
-                <div className="space-y-1">
-                  {summary.availability.map((item: string, idx: number) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      <span className="text-blue-600">✓</span>
-                      <span className="text-gray-700 text-sm">{item}</span>
-                    </div>
-                  ))}
+                <div className="space-y-2">
+                  {summary.availability.map((item: string, idx: number) => {
+                    // Destaque especial para o dia do longão
+                    if (item.includes('🏃‍♂️ Longão:')) {
+                      return (
+                        <div key={idx} className="p-3 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-300">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">🏃‍♂️</span>
+                            <span className="font-bold text-amber-900">{item.replace('🏃‍♂️ ', '')}</span>
+                          </div>
+                          <p className="text-xs text-amber-700 mt-1 ml-8">
+                            Seu treino mais longo da semana será sempre neste dia
+                          </p>
+                        </div>
+                      );
+                    }
+                    // Outros itens normais
+                    return (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-blue-600">✓</span>
+                        <span className="text-gray-700 text-sm">{item}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

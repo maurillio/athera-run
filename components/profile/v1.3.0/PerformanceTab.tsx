@@ -55,7 +55,58 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
 
   return (
     <div className="space-y-8">
-      {/* RESUMO RÁPIDO */}
+      {/* 🏃 RESUMO DE EXPERIÊNCIA - DESTAQUE VISUAL */}
+      <div className="mb-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
+        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+          🏃 Sua Experiência de Corrida
+        </h3>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Nível */}
+          <div className="p-4 bg-white rounded-lg shadow-sm">
+            <div className="text-sm text-gray-600 mb-1">Nível Atual</div>
+            <div className="text-xl font-bold">
+              {runningLevel === 'beginner' && '🟢 Iniciante'}
+              {runningLevel === 'intermediate' && '🟡 Intermediário'}
+              {runningLevel === 'advanced' && '🔴 Avançado'}
+            </div>
+          </div>
+
+          {/* Anos de corrida */}
+          {runningYears > 0 && (
+            <div className="p-4 bg-white rounded-lg shadow-sm">
+              <div className="text-sm text-gray-600 mb-1">Anos Correndo</div>
+              <div className="text-xl font-bold">{runningYears} {runningYears === 1 ? 'ano' : 'anos'}</div>
+            </div>
+          )}
+
+          {/* Volume semanal */}
+          {currentWeeklyKm > 0 && (
+            <div className="p-4 bg-white rounded-lg shadow-sm">
+              <div className="text-sm text-gray-600 mb-1">Volume Semanal Atual</div>
+              <div className="text-xl font-bold">{currentWeeklyKm} km/semana</div>
+            </div>
+          )}
+
+          {/* Longão mais longo */}
+          {longestRun > 0 && (
+            <div className="p-4 bg-white rounded-lg shadow-sm">
+              <div className="text-sm text-gray-600 mb-1">Longão Mais Longo</div>
+              <div className="text-xl font-bold text-amber-600">{longestRun} km</div>
+            </div>
+          )}
+        </div>
+
+        {/* Outros Esportes */}
+        {otherSportsExperience && (
+          <div className="mt-4 p-4 bg-white rounded-lg shadow-sm">
+            <div className="text-sm text-gray-600 mb-1">🎾 Outros Esportes</div>
+            <div className="text-base">{otherSportsExperience}</div>
+          </div>
+        )}
+      </div>
+
+      {/* RESUMO RÁPIDO DE PERFORMANCE */}
       <div className="grid md:grid-cols-3 gap-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-700 font-medium">Nível Atual</p>
