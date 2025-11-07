@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { validateStep1, OnboardingData } from '@/lib/onboarding-validator';
 import { interpretRestingHR, calculateIMC, interpretIMC } from '@/lib/vdot-calculator';
@@ -28,6 +28,23 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
   });
 
   const [errors, setErrors] = useState<string[]>([]);
+
+  // Auto-save com debounce quando os dados mudam
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onUpdate({
+        age: formData.age ? parseInt(formData.age as string) : undefined,
+        gender: formData.gender || undefined,
+        weight: formData.weight ? parseFloat(formData.weight as string) : undefined,
+        height: formData.height ? parseFloat(formData.height as string) : undefined,
+        restingHeartRate: formData.restingHeartRate ? parseInt(formData.restingHeartRate as string) : undefined,
+        sleepQuality: formData.sleepQuality,
+        stressLevel: formData.stressLevel,
+      });
+    }, 500); // Debounce de 500ms
+
+    return () => clearTimeout(timeoutId);
+  }, [formData, onUpdate]);
 
   const handleChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });

@@ -37,11 +37,11 @@ export default function OnboardingPage() {
   
   // Form data aggregated from all steps
   const [formData, setFormData] = useState<any>({
-    // Step 1: Basic Data (v1.3.0 usa age, não birthDate)
+    // Step 1: Basic Data
     name: session?.user?.name || '',
     email: session?.user?.email || '',
     gender: '',
-    age: '', // Mudado de birthDate para age
+    age: '',
     weight: '',
     height: '',
     restingHeartRate: '',
@@ -66,20 +66,22 @@ export default function OnboardingPage() {
     medicalClearance: true,
     medicalNotes: '',
     
-    // Step 5: Goals
+    // Step 5: Goals (CRITICAL for API)
     primaryGoal: '',
     targetRaceDate: '',
-    targetDistance: '',
+    goalDistance: '', // REQUIRED
     targetTime: '',
     secondaryGoals: [],
+    motivationFactors: {},
     
     // Step 6: Availability
     trainingDays: [],
     preferredTimes: {},
     longRunDay: null,
     otherActivities: [],
+    availableDays: {}, // Will be converted to trainingActivities
     
-    // Step 7: Review (auto-filled, editable)
+    // Step 7: Review
     reviewComplete: false,
   });
 
@@ -155,27 +157,65 @@ export default function OnboardingPage() {
         return;
       }
       
-      // Converter availableDays para trainingActivities (formato esperado pela API)
-      const trainingActivities = formData.availableDays?.running || [];
+      // Mapear availableDays para trainingActivities (formato esperado pela API)
+      const trainingActivities = formData.availableDays?.running || formData.trainingDays || [];
+      
+      // Preparar dados completos para o perfil
+      const profilePayload = {
+        // Campos básicos (Step 1)
+        age: formData.age,
+        gender: formData.gender,
+        weight: formData.weight,
+        height: formData.height,
+        restingHeartRate: formData.restingHeartRate,
+        sleepQuality: formData.sleepQuality,
+        stressLevel: formData.stressLevel,
+        
+        // Experiência (Step 2)
+        runningLevel: formData.runningLevel,
+        yearsRunning: formData.yearsRunning,
+        currentWeeklyKm: formData.weeklyVolume, // Mapear weeklyVolume → currentWeeklyKm
+        longestRun: formData.longestRun,
+        preferredPace: formData.preferredPace,
+        otherSportsExperience: formData.otherSports, // Mapear otherSports → otherSportsExperience
+        
+        // Performance (Step 3)
+        bestTimes: formData.personalBests, // Mapear personalBests → bestTimes
+        
+        // Saúde (Step 4)
+        injuryDetails: [...(formData.injuries || []), ...(formData.medicalConditions || [])].join('; '),
+        medicalNotes: formData.medicalNotes,
+        
+        // Objetivos (Step 5) - CRITICAL
+        goalDistance: formData.goalDistance, // REQUIRED
+        targetRaceDate: formData.targetRaceDate, // REQUIRED
+        targetTime: formData.targetTime,
+        primaryGoal: formData.primaryGoal,
+        secondaryGoals: formData.secondaryGoals,
+        motivationFactors: formData.motivationFactors,
+        
+        // Disponibilidade (Step 6)
+        trainingActivities: trainingActivities,
+        longRunDay: formData.longRunDay,
+        preferredTimes: formData.preferredTimes,
+        
+        // Outros
+        onboardingComplete: true,
+        locale: session?.user?.locale || locale || 'pt-BR',
+      };
       
       console.log('📊 Dados do onboarding:', {
         formData,
+        profilePayload,
         trainingActivities,
-        availableDays: formData.availableDays,
-        goalDistance: formData.goalDistance,
-        targetRaceDate: formData.targetRaceDate,
-        primaryGoal: formData.primaryGoal
+        goalDistance: profilePayload.goalDistance,
+        targetRaceDate: profilePayload.targetRaceDate,
       });
       
       const response = await fetch('/api/profile/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          trainingActivities, // API espera este campo
-          onboardingComplete: true,
-          locale: session?.user?.locale || 'pt-BR',
-        }),
+        body: JSON.stringify(profilePayload),
       });
 
       const data = await response.json();
@@ -227,7 +267,7 @@ export default function OnboardingPage() {
       case 6:
         return <Step6Availability {...stepProps} />;
       case 7:
-        return <Step7Review {...stepProps} onSubmit={handleSubmit} loading={loading} />;
+        return <Step7Review {...stepProps} onSubmit={handleSubmit} onBack={handlePrevious} loading={loading} />;
       default:
         return null;
     }
@@ -279,7 +319,7 @@ export default function OnboardingPage() {
           <CardContent>
             {renderStep()}
 
-            {/* Navigation Buttons */}
+            {/* Navigation Buttons - Only for Steps 1-6 */}
             {currentStep < 7 && (
               <div className="flex gap-4 mt-8 pt-6 border-t">
                 {currentStep > 1 && (
@@ -303,40 +343,7 @@ export default function OnboardingPage() {
                 </Button>
               </div>
             )}
-
-            {/* Step 7 - Submit Button */}
-            {currentStep === 7 && (
-              <div className="flex gap-4 mt-8 pt-6 border-t">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handlePrevious}
-                  disabled={loading}
-                  className="flex-1"
-                >
-                  <ChevronLeft className="mr-2 h-4 w-4" />
-                  {tCommon('previous')}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={loading || !formData.goalDistance || !formData.targetRaceDate}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {tCommon('loading')}
-                    </>
-                  ) : (
-                    <>
-                      {t('step7.submitButton')}
-                      <CheckCircle className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
+            {/* Step 7 buttons are handled in Step7Review component */}
           </CardContent>
         </Card>
 

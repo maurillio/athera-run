@@ -8,7 +8,13 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
   const tCommon = useTranslations('common');
   
   const getSummary = () => {
-    const items = [];
+    const sections: any = {
+      basic: [],
+      experience: [],
+      goals: [],
+      availability: [],
+      health: []
+    };
     
     console.log('📊 Step7Review - data received:', {
       goalDistance: data.goalDistance,
@@ -19,26 +25,29 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       allData: data
     });
     
-    // Dados básicos
-    if (data.age) items.push(`${data.age} anos`);
-    if (data.gender) items.push(data.gender === 'male' ? 'Masculino' : 'Feminino');
-    if (data.weight) items.push(`${data.weight}kg`);
-    if (data.height) items.push(`${data.height}cm`);
+    // ===== DADOS BÁSICOS =====
+    if (data.age) sections.basic.push(`${data.age} anos`);
+    if (data.gender) sections.basic.push(data.gender === 'male' ? '👨 Masculino' : '👩 Feminino');
+    if (data.weight) sections.basic.push(`⚖️ ${data.weight}kg`);
+    if (data.height) sections.basic.push(`📏 ${data.height}cm`);
+    if (data.restingHeartRate) sections.basic.push(`❤️ FC Repouso: ${data.restingHeartRate} bpm`);
     
-    // Experiência
+    // ===== EXPERIÊNCIA =====
     if (data.runningLevel) {
       const levels: any = {
         beginner: 'Iniciante',
         intermediate: 'Intermediário',
         advanced: 'Avançado'
       };
-      items.push(levels[data.runningLevel] || data.runningLevel);
+      sections.experience.push(`🏃 Nível: ${levels[data.runningLevel] || data.runningLevel}`);
     }
     
-    if (data.weeklyVolume) items.push(`${data.weeklyVolume}km/semana atualmente`);
-    if (data.longestRun) items.push(`Longão de ${data.longestRun}km`);
+    if (data.yearsRunning) sections.experience.push(`📅 ${data.yearsRunning} anos correndo`);
+    if (data.weeklyVolume) sections.experience.push(`📊 ${data.weeklyVolume}km/semana atualmente`);
+    if (data.longestRun) sections.experience.push(`🏃‍♂️ Longão de ${data.longestRun}km`);
+    if (data.preferredPace) sections.experience.push(`⏱️ Pace preferido: ${data.preferredPace}`);
     
-    // Objetivo principal
+    // ===== OBJETIVOS =====
     if (data.primaryGoal) {
       const goalLabels: any = {
         finish_first_race: 'Completar primeira corrida',
@@ -48,7 +57,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
         challenge: 'Desafio pessoal',
         consistency: 'Criar consistência'
       };
-      items.push(`🎯 ${goalLabels[data.primaryGoal] || data.primaryGoal}`);
+      sections.goals.push(`🎯 ${goalLabels[data.primaryGoal] || data.primaryGoal}`);
     }
     
     // Race Goal - CRITICAL
@@ -59,52 +68,136 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
         '21k': 'Meia Maratona (21km)',
         '42k': 'Maratona (42km)'
       };
-      items.push(`🏁 Meta: ${distances[data.goalDistance] || data.goalDistance}`);
+      sections.goals.push(`🏁 Meta: ${distances[data.goalDistance] || data.goalDistance}`);
     }
     
     if (data.targetRaceDate) {
       const date = new Date(data.targetRaceDate);
-      items.push(`📅 Data da prova: ${date.toLocaleDateString('pt-BR')}`);
+      sections.goals.push(`📅 Data da prova: ${date.toLocaleDateString('pt-BR')}`);
     }
     
     if (data.targetTime) {
-      items.push(`⏱️ Tempo alvo: ${data.targetTime}`);
+      sections.goals.push(`⏱️ Tempo alvo: ${data.targetTime}`);
     }
     
-    // Disponibilidade - verificar múltiplos formatos
+    // ===== DISPONIBILIDADE =====
     const trainingDaysCount = 
       data.availableDays?.running?.length || 
       data.trainingDays?.length || 
       (data.trainingActivities?.length > 0 ? data.trainingActivities.length : 0);
       
     if (trainingDaysCount > 0) {
-      items.push(`${trainingDaysCount} dias de treino por semana`);
+      sections.availability.push(`📅 ${trainingDaysCount} dias de treino por semana`);
     }
     
     // Dia do longão
     if (data.longRunDay !== null && data.longRunDay !== undefined) {
       const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-      items.push(`Longão: ${days[data.longRunDay]}`);
+      sections.availability.push(`🏃‍♂️ Longão: ${days[data.longRunDay]}`);
     }
     
-    return items;
+    // ===== SAÚDE =====
+    if (data.injuries && data.injuries.length > 0) {
+      sections.health.push(`⚠️ ${data.injuries.length} lesão(ões) relatada(s)`);
+    }
+    if (data.medicalConditions && data.medicalConditions.length > 0) {
+      sections.health.push(`🏥 ${data.medicalConditions.length} condição(ões) médica(s)`);
+    }
+    if (data.sleepQuality) {
+      sections.health.push(`😴 Qualidade do sono: ${data.sleepQuality}/5`);
+    }
+    if (data.stressLevel) {
+      sections.health.push(`😰 Nível de estresse: ${data.stressLevel}/5`);
+    }
+    
+    return sections;
   };
 
   const hasRequiredData = data.goalDistance && data.targetRaceDate;
+  const summary = getSummary();
+  const hasSummaryData = Object.values(summary).some((section: any) => section.length > 0);
 
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
         <h3 className="font-bold text-lg mb-4 text-blue-900">📊 Seu Perfil</h3>
         
-        {getSummary().length > 0 ? (
-          <div className="space-y-2">
-            {getSummary().map((item, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <span className="text-blue-600">✓</span>
-                <span className="text-gray-700">{item}</span>
+        {hasSummaryData ? (
+          <div className="space-y-6">
+            {/* Dados Básicos */}
+            {summary.basic.length > 0 && (
+              <div>
+                <h4 className="font-semibold text-blue-800 mb-2">👤 Dados Pessoais</h4>
+                <div className="space-y-1">
+                  {summary.basic.map((item: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-blue-600">✓</span>
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* Experiência */}
+            {summary.experience.length > 0 && (
+              <div className="pt-3 border-t border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">🏃 Experiência de Corrida</h4>
+                <div className="space-y-1">
+                  {summary.experience.map((item: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-blue-600">✓</span>
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Objetivos */}
+            {summary.goals.length > 0 && (
+              <div className="pt-3 border-t border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">🎯 Objetivos e Metas</h4>
+                <div className="space-y-1">
+                  {summary.goals.map((item: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-blue-600">✓</span>
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Disponibilidade */}
+            {summary.availability.length > 0 && (
+              <div className="pt-3 border-t border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">📅 Disponibilidade</h4>
+                <div className="space-y-1">
+                  {summary.availability.map((item: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-blue-600">✓</span>
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Saúde */}
+            {summary.health.length > 0 && (
+              <div className="pt-3 border-t border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">🏥 Saúde e Bem-estar</h4>
+                <div className="space-y-1">
+                  {summary.health.map((item: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-blue-600">✓</span>
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-8">
