@@ -1,0 +1,1168 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "optional": "Optional",
+    "required": "Required",
+    "select": "Select",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "reset": "Reset",
+    "continue": "Continue",
+    "skip": "Skip",
+    "or": "or",
+    "and": "and",
+    "of": "of",
+    "to": "to",
+    "from": "from",
+    "at": "at",
+    "on": "on",
+    "in": "in",
+    "with": "with",
+    "without": "without",
+    "by": "by",
+    "per": "per"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "subtitle": "Welcome back to Athera Run",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Your password",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Create account",
+      "googleSignIn": "Sign in with Google",
+      "errors": {
+        "invalid": "Invalid email or password",
+        "network": "Connection error. Please try again.",
+        "unknown": "Unknown error. Please try again."
+      }
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start your journey with Athera Run",
+      "name": "Full name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Type password again",
+      "signUp": "Create account",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "googleSignUp": "Sign up with Google",
+      "terms": "By creating an account, you agree to our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "errors": {
+        "emailExists": "This email is already in use",
+        "passwordMismatch": "Passwords don't match",
+        "weakPassword": "Password must be at least 8 characters",
+        "invalidEmail": "Invalid email",
+        "network": "Connection error. Please try again.",
+        "unknown": "Error creating account. Please try again."
+      },
+      "orSignUpWith": "or sign up with email",
+      "creatingAccount": "Creating account..."
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to Athera Run",
+    "subtitle": "Let's create your personalized plan in 7 simple steps",
+    "progress": "Step {{current}} of {{total}}",
+    "step1": {
+      "title": "Basic Data",
+      "subtitle": "Essential information about you",
+      "name": "Full name",
+      "namePlaceholder": "Enter your name",
+      "age": "Age",
+      "agePlaceholder": "Ex: 30",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "weight": "Weight (kg)",
+      "weightPlaceholder": "Ex: 70",
+      "height": "Height (cm)",
+      "heightPlaceholder": "Ex: 175",
+      "restingHeartRate": "Resting Heart Rate (bpm)",
+      "restingHeartRatePlaceholder": "Ex: 60",
+      "sleepQuality": "Sleep Quality",
+      "sleepQualityPlaceholder": "Select...",
+      "stressLevel": "Stress Level",
+      "stressLevelPlaceholder": "Select...",
+      "qualityLevels": {
+        "veryPoor": "Very Poor",
+        "poor": "Poor",
+        "fair": "Fair",
+        "good": "Good",
+        "veryGood": "Very Good",
+        "excellent": "Excellent"
+      },
+      "errors": {
+        "nameRequired": "Name is required",
+        "ageRequired": "Age is required",
+        "ageInvalid": "Age must be between 16 and 100 years",
+        "genderRequired": "Gender is required",
+        "weightRequired": "Weight is required",
+        "weightInvalid": "Weight must be between 30 and 200 kg",
+        "heightRequired": "Height is required",
+        "heightInvalid": "Height must be between 120 and 250 cm"
+      },
+      "physiological": {
+        "title": "Physiological Data",
+        "restingHR": "Resting HR (bpm)",
+        "restingHRNote": "40-80 normal for athletes",
+        "restingHRPlaceholder": "Ex: 60",
+        "sleepQuality": "Sleep Quality",
+        "sleepLevels": {
+          "poor": "1-4h (Poor)",
+          "fair": "4-6h (Fair)",
+          "good": "6-7h (Good)",
+          "veryGood": "7-8h (Very Good)",
+          "excellent": "8h+ (Excellent)"
+        },
+        "stressLevel": "Stress Level",
+        "stressLevels": {
+          "low": "Very Low",
+          "mild": "Low",
+          "moderate": "Moderate",
+          "high": "High",
+          "veryHigh": "Very High"
+        }
+      },
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female"
+      },
+      "bmi": "BMI"
+    },
+    "step2": {
+      "title": "Sports Background",
+      "subtitle": "Your experience with running and other sports",
+      "hasRunBefore": "Have you run before?",
+      "yes": "Yes",
+      "no": "No",
+      "yearsRunning": "Years running",
+      "yearsRunningPlaceholder": "Ex: 2",
+      "experienceLevel": "Experience level",
+      "experienceLevels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "currentWeeklyVolume": "Current weekly volume (km)",
+      "weeklyVolumePlaceholder": "Ex: 30",
+      "hasOtherSports": "Do you practice other sports?",
+      "whichSports": "Which sports?",
+      "sports": {
+        "cycling": "Cycling",
+        "swimming": "Swimming",
+        "soccer": "Soccer",
+        "basketball": "Basketball",
+        "tennis": "Tennis",
+        "gym": "Gym/Strength",
+        "other": "Other"
+      },
+      "otherSportYears": "For how many years?",
+      "otherSportYearsPlaceholder": "Ex: 5",
+      "errors": {
+        "experienceLevelRequired": "Experience level is required",
+        "yearsRunningRequired": "Years running is required when you have experience",
+        "weeklyVolumeRequired": "Weekly volume is required",
+        "weeklyVolumeInvalid": "Volume must be between 0 and 300 km"
+      },
+      "weeklyVolume": "Weekly volume (km)",
+      "longestRun": "Longest run (km)",
+      "longestRunPlaceholder": "Ex: 21",
+      "otherSports": {
+        "title": "Other Sports",
+        "sports": "Sport",
+        "sportsPlaceholder": "Ex: Swimming",
+        "years": "Years practicing",
+        "yearsPlaceholder": "Ex: 3"
+      }
+    },
+    "step3": {
+      "title": "Performance",
+      "subtitle": "Your best times (optional but recommended)",
+      "addTime": "Add Time",
+      "distancePlaceholder": "Distance...",
+      "distance5k": "5km",
+      "distance10k": "10km",
+      "distance21k": "21km (Half)",
+      "distance42k": "42km (Marathon)",
+      "hoursPlaceholder": "H",
+      "minutesPlaceholder": "MM",
+      "secondsPlaceholder": "SS",
+      "yourTimes": "Your Times",
+      "yourVdot": "Your VDOT"
+    },
+    "step4": {
+      "title": "Health & History",
+      "subtitle": "Important information to prevent injuries",
+      "hasInjuries": "Have you had running injuries recently?",
+      "whichInjuries": "Which injuries?",
+      "otherInjuryPlaceholder": "Other injury...",
+      "injuries": {
+        "shinSplints": "Shin Splints",
+        "plantarFasciitis": "Plantar Fasciitis",
+        "achillesTendinitis": "Achilles Tendinitis",
+        "runnersKnee": "Runner's Knee",
+        "itBand": "IT Band Injury",
+        "stressFracture": "Stress Fracture",
+        "muscleStrain": "Muscle Strain",
+        "other": "Other"
+      },
+      "injuryDetailsTitle": "Injury Details (Optional)",
+      "recoveryStatus": "Recovery Status",
+      "statusOptions": {
+        "active": "Active Injury",
+        "recovering": "Recovering",
+        "recovered": "Recovered"
+      },
+      "lastInjuryDate": "Last Injury Date",
+      "restingHR": "Resting Heart Rate",
+      "restingHRPlaceholder": "Ex: 60 bpm",
+      "sleepQuality": "Sleep Quality",
+      "stressLevel": "Stress Level",
+      "qualityLevels": {
+        "veryPoor": "Very Poor",
+        "poor": "Poor",
+        "fair": "Fair",
+        "good": "Good",
+        "veryGood": "Very Good",
+        "excellent": "Excellent"
+      }
+    },
+    "step5": {
+      "title": "Your Main Goal",
+      "subtitle": "What do you want to achieve?",
+      "primaryGoal": "Primary Goal",
+      "secondaryGoals": "Secondary Goals (optional)",
+      "goals": {
+        "finish_first_race": "🎯 Complete my first race",
+        "improve_time": "⚡ Improve my time",
+        "health_fitness": "💪 Health & fitness",
+        "weight_loss": "🏃 Lose weight",
+        "challenge": "🏆 Complete specific challenge",
+        "consistency": "📅 Build consistent routine"
+      },
+      "goalDescriptions": {
+        "finish_first_race": "Focus on finishing safely",
+        "improve_time": "Pursue new PR",
+        "health_fitness": "Maintain fitness",
+        "weight_loss": "Healthy weight loss",
+        "challenge": "Important personal goal",
+        "consistency": "Regular training habit"
+      },
+      "motivationTitle": "What else motivates you?",
+      "selectMultiple": "Select all that apply",
+      "errors": {
+        "primaryGoalRequired": "Primary goal is required"
+      },
+      "primaryGoalLabel": "What is your main goal?",
+      "raceGoalTitle": "Target Race Information",
+      "raceGoalDescription": "This information is needed to generate your personalized training plan.",
+      "distanceLabel": "Race Distance",
+      "selectDistance": "Select...",
+      "halfMarathon": "Half Marathon (21km)",
+      "marathon": "Marathon (42km)",
+      "raceDateLabel": "Race Date",
+      "targetTimeLabel": "Target Time",
+      "optional": "Optional",
+      "targetTimePlaceholder": "E.g.: 45:00, 1:30:00, 3:45:00",
+      "targetTimeHelp": "Format: MM:SS or H:MM:SS",
+      "motivationLabel": "What motivates you?",
+      "motivationPlaceholder": "E.g.: I want to run a half marathon with my brother, it's a longtime dream...",
+      "motivationHelp": "The more details, the more personalized your plan will be!"
+    },
+    "step6": {
+      "title": "Availability",
+      "subtitle": "When can you train?",
+      "trainingDaysTitle": "Running Days",
+      "selectDaysDescription": "Select the days you can run",
+      "daysOfWeek": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+      },
+      "otherActivitiesTitle": "Other Activities (Optional)",
+      "otherActivitiesDescription": "Mark other complementary training",
+      "activities": {
+        "gym": "Gym/Strength",
+        "yoga": "Yoga/Pilates",
+        "cycling": "Cycling",
+        "swimming": "Swimming"
+      },
+      "infrastructureTitle": "Available Infrastructure",
+      "infrastructureDescription": "What do you have access to?",
+      "access": {
+        "gym": "Gym/Strength",
+        "pool": "Pool/Swimming",
+        "track": "Running Track"
+      },
+      "preferencesTitle": "Training Preferences",
+      "trainingLocation": "Where do you prefer to train?",
+      "locations": {
+        "street": "Street/Road",
+        "park": "Park/Trail",
+        "track": "Track",
+        "treadmill": "Treadmill"
+      },
+      "groupTraining": "Prefer group training?",
+      "indoorOutdoor": "Indoor or Outdoor training?",
+      "options": {
+        "indoor": "Indoor",
+        "outdoor": "Outdoor",
+        "both": "Both"
+      },
+      "minDaysError": "Select at least 2 running days",
+      "errors": {
+        "trainingDaysRequired": "Select at least 3 training days"
+      }
+    },
+    "step7": {
+      "title": "Final Review",
+      "subtitle": "Confirm your information before generating the plan",
+      "profileTitle": "📊 Your Profile",
+      "years": "years",
+      "male": "Male",
+      "female": "Female",
+      "beginner": "Beginner",
+      "yearsRunning": "{{years}} years running",
+      "kmPerWeek": "{{km}}km/week current",
+      "daysPerWeek": "{{days}} days/week",
+      "bestTimesTitle": "🏃 Best Times",
+      "injuryHistoryTitle": "⚠️ Injury History",
+      "nextStepTitle": "✨ Next Step",
+      "nextStepDescription": "Our AI will analyze all this information and create a 100% personalized plan for you, respecting your limitations and maximizing your results!",
+      "generatePlan": "🚀 Generate My Plan!",
+      "goalLabels": {
+        "finish_first_race": "Complete first race",
+        "improve_time": "Improve time",
+        "health_fitness": "Health",
+        "weight_loss": "Lose weight",
+        "challenge": "Specific challenge",
+        "consistency": "Build routine"
+      },
+      "submitButton": "Finish and Create My Plan"
+    }
+  },
+  "profile": {
+    "tabs": {
+      "basic": "👤 Basic Data",
+      "performance": "⚡ Performance",
+      "health": "🏥 Health",
+      "goals": "🎯 Goals",
+      "availability": "📅 Availability",
+      "preferences": "⚙️ Preferences"
+    },
+    "errors": {
+      "updateFailed": "Error updating profile. Please try again.",
+      "dataUnavailable": "Error: User data unavailable"
+    },
+    "saving": "Saving...",
+    "saveChanges": "💾 Save Changes",
+    "basic": {
+      "age": "Age",
+      "gender": "Gender",
+      "weight": "Weight (kg)",
+      "height": "Height (cm)",
+      "restingHR": "Resting HR (bpm)",
+      "sleepQuality": "Sleep Quality",
+      "stressLevel": "Stress Level",
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female"
+      }
+    },
+    "performance": {
+      "title": "Best Times",
+      "description": "Your personal records at different distances",
+      "addTimeTitle": "Add Time",
+      "addTimeDescription": "Record your recent race time",
+      "selectDistance": "Select Distance",
+      "enterTime": "Enter your time (HH:MM:SS or MM:SS)",
+      "timePlaceholder": "Ex: 45:30",
+      "addTime": "Add Time",
+      "bestVdot": "Best VDOT",
+      "noTimes": "No times recorded",
+      "addFirst": "Add your first time above!",
+      "distances": {
+        "5k": "5km",
+        "10k": "10km",
+        "21k": "21km",
+        "42k": "42km"
+      }
+    },
+    "goals": {
+      "primaryGoal": "Primary Goal",
+      "motivation": "Motivation",
+      "motivationPlaceholder": "What motivates you?",
+      "options": {
+        "finish_first_race": "🏁 Complete first race",
+        "improve_time": "⚡ Improve time",
+        "health_fitness": "💪 Health and fitness",
+        "weight_loss": "🏃 Lose weight",
+        "challenge": "🏆 Complete specific challenge",
+        "consistency": "📅 Create consistent routine"
+      }
+    },
+    "availability": {
+      "title": "Weekly Availability",
+      "howItWorks": "How availability works",
+      "fullControl": "✨ You have 100% control! Only activities you mark will be included in your plan.",
+      "runningRequired": "🏃 Running days are required. Other activities are optional.",
+      "autoAdjust": "💾 When saving, your plan will be automatically adjusted from today forward, preserving all history.",
+      "runningDaysLabel": "🏃 Running Days *",
+      "runningDaysDesc": "Select the days of the week when you can run",
+      "daysSelected": "✅ {{count}} day(s) selected",
+      "minRecommended": "(minimum recommended: 3)",
+      "complementaryTitle": "Complementary Activities (Optional)",
+      "complementaryDesc": "Mark only activities you actually do. If not marked, they won't be included in the plan.",
+      "strength": "💪 Strength Training",
+      "swimming": "🏊 Swimming",
+      "crossTraining": "🚴 Cross Training (bike, elliptical, etc.)",
+      "yoga": "🧘 Yoga / Pilates",
+      "noDaysSelected": "No days selected",
+      "saveAndApply": "Save and Apply Auto Adjustment",
+      "savingAndAdjusting": "Saving and adjusting plan...",
+      "adjustmentApplied": "✅ Adjustment Applied!",
+      "workoutsDeleted": "• {{count}} future workouts were removed",
+      "nextStep": "🔄 Next step: Go to \"Plan\" page and click \"Regenerate Plan\" to create new workouts.",
+      "historyPreserved": "🛡️ History Preserved: All completed workouts will be kept. Only future workouts will be adjusted.",
+      "days": {
+        "0": "Sun",
+        "1": "Mon",
+        "2": "Tue",
+        "3": "Wed",
+        "4": "Thu",
+        "5": "Fri",
+        "6": "Sat"
+      },
+      "toast": {
+        "updateSuccess": "✅ Availability updated!",
+        "regenerateInfo": "🔄 Click \"Regenerate Plan\" on the profile page to apply changes.",
+        "adjustError": "Error adjusting plan: {{error}}",
+        "saveError": "Error saving changes"
+      }
+    },
+    "health": {
+      "title": "Health and Conditioning",
+      "injuryHistory": {
+        "label": "Injury History",
+        "noInjuries": "No injuries",
+        "withInjuries": "With injuries",
+        "remove": "Remove injury"
+      },
+      "physiological": {
+        "title": "📊 Physiological Data",
+        "restingHR": {
+          "label": "Resting HR (bpm)",
+          "help": "40-80 normal for athletes",
+          "placeholder": "Ex: 60"
+        },
+        "sleepQuality": {
+          "label": "Sleep Quality",
+          "level1": "1-4h (Very Poor)",
+          "level2": "4-6h (Poor)",
+          "level3": "6-7h (Fair)",
+          "level4": "7-8h (Good)",
+          "level5": "8h+ (Excellent)"
+        },
+        "stressLevel": {
+          "label": "Stress Level",
+          "level1": "Very Low",
+          "level2": "Low",
+          "level3": "Moderate",
+          "level4": "High",
+          "level5": "Very High"
+        }
+      },
+      "medicalClearance": {
+        "label": "Medical Clearance",
+        "yes": "I have medical clearance",
+        "no": "I don't have medical clearance",
+        "warning": "⚠️ We recommend medical consultation before starting intense training"
+      }
+    },
+    "preferences": {
+      "title": "Training Preferences",
+      "location": {
+        "label": "🏃 Where Do You Prefer to Train?",
+        "street": "street",
+        "track": "track",
+        "treadmill": "treadmill",
+        "trail": "trail"
+      },
+      "environment": {
+        "label": "☀️ General Preference",
+        "outdoor": "Outdoor",
+        "indoor": "Indoor"
+      },
+      "groupTraining": {
+        "label": "👥 I like to train in a group"
+      },
+      "motivation": {
+        "title": "Motivation and Goals",
+        "primaryLabel": "💪 Primary Motivation",
+        "options": {
+          "health": "Health and Wellness",
+          "challenge": "Personal Challenge",
+          "competition": "Competition",
+          "social": "Socialization",
+          "aesthetics": "Aesthetics"
+        }
+      },
+      "goals": {
+        "label": "🎯 Goals (multiple choice)",
+        "options": {
+          "loseWeight": "lose weight",
+          "compete": "compete",
+          "improveTime": "improve time",
+          "increaseDistance": "increase distance",
+          "preventInjuries": "prevent injuries",
+          "increaseEndurance": "increase endurance"
+        }
+      },
+      "save": "💾 Save Preferences"
+    }
+  },
+  "dashboard": {
+    "welcome": "Hello, {{name}}! 👋",
+    "welcomeDefault": "Hello, Runner! 👋",
+    "subtitle": "Welcome to your personalized training dashboard",
+    "createPlanSubtitle": "Let's create your personalized training plan",
+    "loading": "Loading...",
+    "generatePlan": {
+      "title": "Generate Your Personalized Plan",
+      "description": "Based on your profile, we will create a training plan fully adapted to your goals",
+      "button": "Generate My Plan Now",
+      "generating": "Generating Plan..."
+    },
+    "stats": {
+      "nextWorkout": "Next Workout",
+      "currentWeek": "Current Week",
+      "goal": "Goal",
+      "progress": "Progress",
+      "noWorkout": "No pending workouts",
+      "completed": "workouts"
+    },
+    "upcomingWorkouts": {
+      "title": "Your Upcoming Workouts",
+      "description": "Today and tomorrow's workouts",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "noWorkouts": "No workouts scheduled for today or tomorrow.",
+      "viewFullPlan": "View full plan",
+      "distance": "Distance:",
+      "duration": "Duration:",
+      "pace": "Pace:",
+      "confirmButton": "Confirm Workout Completed"
+    },
+    "quickAccess": {
+      "title": "Quick Access",
+      "description": "Navigate through main features",
+      "viewPlan": "View Full Plan",
+      "registerWorkout": "Register Workout",
+      "calculator": "VDOT Calculator",
+      "aiAnalysis": "AI Analysis"
+    },
+    "advancedFeatures": {
+      "title": "Advanced Features",
+      "description": "Make the most of your training",
+      "personalizedPlan": "100% Personalized Plan",
+      "personalizedPlanDesc": "Your plan was generated based on your unique profile",
+      "personalizedPlanDescFuture": "Will be generated based on your unique profile",
+      "aiAnalysis": "AI Analysis",
+      "aiAnalysisDesc": "Deep insights about your progress",
+      "stravaIntegration": "Strava Integration",
+      "stravaIntegrationDesc": "Automatic workout synchronization"
+    },
+    "workoutLog": {
+      "title": "Confirm Workout Completed",
+      "description": "Record how your workout went and share your perceptions",
+      "completed": "Did you complete this workout?",
+      "completedYes": "Yes, I completed the workout",
+      "completedNo": "No, I couldn't do it",
+      "feeling": "How did you feel during the workout?",
+      "feelings": {
+        "excellent": "😄 Excellent - I felt great!",
+        "good": "😊 Good - It was a positive workout",
+        "ok": "😐 Ok - Normal, nothing special",
+        "tired": "😓 Tired - It was difficult",
+        "bad": "😣 Bad - Very challenging"
+      },
+      "effort": "Perceived effort level (1-10)",
+      "effortEasy": "1 - Very easy",
+      "effortMax": "10 - Maximum effort",
+      "notes": "Observations and comments (optional)",
+      "notesPlaceholder": "How was the workout? Any difficulties? Did you feel any pain? Share your thoughts...",
+      "notesHelp": "Your observations help AI better personalize your training plan.",
+      "save": "Save Report",
+      "saving": "Saving..."
+    }
+  },
+  "plan": {
+    "title": "Training Plan",
+    "subtitle": "Your personalized plan",
+    "weekView": "Week View",
+    "monthView": "Month View",
+    "calendarView": "Calendar",
+    "week": "Week",
+    "phase": "Phase",
+    "phases": {
+      "base": "Base",
+      "build": "Build",
+      "peak": "Peak",
+      "taper": "Taper",
+      "recovery": "Recovery"
+    },
+    "workout": {
+      "type": "Type",
+      "distance": "Distance",
+      "duration": "Duration",
+      "pace": "Pace",
+      "intensity": "Intensity",
+      "description": "Description",
+      "warmup": "Warmup",
+      "main": "Main",
+      "cooldown": "Cooldown",
+      "notes": "Notes",
+      "completed": "Completed",
+      "pending": "Pending",
+      "skipped": "Skipped",
+      "markComplete": "Mark as complete",
+      "logActivity": "Log activity",
+      "viewDetails": "View details"
+    },
+    "workoutTypes": {
+      "easy": "Easy Run",
+      "long": "Long Run",
+      "tempo": "Tempo Run",
+      "intervals": "Intervals",
+      "hills": "Hill Repeats",
+      "recovery": "Recovery",
+      "race": "Race/Time Trial",
+      "cross": "Cross Training",
+      "rest": "Rest",
+      "strength": "Strength"
+    },
+    "intensityLevels": {
+      "veryEasy": "Very Easy",
+      "easy": "Easy",
+      "moderate": "Moderate",
+      "hard": "Hard",
+      "veryHard": "Very Hard"
+    },
+    "adjustPlan": "Adjust Plan",
+    "regeneratePlan": "Regenerate Plan",
+    "downloadPlan": "Download Plan"
+  },
+  "header": {
+    "brand": "Athera Run",
+    "tagline": "Smart Training",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "plano": "Plan",
+      "treinos": "Workouts"
+    },
+    "mobileSelect": "Navigation",
+    "userMenu": {
+      "label": "User menu",
+      "login": "Login",
+      "signup": "Sign Up",
+      "editProfile": "Edit Profile",
+      "adminPanel": "Admin Panel",
+      "upgrade": "Upgrade",
+      "logout": "Logout",
+      "loggingOut": "Logging out..."
+    }
+  },
+  "footer": {
+    "about": "About",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "contact": "Contact",
+    "rights": "© {{year}} Athera Run. All rights reserved."
+  },
+  "errors": {
+    "pageNotFound": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn't find the page you're looking for.",
+      "goHome": "Go to Home"
+    },
+    "genericError": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Please try again later.",
+      "retry": "Try again"
+    }
+  },
+  "loading": {
+    "pleaseWait": "Please wait...",
+    "loading": "Loading",
+    "processing": "Processing",
+    "saving": "Saving",
+    "deleting": "Deleting",
+    "uploading": "Uploading"
+  },
+  "plano": {
+    "title": "My Training Plan",
+    "subtitle": "Personalized plan for {{goal}}",
+    "loading": "Loading...",
+    "noPlan": {
+      "title": "No Plan Found",
+      "description": "You don't have a personalized training plan yet.",
+      "button": "Generate My Plan"
+    },
+    "summary": {
+      "goal": "Goal",
+      "currentWeek": "Current Week",
+      "progress": "Progress",
+      "completedWorkouts": "Workouts completed",
+      "totalDuration": "Total Duration",
+      "weeks": "weeks"
+    },
+    "weekNavigation": {
+      "week": "Week",
+      "of": "of",
+      "currentWeek": "Current Week",
+      "weekFocus": "Week Focus",
+      "noWorkouts": "No workouts available for this week",
+      "loadingWeek": "Loading week data..."
+    },
+    "workout": {
+      "distance": "{{distance}} km",
+      "duration": "{{duration}} min",
+      "pace": "Pace: {{pace}}"
+    },
+    "phases": {
+      "base": "Base",
+      "build": "Build",
+      "peak": "Peak",
+      "taper": "Taper",
+      "race": "Race",
+      "baseaerobia": "Aerobic Base",
+      "base aerobia": "Aerobic Base",
+      "construcao": "Build",
+      "construção": "Build",
+      "pico": "Peak",
+      "polimento": "Taper",
+      "corrida": "Race"
+    },
+    "workoutTypes": {
+      "easy": "Easy Run",
+      "long": "Long Run",
+      "threshold": "Threshold Run",
+      "interval": "Interval Run",
+      "tempo": "Tempo Run",
+      "recovery": "Recovery",
+      "rest": "Rest",
+      "running": "Running",
+      "strength": "Strength",
+      "cross": "Cross-training"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "registerWorkout": "Register Workout",
+      "viewDashboard": "View Dashboard",
+      "manageRaces": "Manage Races"
+    },
+    "goalLabels": {
+      "10k": "10km",
+      "half_marathon": "Half Marathon",
+      "marathon": "Marathon"
+    },
+    "daysOfWeek": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "goalDescription": "Personalized plan for {{goal}}"
+  },
+  "perfil": {
+    "title": "My Profile",
+    "subtitle": "Manage your information and training goals",
+    "loading": "Loading profile...",
+    "error": "Error loading profile",
+    "reloadPage": "Reload Page",
+    "tabs": {
+      "profile": "Profile",
+      "medical": "Medical",
+      "races": "Races",
+      "actions": "Actions"
+    },
+    "profileTab": {
+      "title": "Athlete Information",
+      "description": "Manage all aspects of your runner profile"
+    },
+    "actions": {
+      "title": "System Actions",
+      "description": "Advanced operations to manage your plan and profile",
+      "regeneratePlan": {
+        "title": "Regenerate Training Plan",
+        "description": "Generates a new plan based on your current information. Training history will be preserved.",
+        "button": "Regenerate Plan",
+        "buttonLoading": "Regenerating...",
+        "dialogTitle": "Regenerate Training Plan?",
+        "dialogDescription": "This action will delete your current plan and generate a new one based on your updated information. Past workouts will be preserved.",
+        "successDeleted": "Plan deleted! Generating new plan...",
+        "successGenerated": "New plan successfully generated!",
+        "errorDelete": "Error deleting plan",
+        "errorGenerate": "Error generating new plan",
+        "errorRegenerate": "Error regenerating plan"
+      },
+      "deleteProfile": {
+        "title": "Delete Athlete Profile",
+        "description": "Permanently removes all your athlete information and training plan. This action CANNOT be undone!",
+        "button": "Delete Profile",
+        "buttonLoading": "Deleting...",
+        "dialogTitle": "Are you absolutely sure?",
+        "dialogIntro": "This action will:",
+        "dialogItems": {
+          "deleteProfile": "Delete your athlete profile",
+          "deletePlan": "Delete your training plan",
+          "deleteHistory": "Delete all training history",
+          "redirect": "Redirect you to onboarding"
+        },
+        "dialogWarning": "This action CANNOT be undone!",
+        "confirmButton": "Yes, delete everything",
+        "success": "Profile deleted! Redirecting...",
+        "error": "Error deleting profile"
+      }
+    },
+    "toasts": {
+      "profileUpdated": "Profile successfully updated!",
+      "adjustPlanQuestion": "Would you like to adjust your training plan?",
+      "adjustPlanButton": "Adjust",
+      "planAdjusted": "Plan automatically adjusted!",
+      "errorLoadingProfile": "Error loading profile. Please reload the page.",
+      "errorConnection": "Error loading profile. Check your connection.",
+      "errorUpdatingProfile": "Error updating profile"
+    }
+  },
+  "paywall": {
+    "title": "Premium Feature",
+    "description": "is an exclusive feature for Premium subscribers.",
+    "withPremium": "With Premium you get:",
+    "benefits": {
+      "strava": "Full Strava integration",
+      "autoAdjust": "Intelligent auto-adjustment of workouts",
+      "aiChat": "Unlimited chat with specialized AI",
+      "analytics": "Advanced analytics and insights",
+      "multipleGoals": "Multiple simultaneous goals",
+      "priority": "Priority support"
+    },
+    "viewPlans": "View Premium Plans",
+    "maybeLater": "Maybe later"
+  },
+  "subscription": {
+    "title": "Manage Subscription",
+    "subtitle": "View and manage your subscription",
+    "currentPlan": "Current Plan",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusTrial": "Trial",
+    "statusFree": "Free",
+    "planFree": "Free",
+    "planMonthly": "Premium Monthly",
+    "planAnnual": "Premium Annual",
+    "subscribePremium": "Subscribe to Premium",
+    "manageSubscription": "Manage Subscription",
+    "opening": "Opening...",
+    "loadingError": "Error loading data",
+    "portalUrlError": "Portal URL not received",
+    "portalOpenError": "Error opening portal: {{error}}",
+    "requestError": "Error processing request"
+  },
+  "tracking": {
+    "title": "My Workouts",
+    "subtitle": "Log your workouts and track your progress"
+  },
+  "training": {
+    "title": "AI Analysis",
+    "subtitle": "Deep insights about your progress and performance",
+    "generateNew": "Generate New Analysis",
+    "selectPeriod": "Select the period and let AI analyze your progress",
+    "lastWeek": "Last Week",
+    "lastMonth": "Last Month",
+    "analyzing": "Analyzing...",
+    "generateAnalysis": "Generate Analysis",
+    "noAnalysis": "No analysis yet",
+    "recordWorkouts": "Record some workouts and generate your first AI analysis",
+    "weeklyAnalysis": "Weekly Analysis",
+    "monthlyAnalysis": "Monthly Analysis",
+    "until": "until",
+    "withAlerts": "With Alerts",
+    "normal": "Normal",
+    "summary": "Summary",
+    "workouts": "Workouts",
+    "distance": "Distance",
+    "performance": "Performance",
+    "recovery": "Recovery",
+    "insights": "Insights",
+    "recommendations": "Recommendations",
+    "generatedAt": "Generated at"
+  },
+  "calculator": {
+    "title": "VDOT Calculator",
+    "description": "Calculate your personalized paces based on Jack Daniels system. Use your recent 10km time to determine your ideal training zones.",
+    "vdotLevel": "VDOT 37-38",
+    "vdotLevelDesc": "Your current level based on 10km pace (5:40-5:50/km)",
+    "goalTitle": "Goal: 4h",
+    "goalDesc": "Target marathon pace: 5:41/km - perfectly achievable",
+    "zonesTitle": "5 Zones",
+    "zonesDesc": "Easy, Marathon, Threshold, Interval, Repetition",
+    "understandingTitle": "Understanding Training Zones",
+    "understandingDesc": "Each zone has a specific purpose in developing aerobic capacity",
+    "ePaceTitle": "E-Pace (Easy)",
+    "ePaceDesc": "Conversational pace, used in 80% of training. Develops aerobic base and promotes active recovery.",
+    "mPaceTitle": "M-Pace (Marathon)",
+    "mPaceDesc": "Your target marathon pace. Used in specific long runs to adapt body and mind to race effort.",
+    "tPaceTitle": "T-Pace (Threshold)",
+    "tPaceDesc": "Comfortably hard pace. Improves lactate threshold and ability to sustain moderate efforts.",
+    "iPaceTitle": "I-Pace (Interval)",
+    "iPaceDesc": "Intervals to develop VO2max. Used in quality sessions to improve aerobic power.",
+    "rPaceTitle": "R-Pace (Repetition)",
+    "rPaceDesc": "Fast repetitions to improve running form, economy and neuromuscular speed. Limited use in marathon.",
+    "distribution8020Title": "80/20 Distribution",
+    "distribution8020Desc": "80% of volume at E-Pace, 20% at moderate/high intensities. Fundamental principle for aerobic development.",
+    "formTitle": "Calculate VDOT from 10km Time",
+    "formDescription": "Enter your recent 10km time to calculate your VDOT and personalized paces",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "calculate": "Calculate",
+    "result": "Result:",
+    "time": "Time:",
+    "vdot": "VDOT:",
+    "avgPace": "Average Pace:",
+    "yourPacesTitle": "Your Training Paces (VDOT {{vdot}})",
+    "yourPacesDescription": "Use these paces to structure your workouts according to each zone",
+    "projectionTitle": "Time Projections for Other Distances:",
+    "projectionMeta": "~4h00 (goal)",
+    "marathonPace": "Marathon Pace:",
+    "tableTitle": "VDOT Reference Table",
+    "tableDescription": "Compare different VDOT levels and their respective paces",
+    "paceZones": {
+      "easy": {
+        "name": "Easy (E-Pace)",
+        "description": "Easy runs and recovery"
+      },
+      "marathon": {
+        "name": "Marathon (M-Pace)",
+        "description": "Target marathon pace"
+      },
+      "threshold": {
+        "name": "Threshold (T-Pace)",
+        "description": "Threshold workouts"
+      },
+      "interval": {
+        "name": "Interval (I-Pace)",
+        "description": "VO2max intervals"
+      },
+      "repetition": {
+        "name": "Repetition (R-Pace)",
+        "description": "Fast repetitions"
+      }
+    },
+    "tableHeaders": {
+      "vdot": "VDOT",
+      "easy": "Easy",
+      "marathon": "Marathon",
+      "threshold": "Threshold",
+      "interval": "Interval"
+    }
+  },
+  "chat": {
+    "title": "AI Coach Chat",
+    "subtitle": "Ask questions about training, nutrition, recovery and race preparation",
+    "instruction": "Click the floating button in the bottom right corner to start the chat 👇",
+    "chatTitle": "AI Coach",
+    "chatDescription": "Ask your training questions",
+    "messagesRemaining": "remaining",
+    "greeting": "👋 Hello! How can I help?",
+    "subGreeting": "Ask about workouts, nutrition, recovery and more!",
+    "suggestedQuestions": "Suggested questions:",
+    "inputPlaceholder": "Type your question...",
+    "sendError": "Error sending message",
+    "paywallFeature": "Unlimited AI Chat",
+    "paywallDescription": "Continue asking questions about training, nutrition and running without limits",
+    "questions": {
+      "nutrition": "How should I eat before a long race?",
+      "kneePain": "What to do when I feel knee pain during training?",
+      "paceVsInterval": "What's the difference between tempo and interval training?",
+      "improveSpeed": "How to improve my running speed?",
+      "sleep": "How many hours of sleep do I need to recover well?"
+    }
+  },
+  "strava": {
+    "title": "Strava Integration",
+    "description": "Connect your Strava account to import workouts automatically",
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "setupInfo": "To activate Strava integration, you need to first configure the API credentials.",
+    "setupLink": "View setup instructions",
+    "connect": "Connect with Strava",
+    "disconnect": "Disconnect",
+    "autoImportInfo": "Your new Strava activities will be imported automatically",
+    "syncActiveTitle": "Sync active!",
+    "syncActiveDesc": "New workouts appear here automatically in real time. If you want to import old activities, use the button below.",
+    "importHistory": "Import History (90 days)",
+    "importing": "Importing...",
+    "confirmImport": "Do you want to import activities from the last 90 days from Strava?",
+    "confirmDisconnect": "Are you sure you want to disconnect from Strava?",
+    "importSuccess": "Import completed!\n\n✅ {{imported}} activities imported\n⏭️ {{skipped}} activities skipped (duplicates)\n📊 Total analyzed: {{total}}",
+    "importError": "Error importing history. Please try again.",
+    "paywallFeature": "Strava Integration",
+    "paywallDescription": "Automatically sync your Strava workouts and have all your data in one place"
+  },
+  "workoutHistory": {
+    "title": "Workout History",
+    "description": "Your last 10 recorded workouts",
+    "noWorkouts": "No workouts recorded yet. Start recording your workouts above!",
+    "confirmDelete": "Are you sure you want to delete this workout?",
+    "deleteError": "Error deleting workout.",
+    "networkError": "Network error deleting workout.",
+    "openMenu": "Open menu",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editTitle": "Edit Workout",
+    "effort": "Effort:",
+    "types": {
+      "running": "Running",
+      "strength": "Strength Training",
+      "swimming": "Swimming",
+      "cross_training": "Cross Training",
+      "rest": "Rest"
+    },
+    "subtypes": {
+      "easy": "Easy",
+      "tempo": "Tempo",
+      "intervals": "Intervals",
+      "long": "Long Run",
+      "recovery": "Recovery"
+    }
+  },
+  "raceManagement": {
+    "title": "Race Management",
+    "description": "Add and manage your races. The system automatically classifies them as A, B or C.",
+    "reclassify": "Re-classify",
+    "classifying": "Classifying...",
+    "addRace": "Add Race",
+    "addRaceTitle": "Add New Race",
+    "addRaceDesc": "Add a race and the system will automatically classify it as A, B or C",
+    "editRaceTitle": "Edit Race",
+    "editRaceDesc": "Change the race data and the system will automatically reclassify it",
+    "raceName": "Race Name *",
+    "raceNamePlaceholder": "E.g.: São Paulo Marathon 2026",
+    "distance": "Distance *",
+    "raceDate": "Race Date *",
+    "targetTime": "Target Time (optional)",
+    "targetTimePlaceholder": "E.g.: 3:30:00",
+    "location": "Location (optional)",
+    "locationPlaceholder": "E.g.: São Paulo, SP",
+    "classification": "Race Classification *",
+    "adding": "Adding...",
+    "updating": "Updating...",
+    "update": "Update Race",
+    "cancel": "Cancel",
+    "confirmDelete": "Are you sure you want to delete this race?",
+    "addError": "Error adding race",
+    "updateError": "Error updating race",
+    "deleteError": "Error deleting race",
+    "noRaces": "No races registered yet.",
+    "noRacesDesc": "Add your races to get started!",
+    "editTooltip": "Edit race",
+    "deleteTooltip": "Delete race",
+    "goal": "Goal:",
+    "weeksBeforeA": "weeks before A race",
+    "priorities": {
+      "A": "Main Goal",
+      "B": "Preparatory",
+      "C": "Volume"
+    },
+    "priorityOptions": {
+      "A": {
+        "label": "Race A",
+        "description": "Main Goal"
+      },
+      "B": {
+        "label": "Race B",
+        "description": "Preparatory/Test"
+      },
+      "C": {
+        "label": "Race C",
+        "description": "Volume/Experience"
+      }
+    },
+    "autoClassification": {
+      "title": "Automatic Classification System:",
+      "raceA": "Race A: Your main goal - the entire plan is structured for this race",
+      "raceB": "Race B: Preparatory (2-6 weeks before A) - use as pace test",
+      "raceC": "Race C: Volume/experience - replaces long run, no taper"
+    },
+    "distances": {
+      "5k": "5km",
+      "10k": "10km",
+      "15k": "15km",
+      "10mile": "10 Miles",
+      "half_marathon": "Half Marathon",
+      "30k": "30km",
+      "marathon": "Marathon"
+    }
+  },
+  "nutrition": {
+    "title": "Nutrition Guide",
+    "subtitle": "Nutritional strategies for running"
+  },
+  "prevention": {
+    "title": "Injury Prevention",
+    "subtitle": "Stay healthy and running"
+  },
+  "glossary": {
+    "title": "Glossary",
+    "subtitle": "Running terms and concepts"
+  },
+  "overtraining": {
+    "title": "Overtraining",
+    "subtitle": "Understand and prevent excessive training"
+  },
+  "pricing": {
+    "title": "Plans & Pricing",
+    "subtitle": "Choose the perfect plan for you"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "subtitle": "Manage users and system"
+  }
+}
