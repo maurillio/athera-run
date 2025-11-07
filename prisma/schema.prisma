@@ -318,9 +318,9 @@ model RaceGoal {
 
 model CustomTrainingPlan {
   id                Int             @id @default(autoincrement())
-  goalDistance      String
+  goalDistance      String?
   runningLevel      String
-  targetRaceDate    DateTime
+  targetRaceDate    DateTime?
   startDate         DateTime
   totalWeeks        Int
   currentWeek       Int             @default(1)
