@@ -303,6 +303,9 @@
       "subtitle": "¿Cuándo puedes entrenar?",
       "trainingDaysTitle": "Días para Correr",
       "selectDaysDescription": "Selecciona los días que puedes correr",
+      "longRunDayTitle": "Día del Entrenamiento Largo",
+      "longRunDayDescription": "Elige el día de la semana para tu entrenamiento más largo. Generalmente es el fin de semana, ¡pero tú decides!",
+      "selectLongRunDay": "Selecciona un día...",
       "daysOfWeek": {
         "sunday": "Domingo",
         "monday": "Lunes",

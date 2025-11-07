@@ -303,6 +303,9 @@
       "subtitle": "When can you train?",
       "trainingDaysTitle": "Running Days",
       "selectDaysDescription": "Select the days you can run",
+      "longRunDayTitle": "Long Run Day",
+      "longRunDayDescription": "Choose the day of the week for your longest training. Usually on weekends, but you decide!",
+      "selectLongRunDay": "Select a day...",
       "daysOfWeek": {
         "sunday": "Sunday",
         "monday": "Monday",
