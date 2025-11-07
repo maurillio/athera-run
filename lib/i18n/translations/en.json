@@ -534,6 +534,20 @@
     },
     "preferences": {
       "title": "Training Preferences",
+      "language": {
+        "title": "Language and Units",
+        "label": "Interface Language",
+        "description": "Select your preferred language. The interface will update automatically."
+      },
+      "units": {
+        "label": "Unit System",
+        "metric": "Metric",
+        "imperial": "Imperial"
+      },
+      "languageChanged": "Language changed successfully!",
+      "languageChangeError": "Error changing language",
+      "preferencesSaved": "Preferences saved successfully!",
+      "saveError": "Error saving preferences",
       "location": {
         "label": "🏃 Where Do You Prefer to Train?",
         "street": "street",

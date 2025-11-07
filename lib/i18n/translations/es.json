@@ -534,6 +534,20 @@
     },
     "preferences": {
       "title": "Preferencias de Entrenamiento",
+      "language": {
+        "title": "Idioma y Unidades",
+        "label": "Idioma de la Interfaz",
+        "description": "Selecciona tu idioma preferido. La interfaz se actualizará automáticamente."
+      },
+      "units": {
+        "label": "Sistema de Unidades",
+        "metric": "Métrico",
+        "imperial": "Imperial"
+      },
+      "languageChanged": "¡Idioma cambiado exitosamente!",
+      "languageChangeError": "Error al cambiar idioma",
+      "preferencesSaved": "¡Preferencias guardadas exitosamente!",
+      "saveError": "Error al guardar preferencias",
       "location": {
         "label": "🏃 ¿Dónde Prefieres Entrenar?",
         "street": "calle",
