@@ -46,11 +46,22 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   };
 
   const handleNext = () => {
-    if (!goal) return;
+    if (!goal) {
+      alert(t('selectGoalFirst') || 'Por favor, selecione um objetivo');
+      return;
+    }
+    
+    // Warn if race goal info is missing
+    if (goalDistance && !targetRaceDate) {
+      if (!confirm(t('confirmNoRaceDate') || 'Você selecionou uma distância mas não informou a data da prova. Deseja continuar?')) {
+        return;
+      }
+    }
+    
     onUpdate({ 
       primaryGoal: goal, 
       motivation: motivation || undefined,
-      // Race goal data (required for plan generation)
+      // Race goal data - send only if goalDistance is selected
       goalDistance: goalDistance || undefined,
       targetRaceDate: targetRaceDate || undefined,
       targetTime: targetTime || undefined,
