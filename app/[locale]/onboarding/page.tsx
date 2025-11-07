@@ -188,13 +188,17 @@ export default function OnboardingPage() {
         currentWeeklyKm: formData.weeklyVolume, // Mapear weeklyVolume → currentWeeklyKm
         longestRun: formData.longestRun,
         preferredPace: formData.preferredPace,
-        otherSportsExperience: formData.otherSports, // Mapear otherSports → otherSportsExperience
+        otherSportsExperience: Array.isArray(formData.otherSports) 
+          ? (formData.otherSports.length > 0 ? formData.otherSports.join(', ') : null)
+          : (formData.otherSports || null), // Converter array para string ou null
         
         // Performance (Step 3)
-        bestTimes: formData.personalBests, // Mapear personalBests → bestTimes
+        bestTimes: (formData.personalBests && Object.keys(formData.personalBests).length > 0) 
+          ? formData.personalBests 
+          : null, // Converter objeto vazio em null
         
         // Saúde (Step 4)
-        injuryDetails: [...(formData.injuries || []), ...(formData.medicalConditions || [])].join('; '),
+        injuryDetails: [...(formData.injuries || []), ...(formData.medicalConditions || [])].filter(x => x).join('; ') || null,
         medicalNotes: formData.medicalNotes,
         
         // Objetivos (Step 5) - CRITICAL
