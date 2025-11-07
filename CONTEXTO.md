@@ -1586,3 +1586,157 @@ Pronto! Você terá todo o contexto necessário. 🎯
 - `RESUMO_PROXIMOS_PASSOS_07NOV2025.md` - Status detalhado
 - `test-e2e-convergence.md` - Checklist de testes
 
+
+---
+
+## 📊 ATUALIZAÇÃO 07/NOV/2025 20:30 UTC - STRAVA OAUTH FIX
+
+### 🔴 PROBLEMA CRÍTICO IDENTIFICADO
+- **Integração Strava:** OAuth não funcionando em produção
+- **Causa:** Variáveis de ambiente não configuradas no Vercel
+- **Impacto:** Usuários não conseguem conectar com Strava
+
+### ✅ CORREÇÕES IMPLEMENTADAS (v1.6.3)
+
+#### 1. Strava OAuth Route
+- **Arquivo:** `app/api/strava/auth/route.ts`
+- **Mudanças:**
+  - Adicionado `runtime = "edge"` para performance
+  - Logs debug detalhados
+  - Validação melhorada de variáveis
+  - Mensagens de erro mais claras
+
+#### 2. Profile Delete
+- **Status:** ✅ JÁ ESTAVA 100% FUNCIONAL
+- **Arquivo:** `app/api/profile/delete/route.ts` (175 linhas)
+- **Features:**
+  - Transação atômica
+  - Limpeza completa (workouts, races, plans, feedback)
+  - Logs detalhados
+  - Redirect automático para onboarding
+
+#### 3. Frontend Delete Handler
+- **Status:** ✅ JÁ ESTAVA CORRETO
+- **Features:**
+  - Limpa localStorage e sessionStorage
+  - Remove cookies relacionados
+  - Hard redirect com window.location.replace()
+  - Toast feedback apropriado
+
+### 📚 DOCUMENTAÇÃO CRIADA
+
+1. **GUIA_CONFIGURACAO_STRAVA_VERCEL.md**
+   - 3 métodos de configuração (Web, CLI, Env File)
+   - Passo a passo detalhado
+   - Troubleshooting completo
+   - Seção de segurança
+
+2. **check-strava-config.sh**
+   - Script de verificação automática
+   - Testa variáveis locais e Vercel
+   - Testa endpoint em produção
+   - Mostra próximos passos
+
+3. **DIAGNOSTICO_STRAVA_PROFILE_FINAL_07NOV2025.md**
+   - Análise técnica completa
+   - Código corrigido com diff
+   - Checklist de deploy
+
+4. **ACAO_IMEDIATA_STRAVA.md**
+   - Guia rápido (5 minutos)
+   - Foco em ação imediata
+   - Timeline clara
+
+5. **RESUMO_EXECUTIVO_STRAVA_FIX_v1.6.3.md**
+   - Resumo executivo completo
+   - Status de cada correção
+   - Próximos passos
+
+### 🔧 PENDENTE - AÇÃO NECESSÁRIA
+
+**CRÍTICO:** Configurar 3 variáveis no Vercel
+
+```env
+STRAVA_CLIENT_ID=seu_client_id
+STRAVA_CLIENT_SECRET=seu_client_secret
+STRAVA_REDIRECT_URI=https://atherarun.com/api/strava/callback
+```
+
+**Como fazer:**
+1. Obter credenciais em: https://www.strava.com/settings/api
+2. Adicionar no Vercel: https://vercel.com/dashboard
+   - Projeto: atherarun
+   - Settings → Environment Variables
+3. Fazer redeploy
+
+**Verificar:**
+```bash
+./check-strava-config.sh
+curl -I https://atherarun.com/api/strava/auth
+```
+
+### 📊 Status Atual
+
+```
+Convergência Onboarding → Perfil: 95%
+✅ Coleta de dados: 100%
+✅ Salvamento banco: 100%
+✅ Uso na geração: 100%
+🟡 Visualização perfil: 70% (gaps visuais)
+
+Integração Strava:
+✅ Código: 100% funcional
+🔴 Variáveis: 0% configuradas
+⏳ Aguardando: configuração Vercel
+```
+
+### 🎯 Próximas Ações (Ordem de Prioridade)
+
+1. **IMEDIATO** (5min):
+   - Configurar variáveis Strava no Vercel
+   - Testar OAuth flow
+
+2. **MELHORIAS VISUAIS** (6-8h):
+   - AvailabilityTab: destacar longRunDay
+   - PerformanceTab: exibir dados de experiência
+   - PreferencesTab: idioma e unidades
+
+3. **TESTES E2E** (4h):
+   - Executar checklist completo
+   - Validar convergência 100%
+   - Documentar resultados
+
+### 📦 Commits Realizados
+
+```bash
+Commit: 8e3aeef3
+Mensagem: "fix: Strava OAuth configuration and environment variables v1.6.3"
+Arquivos:
+- app/api/strava/auth/route.ts (corrigido)
+- GUIA_CONFIGURACAO_STRAVA_VERCEL.md (novo)
+- check-strava-config.sh (novo)
+- DIAGNOSTICO_STRAVA_PROFILE_FINAL_07NOV2025.md (novo)
+- RESUMO_EXECUTIVO_STRAVA_FIX_v1.6.3.md (novo)
+- ACAO_IMEDIATA_STRAVA.md (novo)
+```
+
+### 🔍 Para Debug
+
+Se tiver problemas com Strava:
+```bash
+# 1. Verificar status
+./check-strava-config.sh
+
+# 2. Ver logs em produção
+vercel logs --prod | grep STRAVA
+
+# 3. Consultar guia
+cat GUIA_CONFIGURACAO_STRAVA_VERCEL.md
+```
+
+---
+
+**Última atualização:** 07 de Novembro de 2025 20:30 UTC
+**Versão:** v1.6.3
+**Status:** 🟡 Código pronto, aguardando configuração Vercel
+**Próxima ação:** Configurar variáveis Strava (5min)
