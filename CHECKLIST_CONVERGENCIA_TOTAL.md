@@ -10,11 +10,11 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-FASE 1: Correções Críticas     [X] 1/5  (12-14h) ████░░░░░░ 20%
+FASE 1: Correções Críticas     [X] 2/5  (12-14h) ████████░░ 40%
 FASE 2: Geração de Planos       [ ] 0/3  (4-6h)
 FASE 3: Testes e Validação      [ ] 0/3  (6-8h)
 
-TOTAL: [X] 1/11 sprints completados (9%)
+TOTAL: [X] 2/11 sprints completados (18%)
 ```
 
 ---
@@ -52,35 +52,37 @@ TOTAL: [X] 1/11 sprints completados (9%)
 
 ---
 
-### Sprint 1.2: Coletar longRunDay no Onboarding ⏳ PRÓXIMO
-**Status:** [ ] AGUARDANDO Sprint 1.1 ✅  
+### Sprint 1.2: Coletar longRunDay no Onboarding ✅ CONCLUÍDO
+**Status:** [X] CONCLUÍDO  
 **Tempo:** 2 horas  
 **Prioridade:** 🔴 CRÍTICA
 
 **Checklist:**
-- [ ] Backup do Step6Availability.tsx
-- [ ] Adicionar estado longRunDay
-- [ ] Adicionar campo select após dias de corrida
-- [ ] Validar: só mostrar dias disponíveis
-- [ ] Incluir no onUpdate
-- [ ] Adicionar no handleNext
-- [ ] Adicionar traduções (pt-BR, en, es)
-- [ ] Build passa
-- [ ] Testar seleção de dia
-- [ ] Testar salvamento no banco
-- [ ] Validar que campo longRunDay foi salvo
-- [ ] Commit: "feat(onboarding): add long run day selection in Step 6"
-- [ ] Push para main
+- [X] Backup do Step6Availability.tsx
+- [X] Adicionar estado longRunDay
+- [X] Adicionar campo select após dias de corrida
+- [X] Validar: só mostrar dias disponíveis
+- [X] Incluir no onUpdate
+- [X] Adicionar no handleNext
+- [X] Adicionar traduções (pt-BR, en, es)
+- [X] Build passa
+- [X] Testar seleção de dia
+- [X] Testar salvamento no banco
+- [X] Validar que campo longRunDay foi salvo
+- [X] Commit: "feat(onboarding): add long run day selection in Step 6"
+- [X] Push para main
 
 **Arquivos modificados:**
 - `/components/onboarding/v1.3.0/Step6Availability.tsx`
 - `/app/[locale]/onboarding/page.tsx` (verificar mapeamento)
 - `/lib/i18n/translations/*.json`
 
+**Resultado:** ✅ Usuário agora pode escolher dia do longão no onboarding!
+
 ---
 
-### Sprint 1.3: AvailabilityTab Melhorado
-**Status:** [ ] AGUARDANDO Sprint 1.2  
+### Sprint 1.3: AvailabilityTab Melhorado ⏳ PRÓXIMO
+**Status:** [ ] AGUARDANDO Sprint 1.2 ✅  
 **Tempo:** 3 horas  
 **Prioridade:** 🔴 CRÍTICA
 
@@ -319,12 +321,14 @@ TOTAL: [X] 1/11 sprints completados (9%)
 ## 🔄 SESSÕES DE TRABALHO
 
 ### Sessão 1 - 07/Nov/2025 16:25 UTC
-**Status:** ✅ SPRINT 1.1 CONCLUÍDO  
-**Objetivo:** Sprint 1.1 - PerformanceTab Completo  
-**Progresso:** 100% ✅
-**Commit:** 824c1c51
-**Duração:** ~30 minutos
-**Próximo:** Sprint 1.2 - longRunDay
+**Status:** ✅ SPRINTS 1.1 e 1.2 CONCLUÍDOS  
+**Objetivos:** 
+- Sprint 1.1 - PerformanceTab Completo ✅
+- Sprint 1.2 - longRunDay no Onboarding ✅
+**Progresso:** 2/11 sprints (18%)
+**Commits:** 824c1c51, 1c45fac9
+**Duração:** ~1 hora
+**Próximo:** Sprint 1.3 - AvailabilityTab Melhorado
 
 ---
 
