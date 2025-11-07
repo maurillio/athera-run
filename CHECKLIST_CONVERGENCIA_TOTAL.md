@@ -361,6 +361,6 @@ TOTAL: [X] 2/11 sprints completados (18%)
 
 ---
 
-**Última atualização:** 07/Nov/2025 17:00 UTC  
-**Próxima ação:** Sprint 1.2 - Coletar longRunDay no Onboarding
-**Status:** 1/11 sprints concluídos (9%) - FASE 1 em progresso
+**Última atualização:** 07/Nov/2025 17:15 UTC  
+**Próxima ação:** Sprint 1.3 - AvailabilityTab Melhorado
+**Status:** 2/11 sprints concluídos (18%) - FASE 1 em progresso (40%)

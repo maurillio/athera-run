@@ -96,7 +96,7 @@ FASE 3: ░░░░░░░░░░  0% (0/3)  ⏰ AGUARDANDO
 
 ---
 
-**Última atualização:** 07/Nov/2025 17:00 UTC  
+**Última atualização:** 07/Nov/2025 17:15 UTC  
 **Por:** Sistema de Tracking Automático  
-**Sprint Atual:** 1.2 (aguardando)  
-**Próximo:** Adicionar longRunDay no onboarding
+**Sprint Atual:** 1.3 (iniciando agora)  
+**Próximo:** Melhorar AvailabilityTab com resumo visual e infraestrutura
