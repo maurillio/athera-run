@@ -166,38 +166,69 @@ export default function PerfilPage() {
   };
 
   const handleDeleteProfile = async () => {
+    console.log('[FRONTEND] 🚀 Iniciando exclusão de perfil...');
     setDeletingProfile(true);
+    
     try {
-      const response = await fetch('/api/profile/delete', { method: 'DELETE' });
+      console.log('[FRONTEND] 📡 Fazendo requisição DELETE para /api/profile/delete');
+      
+      const response = await fetch('/api/profile/delete', { 
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('[FRONTEND] 📥 Response status:', response.status, response.statusText);
+      
       const data = await response.json();
+      console.log('[FRONTEND] 📊 Response data:', data);
 
       if (response.ok && data.success) {
+        console.log('[FRONTEND] ✅ Exclusão bem-sucedida!');
+        
         toast.success(t('actions.deleteProfile.success'), {
           description: data.message,
           duration: 3000
         });
         
-        // Limpar cache local
+        // Limpar TODOS os caches
+        console.log('[FRONTEND] 🧹 Limpando caches...');
         if (typeof window !== 'undefined') {
           sessionStorage.clear();
-          localStorage.removeItem('athleteProfile');
+          localStorage.clear(); // Limpar tudo, não só athleteProfile
+          
+          // Limpar cookies se necessário
+          document.cookie.split(";").forEach((c) => {
+            document.cookie = c
+              .replace(/^ +/, "")
+              .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+          });
         }
+        
+        console.log('[FRONTEND] 🔄 Redirecionando para:', data.redirectTo);
         
         // Redirecionar para onboarding
         const redirectPath = data.redirectTo || '/onboarding';
         setTimeout(() => {
+          console.log('[FRONTEND] 🎯 Executando redirect...');
           window.location.href = redirectPath; // Hard redirect para limpar estado
         }, 1500);
       } else {
+        console.error('[FRONTEND] ❌ Erro na resposta:', data);
+        
         toast.error(data.error || t('actions.deleteProfile.error'), {
-          description: data.details
+          description: data.details || 'Detalhes não disponíveis'
         });
         setDeletingProfile(false);
       }
     } catch (error) {
-      console.error('[DELETE PROFILE] Erro:', error);
+      console.error('[FRONTEND] ❌ ERRO CRÍTICO:', error);
+      console.error('[FRONTEND] Tipo:', error instanceof Error ? error.constructor.name : typeof error);
+      console.error('[FRONTEND] Mensagem:', error instanceof Error ? error.message : String(error));
+      
       toast.error(t('actions.deleteProfile.error'), {
-        description: error instanceof Error ? error.message : 'Erro desconhecido'
+        description: error instanceof Error ? error.message : 'Erro desconhecido ao processar requisição'
       });
       setDeletingProfile(false);
     }
