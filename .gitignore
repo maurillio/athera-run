@@ -23,6 +23,11 @@
 !.env.example
 !.env.template
 
+# NEVER commit these - GitGuardian warning
+**/*connection*string*
+**/*database*url*
+**/prisma/.env
+
 # Vercel
 .vercel
 .vercel/*
