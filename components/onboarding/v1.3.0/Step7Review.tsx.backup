@@ -47,24 +47,6 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     if (data.longestRun) sections.experience.push(`🏃‍♂️ Longão de ${data.longestRun}km`);
     if (data.preferredPace) sections.experience.push(`⏱️ Pace preferido: ${data.preferredPace}`);
     
-    // Outros esportes
-    if (data.otherSports && data.otherSports.length > 0) {
-      sections.experience.push(`🎾 Outros esportes: ${data.otherSports.join(', ')}`);
-    }
-    if (data.otherSportsYears) {
-      sections.experience.push(`📅 Anos praticando: ${data.otherSportsYears}`);
-    }
-    
-    // Best times
-    if (data.bestTimes && data.bestTimes.length > 0) {
-      sections.experience.push(`🏆 Melhores tempos registrados`);
-      data.bestTimes.forEach((bt: any) => {
-        if (bt.distance && bt.time) {
-          sections.experience.push(`   • ${bt.distance}: ${bt.time}`);
-        }
-      });
-    }
-    
     // ===== OBJETIVOS =====
     if (data.primaryGoal) {
       const goalLabels: any = {
@@ -108,57 +90,13 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       sections.availability.push(`📅 ${trainingDaysCount} dias de treino por semana`);
     }
     
-    // Dias de corrida
-    if (data.availableDays?.running && data.availableDays.running.length > 0) {
-      const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const runDays = data.availableDays.running.map((d: number) => days[d]).join(', ');
-      sections.availability.push(`🏃 Dias de corrida: ${runDays}`);
-    } else if (data.trainingActivities && data.trainingActivities.length > 0) {
-      const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const runDays = data.trainingActivities.map((d: number) => days[d]).join(', ');
-      sections.availability.push(`🏃 Dias de corrida: ${runDays}`);
-    }
-    
     // Dia do longão
     if (data.longRunDay !== null && data.longRunDay !== undefined) {
       const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
       sections.availability.push(`🏃‍♂️ Longão: ${days[data.longRunDay]}`);
     }
     
-    // Outras atividades
-    const activities = [];
-    if (data.availableDays?.strength && data.availableDays.strength.length > 0) {
-      activities.push(`💪 Musculação`);
-    }
-    if (data.availableDays?.swimming && data.availableDays.swimming.length > 0) {
-      activities.push(`🏊 Natação`);
-    }
-    if (data.availableDays?.yoga && data.availableDays.yoga.length > 0) {
-      activities.push(`🧘 Yoga`);
-    }
-    if (data.availableDays?.crossTraining && data.availableDays.crossTraining.length > 0) {
-      activities.push(`🚴 Cross Training`);
-    }
-    if (activities.length > 0) {
-      sections.availability.push(`✨ Outras: ${activities.join(', ')}`);
-    }
-    
-    // Infraestrutura
-    const infrastructure = [];
-    if (data.hasGymAccess) infrastructure.push('Academia');
-    if (data.hasPoolAccess) infrastructure.push('Piscina');
-    if (data.hasTrackAccess) infrastructure.push('Pista');
-    if (infrastructure.length > 0) {
-      sections.availability.push(`🏗️ Recursos: ${infrastructure.join(', ')}`);
-    }
-    
     // ===== SAÚDE =====
-    if (data.sleepQuality) {
-      sections.health.push(`😴 Qualidade do sono: ${data.sleepQuality}/5`);
-    }
-    if (data.stressLevel) {
-      sections.health.push(`😰 Nível de estresse: ${data.stressLevel}/5`);
-    }
     if (data.injuries && data.injuries.length > 0) {
       sections.health.push(`⚠️ ${data.injuries.length} lesão(ões) relatada(s)`);
     }
