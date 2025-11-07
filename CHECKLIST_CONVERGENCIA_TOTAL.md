@@ -362,6 +362,6 @@ TOTAL: [X] 3/11 sprints completados (27%)
 
 ---
 
-**Última atualização:** 07/Nov/2025 17:15 UTC  
-**Próxima ação:** Sprint 1.3 - AvailabilityTab Melhorado
-**Status:** 2/11 sprints concluídos (18%) - FASE 1 em progresso (40%)
+**Última atualização:** 07/Nov/2025 17:35 UTC  
+**Próxima ação:** Sprint 1.4 - PreferencesTab com Idioma
+**Status:** 3/11 sprints concluídos (27%) - FASE 1 em progresso (60%)
