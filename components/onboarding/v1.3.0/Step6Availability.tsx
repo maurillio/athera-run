@@ -8,6 +8,11 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   const [runDays, setRunDays] = useState(data.availableDays?.running || []);
   const [otherActivities, setOtherActivities] = useState(data.availableDays?.other || {});
   
+  // v1.6.0 - Dia do Longão
+  const [longRunDay, setLongRunDay] = useState<number | null>(
+    data.longRunDay !== undefined ? data.longRunDay : null
+  );
+  
   // v1.3.0 - Infraestrutura
   const [hasGymAccess, setHasGymAccess] = useState(data.hasGymAccess ?? false);
   const [hasPoolAccess, setHasPoolAccess] = useState(data.hasPoolAccess ?? false);
@@ -79,6 +84,7 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
           running: runDays,
           other: Object.keys(cleanOther).length > 0 ? cleanOther : undefined
         },
+        longRunDay: longRunDay, // v1.6.0
         hasGymAccess,
         hasPoolAccess,
         hasTrackAccess,
@@ -92,7 +98,7 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [
-    runDays, otherActivities, hasGymAccess, hasPoolAccess, hasTrackAccess,
+    runDays, otherActivities, longRunDay, hasGymAccess, hasPoolAccess, hasTrackAccess,
     trainingLocations, preferredLocation, groupTraining, indoorOutdoor, onUpdate
   ]);
 
@@ -108,6 +114,8 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
         running: runDays,
         other: Object.keys(cleanOther).length > 0 ? cleanOther : undefined
       },
+      // v1.6.0 - Dia do Longão
+      longRunDay: longRunDay,
       // v1.3.0 - Infraestrutura
       hasGymAccess,
       hasPoolAccess,
@@ -144,6 +152,42 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
           <p className="text-sm text-gray-600 mt-2">✓ {runDays.length} dia(s) de corrida selecionado(s)</p>
         )}
       </div>
+
+      {/* v1.6.0 - Dia do Longão */}
+      {runDays.length > 0 && (
+        <div className="border-t pt-6">
+          <label className="block font-semibold mb-3 text-blue-900">
+            🏃‍♂️ {t('longRunDayTitle')} *
+          </label>
+          <p className="text-sm text-gray-600 mb-3">
+            {t('longRunDayDescription')}
+          </p>
+          
+          <select
+            value={longRunDay !== null && longRunDay !== undefined ? longRunDay : ''}
+            onChange={(e) => {
+              const day = e.target.value === '' ? null : parseInt(e.target.value);
+              setLongRunDay(day);
+            }}
+            className="w-full px-4 py-2 border-2 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          >
+            <option value="">{t('selectLongRunDay')}</option>
+            {runDays.map((dayIdx: number) => (
+              <option key={dayIdx} value={dayIdx}>
+                {days[dayIdx]}
+              </option>
+            ))}
+          </select>
+          
+          {longRunDay !== null && longRunDay !== undefined && (
+            <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-800 font-medium">
+                ✅ Seu treino longo será sempre {days[longRunDay]}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="border-t pt-6">
         <label className="block font-semibold mb-3">Outras Atividades (Opcional)</label>
