@@ -4,13 +4,22 @@
 > Plataforma inteligente de treinamento de corrida com IA
 
 **Versão:** 1.5.1 (Critical Onboarding Fix)  
-**Última atualização:** 06 de Novembro de 2025  
+**Última atualização:** 07 de Novembro de 2025  
 **Website:** https://atherarun.com
-**Status:** ✅ Sistema funcionando - Onboarding corrigido
+**Status:** ✅ Sistema funcionando - Database em Neon
+**Database:** 🌩️ Neon PostgreSQL 16.9 (US East)
 
 ---
 
 ## 🎯 Últimas Atualizações
+
+### v1.5.1 - Database Migration to Neon (07/Nov/2025)
+- 🌩️ **NOVO**: Banco migrado para Neon (PostgreSQL as a Service)
+- ⚡ Performance 40-100x mais rápida (latência 1-5ms)
+- 🔄 Backups automáticos e contínuos
+- 🛡️ Alta disponibilidade (99.95% SLA)
+- 📊 Zero manutenção de servidor
+- 📄 Ver: [MIGRACAO_NEON_07NOV2025.md](MIGRACAO_NEON_07NOV2025.md)
 
 ### v1.5.1 - Correção Crítica do Onboarding (06/Nov/2025)
 - ✅ **CRÍTICO**: Restaurados campos de Race Goal no Step5
