@@ -7,11 +7,40 @@ import { useTranslations } from '@/lib/i18n/hooks';
 export default function AvailabilityTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
   
-  // v1.6.0 - Padronização: ler apenas de trainingActivities
-  const [runDays, setRunDays] = useState(
-    userData.trainingActivities || []
-  );
-  const [strengthDays, setStrengthDays] = useState(userData.availableDays?.strength || []);
+  // v1.6.7 - Usar trainingSchedule como fonte única da verdade
+  const initializeFromSchedule = () => {
+    const schedule = userData.trainingSchedule || {};
+    const runDays: number[] = [];
+    const gymDays: number[] = [];
+    const allActivitiesByDay: {[key: number]: string[]} = {};
+    
+    Object.keys(schedule).forEach(dayKey => {
+      const dayIdx = parseInt(dayKey);
+      const dayData = schedule[dayIdx];
+      
+      if (dayData) {
+        if (dayData.running) {
+          runDays.push(dayIdx);
+        }
+        if (dayData.activities && Array.isArray(dayData.activities)) {
+          allActivitiesByDay[dayIdx] = dayData.activities;
+          dayData.activities.forEach((activity: string) => {
+            const activityLower = activity.toLowerCase();
+            if (activityLower.includes('muscula') || activityLower.includes('gym') || activityLower.includes('academia')) {
+              if (!gymDays.includes(dayIdx)) gymDays.push(dayIdx);
+            }
+          });
+        }
+      }
+    });
+    
+    return { runDays: runDays.sort(), gymDays: gymDays.sort(), allActivitiesByDay };
+  };
+  
+  const { runDays: initialRunDays, gymDays: initialGymDays, allActivitiesByDay } = initializeFromSchedule();
+  
+  const [runDays, setRunDays] = useState(initialRunDays);
+  const [strengthDays, setStrengthDays] = useState(initialGymDays);
   const [swimmingDays, setSwimmingDays] = useState(userData.availableDays?.swimming || []);
   const [crossTrainingDays, setCrossTrainingDays] = useState(userData.availableDays?.crossTraining || []);
   const [yogaDays, setYogaDays] = useState(userData.availableDays?.yoga || []);
