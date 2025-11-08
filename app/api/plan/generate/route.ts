@@ -23,6 +23,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
+    // Parse request body para obter customStartDate se fornecida
+    const body = await request.json().catch(() => ({}));
+    const customStartDate = body.startDate ? new Date(body.startDate) : undefined;
+
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: { athleteProfile: true },
@@ -186,9 +190,12 @@ export async function POST(request: NextRequest) {
     };
 
     console.log('[AI PLAN] Gerando plano com IA...');
+    if (customStartDate) {
+      console.log('[AI PLAN] Data de início customizada:', customStartDate.toISOString());
+    }
     
-    // Gerar plano com IA
-    const aiPlan = await generateAIPlan(aiProfile);
+    // Gerar plano com IA (passando customStartDate se fornecida)
+    const aiPlan = await generateAIPlan(aiProfile, 3, customStartDate);
 
     console.log('[AI PLAN] Plano gerado pela IA! Total de semanas:', aiPlan.totalWeeks);
 

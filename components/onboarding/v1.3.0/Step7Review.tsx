@@ -1,11 +1,146 @@
 'use client';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronLeft } from 'lucide-react';
+import { Loader2, ChevronLeft, Calendar } from 'lucide-react';
 
 export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
   const t = useTranslations('onboarding.step7');
   const tCommon = useTranslations('common');
+  const router = useRouter();
+  
+  // Estado para data de início do plano
+  const [planStartDate, setPlanStartDate] = useState<string>('');
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [generationStep, setGenerationStep] = useState(0);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  
+  // Mensagens de loading com humor
+  const loadingMessages = [
+    '🕶️ Colocando os óculos baixa pace...',
+    '⚡ Tomando o gel de carboidrato...',
+    '👟 Colocando o tênis de placa de carbono...',
+    '💧 Hidratando...',
+    '📊 Analisando seu perfil...',
+    '🎯 Calculando distâncias ideais...',
+    '📅 Organizando suas semanas de treino...',
+    '🏃 Definindo seus ritmos personalizados...',
+    '✨ Finalizando seu plano perfeito...'
+  ];
+  
+  // Calcular data mínima (hoje) e sugerida (próxima segunda)
+  useEffect(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const daysToMonday = dayOfWeek === 1 ? 0 : dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + daysToMonday);
+    
+    // Sugerir próxima segunda como padrão
+    setPlanStartDate(nextMonday.toISOString().split('T')[0]);
+  }, []);
+  
+  // Animação das mensagens de loading
+  useEffect(() => {
+    if (isGeneratingPlan) {
+      const interval = setInterval(() => {
+        setGenerationStep(prev => (prev + 1) % loadingMessages.length);
+      }, 2000); // Muda a cada 2 segundos
+      
+      return () => clearInterval(interval);
+    }
+  }, [isGeneratingPlan]);
+  
+  // Função para criar perfil E gerar plano automaticamente
+  const handleFinishAndGeneratePlan = async () => {
+    try {
+      setIsGeneratingPlan(true);
+      setGenerationError(null);
+      setGenerationStep(0);
+      
+      console.log('🔍 [ONBOARDING] formData completo:', data);
+      console.log('🔍 [ONBOARDING] goalDistance:', data.goalDistance);
+      console.log('🔍 [ONBOARDING] targetRaceDate:', data.targetRaceDate);
+      console.log('🔍 [ONBOARDING] planStartDate:', planStartDate);
+      
+      // Preparar payload com data de início do plano
+      const profilePayload = {
+        ...data,
+        planStartDate: planStartDate || undefined,
+      };
+      
+      // Transformar trainingSchedule para trainingActivities
+      const trainingActivities: number[] = [];
+      if (data.trainingSchedule) {
+        Object.keys(data.trainingSchedule).forEach(dayIndex => {
+          const schedule = data.trainingSchedule[parseInt(dayIndex)];
+          if (schedule.running || schedule.activities?.length > 0) {
+            trainingActivities.push(parseInt(dayIndex));
+          }
+        });
+      }
+      
+      console.log('📊 Dados do onboarding:', {
+        formData: data,
+        profilePayload,
+        trainingActivities,
+        goalDistance: data.goalDistance,
+        targetRaceDate: data.targetRaceDate
+      });
+      
+      // 1. CRIAR PERFIL
+      const profileResponse = await fetch('/api/profile/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profilePayload),
+      });
+      
+      console.log('📡 Resposta da API:', {
+        status: profileResponse.status,
+        ok: profileResponse.ok,
+        data: await profileResponse.clone().json()
+      });
+      
+      if (!profileResponse.ok) {
+        const error = await profileResponse.json();
+        console.error('❌ Erro ao criar perfil:', error.error, error);
+        throw new Error(error.error || 'Erro ao criar perfil');
+      }
+      
+      const profileData = await profileResponse.json();
+      console.log('✅ Perfil criado com sucesso!');
+      
+      // 2. GERAR PLANO AUTOMATICAMENTE
+      console.log('🚀 Iniciando geração do plano...');
+      const planResponse = await fetch('/api/plan/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startDate: planStartDate
+        }),
+      });
+      
+      if (!planResponse.ok) {
+        const planError = await planResponse.json();
+        console.error('⚠️ Erro ao gerar plano (não crítico):', planError);
+        // Não bloqueia - usuário pode gerar depois
+      } else {
+        console.log('✅ Plano gerado com sucesso!');
+      }
+      
+      // 3. REDIRECIONAR PARA DASHBOARD
+      console.log('✅ Redirecionando para dashboard...');
+      setTimeout(() => {
+        router.push('/pt-BR/dashboard');
+      }, 1000);
+      
+    } catch (error: any) {
+      console.error('❌ Erro no processo de onboarding:', error);
+      setGenerationError(error.message || 'Erro ao finalizar onboarding');
+      setIsGeneratingPlan(false);
+    }
+  };
   
   // Helper para obter label da atividade com acentos corretos
   const defaultActivities = [
@@ -399,11 +534,70 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       {/* Next Step Info */}
       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
         <p className="font-semibold text-green-900 mb-2">✨ Próximo Passo</p>
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-gray-700 mb-4">
           Nossa IA vai analisar todas essas informações e criar um plano 100% personalizado para você,
           respeitando suas limitações e maximizando seus resultados!
         </p>
+        
+        {/* Seleção da data de início do plano */}
+        <div className="bg-white rounded-lg p-4 border-2 border-green-300 mt-4">
+          <label className="flex items-center gap-2 font-semibold text-gray-900 mb-2">
+            <Calendar className="w-5 h-5 text-green-600" />
+            📅 Quando você quer começar seu treino?
+          </label>
+          <input
+            type="date"
+            value={planStartDate}
+            onChange={(e) => setPlanStartDate(e.target.value)}
+            min={new Date().toISOString().split('T')[0]}
+            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 text-lg"
+          />
+          <p className="text-xs text-gray-600 mt-2">
+            💡 Recomendamos começar em uma segunda-feira para melhor organização semanal
+          </p>
+        </div>
       </div>
+
+      {/* Loading Screen durante geração */}
+      {isGeneratingPlan && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div className="mb-6">
+              <Loader2 className="w-16 h-16 mx-auto text-blue-600 animate-spin" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Criando seu plano perfeito!
+            </h3>
+            <p className="text-lg text-gray-700 mb-6 animate-pulse">
+              {loadingMessages[generationStep]}
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-600 to-green-600 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${((generationStep + 1) / loadingMessages.length) * 100}%` }}
+              />
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
+              Aguarde, estamos quase lá...
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {generationError && (
+        <div className="bg-red-50 border-2 border-red-300 rounded-lg p-4">
+          <p className="font-semibold text-red-900 mb-2">❌ Erro ao criar perfil</p>
+          <p className="text-sm text-red-700">{generationError}</p>
+          <Button
+            onClick={() => setGenerationError(null)}
+            className="mt-3"
+            variant="outline"
+          >
+            Tentar novamente
+          </Button>
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex gap-3 pt-4">
@@ -411,7 +605,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
           type="button"
           variant="outline"
           onClick={onBack}
-          disabled={loading}
+          disabled={loading || isGeneratingPlan}
           className="flex-1"
         >
           <ChevronLeft className="w-4 h-4 mr-2" />
@@ -420,17 +614,17 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
         
         <Button
           type="button"
-          onClick={onSubmit}
-          disabled={loading || !hasRequiredData}
+          onClick={handleFinishAndGeneratePlan}
+          disabled={loading || !hasRequiredData || isGeneratingPlan || !planStartDate}
           className="flex-1 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700 text-white"
         >
-          {loading ? (
+          {isGeneratingPlan ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {tCommon('processing')}
+              Criando...
             </>
           ) : (
-            <>✨ {tCommon('finishAndCreatePlan')}</>
+            <>✨ Finalizar e Criar Plano</>
           )}
         </Button>
       </div>
