@@ -395,7 +395,7 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
  * Gera um plano de treinamento usando IA
  * A IA gera a estrutura e estratégia com exemplos, depois expandimos para todas as semanas
  */
-export async function generateAIPlan(profile: AIUserProfile, maxRetries: number = 3): Promise<AIGeneratedPlan> { 
+export async function generateAIPlan(profile: AIUserProfile, maxRetries: number = 3, customStartDate?: Date): Promise<AIGeneratedPlan> { 
   // v1.3.0: Usar novo context builder completo
   const userContext = buildComprehensiveContext(profile as any);
   
@@ -660,8 +660,8 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
     console.log('[AI PLAN] Estratégia gerada e validada com sucesso!');
     console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
 
-    // Expandir estratégia em plano completo
-    const fullPlan = expandStrategyToPlan(strategy, profile, totalWeeks);
+    // Expandir estratégia em plano completo (com customStartDate se fornecida)
+    const fullPlan = expandStrategyToPlan(strategy, profile, totalWeeks, customStartDate);
     
     // Adicionar aviso se for tempo curto
     if (isShortNotice) {
@@ -681,28 +681,38 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
 /**
  * Expande uma estratégia gerada pela IA em um plano completo com todas as semanas
  */
-function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks: number): AIGeneratedPlan { 
+function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks: number, customStartDate?: Date): AIGeneratedPlan { 
   console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
   
-  const startDate = new Date();
-  startDate.setHours(0, 0, 0, 0);
-
-  // Começar na PRÓXIMA segunda-feira (ou hoje se for segunda)
-  const dayOfWeek = startDate.getDay();
-  // Se é segunda (1), começar hoje
-  // Se é terça-domingo (2-6, 0), ir para a PRÓXIMA segunda
-  let daysToMonday;
-  if (dayOfWeek === 1) {
-    daysToMonday = 0; // Segunda -> começar hoje
-  } else if (dayOfWeek === 0) {
-    daysToMonday = 1; // Domingo -> próxima segunda
+  // Usar data customizada se fornecida, caso contrário usar próxima segunda-feira
+  let startDate: Date;
+  
+  if (customStartDate) {
+    startDate = new Date(customStartDate);
+    startDate.setHours(0, 0, 0, 0);
+    console.log(`[AI PLAN] Usando data de início customizada: ${startDate.toISOString()}`);
   } else {
-    daysToMonday = 8 - dayOfWeek; // Terça-Sábado -> próxima segunda
+    startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+
+    // Começar na PRÓXIMA segunda-feira (ou hoje se for segunda)
+    const dayOfWeek = startDate.getDay();
+    // Se é segunda (1), começar hoje
+    // Se é terça-domingo (2-6, 0), ir para a PRÓXIMA segunda
+    let daysToMonday;
+    if (dayOfWeek === 1) {
+      daysToMonday = 0; // Segunda -> começar hoje
+    } else if (dayOfWeek === 0) {
+      daysToMonday = 1; // Domingo -> próxima segunda
+    } else {
+      daysToMonday = 8 - dayOfWeek; // Terça-Sábado -> próxima segunda
+    }
+
+    startDate.setDate(startDate.getDate() + daysToMonday);
+    console.log(`[AI PLAN] Data de início calculada (próxima segunda): ${startDate.toISOString()}`);
   }
 
-  startDate.setDate(startDate.getDate() + daysToMonday);
-
-  console.log(`[AI PLAN] Data de início calculada: ${startDate.toISOString()} (dia da semana: ${startDate.getDay()})`);
+  console.log(`[AI PLAN] Data de início final: ${startDate.toISOString()} (dia da semana: ${startDate.getDay()})`);
   
   const weeks: any[] = [];
   let weekNumber = 1;

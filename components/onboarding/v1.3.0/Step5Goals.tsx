@@ -46,13 +46,13 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   
   // Tipo de objetivo - NOVA LÓGICA (não vem nada pré-selecionado)
   const [goalType, setGoalType] = useState<GoalType | ''>(
-    data.goalType || ''
+    '' // SEMPRE inicia vazio - usuário deve escolher
   );
   
   // Race goal fields
   const [raceName, setRaceName] = useState(data.raceName || '');
-  const [goalDistance, setGoalDistance] = useState(data.goalDistance || '');
-  const [targetRaceDate, setTargetRaceDate] = useState(data.targetRaceDate || '');
+  const [goalDistance, setGoalDistance] = useState(''); // SEMPRE vazio inicialmente
+  const [targetRaceDate, setTargetRaceDate] = useState(''); // SEMPRE vazio inicialmente
   
   // Tempo alvo - separado em H:M:S para melhor UX
   const [timeHours, setTimeHours] = useState('');
@@ -398,10 +398,10 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       )}
 
       {/* SE COMEÇAR A CORRER OU CONDICIONAMENTO */}
-      {goalType && goalType !== 'race' && goalType in GOAL_CONFIGS && (
+      {goalType && goalType !== 'race' && goalType !== '' && GOAL_CONFIGS[goalType as GoalType] && (
         <div className="bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-lg border-2 border-green-300">
           <div className="flex items-start gap-3">
-            <span className="text-4xl">{GOAL_CONFIGS[goalType as GoalType].icon}</span>
+            <span className="text-4xl">{GOAL_CONFIGS[goalType as GoalType]?.icon}</span>
             <div>
               <h3 className="font-bold text-xl text-green-900 mb-2">
                 {GOAL_CONFIGS[goalType as GoalType].defaults.message}
