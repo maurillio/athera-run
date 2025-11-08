@@ -180,8 +180,19 @@ export default function OnboardingPage() {
         return;
       }
       
-      // Mapear availableDays para trainingActivities (formato esperado pela API)
-      const trainingActivities = formData.availableDays?.running || formData.trainingDays || [];
+      // Transformar trainingSchedule em trainingActivities (array de dias com corrida)
+      const trainingActivities: any[] = [];
+      if (formData.trainingSchedule && typeof formData.trainingSchedule === 'object') {
+        Object.entries(formData.trainingSchedule).forEach(([day, schedule]: [string, any]) => {
+          if (schedule.running || (schedule.activities && schedule.activities.length > 0)) {
+            trainingActivities.push({
+              day: parseInt(day),
+              running: schedule.running || false,
+              activities: schedule.activities || []
+            });
+          }
+        });
+      }
       
       // Preparar dados completos para o perfil
       const profilePayload = {
@@ -222,8 +233,9 @@ export default function OnboardingPage() {
         secondaryGoals: formData.secondaryGoals,
         motivationFactors: formData.motivationFactors,
         
-        // Disponibilidade (Step 6) - NOVA ESTRUTURA
-        trainingSchedule: formData.trainingSchedule || {},
+        // Disponibilidade (Step 6) - NOVA E ANTIGA ESTRUTURA (compatibilidade)
+        trainingActivities: trainingActivities, // Array de dias (formato antigo para API)
+        trainingSchedule: formData.trainingSchedule || {}, // Novo formato completo
         customActivities: formData.customActivities || [],
         longRunDay: formData.longRunDay,
         hasGymAccess: formData.hasGymAccess || false,
