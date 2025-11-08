@@ -46,13 +46,17 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   
   // Tipo de objetivo - NOVA LÓGICA (não vem nada pré-selecionado)
   const [goalType, setGoalType] = useState<GoalType | ''>(
-    '' // SEMPRE inicia vazio - usuário deve escolher
+    data.goalType || '' // Mantém se já preenchido (volta de step7)
   );
   
-  // Race goal fields
+  // Race goal fields - SÓ inicializa com data se goalType já estiver setado
   const [raceName, setRaceName] = useState(data.raceName || '');
-  const [goalDistance, setGoalDistance] = useState(''); // SEMPRE vazio inicialmente
-  const [targetRaceDate, setTargetRaceDate] = useState(''); // SEMPRE vazio inicialmente
+  const [goalDistance, setGoalDistance] = useState(
+    data.goalType ? (data.goalDistance || '') : '' // Só usa data se já tinha escolhido goalType
+  );
+  const [targetRaceDate, setTargetRaceDate] = useState(
+    data.goalType ? (data.targetRaceDate || '') : '' // Só usa data se já tinha escolhido goalType
+  );
   
   // Tempo alvo - separado em H:M:S para melhor UX
   const [timeHours, setTimeHours] = useState('');

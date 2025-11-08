@@ -380,7 +380,29 @@
         "challenge": "Specific challenge",
         "consistency": "Build routine"
       },
-      "submitButton": "Finish and Create My Plan"
+      "submitButton": "Finish and Create My Plan",
+      "planStartDateLabel": "📅 Plan Start Date",
+      "planStartDateHelp": "Choose when you want to start training",
+      "startToday": "Start today",
+      "startNextMonday": "Next Monday",
+      "generatingPlan": "Generating your plan...",
+      "loadingMessages": [
+        "🕶️ Putting on low-pace sunglasses...",
+        "⚡ Taking the carb gel...",
+        "👟 Putting on carbon plate shoes...",
+        "💧 Hydrating...",
+        "📊 Analyzing your profile...",
+        "🎯 Calculating ideal distances...",
+        "📅 Organizing your training weeks...",
+        "🏃 Setting your personalized paces...",
+        "✨ Finishing your perfect plan..."
+      ],
+      "startDateQuestion": "When do you want to start training?",
+      "startDateHelp": "💡 We recommend starting on a Monday for better weekly organization",
+      "creatingPerfectPlan": "Creating your perfect plan!",
+      "pleaseWait": "Please wait, we are almost there...",
+      "profileCreationError": "Error creating profile",
+      "tryAgain": "Try again"
     }
   },
   "profile": {

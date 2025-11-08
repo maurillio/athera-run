@@ -16,18 +16,21 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
   const [generationStep, setGenerationStep] = useState(0);
   const [generationError, setGenerationError] = useState<string | null>(null);
   
-  // Mensagens de loading com humor
-  const loadingMessages = [
-    '🕶️ Colocando os óculos baixa pace...',
-    '⚡ Tomando o gel de carboidrato...',
-    '👟 Colocando o tênis de placa de carbono...',
-    '💧 Hidratando...',
-    '📊 Analisando seu perfil...',
-    '🎯 Calculando distâncias ideais...',
-    '📅 Organizando suas semanas de treino...',
-    '🏃 Definindo seus ritmos personalizados...',
-    '✨ Finalizando seu plano perfeito...'
-  ];
+  // Mensagens de loading com humor (via i18n)
+  const loadingMessagesRaw = t('loadingMessages');
+  const loadingMessages = Array.isArray(loadingMessagesRaw) 
+    ? loadingMessagesRaw 
+    : [
+        '🕶️ Colocando os óculos baixa pace...',
+        '⚡ Tomando o gel de carboidrato...',
+        '👟 Colocando o tênis de placa de carbono...',
+        '💧 Hidratando...',
+        '📊 Analisando seu perfil...',
+        '🎯 Calculando distâncias ideais...',
+        '📅 Organizando suas semanas de treino...',
+        '🏃 Definindo seus ritmos personalizados...',
+        '✨ Finalizando seu plano perfeito...'
+      ];
   
   // Calcular data mínima (hoje) e sugerida (próxima segunda)
   useEffect(() => {
@@ -64,12 +67,6 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       console.log('🔍 [ONBOARDING] targetRaceDate:', data.targetRaceDate);
       console.log('🔍 [ONBOARDING] planStartDate:', planStartDate);
       
-      // Preparar payload com data de início do plano
-      const profilePayload = {
-        ...data,
-        planStartDate: planStartDate || undefined,
-      };
-      
       // Transformar trainingSchedule para trainingActivities
       const trainingActivities: number[] = [];
       if (data.trainingSchedule) {
@@ -80,6 +77,13 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
           }
         });
       }
+      
+      // Preparar payload com data de início do plano E trainingActivities
+      const profilePayload = {
+        ...data,
+        planStartDate: planStartDate || undefined,
+        trainingActivities, // ✅ CRÍTICO: Incluir trainingActivities no payload
+      };
       
       console.log('📊 Dados do onboarding:', {
         formData: data,
@@ -543,7 +547,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
         <div className="bg-white rounded-lg p-4 border-2 border-green-300 mt-4">
           <label className="flex items-center gap-2 font-semibold text-gray-900 mb-2">
             <Calendar className="w-5 h-5 text-green-600" />
-            📅 Quando você quer começar seu treino?
+            {t('startDateQuestion')}
           </label>
           <input
             type="date"
@@ -553,7 +557,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
             className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 text-lg"
           />
           <p className="text-xs text-gray-600 mt-2">
-            💡 Recomendamos começar em uma segunda-feira para melhor organização semanal
+            {t('startDateHelp')}
           </p>
         </div>
       </div>
@@ -566,7 +570,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
               <Loader2 className="w-16 h-16 mx-auto text-blue-600 animate-spin" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Criando seu plano perfeito!
+              {t('creatingPerfectPlan')}
             </h3>
             <p className="text-lg text-gray-700 mb-6 animate-pulse">
               {loadingMessages[generationStep]}
@@ -578,7 +582,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
               />
             </div>
             <p className="text-sm text-gray-500 mt-4">
-              Aguarde, estamos quase lá...
+              {t('pleaseWait')}
             </p>
           </div>
         </div>
@@ -587,14 +591,14 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       {/* Error Message */}
       {generationError && (
         <div className="bg-red-50 border-2 border-red-300 rounded-lg p-4">
-          <p className="font-semibold text-red-900 mb-2">❌ Erro ao criar perfil</p>
+          <p className="font-semibold text-red-900 mb-2">❌ {t('profileCreationError')}</p>
           <p className="text-sm text-red-700">{generationError}</p>
           <Button
             onClick={() => setGenerationError(null)}
             className="mt-3"
             variant="outline"
           >
-            Tentar novamente
+            {t('tryAgain')}
           </Button>
         </div>
       )}
@@ -621,10 +625,10 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
           {isGeneratingPlan ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Criando...
+              {t('generatingPlan')}
             </>
           ) : (
-            <>✨ Finalizar e Criar Plano</>
+            <>{t('submitButton')}</>
           )}
         </Button>
       </div>
