@@ -9,21 +9,21 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
   
   // Helper para obter label da atividade com acentos corretos
   const defaultActivities = [
-    { key: 'Musculação', label: '💪 Musculação' },
-    { key: 'Yoga', label: '🧘 Yoga' },
-    { key: 'Pilates', label: '🤸 Pilates' },
-    { key: 'Natação', label: '🏊 Natação' },
-    { key: 'Ciclismo', label: '🚴 Ciclismo' },
-    { key: 'Luta', label: '🥋 Luta' },
+    { key: 'Musculação', label: 'Musculação' },
+    { key: 'Yoga', label: 'Yoga' },
+    { key: 'Pilates', label: 'Pilates' },
+    { key: 'Natação', label: 'Natação' },
+    { key: 'Ciclismo', label: 'Ciclismo' },
+    { key: 'Luta', label: 'Luta' },
   ];
   
   const getActivityLabel = (key: string) => {
     const defaultActivity = defaultActivities.find(a => a.key === key);
-    if (defaultActivity) return defaultActivity.label.replace(/[^\w\sÀ-ÿ]/g, '').trim(); // Remove emoji, mantém acentos
+    if (defaultActivity) return defaultActivity.label;
     
-    // Customizado - formata o nome
+    // Customizado - formata o nome preservando acentos
     return key.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     ).join(' ');
   };
   
