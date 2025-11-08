@@ -687,18 +687,17 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   const startDate = new Date();
   startDate.setHours(0, 0, 0, 0);
 
-  // Começar na segunda-feira DESTA semana
+  // Começar na PRÓXIMA segunda-feira (ou hoje se for segunda)
   const dayOfWeek = startDate.getDay();
-  // Se é domingo (0), começar amanhã (segunda)
   // Se é segunda (1), começar hoje
-  // Se é terça-sábado (2-6), VOLTAR para a segunda desta semana
+  // Se é terça-domingo (2-6, 0), ir para a PRÓXIMA segunda
   let daysToMonday;
-  if (dayOfWeek === 0) {
-    daysToMonday = 1; // Domingo -> Segunda (amanhã)
-  } else if (dayOfWeek === 1) {
-    daysToMonday = 0; // Segunda -> Segunda (hoje)
+  if (dayOfWeek === 1) {
+    daysToMonday = 0; // Segunda -> começar hoje
+  } else if (dayOfWeek === 0) {
+    daysToMonday = 1; // Domingo -> próxima segunda
   } else {
-    daysToMonday = -(dayOfWeek - 1); // Terça-Sábado -> Voltar para Segunda
+    daysToMonday = 8 - dayOfWeek; // Terça-Sábado -> próxima segunda
   }
 
   startDate.setDate(startDate.getDate() + daysToMonday);
