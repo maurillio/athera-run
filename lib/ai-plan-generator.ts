@@ -36,7 +36,7 @@ export interface AIUserProfile {
   usualPaces?: Record<string, string>;
   
   // Performance adicional (v1.6.0)
-  bestTimes?: Array<{ distance: string; time: string; date?: Date }>;
+  bestTimes?: Record<string, { time: string; vdot: number; totalSeconds: number; date?: string }>;
   runningYears?: number;
   maxHeartRate?: number;
   recentLongRunPace?: string;
