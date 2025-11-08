@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { validateStep1, OnboardingData } from '@/lib/onboarding-validator';
-import { interpretRestingHR, calculateIMC, interpretIMC } from '@/lib/vdot-calculator';
+import { calculateIMC, interpretIMC } from '@/lib/vdot-calculator';
 
 interface Step1Props {
   data: Partial<OnboardingData>;
@@ -22,9 +22,6 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
     gender: data.gender || '',
     weight: data.weight || '',
     height: data.height || '',
-    restingHeartRate: data.restingHeartRate || '',
-    sleepQuality: data.sleepQuality || 3,
-    stressLevel: data.stressLevel || 3,
   });
 
   const [errors, setErrors] = useState<string[]>([]);
@@ -37,9 +34,6 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
         gender: formData.gender || undefined,
         weight: formData.weight ? parseFloat(formData.weight as string) : undefined,
         height: formData.height ? parseFloat(formData.height as string) : undefined,
-        restingHeartRate: formData.restingHeartRate ? parseInt(formData.restingHeartRate as string) : undefined,
-        sleepQuality: formData.sleepQuality,
-        stressLevel: formData.stressLevel,
       });
     }, 500); // Debounce de 500ms
 
@@ -57,9 +51,6 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
       gender: formData.gender,
       weight: parseFloat(formData.weight as string),
       height: parseFloat(formData.height as string),
-      restingHeartRate: formData.restingHeartRate ? parseInt(formData.restingHeartRate as string) : undefined,
-      sleepQuality: formData.sleepQuality,
-      stressLevel: formData.stressLevel,
     });
 
     if (!validation.valid && validation.errors) {
@@ -72,9 +63,6 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
       gender: formData.gender,
       weight: parseFloat(formData.weight as string),
       height: parseFloat(formData.height as string),
-      restingHeartRate: formData.restingHeartRate ? parseInt(formData.restingHeartRate as string) : undefined,
-      sleepQuality: formData.sleepQuality,
-      stressLevel: formData.stressLevel,
     });
 
     onNext();
@@ -130,47 +118,13 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
         </div>
       )}
 
-      <div className="border-t pt-6">
-        <h3 className="text-lg font-semibold mb-4">{t('physiological.title')} ({tCommon('optional')})</h3>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              {t('physiological.restingHR')} <span className="text-xs text-gray-500">{t('physiological.restingHRNote')}</span>
-            </label>
-            <input type="number" value={formData.restingHeartRate} onChange={(e) => handleChange('restingHeartRate', e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg" placeholder={t('physiological.restingHRPlaceholder')} min="30" max="120" />
-            {formData.restingHeartRate && (
-              <p className="text-sm text-gray-600 mt-1">{interpretRestingHR(parseInt(formData.restingHeartRate as string))}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">{t('physiological.sleepQuality')}: {formData.sleepQuality}/5</label>
-            <input type="range" min="1" max="5" value={formData.sleepQuality}
-              onChange={(e) => handleChange('sleepQuality', parseInt(e.target.value))} className="w-full" />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>{t('physiological.sleepLevels.poor')}</span>
-              <span>{t('physiological.sleepLevels.fair')}</span>
-              <span>{t('physiological.sleepLevels.good')}</span>
-              <span>{t('physiological.sleepLevels.veryGood')}</span>
-              <span>{t('physiological.sleepLevels.excellent')}</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">{t('physiological.stressLevel')}: {formData.stressLevel}/5</label>
-            <input type="range" min="1" max="5" value={formData.stressLevel}
-              onChange={(e) => handleChange('stressLevel', parseInt(e.target.value))} className="w-full" />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>{t('physiological.stressLevels.low')}</span>
-              <span>{t('physiological.stressLevels.mild')}</span>
-              <span>{t('physiological.stressLevels.moderate')}</span>
-              <span>{t('physiological.stressLevels.high')}</span>
-              <span>{t('physiological.stressLevels.veryHigh')}</span>
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-between mt-8">
+        <button
+          onClick={handleNext}
+          className="px-6 py-3 bg-gradient-to-r from-orange-500 to-blue-600 text-white rounded-lg hover:from-orange-600 hover:to-blue-700 transition-colors font-medium"
+        >
+          {tCommon('next')} →
+        </button>
       </div>
     </div>
   );

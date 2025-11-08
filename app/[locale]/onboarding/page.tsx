@@ -44,9 +44,6 @@ export default function OnboardingPage() {
     age: '',
     weight: '',
     height: '',
-    restingHeartRate: '',
-    sleepQuality: 3,
-    stressLevel: 3,
     
     // Step 2: Sport Background
     runningLevel: '',
@@ -60,11 +57,14 @@ export default function OnboardingPage() {
     // Step 3: Performance
     personalBests: [],
     
-    // Step 4: Health
+    // Step 4: Health (incluindo dados fisiológicos)
     injuries: [],
     medicalConditions: [],
     medicalClearance: true,
     medicalNotes: '',
+    restingHeartRate: '',
+    sleepQuality: 3,
+    stressLevel: 3,
     
     // Step 5: Goals (CRITICAL for API)
     primaryGoal: '',
