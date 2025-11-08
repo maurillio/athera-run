@@ -55,7 +55,7 @@ export default function OnboardingPage() {
     otherSports: [],
     
     // Step 3: Performance
-    personalBests: [],
+    bestTimes: {},
     
     // Step 4: Health (incluindo dados fisiológicos)
     injuries: [],
@@ -191,8 +191,8 @@ export default function OnboardingPage() {
         otherSportsExperience: formData.otherSportsExperience || null, // Sempre string ou null
         
         // Performance (Step 3)
-        bestTimes: (formData.personalBests && Object.keys(formData.personalBests).length > 0) 
-          ? formData.personalBests 
+        bestTimes: (formData.bestTimes && Object.keys(formData.bestTimes).length > 0) 
+          ? formData.bestTimes 
           : null, // Converter objeto vazio em null
         
         // Saúde (Step 4)
