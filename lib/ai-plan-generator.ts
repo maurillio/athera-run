@@ -44,7 +44,6 @@ export interface AIUserProfile {
   
   // Experiência Multiesportiva (v1.6.0)
   otherSportsExperience?: string;
-  otherSportsYears?: number;
   
   // Saúde e Bem-estar (v1.6.0)
   sleepQuality?: number; // 1-5

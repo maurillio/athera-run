@@ -44,7 +44,6 @@ export interface ComprehensiveProfile {
   currentWeeklyKm: number;
   longestRun: number;
   otherSportsExperience?: string;
-  otherSportsYears?: number;
   
   // Performance
   currentVDOT?: number;
@@ -144,9 +143,6 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   
   if (profile.otherSportsExperience) {
     context += `Outros Esportes: ${profile.otherSportsExperience}\n`;
-    if (profile.otherSportsYears) {
-      context += `Tempo em Outros Esportes: ${profile.otherSportsYears} ano(s)\n`;
-    }
     context += `\n💡 IMPACTO NA BASE AERÓBICA:\n`;
     context += analyzeOtherSports(profile.otherSportsExperience);
     context += `\n\n`;

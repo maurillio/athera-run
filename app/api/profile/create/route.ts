@@ -143,7 +143,6 @@ export async function POST(req: NextRequest) {
       sleepQuality,
       stressLevel,
       otherSportsExperience,
-      otherSportsYears, // v1.3.0
       // v1.3.0 - Lesões detalhadas
       injuryDetails,
       injuryRecoveryStatus,
@@ -223,7 +222,6 @@ export async function POST(req: NextRequest) {
       sleepQuality: sleepQuality ? parseInt(sleepQuality) : null,
       stressLevel: stressLevel ? parseInt(stressLevel) : null,
       otherSportsExperience: cleanString(otherSportsExperience),
-      otherSportsYears: otherSportsYears ? parseInt(otherSportsYears) : null,
       injuryDetails: injuryDetails || null,
       injuryRecoveryStatus: cleanString(injuryRecoveryStatus),
       lastInjuryDate: lastInjuryDate ? new Date(lastInjuryDate) : null,

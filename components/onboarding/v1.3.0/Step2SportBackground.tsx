@@ -20,7 +20,6 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
     longestRun: data.longestRun || '',
     selectedSports: parseInitialSports(),
     customSport: '',
-    otherSportsYears: data.otherSportsYears || '',
   });
   
   // Lista de esportes comuns
@@ -67,7 +66,6 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
         currentWeeklyKm: formData.currentWeeklyKm ? parseFloat(formData.currentWeeklyKm) : undefined,
         longestRun: formData.longestRun ? parseFloat(formData.longestRun) : undefined,
         otherSportsExperience: formData.selectedSports.length > 0 ? formData.selectedSports.join(', ') : undefined,
-        otherSportsYears: formData.otherSportsYears ? parseInt(formData.otherSportsYears) : undefined,
       });
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -80,7 +78,6 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
       currentWeeklyKm: formData.currentWeeklyKm ? parseFloat(formData.currentWeeklyKm) : undefined,
       longestRun: formData.longestRun ? parseFloat(formData.longestRun) : undefined,
       otherSportsExperience: formData.selectedSports.length > 0 ? formData.selectedSports.join(', ') : undefined,
-      otherSportsYears: formData.otherSportsYears ? parseInt(formData.otherSportsYears) : undefined,
     });
     onNext();
   };
@@ -190,20 +187,6 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
                 </span>
               ))}
             </div>
-          </div>
-        )}
-        
-        {/* Anos praticando outros esportes */}
-        {formData.selectedSports.length > 0 && (
-          <div className="mt-4">
-            <label className="block font-medium mb-2">{t('otherSports.years')}</label>
-            <input
-              type="number"
-              value={formData.otherSportsYears}
-              onChange={(e) => setFormData({...formData, otherSportsYears: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder={t('otherSports.yearsPlaceholder')}
-            />
           </div>
         )}
       </div>
