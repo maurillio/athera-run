@@ -211,8 +211,9 @@ export async function POST(req: NextRequest) {
       goalDistance: cleanString(goalDistance) || 'unknown',
       targetRaceDate: new Date(targetRaceDate),
       targetTime: cleanString(targetTime),
-      // Sistema flexível de atividades de treino (v1.6.0 - convergência total)
-      // ✅ CRÍTICO: trainingActivities precisa ser salvo como JSON (array de dias)
+      // Sistema flexível de atividades de treino (v1.6.7 - Manter compatibilidade)
+      // ⚠️ trainingActivities mantido apenas para compatibilidade com código legado
+      // A fonte da verdade é trainingSchedule
       trainingActivities: Array.isArray(trainingActivities) && trainingActivities.length > 0 
         ? trainingActivities 
         : (trainingSchedule ? Object.keys(trainingSchedule).filter(day => {
