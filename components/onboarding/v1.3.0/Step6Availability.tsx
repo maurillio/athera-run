@@ -26,10 +26,15 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   const [newSportName, setNewSportName] = useState('');
   const [addingSportForDay, setAddingSportForDay] = useState<number | null>(null);
   
-  // v1.6.0 - Dia do Longão
+  // v1.6.0 - Dia do Longão (lógica melhorada)
   const [longRunDay, setLongRunDay] = useState<number | null>(
     data.longRunDay !== undefined ? data.longRunDay : null
   );
+  const [noLongRunYet, setNoLongRunYet] = useState(false); // "Ainda não faço longões"
+  
+  // Detecta se é iniciante (vem do Step 2)
+  const runningLevel = data.runningLevel || '';
+  const isBeginnerOrNever = ['beginner', 'iniciante', 'never_ran', 'nunca_correu'].includes(runningLevel.toLowerCase());
   
   // v1.3.0 - Infraestrutura
   const [hasGymAccess, setHasGymAccess] = useState(data.hasGymAccess ?? false);
@@ -181,6 +186,18 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
       alert('Por favor, selecione se prefere treinar indoor, outdoor ou ambos.');
       return;
     }
+    
+    // Validação do longão - APENAS para não-iniciantes
+    const runningDays = Object.keys(trainingSchedule)
+      .filter(day => trainingSchedule[parseInt(day)]?.running);
+    
+    if (runningDays.length > 0 && !isBeginnerOrNever) {
+      // Corredores intermediários/avançados DEVEM escolher longão
+      if (longRunDay === null) {
+        alert('Por favor, escolha o dia da sua corrida longa (longão) ou marque que ainda não faz corridas longas.');
+        return;
+      }
+    }
 
     onNext();
   };
@@ -281,26 +298,140 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
                 >
                   + Adicionar outro esporte
                 </button>
-                
-                {/* Dia do Longão */}
-                {daySchedule.running && (
-                  <div className="mt-3 pt-3 border-t">
-                    <label className="flex items-center gap-2 text-sm cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={longRunDay === dayIndex}
-                        onChange={(e) => setLongRunDay(e.target.checked ? dayIndex : null)}
-                        className="rounded"
-                      />
-                      <span>Este é o dia do longão (corrida longa semanal)</span>
-                    </label>
-                  </div>
-                )}
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* SEÇÃO DO LONGÃO - SEPARADA E INTELIGENTE */}
+      {(() => {
+        // Obter dias com corrida
+        const runningDays = Object.keys(trainingSchedule)
+          .filter(day => trainingSchedule[parseInt(day)]?.running)
+          .map(day => parseInt(day));
+        
+        // Só mostra se tem pelo menos 1 dia de corrida
+        if (runningDays.length === 0) return null;
+        
+        return (
+          <div className="border-t pt-6">
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg border-2 border-purple-300">
+              <h3 className="text-lg font-semibold mb-3 text-purple-900">
+                📅 Dia do Longão (Corrida Longa Semanal)
+              </h3>
+              
+              {/* Texto educacional baseado no nível */}
+              <div className="bg-white/70 p-4 rounded-lg mb-4 text-sm">
+                <p className="flex items-start gap-2">
+                  <span className="text-xl">💡</span>
+                  <span>
+                    {isBeginnerOrNever ? (
+                      <>
+                        <strong>Para iniciantes:</strong> O longão virá naturalmente com sua evolução. 
+                        Por enquanto, foque em criar o hábito de correr regularmente. 
+                        Você pode pular esta etapa por enquanto.
+                      </>
+                    ) : runningLevel.toLowerCase().includes('intermediario') || runningLevel.toLowerCase().includes('intermediate') ? (
+                      <>
+                        <strong>Para intermediários:</strong> O longão é sua corrida mais longa da semana, 
+                        geralmente 30-40% do seu volume semanal total. É essencial para construir 
+                        resistência aeróbica.
+                      </>
+                    ) : (
+                      <>
+                        <strong>Para corredores experientes:</strong> Seu longão é fundamental para 
+                        desenvolver resistência e preparar o corpo para distâncias maiores. 
+                        Recomendamos fim de semana quando você tem mais tempo.
+                      </>
+                    )}
+                  </span>
+                </p>
+              </div>
+              
+              <label className="block font-medium mb-3">
+                Escolha o dia da sua corrida longa:
+                {!isBeginnerOrNever && <span className="text-red-600 ml-1">*</span>}
+              </label>
+              
+              <div className="space-y-2">
+                {days.map((day, dayIndex) => {
+                  // Só mostra dias com corrida
+                  if (!runningDays.includes(dayIndex)) return null;
+                  
+                  const isWeekend = dayIndex === 0 || dayIndex === 6; // Dom ou Sáb
+                  
+                  return (
+                    <label
+                      key={dayIndex}
+                      className={`flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-all ${
+                        longRunDay === dayIndex
+                          ? 'bg-purple-100 border-2 border-purple-500'
+                          : 'bg-white border-2 border-gray-200 hover:border-purple-300'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="longRunDay"
+                        checked={longRunDay === dayIndex}
+                        onChange={() => {
+                          setLongRunDay(dayIndex);
+                          setNoLongRunYet(false);
+                        }}
+                        className="w-5 h-5"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{day}</span>
+                          {isWeekend && (
+                            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                              Recomendado
+                            </span>
+                          )}
+                        </div>
+                        {isWeekend && (
+                          <p className="text-xs text-gray-600 mt-1">
+                            Ideal: você terá mais tempo e poderá correr com calma
+                          </p>
+                        )}
+                      </div>
+                    </label>
+                  );
+                })}
+                
+                {/* Opção "Ainda não faço longões" - APENAS para iniciantes */}
+                {isBeginnerOrNever && (
+                  <label
+                    className={`flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-all ${
+                      noLongRunYet
+                        ? 'bg-gray-100 border-2 border-gray-400'
+                        : 'bg-white border-2 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={noLongRunYet}
+                      onChange={(e) => {
+                        setNoLongRunYet(e.target.checked);
+                        if (e.target.checked) {
+                          setLongRunDay(null);
+                        }
+                      }}
+                      className="w-5 h-5"
+                    />
+                    <span className="text-sm">
+                      Ainda não faço corridas longas (vou construir isso gradualmente)
+                    </span>
+                  </label>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* INFRAESTRUTURA */}
+      <div className="border-t pt-6">
 
       {/* INFRAESTRUTURA */}
       <div className="border-t pt-6">
