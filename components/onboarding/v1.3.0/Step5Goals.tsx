@@ -104,9 +104,9 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
     return date.toISOString().split('T')[0];
   };
 
-  // Auto-aplicar defaults quando muda goalType
+  // Auto-aplicar defaults quando muda goalType - APENAS PARA OBJETIVOS ABERTOS
   useEffect(() => {
-    if (goalType && goalType !== 'race') {
+    if (goalType === 'start' || goalType === 'fitness') {
       // Aplica defaults para objetivos abertos - APENAS SE ESTIVER VAZIO
       const config = GOAL_CONFIGS[goalType];
       if (!goalDistance) {
@@ -117,7 +117,12 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       }
       setRaceName(''); // Limpa nome da corrida para objetivos abertos
     } else if (goalType === 'race') {
-      // NÃO LIMPA NADA - mantém valores do usuário
+      // Para 'race', NÃO APLICA NADA - usuário preenche tudo manualmente
+      // Apenas limpa os campos se estavam com defaults de outro goalType
+      if (data.isOpenGoal) {
+        setGoalDistance('');
+        setTargetRaceDate('');
+      }
     }
   }, [goalType]);
 

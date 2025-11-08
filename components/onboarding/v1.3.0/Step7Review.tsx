@@ -69,20 +69,28 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       
       // Transformar trainingSchedule para trainingActivities
       const trainingActivities: number[] = [];
-      if (data.trainingSchedule) {
+      if (data.trainingSchedule && typeof data.trainingSchedule === 'object') {
         Object.keys(data.trainingSchedule).forEach(dayIndex => {
           const schedule = data.trainingSchedule[parseInt(dayIndex)];
-          if (schedule.running || schedule.activities?.length > 0) {
+          // Adicionar dia se tem corrida OU outras atividades
+          if (schedule && (schedule.running || (schedule.activities && schedule.activities.length > 0))) {
             trainingActivities.push(parseInt(dayIndex));
           }
         });
       }
       
+      console.log('🔄 [ONBOARDING] Conversão trainingSchedule → trainingActivities:', {
+        trainingSchedule: data.trainingSchedule,
+        trainingActivities,
+        diasComAtividade: trainingActivities.length
+      });
+      
       // Preparar payload com data de início do plano E trainingActivities
       const profilePayload = {
         ...data,
         planStartDate: planStartDate || undefined,
-        trainingActivities, // ✅ CRÍTICO: Incluir trainingActivities no payload
+        trainingActivities, // ✅ CRÍTICO: Array de dias disponíveis
+        trainingSchedule: data.trainingSchedule, // ✅ Manter também a estrutura completa
       };
       
       console.log('📊 Dados do onboarding:', {
