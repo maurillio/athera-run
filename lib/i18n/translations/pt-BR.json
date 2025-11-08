@@ -48,9 +48,13 @@
       "passwordPlaceholder": "Sua senha",
       "forgotPassword": "Esqueceu a senha?",
       "signIn": "Entrar",
+      "signingIn": "Entrando...",
       "noAccount": "Não tem uma conta?",
       "signUpLink": "Criar conta",
       "googleSignIn": "Entrar com Google",
+      "orContinueWith": "ou continuar com",
+      "invalidCredentials": "E-mail ou senha inválidos",
+      "googleError": "Erro ao fazer login com Google. Tente novamente.",
       "errors": {
         "invalid": "E-mail ou senha inválidos",
         "network": "Erro de conexão. Tente novamente.",

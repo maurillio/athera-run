@@ -48,9 +48,13 @@
       "passwordPlaceholder": "Tu contraseña",
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "signIn": "Iniciar sesión",
+      "signingIn": "Iniciando sesión...",
       "noAccount": "¿No tienes una cuenta?",
       "signUpLink": "Crear cuenta",
       "googleSignIn": "Iniciar sesión con Google",
+      "orContinueWith": "o continuar con",
+      "invalidCredentials": "Correo o contraseña inválidos",
+      "googleError": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
       "errors": {
         "invalid": "Correo o contraseña inválidos",
         "network": "Error de conexión. Inténtalo de nuevo.",
