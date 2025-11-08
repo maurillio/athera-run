@@ -319,7 +319,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       )}
 
       {/* SE COMEÇAR A CORRER OU CONDICIONAMENTO */}
-      {goalType !== 'race' && (
+      {goalType && goalType !== 'race' && (
         <div className="bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-lg border-2 border-green-300">
           <div className="flex items-start gap-3">
             <span className="text-4xl">{GOAL_CONFIGS[goalType].icon}</span>
