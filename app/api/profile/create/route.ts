@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
       goalDistance,
       targetRaceDate,
       targetTime,
-      trainingActivities, // Novo sistema flexível
+      trainingActivities, // Sistema antigo (manter compatibilidade)
       longRunDay, // Dia do treino longo
       hasRunBefore, // Se já correu antes
       usualPaces, // Paces habituais por distância
@@ -156,6 +156,9 @@ export async function POST(req: NextRequest) {
       // v1.3.0 - Preferências
       trainingPreferences,
       motivationFactors,
+      // v1.4.0 - Nova estrutura de disponibilidade
+      trainingSchedule, // { 0: { running: true, activities: ['gym'] } }
+      customActivities, // ['pilates', 'crossfit']
     } = body;
 
     // Validar campos obrigatórios
@@ -232,6 +235,9 @@ export async function POST(req: NextRequest) {
       hasTrackAccess: hasTrackAccess === true || hasTrackAccess === 'true',
       trainingPreferences: trainingPreferences || null,
       motivationFactors: motivationFactors || null,
+      // v1.4.0 - Nova estrutura de disponibilidade
+      trainingSchedule: trainingSchedule || null,
+      customActivities: customActivities || null,
       // v1.5.4 - Mark as ready for plan generation
       hasCustomPlan: true, // Always true if we got here (validated above)
     };

@@ -275,6 +275,8 @@ model AthleteProfile {
   hasTrackAccess        Boolean?            @default(false)
   trainingPreferences   Json?
   motivationFactors     Json?
+  trainingSchedule      Json?               // v1.4.0 - Nova estrutura { 0: { running: true, activities: ['gym'] } }
+  customActivities      Json?               // v1.4.0 - Esportes customizados ['pilates', 'crossfit']
   aiAnalyses            AIAnalysis[]
   customPlan            CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
   user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
