@@ -117,15 +117,6 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
           <p className="text-sm font-medium">{t('bmi')}: <span className="text-2xl font-bold">{imc}</span> ({interpretIMC(imc)})</p>
         </div>
       )}
-
-      <div className="flex justify-between mt-8">
-        <button
-          onClick={handleNext}
-          className="px-6 py-3 bg-gradient-to-r from-orange-500 to-blue-600 text-white rounded-lg hover:from-orange-600 hover:to-blue-700 transition-colors font-medium"
-        >
-          {tCommon('next')} →
-        </button>
-      </div>
     </div>
   );
 }
