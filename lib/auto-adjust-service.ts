@@ -40,15 +40,29 @@ export class AutoAdjustService {
       select: { 
         autoAdjustEnabled: true, 
         lastAutoAdjustDate: true,
-        hasCustomPlan: true
+        hasCustomPlan: true,
+        customPlan: {
+          select: {
+            createdAt: true,
+            startDate: true
+          }
+        }
       }
     });
     
-    if (!profile || !profile.autoAdjustEnabled || !profile.hasCustomPlan) {
+    if (!profile || !profile.autoAdjustEnabled || !profile.hasCustomPlan || !profile.customPlan) {
       return false;
     }
     
-    // Se nunca foi executado, pode executar
+    // NÃO executar ajuste automático se o plano foi criado há menos de 7 dias
+    // Isso evita análises de "treinos atrasados" quando o plano acabou de ser criado
+    const daysSincePlanCreation = (Date.now() - profile.customPlan.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSincePlanCreation < 7) {
+      console.log(`[AUTO-ADJUST] Plano muito recente (${Math.floor(daysSincePlanCreation)} dias). Aguardando pelo menos 7 dias.`);
+      return false;
+    }
+    
+    // Se nunca foi executado, pode executar (já passou dos 7 dias)
     if (!profile.lastAutoAdjustDate) {
       return true;
     }
@@ -150,6 +164,9 @@ export class AutoAdjustService {
         currentWeek: profile.customPlan.currentWeek,
         totalWeeks: profile.customPlan.totalWeeks,
         completionRate: profile.customPlan.completionRate,
+        startDate: profile.customPlan.startDate,
+        createdAt: profile.customPlan.createdAt,
+        daysSincePlanCreated: Math.floor((Date.now() - profile.customPlan.createdAt.getTime()) / (1000 * 60 * 60 * 24)),
         upcomingWeeks: profile.customPlan.weeks.slice(0, 4).map(week => ({
           weekNumber: week.weekNumber,
           startDate: week.startDate,
@@ -239,6 +256,12 @@ export class AutoAdjustService {
           content: `Você é um treinador de corrida PhD em fisiologia do exercício, especialista em periodização e treinamento científico.
 
 Sua missão é analisar o histórico COMPLETO do atleta (não apenas 7 dias) e decidir se o plano de treinamento precisa de ajustes PROGRESSIVOS e CIENTÍFICOS.
+
+**ATENÇÃO - PLANO RECENTE:**
+- Se o plano foi criado há menos de 14 dias (verifique daysSincePlanCreated no contexto), considere que é NORMAL não haver muitos treinos completados ainda
+- NÃO penalize o atleta por "baixa taxa de completude" se o plano é novo e os treinos ainda não começaram ou mal começaram
+- Para planos novos, foque em MANTER o plano e dar tempo para o atleta se adaptar
+- Só sugira ajustes em planos recentes se houver sinais CRÍTICOS (lesão, doença, impossibilidade física)
 
 PRINCÍPIOS CIENTÍFICOS:
 1. **Princípio da Sobrecarga Progressiva**: Aumento gradual de carga (não mais que 10% por semana)
