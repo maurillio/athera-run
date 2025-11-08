@@ -67,12 +67,12 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   
   // Atividades padrão + customizadas
   const defaultActivities = [
-    { key: 'musculacao', label: '💪 Musculação', icon: '💪' },
-    { key: 'yoga', label: '🧘 Yoga', icon: '🧘' },
-    { key: 'pilates', label: '🤸 Pilates', icon: '🤸' },
-    { key: 'natacao', label: '🏊 Natação', icon: '🏊' },
-    { key: 'ciclismo', label: '🚴 Ciclismo', icon: '🚴' },
-    { key: 'luta', label: '🥋 Luta', icon: '🥋' },
+    { key: 'Musculação', label: '💪 Musculação', icon: '💪' },
+    { key: 'Yoga', label: '🧘 Yoga', icon: '🧘' },
+    { key: 'Pilates', label: '🤸 Pilates', icon: '🤸' },
+    { key: 'Natação', label: '🏊 Natação', icon: '🏊' },
+    { key: 'Ciclismo', label: '🚴 Ciclismo', icon: '🚴' },
+    { key: 'Luta', label: '🥋 Luta', icon: '🥋' },
   ];
 
   // Toggle corrida em um dia
