@@ -44,9 +44,9 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step5');
   const tCommon = useTranslations('common');
   
-  // Tipo de objetivo - NOVA LÓGICA
-  const [goalType, setGoalType] = useState<GoalType>(
-    data.goalType || (data.goalDistance && data.targetRaceDate ? 'race' : 'start')
+  // Tipo de objetivo - NOVA LÓGICA (não vem nada pré-selecionado)
+  const [goalType, setGoalType] = useState<GoalType | ''>(
+    data.goalType || ''
   );
   
   // Race goal fields
@@ -81,7 +81,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
 
   // Auto-aplicar defaults quando muda goalType
   useEffect(() => {
-    if (goalType !== 'race') {
+    if (goalType && goalType !== 'race') {
       const config = GOAL_CONFIGS[goalType];
       setGoalDistance(config.defaults.goalDistance);
       setTargetRaceDate(calculateFutureDate(config.defaults.weeksAhead));
@@ -135,6 +135,12 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   };
 
   const handleNext = () => {
+    // Validação do tipo de objetivo PRIMEIRO
+    if (!goalType) {
+      alert('Por favor, selecione sua situação atual (corrida alvo, começar a correr ou condicionamento).');
+      return;
+    }
+    
     // Validação baseada no tipo de objetivo
     if (goalType === 'race') {
       if (!goalDistance) {

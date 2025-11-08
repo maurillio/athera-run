@@ -67,7 +67,7 @@ export default function OnboardingPage() {
     stressLevel: 3,
     
     // Step 5: Goals (CRITICAL for API)
-    goalType: 'start', // Tipo: 'race' | 'start' | 'fitness'
+    goalType: '', // Tipo: 'race' | 'start' | 'fitness' (vazio inicialmente)
     isOpenGoal: false, // Se é objetivo aberto (sem corrida específica)
     primaryGoal: '',
     raceName: '', // Nome da corrida (opcional)
@@ -203,7 +203,7 @@ export default function OnboardingPage() {
         medicalNotes: formData.medicalNotes,
         
         // Objetivos (Step 5) - CRITICAL
-        goalType: formData.goalType || 'start', // Tipo de objetivo
+        goalType: formData.goalType || null, // Tipo de objetivo
         isOpenGoal: formData.isOpenGoal || false, // Se é objetivo aberto
         raceName: formData.raceName || null, // Nome da corrida (opcional)
         goalDistance: formData.goalDistance, // REQUIRED
