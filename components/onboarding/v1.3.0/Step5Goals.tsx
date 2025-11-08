@@ -400,20 +400,20 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       )}
 
       {/* SE COMEÇAR A CORRER OU CONDICIONAMENTO */}
-      {goalType && goalType !== 'race' && (
+      {goalType && goalType !== 'race' && goalType in GOAL_CONFIGS && (
         <div className="bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-lg border-2 border-green-300">
           <div className="flex items-start gap-3">
-            <span className="text-4xl">{GOAL_CONFIGS[goalType].icon}</span>
+            <span className="text-4xl">{GOAL_CONFIGS[goalType as GoalType].icon}</span>
             <div>
               <h3 className="font-bold text-xl text-green-900 mb-2">
-                {GOAL_CONFIGS[goalType].defaults.message}
+                {GOAL_CONFIGS[goalType as GoalType].defaults.message}
               </h3>
               <div className="space-y-2 text-sm text-green-800">
                 <p>
-                  <strong>Meta inicial:</strong> Completar <strong>{GOAL_CONFIGS[goalType].defaults.goalDistance}</strong> confortavelmente
+                  <strong>Meta inicial:</strong> Completar <strong>{GOAL_CONFIGS[goalType as GoalType].defaults.goalDistance}</strong> confortavelmente
                 </p>
                 <p>
-                  <strong>Prazo estimado:</strong> {GOAL_CONFIGS[goalType].defaults.weeksAhead} semanas
+                  <strong>Prazo estimado:</strong> {GOAL_CONFIGS[goalType as GoalType].defaults.weeksAhead} semanas
                 </p>
                 <p className="mt-3 text-green-700">
                   💡 A IA vai criar um plano progressivo focado em:
