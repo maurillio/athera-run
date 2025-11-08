@@ -57,7 +57,6 @@ export async function POST(req: NextRequest) {
     if (body.sleepQuality !== undefined) updateData.sleepQuality = body.sleepQuality ? parseInt(body.sleepQuality) : null;
     if (body.stressLevel !== undefined) updateData.stressLevel = body.stressLevel ? parseInt(body.stressLevel) : null;
     if (body.otherSportsExperience !== undefined) updateData.otherSportsExperience = body.otherSportsExperience;
-    if (body.otherSportsYears !== undefined) updateData.otherSportsYears = body.otherSportsYears ? parseInt(body.otherSportsYears) : null;
     if (body.injuryDetails !== undefined) updateData.injuryDetails = body.injuryDetails;
     if (body.injuryRecoveryStatus !== undefined) updateData.injuryRecoveryStatus = body.injuryRecoveryStatus;
     if (body.lastInjuryDate !== undefined) updateData.lastInjuryDate = body.lastInjuryDate ? new Date(body.lastInjuryDate) : null;

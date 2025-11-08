@@ -189,7 +189,6 @@ export default function OnboardingPage() {
         longestRun: formData.longestRun,
         preferredPace: formData.preferredPace,
         otherSportsExperience: formData.otherSportsExperience || null, // Sempre string ou null
-        otherSportsYears: formData.otherSportsYears || null,
         
         // Performance (Step 3)
         bestTimes: (formData.personalBests && Object.keys(formData.personalBests).length > 0) 

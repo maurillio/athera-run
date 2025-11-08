@@ -51,8 +51,8 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     if (data.otherSports && data.otherSports.length > 0) {
       sections.experience.push(`🎾 Outros esportes: ${data.otherSports.join(', ')}`);
     }
-    if (data.otherSportsYears) {
-      sections.experience.push(`📅 Anos praticando: ${data.otherSportsYears}`);
+    if (data.otherSportsExperience) {
+      sections.experience.push(`🎾 Outros esportes: ${data.otherSportsExperience}`);
     }
     
     // Best times

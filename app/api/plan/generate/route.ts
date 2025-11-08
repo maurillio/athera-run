@@ -164,7 +164,6 @@ export async function POST(request: NextRequest) {
       recentLongRunPace: profile.recentLongRunPace ?? undefined,
       restingHeartRate: profile.restingHeartRate ?? undefined,
       otherSportsExperience: profile.otherSportsExperience ?? undefined,
-      otherSportsYears: profile.otherSportsYears ?? undefined,
       sleepQuality: profile.sleepQuality ?? undefined,
       stressLevel: profile.stressLevel ?? undefined,
       hasTrackAccess: profile.hasTrackAccess ?? undefined,

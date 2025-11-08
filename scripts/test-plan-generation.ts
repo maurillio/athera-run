@@ -51,7 +51,6 @@ const testProfiles = [
       hasGymAccess: true,
       restingHeartRate: 55,
       otherSportsExperience: "Ciclismo",
-      otherSportsYears: 2,
     }
   }
 ];

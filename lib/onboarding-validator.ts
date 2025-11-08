@@ -21,7 +21,6 @@ export interface OnboardingData {
   runningYears?: number;
   currentWeeklyKm?: number;
   otherSportsExperience?: string[];
-  otherSportsYears?: Record<string, number>;
 
   // Step 3: Performance
   bestTimes?: Record<string, { time: string; date?: string }>;
