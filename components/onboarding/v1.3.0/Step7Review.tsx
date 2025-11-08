@@ -77,6 +77,21 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     }
     
     // Race Goal - CRITICAL
+    // Mostrar tipo de objetivo
+    const goalTypeLabels: any = {
+      race: '🏁 Tenho corrida alvo',
+      start: '🏃 Quero começar a correr',
+      fitness: '💪 Ganhar condicionamento'
+    };
+    
+    if (data.goalType) {
+      sections.goals.push(`Tipo: ${goalTypeLabels[data.goalType] || data.goalType}`);
+    }
+    
+    if (data.isOpenGoal) {
+      sections.goals.push(`✓ Objetivo aberto - Sem corrida específica`);
+    }
+    
     if (data.raceName) {
       sections.goals.push(`📝 Corrida: ${data.raceName}`);
     }
@@ -93,10 +108,11 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     
     if (data.targetRaceDate) {
       const date = new Date(data.targetRaceDate);
-      sections.goals.push(`📅 Data da prova: ${date.toLocaleDateString('pt-BR')}`);
+      const label = data.isOpenGoal ? 'Prazo estimado' : 'Data da prova';
+      sections.goals.push(`📅 ${label}: ${date.toLocaleDateString('pt-BR')}`);
     }
     
-    if (data.targetTime) {
+    if (data.targetTime && !data.isOpenGoal) {
       sections.goals.push(`⏱️ Tempo alvo: ${data.targetTime}`);
     }
     
