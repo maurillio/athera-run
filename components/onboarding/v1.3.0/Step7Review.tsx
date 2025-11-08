@@ -77,6 +77,10 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     }
     
     // Race Goal - CRITICAL
+    if (data.raceName) {
+      sections.goals.push(`📝 Corrida: ${data.raceName}`);
+    }
+    
     if (data.goalDistance) {
       const distances: any = {
         '5k': '5km',
@@ -84,7 +88,7 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
         '21k': 'Meia Maratona (21km)',
         '42k': 'Maratona (42km)'
       };
-      sections.goals.push(`🏁 Meta: ${distances[data.goalDistance] || data.goalDistance}`);
+      sections.goals.push(`🏁 Distância: ${distances[data.goalDistance] || data.goalDistance}`);
     }
     
     if (data.targetRaceDate) {

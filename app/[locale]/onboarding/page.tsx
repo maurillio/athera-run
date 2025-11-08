@@ -68,6 +68,7 @@ export default function OnboardingPage() {
     
     // Step 5: Goals (CRITICAL for API)
     primaryGoal: '',
+    raceName: '', // Nome da corrida (opcional)
     targetRaceDate: '',
     goalDistance: '', // REQUIRED
     targetTime: '',
@@ -200,6 +201,7 @@ export default function OnboardingPage() {
         medicalNotes: formData.medicalNotes,
         
         // Objetivos (Step 5) - CRITICAL
+        raceName: formData.raceName || null, // Nome da corrida (opcional)
         goalDistance: formData.goalDistance, // REQUIRED
         targetRaceDate: formData.targetRaceDate, // REQUIRED
         targetTime: formData.targetTime,
