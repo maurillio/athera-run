@@ -55,13 +55,11 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       sections.experience.push(`🎾 Outros esportes: ${data.otherSportsExperience}`);
     }
     
-    // Best times
-    if (data.bestTimes && data.bestTimes.length > 0) {
+    // Best times - corrigido para objeto ao invés de array
+    if (data.bestTimes && typeof data.bestTimes === 'object' && Object.keys(data.bestTimes).length > 0) {
       sections.experience.push(`🏆 Melhores tempos registrados`);
-      data.bestTimes.forEach((bt: any) => {
-        if (bt.distance && bt.time) {
-          sections.experience.push(`   • ${bt.distance}: ${bt.time}`);
-        }
+      Object.entries(data.bestTimes).forEach(([distance, timeData]: any) => {
+        sections.experience.push(`   • ${distance}: ${timeData.time} (VDOT ${timeData.vdot})`);
       });
     }
     
@@ -285,13 +283,13 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
           </div>
         )}
 
-        {/* Performance Data */}
-        {data.personalBests && data.personalBests.length > 0 && (
+        {/* Performance Data - corrigido para bestTimes como objeto */}
+        {data.bestTimes && typeof data.bestTimes === 'object' && Object.keys(data.bestTimes).length > 0 && (
           <div className="mt-4 pt-4 border-t border-blue-200">
             <p className="font-semibold text-blue-900 mb-2">🏃 Melhores Tempos</p>
-            {data.personalBests.map((pb: any, idx: number) => (
+            {Object.entries(data.bestTimes).map(([distance, timeData]: any, idx: number) => (
               <p key={idx} className="text-sm text-gray-700">
-                {pb.distance}: {pb.time}
+                {distance}: {timeData.time} <span className="text-gray-500">(VDOT {timeData.vdot})</span>
               </p>
             ))}
           </div>
