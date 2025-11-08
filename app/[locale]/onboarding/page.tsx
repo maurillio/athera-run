@@ -77,12 +77,19 @@ export default function OnboardingPage() {
     secondaryGoals: [],
     motivationFactors: {},
     
-    // Step 6: Availability
-    trainingDays: [],
-    preferredTimes: {},
+    // Step 6: Availability (NOVA ESTRUTURA)
+    trainingSchedule: {}, // { 0: { running: true, activities: ['gym'] } }
+    customActivities: [], // ['pilates', 'crossfit']
     longRunDay: null,
-    otherActivities: [],
-    availableDays: {}, // Will be converted to trainingActivities
+    hasGymAccess: false,
+    hasPoolAccess: false,
+    hasTrackAccess: false,
+    trainingPreferences: {
+      solo: false,
+      group: false,
+      indoor: false,
+      outdoor: false,
+    },
     
     // Step 7: Review
     reviewComplete: false,
@@ -213,10 +220,14 @@ export default function OnboardingPage() {
         secondaryGoals: formData.secondaryGoals,
         motivationFactors: formData.motivationFactors,
         
-        // Disponibilidade (Step 6)
-        trainingActivities: trainingActivities,
+        // Disponibilidade (Step 6) - NOVA ESTRUTURA
+        trainingSchedule: formData.trainingSchedule || {},
+        customActivities: formData.customActivities || [],
         longRunDay: formData.longRunDay,
-        preferredTimes: formData.preferredTimes,
+        hasGymAccess: formData.hasGymAccess || false,
+        hasPoolAccess: formData.hasPoolAccess || false,
+        hasTrackAccess: formData.hasTrackAccess || false,
+        trainingPreferences: formData.trainingPreferences || {},
         
         // Outros
         onboardingComplete: true,
