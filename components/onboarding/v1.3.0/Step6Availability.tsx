@@ -432,9 +432,6 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
 
       {/* INFRAESTRUTURA */}
       <div className="border-t pt-6">
-
-      {/* INFRAESTRUTURA */}
-      <div className="border-t pt-6">
         <h3 className="text-lg font-semibold mb-4 text-blue-900">
           🏢 Infraestrutura Disponível
         </h3>
