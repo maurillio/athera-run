@@ -20,6 +20,7 @@ import Step4Health from '@/components/onboarding/v1.3.0/Step4Health';
 import Step5Goals from '@/components/onboarding/v1.3.0/Step5Goals';
 import Step6Availability from '@/components/onboarding/v1.3.0/Step6Availability';
 import Step7Review from '@/components/onboarding/v1.3.0/Step7Review';
+import PlanGenerationLoading from '@/components/onboarding/PlanGenerationLoading';
 
 const TOTAL_STEPS = 7;
 
@@ -33,6 +34,7 @@ export default function OnboardingPage() {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [generatingPlan, setGeneratingPlan] = useState(false); // NOVO: estado para geração do plano
   const [error, setError] = useState('');
   
   // Form data aggregated from all steps
@@ -242,6 +244,7 @@ export default function OnboardingPage() {
         targetRaceDate: profilePayload.targetRaceDate,
       });
       
+      // STEP 1: Criar perfil
       const response = await fetch('/api/profile/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -264,9 +267,39 @@ export default function OnboardingPage() {
         return;
       }
 
-      console.log('✅ Perfil criado com sucesso! Redirecionando...');
-      // Redirect to dashboard with locale
-      router.push(`/${locale}/dashboard`);
+      console.log('✅ Perfil criado com sucesso!');
+      setLoading(false);
+      
+      // STEP 2: Mostrar loading divertido e gerar plano
+      setGeneratingPlan(true);
+      
+      try {
+        console.log('🚀 Iniciando geração do plano...');
+        
+        const planResponse = await fetch('/api/plan/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        const planData = await planResponse.json();
+        
+        if (!planResponse.ok) {
+          console.error('⚠️ Erro ao gerar plano (não crítico):', planData);
+          // Não bloquear o fluxo, apenas logar o erro
+        } else {
+          console.log('✅ Plano gerado com sucesso!');
+        }
+      } catch (planErr) {
+        console.error('⚠️ Erro ao gerar plano (não crítico):', planErr);
+        // Não bloquear o fluxo
+      }
+      
+      // Aguardar loading animado completar (mínimo 30 segundos para mostrar todas as mensagens)
+      setTimeout(() => {
+        console.log('✅ Redirecionando para dashboard...');
+        router.push(`/${locale}/dashboard`);
+      }, 30000); // 30 segundos
+      
     } catch (err) {
       console.error('❌ Erro na requisição:', err);
       setError(tErrors('network'));
@@ -305,6 +338,11 @@ export default function OnboardingPage() {
 
   // Calculate progress percentage
   const progress = (currentStep / TOTAL_STEPS) * 100;
+
+  // Se está gerando o plano, mostrar loading
+  if (generatingPlan) {
+    return <PlanGenerationLoading />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 py-8 px-4">

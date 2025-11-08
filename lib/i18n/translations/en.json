@@ -9,6 +9,8 @@
     "next": "Next",
     "previous": "Previous",
     "finish": "Finish",
+    "finishAndCreatePlan": "Finish and Create Plan",
+    "creatingPlan": "Creating your plan...",
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",

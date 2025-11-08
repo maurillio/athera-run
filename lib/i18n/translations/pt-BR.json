@@ -9,6 +9,8 @@
     "next": "Próximo",
     "previous": "Anterior",
     "finish": "Finalizar",
+    "finishAndCreatePlan": "Finalizar e Criar Plano",
+    "creatingPlan": "Criando seu plano...",
     "loading": "Carregando...",
     "error": "Erro",
     "success": "Sucesso",
@@ -770,7 +772,26 @@
     "processing": "Processando",
     "saving": "Salvando",
     "deleting": "Excluindo",
-    "uploading": "Enviando"
+    "uploading": "Enviando",
+    "planGeneration": {
+      "messages": [
+        "🏃 Colocando o óculos baixa pace...",
+        "⚡ Tomando o gel de carboidrato...",
+        "👟 Calçando o tênis de placa de carbono...",
+        "💧 Hidratando para os 42km...",
+        "📊 Calculando seu VDOT...",
+        "🎯 Ajustando o ritmo dos treinos...",
+        "📅 Planejando seus longões...",
+        "💪 Preparando os treinos de força...",
+        "🧘 Organizando os dias de descanso...",
+        "🔥 Aquecendo para o primeiro treino...",
+        "⏱️ Programando os intervalados...",
+        "🏔️ Planejando as subidas...",
+        "🎵 Montando a playlist perfeita...",
+        "🌅 Marcando os treinos matinais...",
+        "🏁 Visualizando sua chegada triunfante..."
+      ]
+    }
   },
   "plano": {
     "title": "Meu Plano de Treinamento",
