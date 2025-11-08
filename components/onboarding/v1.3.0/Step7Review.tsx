@@ -117,48 +117,49 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     }
     
     // ===== DISPONIBILIDADE =====
-    const trainingDaysCount = 
-      data.availableDays?.running?.length || 
-      data.trainingDays?.length || 
-      (data.trainingActivities?.length > 0 ? data.trainingActivities.length : 0);
+    // Nova estrutura: trainingSchedule
+    if (data.trainingSchedule && Object.keys(data.trainingSchedule).length > 0) {
+      const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      const daysShort = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
       
-    if (trainingDaysCount > 0) {
-      sections.availability.push(`📅 ${trainingDaysCount} dias de treino por semana`);
-    }
-    
-    // Dias de corrida
-    if (data.availableDays?.running && data.availableDays.running.length > 0) {
-      const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const runDays = data.availableDays.running.map((d: number) => days[d]).join(', ');
-      sections.availability.push(`🏃 Dias de corrida: ${runDays}`);
-    } else if (data.trainingActivities && data.trainingActivities.length > 0) {
-      const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const runDays = data.trainingActivities.map((d: number) => days[d]).join(', ');
-      sections.availability.push(`🏃 Dias de corrida: ${runDays}`);
+      const schedule = data.trainingSchedule;
+      const trainingDays = Object.keys(schedule).filter(day => {
+        const daySchedule = schedule[parseInt(day)];
+        return daySchedule.running || daySchedule.activities?.length > 0;
+      });
+      
+      sections.availability.push(`📅 ${trainingDays.length} dias de treino por semana`);
+      
+      // Dias de corrida
+      const runningDays = Object.keys(schedule)
+        .filter(day => schedule[parseInt(day)].running)
+        .map(day => daysShort[parseInt(day)])
+        .join(', ');
+      
+      if (runningDays) {
+        sections.availability.push(`🏃 Dias de corrida: ${runningDays}`);
+      }
+      
+      // Outras atividades por dia
+      const activitiesByDay: Record<string, string[]> = {};
+      Object.keys(schedule).forEach(day => {
+        const daySchedule = schedule[parseInt(day)];
+        if (daySchedule.activities?.length > 0) {
+          activitiesByDay[days[parseInt(day)]] = daySchedule.activities;
+        }
+      });
+      
+      if (Object.keys(activitiesByDay).length > 0) {
+        Object.entries(activitiesByDay).forEach(([day, activities]) => {
+          sections.availability.push(`✨ ${day}: ${activities.join(', ')}`);
+        });
+      }
     }
     
     // Dia do longão
     if (data.longRunDay !== null && data.longRunDay !== undefined) {
       const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
       sections.availability.push(`🏃‍♂️ Longão: ${days[data.longRunDay]}`);
-    }
-    
-    // Outras atividades
-    const activities = [];
-    if (data.availableDays?.strength && data.availableDays.strength.length > 0) {
-      activities.push(`💪 Musculação`);
-    }
-    if (data.availableDays?.swimming && data.availableDays.swimming.length > 0) {
-      activities.push(`🏊 Natação`);
-    }
-    if (data.availableDays?.yoga && data.availableDays.yoga.length > 0) {
-      activities.push(`🧘 Yoga`);
-    }
-    if (data.availableDays?.crossTraining && data.availableDays.crossTraining.length > 0) {
-      activities.push(`🚴 Cross Training`);
-    }
-    if (activities.length > 0) {
-      sections.availability.push(`✨ Outras: ${activities.join(', ')}`);
     }
     
     // Infraestrutura
@@ -168,6 +169,23 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
     if (data.hasTrackAccess) infrastructure.push('Pista');
     if (infrastructure.length > 0) {
       sections.availability.push(`🏗️ Recursos: ${infrastructure.join(', ')}`);
+    }
+    
+    // Preferências de treino
+    if (data.trainingPreferences) {
+      const prefs = [];
+      if (data.trainingPreferences.solo) prefs.push('Solo');
+      if (data.trainingPreferences.group) prefs.push('Grupo');
+      if (prefs.length > 0) {
+        sections.availability.push(`👤 Preferência: ${prefs.join(' e ')}`);
+      }
+      
+      const env = [];
+      if (data.trainingPreferences.indoor) env.push('Indoor');
+      if (data.trainingPreferences.outdoor) env.push('Outdoor');
+      if (env.length > 0) {
+        sections.availability.push(`🌍 Ambiente: ${env.join(' e ')}`);
+      }
     }
     
     // ===== SAÚDE =====
