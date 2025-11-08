@@ -48,9 +48,13 @@
       "passwordPlaceholder": "Your password",
       "forgotPassword": "Forgot password?",
       "signIn": "Sign In",
+      "signingIn": "Signing in...",
       "noAccount": "Don't have an account?",
       "signUpLink": "Create account",
       "googleSignIn": "Sign in with Google",
+      "orContinueWith": "or continue with",
+      "invalidCredentials": "Invalid email or password",
+      "googleError": "Error signing in with Google. Please try again.",
       "errors": {
         "invalid": "Invalid email or password",
         "network": "Connection error. Please try again.",
