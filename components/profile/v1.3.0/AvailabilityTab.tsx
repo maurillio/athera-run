@@ -11,7 +11,6 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
   const initializeFromSchedule = () => {
     const schedule = userData.trainingSchedule || {};
     const runDays: number[] = [];
-    const gymDays: number[] = [];
     const allActivitiesByDay: {[key: number]: string[]} = {};
     
     Object.keys(schedule).forEach(dayKey => {
@@ -24,26 +23,17 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
         }
         if (dayData.activities && Array.isArray(dayData.activities)) {
           allActivitiesByDay[dayIdx] = dayData.activities;
-          dayData.activities.forEach((activity: string) => {
-            const activityLower = activity.toLowerCase();
-            if (activityLower.includes('muscula') || activityLower.includes('gym') || activityLower.includes('academia')) {
-              if (!gymDays.includes(dayIdx)) gymDays.push(dayIdx);
-            }
-          });
         }
       }
     });
     
-    return { runDays: runDays.sort(), gymDays: gymDays.sort(), allActivitiesByDay };
+    return { runDays: runDays.sort(), allActivitiesByDay };
   };
   
-  const { runDays: initialRunDays, gymDays: initialGymDays, allActivitiesByDay } = initializeFromSchedule();
+  const { runDays: initialRunDays, allActivitiesByDay } = initializeFromSchedule();
   
   const [runDays, setRunDays] = useState(initialRunDays);
-  const [strengthDays, setStrengthDays] = useState(initialGymDays);
-  const [swimmingDays, setSwimmingDays] = useState(userData.availableDays?.swimming || []);
-  const [crossTrainingDays, setCrossTrainingDays] = useState(userData.availableDays?.crossTraining || []);
-  const [yogaDays, setYogaDays] = useState(userData.availableDays?.yoga || []);
+  const [activitiesByDay, setActivitiesByDay] = useState<{[key: number]: string[]}>(allActivitiesByDay);
   
   // v1.6.0 - Dia do Longão
   const [longRunDay, setLongRunDay] = useState<number | null>(
@@ -91,15 +81,40 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
     setAdjustmentStatus(null);
 
     try {
-      // Atualizar disponibilidade (v1.6.0 - Apenas trainingActivities)
+      // Reconstruir trainingSchedule a partir dos dados atuais
+      const newTrainingSchedule: any = {};
+      
+      // Adicionar corridas
+      runDays.forEach(dayIdx => {
+        if (!newTrainingSchedule[dayIdx]) {
+          newTrainingSchedule[dayIdx] = { running: false, activities: [] };
+        }
+        newTrainingSchedule[dayIdx].running = true;
+      });
+      
+      // Adicionar outras atividades
+      Object.keys(activitiesByDay).forEach(dayKey => {
+        const dayIdx = parseInt(dayKey);
+        if (!newTrainingSchedule[dayIdx]) {
+          newTrainingSchedule[dayIdx] = { running: false, activities: [] };
+        }
+        newTrainingSchedule[dayIdx].activities = activitiesByDay[dayIdx];
+      });
+      
+      // Calcular trainingActivities (dias com qualquer atividade)
+      const trainingActivities = Object.keys(newTrainingSchedule)
+        .map(d => parseInt(d))
+        .filter(dayIdx => {
+          const schedule = newTrainingSchedule[dayIdx];
+          return schedule && (schedule.running || (schedule.activities && schedule.activities.length > 0));
+        })
+        .sort();
+      
+      // Atualizar disponibilidade (v1.6.7 - trainingSchedule completo)
       await onUpdate({
-        trainingActivities: runDays,
-        availableDays: {
-          strength: strengthDays.length > 0 ? strengthDays : null,
-          swimming: swimmingDays.length > 0 ? swimmingDays : null,
-          crossTraining: crossTrainingDays.length > 0 ? crossTrainingDays : null,
-          yoga: yogaDays.length > 0 ? yogaDays : null
-        },
+        trainingActivities,
+        trainingSchedule: newTrainingSchedule,
+        customActivities: userData.customActivities || [],
         longRunDay: longRunDay, // v1.6.0
       });
 
@@ -178,40 +193,62 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
           </div>
         )}
 
-        {/* Outras Atividades */}
-        {(strengthDays.length > 0 || swimmingDays.length > 0 || yogaDays.length > 0 || crossTrainingDays.length > 0) && (
+        {/* Outras Atividades - TODAS DO TRAINING SCHEDULE */}
+        {Object.keys(activitiesByDay).length > 0 && (
           <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
-            <div className="font-semibold mb-3">Outras Atividades:</div>
-            <div className="space-y-2 ml-2">
-              {strengthDays.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">💪</span>
-                  <span className="font-medium">Musculação:</span>
-                  <span>{strengthDays.map((d: number) => days[d]).join(', ')}</span>
-                </div>
-              )}
-              {swimmingDays.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🏊</span>
-                  <span className="font-medium">Natação:</span>
-                  <span>{swimmingDays.map((d: number) => days[d]).join(', ')}</span>
-                </div>
-              )}
-              {yogaDays.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🧘</span>
-                  <span className="font-medium">Yoga:</span>
-                  <span>{yogaDays.map((d: number) => days[d]).join(', ')}</span>
-                </div>
-              )}
-              {crossTrainingDays.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🚴</span>
-                  <span className="font-medium">Cross Training:</span>
-                  <span>{crossTrainingDays.map((d: number) => days[d]).join(', ')}</span>
-                </div>
-              )}
+            <div className="font-semibold mb-3">✨ Outras Atividades:</div>
+            <div className="space-y-3">
+              {days.map((dayName, dayIdx) => {
+                const activities = activitiesByDay[dayIdx];
+                if (!activities || activities.length === 0) return null;
+                
+                return (
+                  <div key={dayIdx} className="flex items-start gap-2 ml-2">
+                    <span className="text-sm font-medium text-gray-700 min-w-[100px]">{dayName}:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {activities.map((activity, idx) => {
+                        // Mapear ícones por atividade
+                        const activityIcons: {[key: string]: string} = {
+                          'Musculação': '💪',
+                          'musculacao': '💪',
+                          'Yoga': '🧘',
+                          'yoga': '🧘',
+                          'Pilates': '🤸',
+                          'pilates': '🤸',
+                          'Natação': '🏊',
+                          'natacao': '🏊',
+                          'Ciclismo': '🚴',
+                          'ciclismo': '🚴',
+                          'bicicleta': '🚴',
+                          'Luta': '🥋',
+                          'luta': '🥋',
+                        };
+                        
+                        const activityLower = activity.toLowerCase();
+                        const icon = activityIcons[activity] || activityIcons[activityLower] || '⚡';
+                        const displayName = activity.charAt(0).toUpperCase() + activity.slice(1);
+                        
+                        return (
+                          <span key={idx} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-medium text-sm flex items-center gap-1">
+                            <span>{icon}</span>
+                            <span>{displayName}</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+          </div>
+        )}
+        
+        {/* Nota sobre edição de atividades */}
+        {Object.keys(activitiesByDay).length > 0 && (
+          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-900">
+              ℹ️ Para editar as outras atividades, você pode criar um novo plano a partir do Dashboard.
+            </p>
           </div>
         )}
 
@@ -344,93 +381,6 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
           )}
         </div>
       )}
-
-      <div className="border-t pt-6">
-        <h3 className="font-semibold mb-4 text-lg">{t('availability.complementaryTitle')}</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          {t('availability.complementaryDesc')}
-        </p>
-
-        {/* Musculação */}
-        <div className="mb-4">
-          <label className="block font-medium mb-2">{t('availability.strength')}</label>
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day, idx) => (
-              <button key={idx} onClick={() => toggleDay(idx, strengthDays, setStrengthDays)}
-                className={`px-2 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  strengthDays.includes(idx)
-                    ? 'bg-purple-600 text-white'
-                    : 'border border-gray-300 hover:border-purple-400'
-                }`}>
-                {day}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {strengthDays.length > 0 ? t('availability.daysSelected', { count: strengthDays.length }) : t('availability.noDaysSelected')}
-          </p>
-        </div>
-
-        {/* Natação */}
-        <div className="mb-4">
-          <label className="block font-medium mb-2">{t('availability.swimming')}</label>
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day, idx) => (
-              <button key={idx} onClick={() => toggleDay(idx, swimmingDays, setSwimmingDays)}
-                className={`px-2 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  swimmingDays.includes(idx)
-                    ? 'bg-blue-600 text-white'
-                    : 'border border-gray-300 hover:border-blue-400'
-                }`}>
-                {day}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {swimmingDays.length > 0 ? t('availability.daysSelected', { count: swimmingDays.length }) : t('availability.noDaysSelected')}
-          </p>
-        </div>
-
-        {/* Cross Training */}
-        <div className="mb-4">
-          <label className="block font-medium mb-2">{t('availability.crossTraining')}</label>
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day, idx) => (
-              <button key={idx} onClick={() => toggleDay(idx, crossTrainingDays, setCrossTrainingDays)}
-                className={`px-2 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  crossTrainingDays.includes(idx)
-                    ? 'bg-green-600 text-white'
-                    : 'border border-gray-300 hover:border-green-400'
-                }`}>
-                {day}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {crossTrainingDays.length > 0 ? t('availability.daysSelected', { count: crossTrainingDays.length }) : t('availability.noDaysSelected')}
-          </p>
-        </div>
-
-        {/* Yoga */}
-        <div>
-          <label className="block font-medium mb-2">{t('availability.yoga')}</label>
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day, idx) => (
-              <button key={idx} onClick={() => toggleDay(idx, yogaDays, setYogaDays)}
-                className={`px-2 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  yogaDays.includes(idx)
-                    ? 'bg-pink-600 text-white'
-                    : 'border border-gray-300 hover:border-pink-400'
-                }`}>
-                {day}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {yogaDays.length > 0 ? t('availability.daysSelected', { count: yogaDays.length }) : t('availability.noDaysSelected')}
-          </p>
-        </div>
-      </div>
 
       {/* Botão Salvar */}
       {hasChanges && (
