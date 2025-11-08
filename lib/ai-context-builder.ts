@@ -70,10 +70,16 @@ export interface ComprehensiveProfile {
   hasPoolAccess?: boolean;
   hasTrackAccess?: boolean;
   
-  // Preferências
-  trainingPreferences?: any;
+  // Disponibilidade e Preferências (Nova estrutura v1.3.0)
+  trainingSchedule?: Record<number, { running: boolean; activities: string[] }>;
+  customActivities?: string[];
+  trainingPreferences?: {
+    solo?: boolean;
+    group?: boolean;
+    indoor?: boolean;
+    outdoor?: boolean;
+  };
   motivationFactors?: any;
-  trainingActivities?: any[];
   longRunDay?: number;
   
   // Contexto de execução
@@ -330,11 +336,170 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   context += `\n`;
   
   // ═══════════════════════════════════════
-  // 7. MOTIVAÇÃO E PREFERÊNCIAS
+  // 7. DISPONIBILIDADE E ATIVIDADES
   // ═══════════════════════════════════════
   
   context += `\n═══════════════════════════════════════\n`;
-  context += `7. MOTIVAÇÃO E PREFERÊNCIAS\n`;
+  context += `7. DISPONIBILIDADE E ATIVIDADES\n`;
+  context += `═══════════════════════════════════════\n\n`;
+  
+  // Nova estrutura de disponibilidade
+  if (profile.trainingSchedule && Object.keys(profile.trainingSchedule).length > 0) {
+    const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    
+    context += `AGENDA SEMANAL:\n`;
+    
+    Object.entries(profile.trainingSchedule).forEach(([dayNum, schedule]: [string, any]) => {
+      const dayIndex = parseInt(dayNum);
+      const activities = [];
+      
+      if (schedule.running) {
+        activities.push('🏃 Corrida');
+        if (profile.longRunDay === dayIndex) {
+          activities.push('(DIA DO LONGÃO)');
+        }
+      }
+      
+      if (schedule.activities && schedule.activities.length > 0) {
+        schedule.activities.forEach((activity: string) => {
+          // Formata nome da atividade
+          const activityName = activity.split('_').map((w: string) => 
+            w.charAt(0).toUpperCase() + w.slice(1)
+          ).join(' ');
+          activities.push(`✨ ${activityName}`);
+        });
+      }
+      
+      if (activities.length > 0) {
+        context += `  ${days[dayIndex]}: ${activities.join(', ')}\n`;
+      }
+    });
+    
+    context += `\n`;
+    
+    // Análise de volume
+    const runningDays = Object.values(profile.trainingSchedule).filter((s: any) => s.running).length;
+    const totalActiveDays = Object.values(profile.trainingSchedule).filter((s: any) => 
+      s.running || (s.activities && s.activities.length > 0)
+    ).length;
+    
+    context += `ANÁLISE DE DISPONIBILIDADE:\n`;
+    context += `  Dias de corrida: ${runningDays}/semana\n`;
+    context += `  Total de dias ativos: ${totalActiveDays}/semana\n`;
+    
+    if (runningDays < 3) {
+      context += `  ⚠️ ATENÇÃO: Apenas ${runningDays} dias de corrida - plano conservador\n`;
+    } else if (runningDays >= 5) {
+      context += `  ✓ Excelente disponibilidade para progressão\n`;
+    }
+    
+    context += `\n`;
+    
+    // Esportes complementares
+    const allActivities = new Set<string>();
+    Object.values(profile.trainingSchedule).forEach((s: any) => {
+      if (s.activities) {
+        s.activities.forEach((a: string) => allActivities.add(a));
+      }
+    });
+    
+    if (allActivities.size > 0) {
+      context += `ATIVIDADES COMPLEMENTARES:\n`;
+      allActivities.forEach(activity => {
+        const activityName = activity.split('_').map((w: string) => 
+          w.charAt(0).toUpperCase() + w.slice(1)
+        ).join(' ');
+        context += `  • ${activityName}`;
+        
+        // Recomendação baseada na atividade
+        if (activity === 'musculacao') {
+          context += ` → Considerar fortalecimento de core e membros inferiores\n`;
+        } else if (activity === 'yoga' || activity === 'pilates') {
+          context += ` → Excelente para flexibilidade e prevenção de lesões\n`;
+        } else if (activity === 'natacao') {
+          context += ` → Ótimo para recuperação ativa (baixo impacto)\n`;
+        } else if (activity === 'ciclismo') {
+          context += ` → Bom para cross-training cardiovascular\n`;
+        } else {
+          context += ` → Integrar ao plano como complemento\n`;
+        }
+      });
+      context += `\n`;
+    }
+  }
+  
+  // Infraestrutura disponível
+  const infrastructure = [];
+  if (profile.hasGymAccess) infrastructure.push('Academia');
+  if (profile.hasPoolAccess) infrastructure.push('Piscina');
+  if (profile.hasTrackAccess) infrastructure.push('Pista de Atletismo');
+  
+  if (infrastructure.length > 0) {
+    context += `INFRAESTRUTURA DISPONÍVEL:\n`;
+    infrastructure.forEach(infra => {
+      context += `  ✓ ${infra}\n`;
+    });
+    context += `\n`;
+  }
+  
+  // ═══════════════════════════════════════
+  // 8. PREFERÊNCIAS DE TREINO
+  // ═══════════════════════════════════════
+  
+  context += `\n═══════════════════════════════════════\n`;
+  context += `8. PREFERÊNCIAS DE TREINO\n`;
+  context += `═══════════════════════════════════════\n\n`;
+  
+  if (profile.trainingPreferences) {
+    // Estilo de treino
+    const trainingStyle = [];
+    if (profile.trainingPreferences.solo) trainingStyle.push('Solo');
+    if (profile.trainingPreferences.group) trainingStyle.push('Grupo');
+    
+    if (trainingStyle.length > 0) {
+      context += `ESTILO DE TREINO: ${trainingStyle.join(' e ')}\n`;
+      
+      if (profile.trainingPreferences.solo && !profile.trainingPreferences.group) {
+        context += `  → Atleta prefere treinar sozinho\n`;
+        context += `  → Plano deve ser autogerenciável\n`;
+        context += `  → Motivação intrínseca importante\n`;
+      } else if (profile.trainingPreferences.group && !profile.trainingPreferences.solo) {
+        context += `  → Atleta prefere treinar em grupo\n`;
+        context += `  → Considerar assessorias ou grupos de corrida\n`;
+        context += `  → Motivação social importante\n`;
+      } else {
+        context += `  → Flexível quanto ao estilo de treino\n`;
+      }
+      context += `\n`;
+    }
+    
+    // Ambiente preferido
+    const environment = [];
+    if (profile.trainingPreferences.indoor) environment.push('Indoor');
+    if (profile.trainingPreferences.outdoor) environment.push('Outdoor');
+    
+    if (environment.length > 0) {
+      context += `AMBIENTE PREFERIDO: ${environment.join(' e ')}\n`;
+      
+      if (profile.trainingPreferences.outdoor && !profile.trainingPreferences.indoor) {
+        context += `  → Prefere treinar ao ar livre\n`;
+        context += `  → Considerar variação de terrenos (rua, parque, trilha)\n`;
+      } else if (profile.trainingPreferences.indoor && !profile.trainingPreferences.outdoor) {
+        context += `  → Prefere treinar em ambiente fechado\n`;
+        context += `  → Priorizar academia/esteira quando disponível\n`;
+      } else {
+        context += `  → Flexível quanto ao ambiente de treino\n`;
+      }
+      context += `\n`;
+    }
+  }
+  
+  // ═══════════════════════════════════════
+  // 9. MOTIVAÇÃO
+  // ═══════════════════════════════════════
+  
+  context += `\n═══════════════════════════════════════\n`;
+  context += `9. MOTIVAÇÃO\n`;
   context += `═══════════════════════════════════════\n\n`;
   
   if (profile.motivationFactors) {
@@ -347,23 +512,13 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
     context += `\n`;
   }
   
-  if (profile.trainingPreferences) {
-    context += `Preferências de Treino:\n`;
-    if (profile.trainingPreferences.location) {
-      context += `  Local: ${profile.trainingPreferences.location.join(', ')}\n`;
-    }
-    if (profile.trainingPreferences.groupTraining !== undefined) {
-      context += `  Estilo: ${profile.trainingPreferences.groupTraining ? 'Grupo' : 'Solo'}\n`;
-    }
-    context += `\n`;
-  }
   
   // ═══════════════════════════════════════
-  // 8. OBJETIVO E PRAZO
+  // 10. OBJETIVO E PRAZO
   // ═══════════════════════════════════════
   
   context += `\n═══════════════════════════════════════\n`;
-  context += `8. OBJETIVO E PRAZO\n`;
+  context += `10. OBJETIVO E PRAZO\n`;
   context += `═══════════════════════════════════════\n\n`;
   
   // Verifica se é objetivo aberto (sem corrida específica)
@@ -408,11 +563,11 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   }
   
   // ═══════════════════════════════════════
-  // 9. RECOMENDAÇÕES FINAIS
+  // 11. RECOMENDAÇÕES FINAIS
   // ═══════════════════════════════════════
   
   context += `\n═══════════════════════════════════════\n`;
-  context += `RECOMENDAÇÕES FINAIS PARA O PLANO:\n`;
+  context += `11. RECOMENDAÇÕES FINAIS PARA O PLANO:\n`;
   context += `═══════════════════════════════════════\n\n`;
   
   context += generateFinalRecommendations(profile);
