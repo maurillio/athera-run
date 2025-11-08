@@ -53,7 +53,28 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   const [raceName, setRaceName] = useState(data.raceName || '');
   const [goalDistance, setGoalDistance] = useState(data.goalDistance || '');
   const [targetRaceDate, setTargetRaceDate] = useState(data.targetRaceDate || '');
-  const [targetTime, setTargetTime] = useState(data.targetTime || '');
+  
+  // Tempo alvo - separado em H:M:S para melhor UX
+  const [timeHours, setTimeHours] = useState('');
+  const [timeMinutes, setTimeMinutes] = useState('');
+  const [timeSeconds, setTimeSeconds] = useState('');
+  
+  // Inicializa tempo se já existir
+  useEffect(() => {
+    if (data.targetTime) {
+      const parts = data.targetTime.split(':');
+      if (parts.length >= 2) {
+        setTimeHours(parts[0] || '0');
+        setTimeMinutes(parts[1] || '0');
+        setTimeSeconds(parts[2] || '0');
+      }
+    }
+  }, []);
+  
+  // Calcula targetTime formatado
+  const targetTime = (timeHours || timeMinutes || timeSeconds) 
+    ? `${timeHours || '0'}:${(timeMinutes || '0').padStart(2, '0')}:${(timeSeconds || '0').padStart(2, '0')}`
+    : '';
   
   // Goal selection
   const [goal, setGoal] = useState(data.primaryGoal || '');
@@ -120,7 +141,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
       });
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [goalType, raceName, goal, motivation, goalDistance, targetRaceDate, targetTime, primaryMotivation, secondaryMotivations, multipleGoals, onUpdate]);
+  }, [goalType, raceName, goal, motivation, goalDistance, targetRaceDate, targetTime, timeHours, timeMinutes, timeSeconds, primaryMotivation, secondaryMotivations, multipleGoals, onUpdate]);
 
   const goals = [
     { value: 'finish_first_race', label: t('goals.finish_first_race'), desc: t('goalDescriptions.finish_first_race') },
@@ -315,13 +336,64 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
               <label className="block font-medium mb-2 text-gray-900">
                 ⏱️ Tempo Alvo <span className="text-gray-500 text-sm">(Opcional)</span>
               </label>
-              <input
-                type="text"
-                value={targetTime}
-                onChange={(e) => setTargetTime(e.target.value)}
-                placeholder="Ex: 45:00, 1:30:00, 3:45:00"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg bg-white"
-              />
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
+                  <label className="block text-xs text-gray-600 mb-1">Horas</label>
+                  <input
+                    type="number"
+                    value={timeHours}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 9)) {
+                        setTimeHours(val);
+                      }
+                    }}
+                    className="w-full px-4 py-3 text-2xl text-center border-2 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                    min="0"
+                    max="9"
+                    placeholder="0"
+                  />
+                </div>
+                <div className="text-2xl font-bold text-gray-400 pt-6">:</div>
+                <div className="flex-1">
+                  <label className="block text-xs text-gray-600 mb-1">Minutos</label>
+                  <input
+                    type="number"
+                    value={timeMinutes}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 59)) {
+                        setTimeMinutes(val);
+                      }
+                    }}
+                    className="w-full px-4 py-3 text-2xl text-center border-2 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                    min="0"
+                    max="59"
+                    placeholder="00"
+                  />
+                </div>
+                <div className="text-2xl font-bold text-gray-400 pt-6">:</div>
+                <div className="flex-1">
+                  <label className="block text-xs text-gray-600 mb-1">Segundos</label>
+                  <input
+                    type="number"
+                    value={timeSeconds}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 59)) {
+                        setTimeSeconds(val);
+                      }
+                    }}
+                    className="w-full px-4 py-3 text-2xl text-center border-2 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                    min="0"
+                    max="59"
+                    placeholder="00"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-2">
+                💡 Exemplo: 1h 30min 00seg para uma meia maratona
+              </p>
             </div>
           </div>
         </div>
