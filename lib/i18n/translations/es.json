@@ -378,7 +378,29 @@
         "challenge": "Desafío específico",
         "consistency": "Crear rutina"
       },
-      "submitButton": "Finalizar y Crear Mi Plan"
+      "submitButton": "Finalizar y Crear Mi Plan",
+      "planStartDateLabel": "📅 Fecha de Inicio del Plan",
+      "planStartDateHelp": "Elige cuándo quieres comenzar a entrenar",
+      "startToday": "Comenzar hoy",
+      "startNextMonday": "Próximo lunes",
+      "generatingPlan": "Generando tu plan...",
+      "loadingMessages": [
+        "🕶️ Poniéndome las gafas de ritmo bajo...",
+        "⚡ Tomando el gel de carbohidratos...",
+        "👟 Poniéndome los zapatos de placa de carbono...",
+        "💧 Hidratándome...",
+        "📊 Analizando tu perfil...",
+        "🎯 Calculando distancias ideales...",
+        "📅 Organizando tus semanas de entrenamiento...",
+        "🏃 Definiendo tus ritmos personalizados...",
+        "✨ Finalizando tu plan perfecto..."
+      ],
+      "startDateQuestion": "¿Cuándo quieres comenzar a entrenar?",
+      "startDateHelp": "💡 Recomendamos comenzar un lunes para una mejor organización semanal",
+      "creatingPerfectPlan": "¡Creando tu plan perfecto!",
+      "pleaseWait": "Espera, ya casi estamos...",
+      "profileCreationError": "Error al crear el perfil",
+      "tryAgain": "Intentar de nuevo"
     }
   },
   "profile": {
