@@ -282,16 +282,6 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
           </div>
         </div>
       </div>
-
-      {/* Next Button */}
-      <div className="flex justify-end pt-6 border-t">
-        <button
-          onClick={handleNext}
-          className="px-6 py-3 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700 text-white rounded-lg font-semibold transition-all"
-        >
-          {tCommon('next') || 'Próximo'} →
-        </button>
-      </div>
     </div>
   );
 }
