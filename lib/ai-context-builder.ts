@@ -58,6 +58,8 @@ export interface ComprehensiveProfile {
   medications?: string;
   
   // Objetivos
+  goalType?: string; // 'race' | 'start' | 'fitness'
+  isOpenGoal?: boolean; // Se é objetivo aberto (sem corrida específica)
   goalDistance: string;
   targetRaceDate: Date;
   targetTime?: string;
@@ -364,19 +366,46 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   context += `8. OBJETIVO E PRAZO\n`;
   context += `═══════════════════════════════════════\n\n`;
   
-  context += `Distância Objetivo: ${profile.goalDistance}\n`;
-  context += `Data da Prova: ${new Date(profile.targetRaceDate).toLocaleDateString('pt-BR')}\n`;
-  
-  const weeksAvailable = calculateWeeksUntilRace(profile.targetRaceDate);
-  context += `Semanas Disponíveis: ${weeksAvailable}\n`;
-  
-  if (profile.targetTime) {
-    context += `Meta de Tempo: ${profile.targetTime}\n`;
+  // Verifica se é objetivo aberto (sem corrida específica)
+  if (profile.isOpenGoal) {
+    const goalTypeLabels: any = {
+      start: 'COMEÇAR A CORRER',
+      fitness: 'GANHAR CONDICIONAMENTO GERAL'
+    };
+    
+    context += `⚠️ OBJETIVO ABERTO - ${goalTypeLabels[profile.goalType || 'start']}\n`;
+    context += `Atleta NÃO tem uma corrida/prova específica em mente.\n`;
+    context += `\n`;
+    context += `Meta Inicial: Completar ${profile.goalDistance} de forma confortável\n`;
+    context += `Prazo Flexível: ${new Date(profile.targetRaceDate).toLocaleDateString('pt-BR')}\n`;
+    context += `\n`;
+    context += `🎯 ABORDAGEM RECOMENDADA:\n`;
+    context += `- Foco em BASE AERÓBICA e adaptação cardiovascular\n`;
+    context += `- Progressão GRADUAL e sustentável (evitar burnout)\n`;
+    context += `- Prioridade: Criar HÁBITO e prevenir lesões\n`;
+    context += `- Ritmo CONFORTÁVEL (teste da conversação)\n`;
+    context += `- Volume progressivo com semanas de recuperação\n`;
+    context += `- Sem pressão de data - ajustar conforme evolução\n`;
+    context += `\n`;
+    context += `💡 OBJETIVO: Desenvolver base sólida para futuras corridas\n`;
+    context += `\n`;
+  } else {
+    // Objetivo com corrida específica
+    context += `🏁 CORRIDA ALVO ESPECÍFICA\n`;
+    context += `Distância Objetivo: ${profile.goalDistance}\n`;
+    context += `Data da Prova: ${new Date(profile.targetRaceDate).toLocaleDateString('pt-BR')}\n`;
+    
+    const weeksAvailable = calculateWeeksUntilRace(profile.targetRaceDate);
+    context += `Semanas Disponíveis: ${weeksAvailable}\n`;
+    
+    if (profile.targetTime) {
+      context += `Meta de Tempo: ${profile.targetTime}\n`;
+    }
+    
+    context += `\n`;
+    context += assessGoalViability(profile, weeksAvailable);
+    context += `\n`;
   }
-  
-  context += `\n`;
-  context += assessGoalViability(profile, weeksAvailable);
-  context += `\n`;
   
   // ═══════════════════════════════════════
   // 9. RECOMENDAÇÕES FINAIS
