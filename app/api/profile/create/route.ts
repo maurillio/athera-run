@@ -114,6 +114,7 @@ export async function POST(req: NextRequest) {
     console.log('📦 [PROFILE CREATE] Body recebido:', {
       keys: Object.keys(body),
       trainingActivities: body.trainingActivities,
+      trainingSchedule: body.trainingSchedule,
       availableDays: body.availableDays,
       weight: body.weight,
       age: body.age,
@@ -211,7 +212,13 @@ export async function POST(req: NextRequest) {
       targetRaceDate: new Date(targetRaceDate),
       targetTime: cleanString(targetTime),
       // Sistema flexível de atividades de treino (v1.6.0 - convergência total)
-      trainingActivities: Array.isArray(trainingActivities) ? trainingActivities : [],
+      // ✅ CRÍTICO: trainingActivities precisa ser salvo como JSON (array de dias)
+      trainingActivities: Array.isArray(trainingActivities) && trainingActivities.length > 0 
+        ? trainingActivities 
+        : (trainingSchedule ? Object.keys(trainingSchedule).filter(day => {
+            const sched = trainingSchedule[parseInt(day)];
+            return sched && (sched.running || (sched.activities && sched.activities.length > 0));
+          }).map(d => parseInt(d)) : []),
       // Dia preferido para treino longo
       longRunDay: longRunDay !== null && longRunDay !== undefined ? parseInt(longRunDay) : null,
       // Paces habituais (salvar apenas os paces, sem wrapper)
@@ -247,6 +254,7 @@ export async function POST(req: NextRequest) {
       targetRaceDate: profileData.targetRaceDate,
       hasCustomPlan: profileData.hasCustomPlan,
       trainingActivities: profileData.trainingActivities,
+      trainingSchedule: profileData.trainingSchedule,
       gender: profileData.gender,
       runningLevel: profileData.runningLevel
     });

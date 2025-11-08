@@ -63,9 +63,37 @@ export async function POST(request: NextRequest) {
       missingFields.push('runningLevel (nível de corrida)');
     }
     
-    // Validar trainingActivities
-    const activities = (profile.trainingActivities as any) || [];
-    const hasRunningDays = Array.isArray(activities) && activities.length > 0;
+    // Validar trainingActivities (pode vir como JSON ou array)
+    let activities: any[] = [];
+    if (profile.trainingActivities) {
+      activities = Array.isArray(profile.trainingActivities) 
+        ? profile.trainingActivities 
+        : (typeof profile.trainingActivities === 'object' 
+            ? Object.values(profile.trainingActivities) 
+            : []);
+    }
+    
+    // Se ainda não tem atividades, tentar extrair de trainingSchedule
+    if (activities.length === 0 && profile.trainingSchedule) {
+      const schedule = profile.trainingSchedule as any;
+      if (typeof schedule === 'object') {
+        activities = Object.keys(schedule)
+          .filter(day => {
+            const sched = schedule[parseInt(day)];
+            return sched && (sched.running || (sched.activities && sched.activities.length > 0));
+          })
+          .map(d => parseInt(d));
+      }
+    }
+    
+    const hasRunningDays = activities.length > 0;
+    
+    console.log('🔍 [AI PLAN] Validação de atividades:', {
+      trainingActivities: profile.trainingActivities,
+      trainingSchedule: profile.trainingSchedule,
+      activities,
+      hasRunningDays
+    });
     
     if (!hasRunningDays) {
       missingFields.push('trainingActivities (dias disponíveis para treino)');
