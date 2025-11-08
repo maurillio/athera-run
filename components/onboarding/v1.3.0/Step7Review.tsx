@@ -7,6 +7,26 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
   const t = useTranslations('onboarding.step7');
   const tCommon = useTranslations('common');
   
+  // Helper para obter label da atividade com acentos corretos
+  const defaultActivities = [
+    { key: 'Musculação', label: '💪 Musculação' },
+    { key: 'Yoga', label: '🧘 Yoga' },
+    { key: 'Pilates', label: '🤸 Pilates' },
+    { key: 'Natação', label: '🏊 Natação' },
+    { key: 'Ciclismo', label: '🚴 Ciclismo' },
+    { key: 'Luta', label: '🥋 Luta' },
+  ];
+  
+  const getActivityLabel = (key: string) => {
+    const defaultActivity = defaultActivities.find(a => a.key === key);
+    if (defaultActivity) return defaultActivity.label.replace(/[^\w\sÀ-ÿ]/g, '').trim(); // Remove emoji, mantém acentos
+    
+    // Customizado - formata o nome
+    return key.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+  
   const getSummary = () => {
     const sections: any = {
       basic: [],
@@ -151,7 +171,8 @@ export default function Step7Review({ data, onSubmit, onBack, loading }: any) {
       
       if (Object.keys(activitiesByDay).length > 0) {
         Object.entries(activitiesByDay).forEach(([day, activities]) => {
-          sections.availability.push(`✨ ${day}: ${activities.join(', ')}`);
+          const formattedActivities = activities.map(act => getActivityLabel(act)).join(', ');
+          sections.availability.push(`✨ ${day}: ${formattedActivities}`);
         });
       }
     }
