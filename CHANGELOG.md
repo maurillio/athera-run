@@ -7,6 +7,92 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.7.2] - 2025-11-09 16:15 UTC
+
+### 🎯 HOTFIX CRÍTICO - UX: Semanas Sempre Segunda→Domingo
+
+#### Problema Identificado
+- Quando usuário escolhe iniciar em dia diferente de segunda, semanas exibiam limites errados
+- Exemplo: Início Quarta → Semana "Quarta→Terça" (ao invés de "Segunda→Domingo")
+- Navegação entre semanas confusa e não intuitiva
+- Incompatível com calendários padrão (Google, Apple, etc)
+
+#### Root Cause
+- `currentWeekStart = startDate` (usava data escolhida diretamente)
+- `weekEnd = startDate + 6 dias`
+- Resultado: Semana começava no dia escolhido, não na segunda
+
+#### Fixed
+- **[CRITICAL]** Semanas agora SEMPRE começam na Segunda e terminam no Domingo
+  - Adicionada função `getMondayOfWeek()` helper
+  - Calcula segunda-feira da semana que contém o startDate
+  - Funciona para qualquer dia de início (Dom→Sáb)
+  - Dias antes do início marcados como "Preparação"
+
+#### Changed
+```typescript
+// Antes (v1.7.1)
+let currentWeekStart = new Date(startDate);
+
+// Depois (v1.7.2)
+function getMondayOfWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+let currentWeekStart = getMondayOfWeek(startDate); // ✅
+```
+
+#### Examples
+```
+Início Quarta 12/Nov:
+✅ Week 1: Segunda 10/Nov → Domingo 16/Nov
+  - Seg, Ter: Preparação
+  - Qua→Dom: Treinos normais
+
+Início Segunda 10/Nov:
+✅ Week 1: Segunda 10/Nov → Domingo 16/Nov
+  - Seg→Dom: Treinos normais (sem preparação)
+
+Início Domingo 16/Nov:
+✅ Week 1: Segunda 10/Nov → Domingo 16/Nov
+  - Seg→Sáb: Preparação
+  - Dom: Primeiro treino (Longão)
+```
+
+#### Benefits
+- ✅ **UX Dramática:** Semanas intuitivas e previsíveis
+- ✅ **Compatibilidade:** Google Calendar, Apple Calendar, etc
+- ✅ **Padrão ISO 8601:** Segunda=dia 1, Domingo=dia 7
+- ✅ **Navegação:** Clara entre semanas
+- ✅ **Futuro:** Fácil exportação para iCal
+
+#### Impact
+- **Usuários existentes:** Precisam regenerar plano
+- **Novos planos:** 100% corretos
+- **Treinos individuais:** Não afetados (v1.7.1 já correto)
+
+#### Validation
+- ✅ Build passou sem erros
+- ✅ Testado: Início Qua, Seg, Dom, Sex
+- ✅ Todas as semanas Mon→Sun
+
+#### Documentation
+- `CORRECAO_SEMANAS_SEGUNDA_DOMINGO_v1.7.2.md` (391 linhas)
+- Exemplos detalhados para cada cenário
+- Vantagens UX documentadas
+
+#### Commit
+- **SHA:** 68dd898a
+- **Files:** lib/ai-plan-generator.ts (+45/-1 lines)
+- **Added:** getMondayOfWeek() function, preparation days logic
+
+---
+
 ## [1.7.1] - 2025-11-09 15:45 UTC
 
 ### 🐛 HOTFIX CRÍTICO - Sistema de Calendário

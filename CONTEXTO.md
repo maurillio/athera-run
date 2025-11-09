@@ -2,31 +2,32 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 09 de Novembro de 2025 15:50 UTC
-**Versão Atual:** 1.7.1 (Bug Crítico de Calendário Corrigido)
-**Status:** ✅ **SISTEMA OPERACIONAL - BUG CALENDÁRIO RESOLVIDO**
+**Última atualização:** 09 de Novembro de 2025 16:15 UTC
+**Versão Atual:** 1.7.2 (Semanas Segunda→Domingo)
+**Status:** ✅ **SISTEMA OPERACIONAL - CALENDÁRIO 100% CORRETO**
 **Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-## ✅ CORREÇÃO CRÍTICA APLICADA - v1.7.1 (09/Nov/2025)
-📄 **ÚLTIMA SESSÃO**: `RESUMO_FINAL_BUG_CALENDARIO.md`
+## ✅ CORREÇÃO CRÍTICA APLICADA - v1.7.2 (09/Nov/2025)
+📄 **ÚLTIMA SESSÃO**: `CORRECAO_SEMANAS_SEGUNDA_DOMINGO_v1.7.2.md`
 
-**BUG CORRIGIDO**:
-- ✅ Sistema de calendário com datas customizadas
-- ✅ dayOfWeek agora sempre corresponde ao date
-- ✅ Longão cai no dia configurado pelo usuário
-- ✅ Qualquer data de início funciona perfeitamente
+**BUGS CORRIGIDOS**:
+- ✅ v1.7.1: Sistema de calendário com datas customizadas
+- ✅ v1.7.1: dayOfWeek agora sempre corresponde ao date
+- ✅ v1.7.2: Semanas sempre Segunda→Domingo (convenção universal)
+- ✅ v1.7.2: Dias antes do início marcados como "Preparação"
 
 **STATUS ATUAL**:
-- ✅ Correção implantada em produção (commit 1a5fde16)
+- ✅ Correções implantadas em produção
 - ✅ Build passou sem erros
-- ✅ 1 usuário afetado identificado (camilateste@teste.com)
-- ✅ Novos planos: 100% corretos
+- ✅ Calendário 100% intuitivo e compatível com padrões
+- ✅ Novos planos: funcionam perfeitamente
 
 **DOCUMENTAÇÃO**:
 - ANALISE_BUG_CALENDARIO_CRITICO.md (415 linhas)
 - SISTEMA_DATAS_CALENDARIO.md (783 linhas)
 - CORRECAO_BUG_CALENDARIO_v1.7.1.md (308 linhas)
+- CORRECAO_SEMANAS_SEGUNDA_DOMINGO_v1.7.2.md (391 linhas)
 
 ---
 
