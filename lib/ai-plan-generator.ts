@@ -714,9 +714,45 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
   console.log(`[AI PLAN] Data de início final: ${startDate.toISOString()} (dia da semana: ${startDate.getDay()})`);
   
+  // ✅ FIX v1.7.2: Garantir que semanas sempre comecem na Segunda-feira
+  // Mesmo que o usuário escolha iniciar em outro dia (ex: Quarta),
+  // as "semanas" do plano devem seguir a convenção Segunda→Domingo
+  // Isso torna o calendário intuitivo e compatível com padrões universais
+  
+  /**
+   * Calcula a segunda-feira da semana que contém a data fornecida
+   * @param date Data qualquer
+   * @returns Segunda-feira da semana dessa data
+   */
+  function getMondayOfWeek(date: Date): Date {
+    const d = new Date(date);
+    const day = d.getDay(); // 0=Dom, 1=Seg, 2=Ter, 3=Qua, 4=Qui, 5=Sex, 6=Sáb
+    
+    // Calcular dias até a segunda-feira
+    // Se é Domingo (0): -6 dias para voltar à segunda
+    // Se é Segunda (1): 0 dias (já é segunda)
+    // Se é Terça (2): -1 dia para voltar à segunda
+    // Se é Quarta (3): -2 dias para voltar à segunda
+    // etc...
+    const diff = day === 0 ? -6 : 1 - day;
+    
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+  
   const weeks: any[] = [];
   let weekNumber = 1;
-  let currentWeekStart = new Date(startDate);
+  
+  // ✅ Começar na segunda-feira da semana que contém o startDate
+  // Exemplo: Se startDate = Quarta 12/Nov
+  //   → getMondayOfWeek retorna Segunda 10/Nov
+  //   → Semana 1: Segunda 10/Nov → Domingo 16/Nov
+  //   → Treinos começam apenas em 12/Nov (Quarta)
+  let currentWeekStart = getMondayOfWeek(startDate);
+  
+  console.log(`[AI PLAN] Primeira semana inicia em: ${currentWeekStart.toISOString()} (Segunda-feira)`);
+  console.log(`[AI PLAN] Primeiro treino será em: ${startDate.toISOString()} (${['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][startDate.getDay()]})`);
   
   // Determinar dias disponíveis SEPARADOS POR TIPO DE ATIVIDADE
   const availability = getActivityAvailability(profile);
@@ -786,6 +822,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         availability,
         isCutbackWeek,
         currentWeekStart,
+        planStartDate: startDate, // ✅ Passar data de início do plano para marcar dias anteriores
         raceThisWeek, // Passar corrida B/C se houver
       });
 
@@ -1067,6 +1104,7 @@ function generateWeekWorkouts(params: {
   };
   isCutbackWeek: boolean;
   currentWeekStart: Date;
+  planStartDate: Date; // ✅ v1.7.2: Data de início real do plano (primeiro treino)
   raceThisWeek?: { 
     id: number;
     name: string;
@@ -1266,6 +1304,30 @@ function generateWeekWorkouts(params: {
     console.log(`[DEBUG] i=${i}, dayOfWeek=${dayOfWeek}, startDay=${startDayOfWeek}, offset=${daysOffset}, date=${date.toISOString()}, date.getDay()=${date.getDay()}`);
 
     const activitiesForDay = dayActivities.get(dayOfWeek) || [];
+
+    // ✅ v1.7.2: Se esta data é ANTES do início do plano, marcar como "Preparação"
+    // Exemplo: Plano começa Quarta 12/Nov, mas semana começa Segunda 10/Nov
+    //   → Segunda e Terça são "Preparação" (antes do início)
+    //   → Quarta em diante são treinos normais
+    if (date < params.planStartDate) {
+      workouts.push({
+        dayOfWeek: dayOfWeek,
+        date,
+        type: 'preparation',
+        title: 'Preparação',
+        description: 'Seu plano de treino começa em ' + 
+          params.planStartDate.toLocaleDateString('pt-BR', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long' 
+          }) + 
+          '. Use este tempo para se preparar: revise seu equipamento, planeje sua rotina e descanse bem.',
+        distance: null,
+        duration: null,
+        targetPace: null,
+      });
+      continue; // Pular para próximo dia
+    }
 
     // Se não há atividades configuradas para este dia, adicionar descanso com sugestão inteligente
     if (activitiesForDay.length === 0) {
