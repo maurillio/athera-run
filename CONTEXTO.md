@@ -2,22 +2,31 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 08 de Novembro de 2025 18:25 UTC
-**Versão Atual:** 1.7.0-dev (Onboarding Completo - 90%)
-**Status:** 🟡 **ONBOARDING RENOVADO - PROBLEMA CRÍTICO IDENTIFICADO**
-**Build:** ⚠️ Erro de sintaxe corrigido | **Projeto:** athera-run | **Branch:** main
+**Última atualização:** 09 de Novembro de 2025 15:50 UTC
+**Versão Atual:** 1.7.1 (Bug Crítico de Calendário Corrigido)
+**Status:** ✅ **SISTEMA OPERACIONAL - BUG CALENDÁRIO RESOLVIDO**
+**Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-## 🚨 ALERTA CRÍTICO - LEIA PRIMEIRO
-📄 **SESSÃO ATUAL**: `SESSAO_ONBOARDING_08NOV2025_COMPLETA.md`
+## ✅ CORREÇÃO CRÍTICA APLICADA - v1.7.1 (09/Nov/2025)
+📄 **ÚLTIMA SESSÃO**: `RESUMO_FINAL_BUG_CALENDARIO.md`
 
-**PROBLEMA BLOQUEADOR**:
-- ❌ Múltiplas atividades não sendo consideradas pela IA
-- ❌ Geração de plano falha com erro 400
-- ❌ Perfil não mostra todas as atividades selecionadas
+**BUG CORRIGIDO**:
+- ✅ Sistema de calendário com datas customizadas
+- ✅ dayOfWeek agora sempre corresponde ao date
+- ✅ Longão cai no dia configurado pelo usuário
+- ✅ Qualquer data de início funciona perfeitamente
 
-**PRÓXIMO PASSO OBRIGATÓRIO**:
-Fazer IA identificar TODOS os treinamentos selecionados no Step 6 para criar plano corretamente.
+**STATUS ATUAL**:
+- ✅ Correção implantada em produção (commit 1a5fde16)
+- ✅ Build passou sem erros
+- ✅ 1 usuário afetado identificado (camilateste@teste.com)
+- ✅ Novos planos: 100% corretos
+
+**DOCUMENTAÇÃO**:
+- ANALISE_BUG_CALENDARIO_CRITICO.md (415 linhas)
+- SISTEMA_DATAS_CALENDARIO.md (783 linhas)
+- CORRECAO_BUG_CALENDARIO_v1.7.1.md (308 linhas)
 
 ---
 

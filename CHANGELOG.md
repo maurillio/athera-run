@@ -7,6 +7,70 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.7.1] - 2025-11-09 15:45 UTC
+
+### 🐛 HOTFIX CRÍTICO - Sistema de Calendário
+
+#### Problema Identificado
+- Planos com data de início customizada (≠ segunda-feira) tinham datas completamente erradas
+- Campo `dayOfWeek` não correspondia ao campo `date`
+- Longão aparecia no dia errado
+- Treinos marcados em dias não escolhidos pelo usuário
+- **Reportado por:** camilateste@teste.com
+
+#### Root Cause
+- `lib/ai-plan-generator.ts` (linha 1248): `daysOffset = i` assumia sempre segunda = offset 0
+- Quando `startDate` era outro dia (ex: Sábado), todos os offsets ficavam errados
+- Exemplo: dayOfWeek=0 (Domingo) mas date era Sexta-feira
+
+#### Fixed
+- **[CRITICAL]** Cálculo correto de `daysOffset` baseado no dia real da semana
+  - Nova fórmula: `daysOffset = dayOfWeek - startDayOfWeek`
+  - Tratamento de wrap-around: `if (daysOffset < 0) daysOffset += 7`
+  - Garantia matemática: funciona para qualquer dia de início (Dom→Sáb)
+
+#### Changed
+```typescript
+// Antes (BUGADO)
+for (let i = 0; i < 7; i++) { 
+  const dayOfWeek = daysOrder[i];
+  const daysOffset = i; // ❌ Errado!
+}
+
+// Depois (CORRIGIDO)
+const startDayOfWeek = params.currentWeekStart.getDay();
+for (let i = 0; i < 7; i++) { 
+  const dayOfWeek = daysOrder[i];
+  let daysOffset = dayOfWeek - startDayOfWeek;
+  if (daysOffset < 0) daysOffset += 7; // ✅ Correto!
+}
+```
+
+#### Impact
+- **Usuários afetados:** 1 plano (5.9% dos planos recentes)
+- **Novos planos:** 100% corretos, qualquer data de início funciona
+- **Planos antigos:** 1 usuário precisa regenerar (camilateste@teste.com)
+
+#### Validation
+- ✅ Build passou sem erros
+- ✅ Testado: Início em Segunda, Quinta, Sábado, Domingo
+- ✅ Query no banco confirmou apenas 1 plano afetado
+- ✅ Deploy Vercel automático concluído
+
+#### Documentation
+- `SISTEMA_DATAS_CALENDARIO.md` (783 linhas) - Sistema completo de datas
+- `ANALISE_BUG_CALENDARIO_CRITICO.md` (415 linhas) - Análise profunda do bug
+- `CORRECAO_BUG_CALENDARIO_v1.7.1.md` (308 linhas) - Detalhes da correção
+- `VALIDACAO_CORRECAO_CALENDARIO_v1.7.1.md` (359 linhas) - Validação em produção
+- `RESUMO_FINAL_BUG_CALENDARIO.md` (363 linhas) - Consolidação
+- **Total:** 2,228 linhas de documentação técnica
+
+#### Commit
+- **SHA:** 1a5fde16
+- **Tempo de resolução:** ~4 horas (detecção → produção validada)
+
+---
+
 ## [1.5.4] - 2025-11-07 12:51 UTC
 
 ### 🚨 HOTFIX CRÍTICO - Validação Obrigatória Race Goal
