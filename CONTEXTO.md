@@ -2,13 +2,70 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 08 de Novembro de 2025 15:50 UTC
-**Versão Atual:** 1.4.0 (Onboarding Step 6 Completo)
-**Status:** 🟢 **STEP 6 PERFEITO - CONVERGÊNCIA TOTAL - EM PRODUÇÃO**
-**Build:** ✅ Production Ready | **Projeto:** athera-run | **Branch:** main
+**Última atualização:** 08 de Novembro de 2025 18:25 UTC
+**Versão Atual:** 1.7.0-dev (Onboarding Completo - 90%)
+**Status:** 🟡 **ONBOARDING RENOVADO - PROBLEMA CRÍTICO IDENTIFICADO**
+**Build:** ⚠️ Erro de sintaxe corrigido | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-> **🎯 STEP 6 COMPLETO v1.4.0 (08/Nov 15:50):** 
+## 🚨 ALERTA CRÍTICO - LEIA PRIMEIRO
+📄 **SESSÃO ATUAL**: `SESSAO_ONBOARDING_08NOV2025_COMPLETA.md`
+
+**PROBLEMA BLOQUEADOR**:
+- ❌ Múltiplas atividades não sendo consideradas pela IA
+- ❌ Geração de plano falha com erro 400
+- ❌ Perfil não mostra todas as atividades selecionadas
+
+**PRÓXIMO PASSO OBRIGATÓRIO**:
+Fazer IA identificar TODOS os treinamentos selecionados no Step 6 para criar plano corretamente.
+
+---
+
+> **🎯 MELHORIAS ONBOARDING v1.7.0 (08/Nov 18:25):** 
+> - ✅ **Login**: i18n completo, botão "Entrando..." traduzido
+> - ✅ **Step 1**: Dados fisiológicos removidos, botão duplicado corrigido
+> - ✅ **Step 2**: Esportes clicáveis, campo "anos praticando" REMOVIDO
+> - ✅ **Step 3**: UX melhorada para tempos, ênfase em melhores performances
+> - ✅ **Step 4**: Dados fisiológicos concentrados aqui
+> - ✅ **Step 5**: Opção "Quero começar a correr", data/distância opcional
+> - ✅ **Step 6**: Múltiplas atividades por dia, longão separado, iniciantes suportados
+> - ✅ **Step 7**: Loading motivacional, geração automática do plano
+> - ✅ **Data início**: Usuário escolhe quando começar (não mais "sempre segunda")
+> - ❌ **PROBLEMA**: Múltiplas atividades não salvam/aparecem corretamente
+
+> **📊 IMPLEMENTAÇÃO v1.7.0 (HOJE - 08/Nov):**
+> - Tempo total: ~8 horas
+> - Commits: Múltiplos
+> - Arquivos modificados: 15+
+> - Steps do onboarding: TODOS (7/7)
+> - UX melhorada: SIGNIFICATIVAMENTE
+> - Flexibilidade: MÁXIMA (iniciantes a experientes)
+> - Status: 90% CONCLUÍDO (bloqueado por múltiplas atividades)
+
+> **🏆 CONQUISTAS v1.7.0:**
+> - Onboarding completamente renovado
+> - UX fluida e intuitiva
+> - Iniciantes sem corrida alvo bem-vindos
+> - Loading divertido durante geração
+> - Data de início personalizável
+> - Acentuação correta em todos os idiomas
+> - Campos pré-preenchidos removidos
+
+> **⚠️ BLOQUEIO:**
+> - Múltiplas atividades (natação, bicicleta, personalizadas) não salvam
+> - Perfil mostra apenas corrida + 1 esporte
+> - IA não recebe contexto completo
+> - Precisa análise profunda de Step6 → API → DB → IA
+
+> **📋 DOCUMENTAÇÃO COMPLETA:** 
+> - Ver `SESSAO_ONBOARDING_08NOV2025_COMPLETA.md` para TODOS os detalhes
+> - Histórico completo de mudanças
+> - Problema crítico documentado
+> - Próximos passos definidos
+
+---
+
+> **🎯 STEP 6 COMPLETO v1.4.0 (08/Nov 15:50) - HISTÓRICO:** 
 > - ✅ **Múltiplas atividades por dia:** Corrida + Musculação + Yoga juntos
 > - ✅ **Esportes personalizados:** 6 padrão + customizados ilimitados
 > - ✅ **Preferências obrigatórias:** Desmarcadas, usuário escolhe
