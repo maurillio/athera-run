@@ -1243,15 +1243,27 @@ function generateWeekWorkouts(params: {
   // Ordem de exibição: Segunda, Terça, Quarta, Quinta, Sexta, Sábado, Domingo
   const daysOrder = [1, 2, 3, 4, 5, 6, 0]; // Segunda primeiro, Domingo por último
 
+  // ✅ FIX: Obter dia da semana do início da semana para calcular offset correto
+  // Isso garante que dayOfWeek sempre corresponda ao date.getDay()
+  // Bug reportado por camilateste@teste.com (09/Nov/2025)
+  const startDayOfWeek = params.currentWeekStart.getDay(); // 0=Dom, 1=Seg, ..., 6=Sáb
+
   for (let i = 0; i < 7; i++) { 
     const dayOfWeek = daysOrder[i]; // O dia da semana real (0=Dom, 1=Seg, etc)
-    const daysOffset = i; // Offset em relação ao início da semana (segunda = 0)
+    
+    // ✅ FIX: Calcular offset REAL baseado no dia da semana, não na posição do array
+    // Exemplo: Se startDate=Sábado(6) e queremos Domingo(0):
+    //   offset = 0 - 6 = -6 → +7 = 1 → Sábado + 1 dia = Domingo ✅
+    let daysOffset = dayOfWeek - startDayOfWeek;
+    if (daysOffset < 0) {
+      daysOffset += 7; // Wrap around para semana seguinte
+    }
 
     const date = new Date(params.currentWeekStart);
     date.setDate(date.getDate() + daysOffset);
     date.setHours(12, 0, 0, 0); // Fixar meio-dia para evitar problemas de timezone
 
-    console.log(`[DEBUG] i=${i}, dayOfWeek=${dayOfWeek}, offset=${daysOffset}, date=${date.toISOString()}, date.getDay()=${date.getDay()}`);
+    console.log(`[DEBUG] i=${i}, dayOfWeek=${dayOfWeek}, startDay=${startDayOfWeek}, offset=${daysOffset}, date=${date.toISOString()}, date.getDay()=${date.getDay()}`);
 
     const activitiesForDay = dayActivities.get(dayOfWeek) || [];
 
