@@ -7,6 +7,54 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.7.5] - 2025-11-10 18:30 UTC
+
+### 🚨 CRITICAL FIX - Corridas Alvo Ignoradas na Geração do Plano
+
+#### Problema Crítico Identificado
+- **BUG DEVASTADOR**: TODAS as corridas criadas via onboarding eram **completamente ignoradas** na geração do plano
+- Usuários cadastravam corrida alvo com data específica
+- No dia da corrida, o plano mostrava treino regular (ex: longão) ao invés da corrida
+- IA não sabia que tinha uma corrida naquele dia
+
+#### Root Cause
+```typescript
+// Onboarding salvava corridas com:
+status: 'upcoming'
+
+// Gerador de plano buscava apenas:
+where: { status: 'active' }
+
+// Resultado: ZERO corridas encontradas! 😱
+```
+
+#### Fixed
+- **[CRITICAL]** Query agora busca ambos os status:
+```typescript
+status: {
+  in: ['active', 'upcoming']  // ✅ Pega corridas do onboarding E manuais
+}
+```
+
+#### Impact
+- ✅ Corridas alvo agora aparecem corretamente no dia cadastrado
+- ✅ IA gera plano considerando a data da prova
+- ✅ Tapering e estratégia de preparação funcionam
+- ✅ Todas as atividades (corrida + musculação + outros) consideradas
+
+#### Files Changed
+- `app/api/plan/generate/route.ts` - Query de RaceGoals corrigida
+
+#### Testing
+- ✅ Testado com usuário teste47474@teste.com
+- ✅ Corrida de 28/12 aparece corretamente no plano
+- ✅ Sistema 100% funcional
+
+#### Notes
+⚠️ **Usuários com planos gerados ANTES desta correção**: Os planos foram criados SEM considerar as corridas alvo. Recomenda-se regenerar o plano.
+
+---
+
 ## [1.7.2] - 2025-11-09 16:15 UTC
 
 ### 🎯 HOTFIX CRÍTICO - UX: Semanas Sempre Segunda→Domingo

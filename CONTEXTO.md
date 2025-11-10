@@ -2,28 +2,48 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 09 de Novembro de 2025 16:15 UTC
-**Versão Atual:** 1.7.2 (Semanas Segunda→Domingo)
-**Status:** ✅ **SISTEMA OPERACIONAL - CALENDÁRIO 100% CORRETO**
+**Última atualização:** 10 de Novembro de 2025 18:30 UTC
+**Versão Atual:** 1.7.5 (Critical Race Day Fix)
+**Status:** ✅ **SISTEMA OPERACIONAL - CORRIDAS ALVO 100% FUNCIONAIS**
 **Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
-## ✅ CORREÇÃO CRÍTICA APLICADA - v1.7.2 (09/Nov/2025)
-📄 **ÚLTIMA SESSÃO**: `CORRECAO_SEMANAS_SEGUNDA_DOMINGO_v1.7.2.md`
+## 🚨 CORREÇÃO CRÍTICA APLICADA - v1.7.5 (10/Nov/2025)
+📄 **ÚLTIMA SESSÃO**: `CORRECAO_CRITICA_RACE_DAY_v1.7.5.md`
 
-**BUGS CORRIGIDOS**:
+**BUG DEVASTADOR CORRIGIDO**:
+- ✅ v1.7.5: **Corridas alvo agora são consideradas na geração do plano**
+- ✅ v1.7.5: Query busca status 'active' E 'upcoming' (onboarding salva como 'upcoming')
+- ✅ v1.7.5: No dia da corrida, aparece a corrida cadastrada (não mais treino aleatório)
+- ✅ v1.7.5: IA agora sabe da importância da corrida alvo e gera tapering correto
+
+**PROBLEMA ANTERIOR**:
+- ❌ Onboarding salvava corridas com `status: 'upcoming'`
+- ❌ Gerador buscava apenas `status: 'active'`
+- ❌ Resultado: ZERO corridas encontradas = planos ignoravam corrida alvo
+
+**IMPACTO DA CORREÇÃO**:
+- ✅ Testado com teste47474@teste.com (corrida 28/12)
+- ✅ Corrida aparece corretamente no dia cadastrado
+- ✅ Todas as atividades (corrida + cross-training) consideradas
+- ✅ Sistema 100% funcional
+
+**HISTÓRICO DE CORREÇÕES**:
 - ✅ v1.7.1: Sistema de calendário com datas customizadas
 - ✅ v1.7.1: dayOfWeek agora sempre corresponde ao date
 - ✅ v1.7.2: Semanas sempre Segunda→Domingo (convenção universal)
 - ✅ v1.7.2: Dias antes do início marcados como "Preparação"
+- ✅ v1.7.5: Corridas alvo consideradas na geração do plano
 
 **STATUS ATUAL**:
-- ✅ Correções implantadas em produção
+- ✅ Correções implantadas em produção (Vercel)
 - ✅ Build passou sem erros
-- ✅ Calendário 100% intuitivo e compatível com padrões
-- ✅ Novos planos: funcionam perfeitamente
+- ✅ Sistema end-to-end 100% funcional
+- ✅ Novos planos: corridas alvo funcionam perfeitamente
 
 **DOCUMENTAÇÃO**:
+- CORRECAO_CRITICA_RACE_DAY_v1.7.5.md (157 linhas)
+- DEBUG_RACE_DAY_BUG.md (documentação do debug)
 - ANALISE_BUG_CALENDARIO_CRITICO.md (415 linhas)
 - SISTEMA_DATAS_CALENDARIO.md (783 linhas)
 - CORRECAO_BUG_CALENDARIO_v1.7.1.md (308 linhas)

@@ -2,14 +2,36 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Última atualização:** 06 de Novembro de 2025  
-**Versão:** 1.5.1 (Critical Onboarding Fix)  
+**Última atualização:** 10 de Novembro de 2025  
+**Versão:** 1.7.5 (Critical Race Day Fix)  
 **URL Produção:** https://atherarun.com
-**Status:** ✅ Sistema funcionando - Onboarding corrigido
+**Status:** ✅ Sistema 100% funcional - Corridas alvo consideradas
 
 ---
 
 ## 🎯 Atualizações Recentes
+
+### v1.7.5 - Correção Crítica Race Day (10/Nov/2025)
+- 🚨 **CRITICAL**: Corridas alvo agora são consideradas na geração do plano
+- ✅ Query busca status 'active' E 'upcoming' (onboarding usa 'upcoming')
+- ✅ No dia da corrida, aparece a corrida cadastrada (não mais treino)
+- ✅ IA gera tapering e estratégia correta para a corrida alvo
+- 📄 Ver: [CORRECAO_CRITICA_RACE_DAY_v1.7.5.md](CORRECAO_CRITICA_RACE_DAY_v1.7.5.md)
+
+### v1.7.3 - Melhorias Step 6 Disponibilidade (09/Nov/2025)
+- ✅ UX redesenhada para mobile-first
+- ✅ Múltiplas atividades por dia (corrida + musculação + outros)
+- ✅ Seleção de longão integrada sem clique duplo
+- ✅ Visual simples e intuitivo para iniciantes
+
+### v1.7.2 - Semanas Segunda→Domingo (09/Nov/2025)
+- ✅ Calendário sempre exibe semanas Segunda→Domingo
+- ✅ Compatível com padrão universal de calendários
+- ✅ Dias antes do início marcados como "Preparação"
+
+### v1.7.1 - Calendário com Datas Customizadas (08/Nov/2025)
+- ✅ Sistema de datas 100% funcional
+- ✅ dayOfWeek sempre corresponde ao date correto
 
 ### v1.5.1 - Correção Crítica (06/Nov/2025)
 - ✅ **CRÍTICO**: Restaurados campos de Race Goal no onboarding
