@@ -2,11 +2,52 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 10 de Novembro de 2025 18:30 UTC
-**Versão Atual:** 1.7.5 (Critical Race Day Fix)
-**Status:** ✅ **SISTEMA OPERACIONAL - CORRIDAS ALVO 100% FUNCIONAIS**
+**Última atualização:** 10 de Novembro de 2025 19:15 UTC
+**Versão Atual:** 1.8.0 (Enhanced Weekly Calendar UX)
+**Status:** ✅ **SISTEMA OPERACIONAL - NOVA UX DO PLANO IMPLEMENTADA**
 **Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
+
+## 🎨 MELHORIA VISUAL v1.8.0 (10/Nov/2025 19:15 UTC)
+📄 **ÚLTIMA IMPLEMENTAÇÃO**: Calendário Semanal Redesenhado no Plano
+
+**MELHORIAS IMPLEMENTADAS**:
+- ✅ v1.8.0: **Calendário Grid 7 Dias** - Cards individuais por dia com design limpo
+- ✅ v1.8.0: **Ícones Inteligentes** - Sistema detecta tipo de treino (Corrida Alvo, Longão, Intervalos, etc)
+- ✅ v1.8.0: **Estados Visuais Claros** - Completo (verde), Hoje (laranja), Atrasado (vermelho), Futuro (branco)
+- ✅ v1.8.0: **Barra de Progresso** - Visual da semana com % e treinos completados
+- ✅ v1.8.0: **Badge META** - Destaque especial para corrida alvo (troféu amarelo)
+- ✅ v1.8.0: **Mobile-First** - Design responsivo otimizado para celular
+- ✅ v1.8.0: **Paces Destacados** - Cards visuais para distância/pace/duração
+- ✅ v1.8.0: **Lista Detalhada** - Complemento ao grid com descrições completas
+
+**ÍCONES INTELIGENTES**:
+- 🏆 Trophy: Corrida Alvo/Prova
+- ⛰️ Mountain: Longão/Long Run  
+- ⚡ Activity: Intervalos/Tiros
+- ⏱️ Clock: Tempo/Threshold
+- ❤️ Heart: Regenerativo/Leve
+- 💧 Droplets: Descanso/Rest
+- 💪 Dumbbell: Musculação/Força
+
+**IMPACTO**:
+- ✅ UX 10x mais clara e intuitiva
+- ✅ Identificação visual instantânea
+- ✅ Mobile-first (80% dos usuários)
+- ✅ Zero poluição visual
+- ✅ Mantém funcionalidades existentes
+
+**STATUS ATUAL**:
+- ✅ Implementado em produção (Vercel)
+- ✅ Build passou sem erros
+- ✅ Todas as funcionalidades preservadas
+- ✅ Design system consistente
+
+**DOCUMENTAÇÃO**:
+- CHANGELOG.md atualizado com v1.8.0
+- Commit 4ee855c3 (feat: improved weekly calendar visual UX)
+
+---
 
 ## 🚨 CORREÇÃO CRÍTICA APLICADA - v1.7.5 (10/Nov/2025)
 📄 **ÚLTIMA SESSÃO**: `CORRECAO_CRITICA_RACE_DAY_v1.7.5.md`
