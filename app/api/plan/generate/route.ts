@@ -133,6 +133,14 @@ export async function POST(request: NextRequest) {
     });
 
     console.log('[AI PLAN] Corridas encontradas:', raceGoals.length);
+    if (raceGoals.length > 0) {
+      console.log('[AI PLAN] Detalhes das corridas:');
+      raceGoals.forEach(race => {
+        console.log(`  - ${race.priority}: ${race.raceName} (${race.distance}) em ${race.raceDate.toISOString().split('T')[0]}`);
+      });
+    } else {
+      console.log('[AI PLAN] ⚠️ NENHUMA CORRIDA ENCONTRADA - plano será gerado sem corridas alvo');
+    }
 
     // Preparar perfil para a IA
     const rawPaces = profile.usualPaces as any;
@@ -227,6 +235,14 @@ export async function POST(request: NextRequest) {
     }
     
     // Gerar plano com IA (passando customStartDate se fornecida)
+    console.log('[AI PLAN] ✅ Chamando generateAIPlan com:');
+    console.log(`[AI PLAN]   - ${aiProfile.raceGoals?.length || 0} corridas no perfil`);
+    if (aiProfile.raceGoals && aiProfile.raceGoals.length > 0) {
+      aiProfile.raceGoals.forEach(race => {
+        console.log(`[AI PLAN]     • ${race.priority}: ${race.name} em ${race.date.toISOString().split('T')[0]}`);
+      });
+    }
+    
     const aiPlan = await generateAIPlan(aiProfile, 3, customStartDate);
 
     console.log('[AI PLAN] Plano gerado pela IA! Total de semanas:', aiPlan.totalWeeks);

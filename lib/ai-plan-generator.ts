@@ -692,6 +692,18 @@ function autoCorrectStrategy(
  * A IA gera a estrutura e estratégia com exemplos, depois expandimos para todas as semanas
  */
 export async function generateAIPlan(profile: AIUserProfile, maxRetries: number = 3, customStartDate?: Date): Promise<AIGeneratedPlan> { 
+  // CRITICAL DEBUG: Log what races are in the profile
+  console.log('[AI PLAN] 🚀 generateAIPlan INICIADO');
+  console.log(`[AI PLAN] Corridas no perfil recebido: ${profile.raceGoals?.length || 0}`);
+  if (profile.raceGoals && profile.raceGoals.length > 0) {
+    console.log('[AI PLAN] Detalhes das corridas recebidas:');
+    profile.raceGoals.forEach((race, idx) => {
+      console.log(`[AI PLAN]   ${idx + 1}. ${race.priority}: "${race.name}" (${race.distance}) em ${race.date.toISOString().split('T')[0]}`);
+    });
+  } else {
+    console.log('[AI PLAN] ⚠️⚠️⚠️ PROBLEMA: Nenhuma corrida no perfil! raceGoals está vazio ou undefined');
+  }
+  
   // v1.3.0: Usar novo context builder completo
   const userContext = buildComprehensiveContext(profile as any);
   
