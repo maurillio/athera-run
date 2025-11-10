@@ -276,20 +276,21 @@ export default function DashboardPage() {
 
           {hasCustomPlan && plan && currentWeek && (
             <>
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-                <Card className="touch-manipulation">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{t('stats.nextWorkout')}</CardTitle>
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
+              {/* Quick Stats - Design System v1.8.3 */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {t('stats.nextWorkout')}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-2">
+                  <CardContent>
                     {nextWorkout ? (
                       <>
-                        <div className="text-xl sm:text-2xl font-bold">
+                        <div className="text-2xl font-bold">
                           {formatShortDate(nextWorkout.date, locale)}
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-1">
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
                           {nextWorkout.title}
                         </p>
                       </>
@@ -299,54 +300,59 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="touch-manipulation">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{t('stats.currentWeek')}</CardTitle>
-                    <Activity className="h-4 w-4 text-muted-foreground" />
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {t('stats.currentWeek')}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-2">
-                    <div className="text-xl sm:text-2xl font-bold">
+                  <CardContent>
+                    <div className="text-2xl font-bold">
                       {currentWeek.weekNumber}/{plan.totalWeeks}
                     </div>
-                    <p className="text-xs text-muted-foreground">{currentWeek.phase}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{currentWeek.phase}</p>
                   </CardContent>
                 </Card>
 
-                <Card className="touch-manipulation">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{t('stats.goal')}</CardTitle>
-                    <Target className="h-4 w-4 text-muted-foreground" />
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {t('stats.goal')}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-2">
-                    <div className="text-xl sm:text-2xl font-bold">
+                  <CardContent>
+                    <div className="text-2xl font-bold">
                       {getDistanceLabel(plan.goalDistance)}
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {formatShortDate(plan.targetRaceDate, locale)}
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="touch-manipulation">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{t('stats.progress')}</CardTitle>
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {t('stats.progress')}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-2">
-                    <div className="text-xl sm:text-2xl font-bold">
+                  <CardContent>
+                    <div className="text-2xl font-bold">
                       {Math.round(plan.completionRate)}%
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {currentWeek.completedWorkouts}/{currentWeek.totalWorkouts} {t('stats.completed')}
                     </p>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Upcoming Workouts */}
-              <Card className="mb-8">
+              {/* Próximo Treino - Design System v1.8.3 */}
+              <Card className="mb-8 bg-gradient-to-br from-orange-100 to-orange-50 border-orange-500 border-2">
                 <CardHeader>
-                  <CardTitle>{t('upcomingWorkouts.title')}</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    🔥 {t('upcomingWorkouts.title')}
+                  </CardTitle>
                   <CardDescription>{t('upcomingWorkouts.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-2">
@@ -384,50 +390,45 @@ export default function DashboardPage() {
                         return (
                           <div
                             key={workout.id}
-                            className={`flex flex-col p-4 rounded-lg border ${
+                            className={`p-4 rounded-lg border-2 transition-all ${
                               workout.isCompleted
-                                ? 'bg-green-50 border-green-200'
+                                ? 'bg-gradient-to-br from-green-100 to-green-50 border-green-500'
                                 : (workoutDate.isBefore(today, 'day') && !workout.isCompleted)
-                                  ? 'bg-red-50 border-red-200'
-                                  : 'bg-white border-gray-200'
+                                  ? 'bg-gradient-to-br from-red-100 to-red-50 border-red-500'
+                                  : 'bg-white border-gray-300'
                             }`}
                           >
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <Badge variant={isToday ? "default" : "secondary"}>
-                                    {isToday ? t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
-                                  </Badge>
-                                  {workout.isCompleted ? (
-                                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                  ) : (workoutDate.isBefore(today, 'day') && !workout.isCompleted) ? (
-                                    <XCircle className="h-4 w-4 text-red-600" />
-                                  ) : null}
-                                </div>
-                                <h4 className="font-medium text-lg">{workout.title}</h4>
-                                <p className="text-sm text-muted-foreground">
-                                  {formatLocalizedDate(workout.date, locale)}
-                                </p>
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <Badge className={isToday ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-700"}>
+                                  {isToday ? '🔥 ' + t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
+                                </Badge>
+                                {workout.isCompleted ? (
+                                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                ) : (workoutDate.isBefore(today, 'day') && !workout.isCompleted) ? (
+                                  <XCircle className="h-5 w-5 text-red-600" />
+                                ) : null}
                               </div>
                             </div>
                             
-                            <p className="text-sm mb-3 text-gray-700">{workout.description}</p>
+                            <h4 className="font-semibold text-base mb-2">{workout.title}</h4>
+                            <p className="text-sm text-gray-600 mb-3 leading-relaxed">{workout.description}</p>
                             
-                            <div className="flex flex-wrap gap-3 mb-3 text-sm">
+                            <div className="flex flex-wrap gap-2 mb-3">
                               {workout.distance && (
-                                <div className="flex items-center gap-1">
-                                  <span className="font-medium">📍 {tPlano('workout.distance', { distance: workout.distance })}</span>
-                                </div>
+                                <Badge className="bg-blue-100 text-blue-700">
+                                  📏 {tPlano('workout.distance', { distance: workout.distance })}
+                                </Badge>
                               )}
                               {workout.duration && (
-                                <div className="flex items-center gap-1">
-                                  <span className="font-medium">⏱️ {tPlano('workout.duration', { duration: workout.duration })}</span>
-                                </div>
+                                <Badge className="bg-purple-100 text-purple-700">
+                                  ⏱️ {tPlano('workout.duration', { duration: workout.duration })}
+                                </Badge>
                               )}
                               {workout.targetPace && (
-                                <div className="flex items-center gap-1">
-                                  <span className="font-medium">🎯 {tPlano('workout.pace', { pace: workout.targetPace })}</span>
-                                </div>
+                                <Badge className="bg-green-100 text-green-700">
+                                  🎯 {tPlano('workout.pace', { pace: workout.targetPace })}
+                                </Badge>
                               )}
                             </div>
 
