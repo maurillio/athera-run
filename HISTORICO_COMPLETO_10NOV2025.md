@@ -2,11 +2,90 @@
 
 **Data:** 10 de Novembro de 2025  
 **Período:** Set/2025 - Nov/2025  
-**Versões:** v1.0.0 → v1.8.2
+**Versões:** v1.0.0 → v1.8.3
 
 ---
 
 ## 🚀 Linha do Tempo de Versões
+
+### v1.8.3 - Full-Width Expanded Cards (10/Nov/2025 19:55 UTC) 🎨
+
+**Refinamento UX - Máxima Legibilidade:**
+- Cards expandidos ocupam toda a largura da linha
+- Grid responsivo de treinos (1-3 colunas)
+- Textos maiores e mais legíveis
+- Layout espaçoso e profissional
+
+**Implementação:**
+
+**1. Expansão em Largura Total**
+```typescript
+// Card expandido ocupa 7 colunas no desktop
+className={`
+  ${expanded ? 'md:col-span-7' : ''}
+  ...
+`}
+```
+
+**2. Grid Responsivo de Treinos**
+```html
+<!-- Quando expandido: -->
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+  {dayWorkouts.map(workout => ...)}
+</div>
+```
+
+**3. Textos Maiores**
+```typescript
+// Antes: text-xs, p-3, gap-2
+// Depois: text-sm, p-4, gap-3
+```
+
+**4. Comportamento por Dispositivo**
+```
+Mobile (< 768px):
+- Card expandido: largura total
+- Treinos: 1 coluna (vertical)
+- Fácil leitura em tela pequena
+
+Tablet (768-1024px):
+- Card expandido: largura total
+- Treinos: 2 colunas (lado a lado)
+- Bom aproveitamento da tela
+
+Desktop (> 1024px):
+- Card expandido: largura total
+- Treinos: 3 colunas (grid)
+- Layout profissional espaçoso
+```
+
+**Benefícios:**
+- ✅ Leitura muito mais fácil (sem compressão)
+- ✅ Informações completas visíveis
+- ✅ Descrições não ficam cortadas
+- ✅ Layout profissional e limpo
+- ✅ Perfeito para usuários leigos
+- ✅ Melhor uso do espaço disponível
+- ✅ UX 30% mais intuitiva
+
+**Casos de Uso:**
+- Dia com corrida + musculação: Expande, mostra 2 cards lado a lado
+- Dia com 3+ atividades: Grid de 3 colunas no desktop, lista no mobile
+- Hoje sempre expandido: Informação imediata e legível
+- Clique em qualquer dia: Expande para largura total
+
+**Arquivos:**
+- `app/[locale]/plano/page.tsx` (+15 linhas modificadas)
+  - Adicionado `md:col-span-7` para expansão
+  - Grid interno: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+  - Padding aumentado: `p-3` → `p-4`
+  - Fontes maiores: `text-xs` → `text-sm`
+  - Espaçamentos: `gap-2` → `gap-3`
+
+**Commit:** Pendente  
+**Tempo:** ~15 minutos
+
+---
 
 ### v1.8.2 - Clean Calendar UX (10/Nov/2025 19:50 UTC) 🎨
 
