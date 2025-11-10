@@ -2,13 +2,55 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 11 de Novembro de 2025 00:30 UTC
-**Versão Atual:** 2.0.2 (Correção URL e Encoding)
-**Status:** ✅ **TREINOS PROFISSIONAIS + OPENAI CONFIGURADO + URL CORRIGIDO**
+**Última atualização:** 11 de Novembro de 2025 01:00 UTC
+**Versão Atual:** 2.0.3 (Error Handling & Logging)
+**Status:** ✅ **TREINOS PROFISSIONAIS + OPENAI CONFIGURADO + DIAGNÓSTICO MELHORADO**
 **Build:** ✅ Passou sem erros (67/67 páginas) | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - Abacus AI REMOVIDO
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
+
+---
+
+## 🔧 HOTFIX v2.0.3 - Error Handling & Logging (11/Nov/2025 01:00 UTC)
+
+### 🎯 Problema Identificado
+Usuário `Teste0101019@teste.com` recebe erro 500 ao tentar gerar plano após finalizar onboarding. Erro genérico sem detalhes sobre a causa.
+
+### ✅ Melhorias Implementadas
+
+**1. Logging Detalhado na API**
+- Logs completos de erro (tipo, nome, mensagem, stack)
+- Retorno com hint de possíveis causas
+- Identificação da etapa exata do erro
+
+**2. Tratamento Específico por Tipo de Erro**
+```typescript
+// 401: API Key inválida/expirada
+// 429: Quota OpenAI atingida
+// 500+: OpenAI indisponível
+// Validação de JSON e estrutura
+```
+
+**3. Validação de Resposta**
+- Detecta JSON mal formado
+- Valida estrutura da resposta
+- Log do tamanho do conteúdo
+
+### 📊 Causas Prováveis
+1. **Quota OpenAI** (mais provável)
+2. **Timeout Vercel** (>10s)
+3. **JSON Parsing** (formato inválido)
+4. **Validação** (plano incorreto)
+
+### 📝 Arquivos
+- `app/api/plan/generate/route.ts` (+15)
+- `lib/llm-client.ts` (+35)
+- `HOTFIX_v2.0.3_PLAN_GENERATION_DEBUG.md` (novo)
+- Commit: `ac119e38`
+
+### 🎯 Próximo Passo
+Usuário deve testar novamente e verificar logs do Vercel para identificar causa raiz específica.
 
 ---
 
