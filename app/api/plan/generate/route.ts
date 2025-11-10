@@ -122,10 +122,13 @@ export async function POST(request: NextRequest) {
     console.log('[AI PLAN] Dia do longão:', profile.longRunDay);
 
     // Buscar corridas cadastradas (RaceGoals)
+    // Incluir tanto 'active' quanto 'upcoming' (status default do onboarding)
     const raceGoals = await prisma.raceGoal.findMany({
       where: {
         athleteId: profile.id,
-        status: 'active'
+        status: {
+          in: ['active', 'upcoming']
+        }
       },
       orderBy: {
         raceDate: 'asc'
