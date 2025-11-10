@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como Funciona a Estrela do Longão</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .step-box {
+      transition: all 0.3s ease;
+    }
+    .step-box:hover {
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-8">
+  <div class="max-w-5xl mx-auto">
+    <h1 class="text-4xl font-bold mb-2 text-center text-gray-900">
+      Como Funciona a ⭐ Estrela do Longão
+    </h1>
+    <p class="text-center text-gray-600 mb-8">
+      Tutorial visual passo a passo
+    </p>
+
+    <!-- PASSO 1 -->
+    <div class="step-box bg-white rounded-xl shadow-lg p-8 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold text-gray-900">Primeiro: Selecione os dias de corrida</h2>
+      </div>
+      
+      <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <input type="checkbox" checked class="w-6 h-6">
+          <span class="text-3xl">🏃</span>
+          <span class="font-semibold text-xl">Corrida</span>
+        </div>
+        
+        <p class="text-sm text-gray-700 mb-3">👇 Clique nos dias em que você pode correr:</p>
+        
+        <div class="flex gap-2 flex-wrap">
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">D</button>
+          <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow">S ← Clicou</button>
+          <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow">T ← Clicou</button>
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">Q</button>
+          <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow">Q ← Clicou</button>
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">S</button>
+          <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow">S ← Clicou</button>
+        </div>
+        
+        <div class="mt-4 bg-white/70 rounded p-3 text-sm">
+          ✅ Você selecionou <strong>4 dias de corrida:</strong> Segunda, Terça, Quinta e Sábado
+        </div>
+      </div>
+    </div>
+
+    <!-- PASSO 2 -->
+    <div class="step-box bg-white rounded-xl shadow-lg p-8 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="bg-purple-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold text-gray-900">Segundo: Clique na ⭐ do dia que será o longão</h2>
+      </div>
+      
+      <div class="bg-purple-50 border-2 border-purple-500 rounded-lg p-6">
+        <p class="text-sm text-gray-700 mb-4">
+          Agora, dos 4 dias que você selecionou, escolha qual será o <strong>longão</strong> (corrida mais longa da semana).
+        </p>
+        
+        <p class="text-sm text-gray-700 mb-3">
+          👇 Perceba que apareceu uma <span class="text-2xl">⭐</span> pequena em cima de cada dia de corrida selecionado:
+        </p>
+        
+        <div class="flex gap-2 flex-wrap items-start">
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">D</button>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">S</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30 hover:opacity-100 cursor-pointer" title="Clique para marcar como longão">⭐</button>
+          </div>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">T</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30 hover:opacity-100 cursor-pointer" title="Clique para marcar como longão">⭐</button>
+          </div>
+          
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">Q</button>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">Q</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30 hover:opacity-100 cursor-pointer" title="Clique para marcar como longão">⭐</button>
+          </div>
+          
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">S</button>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">S</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30 hover:opacity-100 cursor-pointer animate-pulse" title="Clique para marcar como longão">⭐</button>
+            <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap text-xs bg-yellow-100 px-2 py-1 rounded">
+              👆 Clique aqui!
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8 bg-white rounded-lg p-4 border-2 border-yellow-300">
+          <p class="text-sm text-gray-700">
+            💡 <strong>Dica:</strong> A estrela ⭐ está <em>meio transparente</em> nos dias que você pode escolher.
+            Quando você passa o mouse, ela fica mais visível.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASSO 3 -->
+    <div class="step-box bg-white rounded-xl shadow-lg p-8 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold text-gray-900">Resultado: O dia fica roxo com ⭐ destacada</h2>
+      </div>
+      
+      <div class="bg-green-50 border-2 border-green-500 rounded-lg p-6">
+        <p class="text-sm text-gray-700 mb-3">
+          ✅ Quando você clica na estrela, o dia muda para <strong>ROXO</strong> e a estrela fica bem visível:
+        </p>
+        
+        <div class="flex gap-2 flex-wrap">
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">D</button>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">S</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30">⭐</button>
+          </div>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">T</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30">⭐</button>
+          </div>
+          
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">Q</button>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-blue-600 text-white font-medium">Q</button>
+            <button class="absolute -top-1 -right-1 text-lg opacity-30">⭐</button>
+          </div>
+          
+          <button class="px-4 py-2 rounded-full bg-white border-2 border-gray-300 font-medium">S</button>
+          
+          <div class="relative">
+            <button class="px-4 py-2 rounded-full bg-purple-600 text-white font-medium shadow-2xl ring-4 ring-purple-300">
+              S
+            </button>
+            <span class="absolute -top-1 -right-1 text-2xl animate-pulse">⭐</span>
+            <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap text-xs bg-purple-100 px-2 py-1 rounded font-bold">
+              🎉 Dia do Longão!
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8 bg-purple-100 rounded-lg p-4 border-2 border-purple-400">
+          <p class="text-sm text-gray-700">
+            🎯 <strong>Pronto!</strong> Agora você tem:
+          </p>
+          <ul class="text-sm text-gray-700 mt-2 space-y-1">
+            <li>• <strong>3 dias de corrida normal:</strong> Segunda, Terça e Quinta (azul)</li>
+            <li>• <strong>1 dia de longão:</strong> Sábado (roxo com ⭐)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLO VISUAL COMPLETO -->
+    <div class="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl shadow-2xl p-8 mb-6 text-white">
+      <h2 class="text-3xl font-bold mb-6 text-center">📊 Resumo Visual Completo</h2>
+      
+      <div class="bg-white/10 backdrop-blur rounded-lg p-6 mb-4">
+        <div class="flex items-center gap-3 mb-4">
+          <input type="checkbox" checked class="w-6 h-6">
+          <span class="text-3xl">🏃</span>
+          <span class="font-semibold text-xl">Corrida</span>
+          <span class="ml-auto text-sm bg-white/20 px-3 py-1 rounded-full">4 dias selecionados</span>
+        </div>
+        
+        <div class="flex gap-2 flex-wrap mb-3">
+          <div class="text-center">
+            <button class="px-4 py-2 rounded-full bg-white/20 border-2 border-white/30 font-medium mb-1">D</button>
+            <div class="text-xs">Não</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="relative">
+              <button class="px-4 py-2 rounded-full bg-blue-500 text-white font-medium mb-1">S</button>
+              <span class="absolute -top-1 -right-1 text-lg opacity-50">⭐</span>
+            </div>
+            <div class="text-xs">Corrida</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="relative">
+              <button class="px-4 py-2 rounded-full bg-blue-500 text-white font-medium mb-1">T</button>
+              <span class="absolute -top-1 -right-1 text-lg opacity-50">⭐</span>
+            </div>
+            <div class="text-xs">Corrida</div>
+          </div>
+          
+          <div class="text-center">
+            <button class="px-4 py-2 rounded-full bg-white/20 border-2 border-white/30 font-medium mb-1">Q</button>
+            <div class="text-xs">Não</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="relative">
+              <button class="px-4 py-2 rounded-full bg-blue-500 text-white font-medium mb-1">Q</button>
+              <span class="absolute -top-1 -right-1 text-lg opacity-50">⭐</span>
+            </div>
+            <div class="text-xs">Corrida</div>
+          </div>
+          
+          <div class="text-center">
+            <button class="px-4 py-2 rounded-full bg-white/20 border-2 border-white/30 font-medium mb-1">S</button>
+            <div class="text-xs">Não</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="relative">
+              <button class="px-4 py-2 rounded-full bg-purple-500 text-white font-bold mb-1 shadow-lg">S</button>
+              <span class="absolute -top-1 -right-1 text-2xl">⭐</span>
+            </div>
+            <div class="text-xs font-bold">LONGÃO</div>
+          </div>
+        </div>
+        
+        <div class="bg-white/20 rounded p-3 text-sm">
+          💡 Clique na ⭐ de qualquer dia azul para mudar qual é o longão
+        </div>
+      </div>
+    </div>
+
+    <!-- VANTAGENS -->
+    <div class="bg-white rounded-xl shadow-lg p-8">
+      <h2 class="text-2xl font-bold mb-4 text-gray-900">✨ Por que esse design é melhor?</h2>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-green-50 p-4 rounded-lg border-2 border-green-200">
+          <h3 class="font-bold text-green-800 mb-2">✅ Vantagens</h3>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li>• <strong>Tudo na mesma tela:</strong> Não precisa rolar para baixo</li>
+            <li>• <strong>Visual óbvio:</strong> Roxo = longão (não tem erro)</li>
+            <li>• <strong>Fácil de mudar:</strong> Clica em outra estrela e pronto</li>
+            <li>• <strong>Integrado:</strong> Longão é naturalmente "parte" dos dias de corrida</li>
+            <li>• <strong>Sem confusão:</strong> A estrela só aparece nos dias que você pode correr</li>
+          </ul>
+        </div>
+        
+        <div class="bg-red-50 p-4 rounded-lg border-2 border-red-200">
+          <h3 class="font-bold text-red-800 mb-2">❌ Interface Antiga (separada)</h3>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li>• Seção separada embaixo</li>
+            <li>• Precisa rolar a página</li>
+            <li>• Radio buttons em lista</li>
+            <li>• Pode escolher dia que não tem corrida (erro!)</li>
+            <li>• Usuário esquece de escolher</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-8 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-8 border-2 border-yellow-300">
+      <h2 class="text-2xl font-bold mb-4 text-gray-900">❓ Perguntas Frequentes</h2>
+      
+      <div class="space-y-4">
+        <div class="bg-white rounded-lg p-4">
+          <p class="font-semibold text-gray-900 mb-2">P: E se eu clicar na estrela por engano?</p>
+          <p class="text-sm text-gray-700">R: Sem problema! É só clicar na estrela de outro dia. Apenas 1 dia pode ser longão por vez.</p>
+        </div>
+        
+        <div class="bg-white rounded-lg p-4">
+          <p class="font-semibold text-gray-900 mb-2">P: Posso deixar sem longão?</p>
+          <p class="text-sm text-gray-700">R: Para iniciantes, sim! A validação permite. Para intermediários/avançados, é obrigatório escolher.</p>
+        </div>
+        
+        <div class="bg-white rounded-lg p-4">
+          <p class="font-semibold text-gray-900 mb-2">P: A estrela aparece em dias que não selecionei?</p>
+          <p class="text-sm text-gray-700">R: Não! A estrela só aparece nos dias AZUIS (que você selecionou para correr). Dias brancos não têm estrela.</p>
+        </div>
+        
+        <div class="bg-white rounded-lg p-4">
+          <p class="font-semibold text-gray-900 mb-2">P: Como sei qual dia está marcado como longão?</p>
+          <p class="text-sm text-gray-700">R: Fácil! O dia fica ROXO e a estrela fica grande e brilhante ⭐. Você também vê no resumo da semana.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

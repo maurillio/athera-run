@@ -184,8 +184,12 @@ export async function POST(request: NextRequest) {
       height: profile.height || undefined,
       age: profile.age || undefined,
       gender: profile.gender || undefined,
-      trainingActivities: activities,
+      // v1.7.3 - Nova estrutura de disponibilidade
+      trainingSchedule: profile.trainingSchedule as any,
+      customActivities: (profile.customActivities as any) || [],
       longRunDay: profile.longRunDay ?? undefined,
+      // DEPRECATED: Mantido para compatibilidade
+      trainingActivities: activities,
       usualPaces: usualPaces,
       hasGymAccess: hasGymAccess,
       hasPoolAccess: hasPoolAccess,
