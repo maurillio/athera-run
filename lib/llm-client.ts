@@ -38,9 +38,9 @@ export async function callLLM(request: LLMRequest): Promise<string> {
     case 'openrouter':
       url = 'https://openrouter.ai/api/v1/chat/completions';
       headers = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://athera-run.com',
+        'HTTP-Referer': 'https://atherarun.com',
         'X-Title': 'Athera Run',
       };
       body = {
@@ -56,7 +56,7 @@ export async function callLLM(request: LLMRequest): Promise<string> {
     default:
       url = 'https://api.openai.com/v1/chat/completions';
       headers = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       };
       body = {
