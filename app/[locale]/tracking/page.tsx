@@ -72,8 +72,8 @@ export default function TrackingPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">{t('title')}</h1>
