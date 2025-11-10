@@ -402,6 +402,26 @@ model CustomWorkout {
   isStrengthSpecific Boolean           @default(false)
   targetHeartRate    String?
   targetRPE          Int?
+  
+  // v2.0.0 - Estrutura Detalhada de Treinos
+  warmUpStructure    Json?             // Aquecimento detalhado (fase 1)
+  mainWorkoutStruct  Json?             // Parte principal estruturada (fase 2)
+  coolDownStructure  Json?             // Desaquecimento detalhado (fase 3)
+  
+  // v2.0.0 - Enriquecimento Educacional
+  objective          String?           // Objetivo fisiológico do treino
+  scientificBasis    String?           // Fundamento científico
+  tips               Json?             // Array de dicas práticas
+  commonMistakes     Json?             // Erros comuns a evitar
+  successCriteria    Json?             // Critérios de sucesso
+  
+  // v2.0.0 - Métricas Avançadas
+  intensityLevel     Int?              // 1-5 (Muito Leve → Muito Intenso)
+  expectedRPE        Int?              // Rate of Perceived Exertion (1-10)
+  heartRateZones     Json?             // Zonas de FC para cada fase
+  intervals          Json?             // Estrutura de intervalos se aplicável
+  expectedDuration   Int?              // Duração total esperada (minutos)
+  
   athleteFeedback    AthleteFeedback[]
   completedWorkout   CompletedWorkout? @relation(fields: [completedWorkoutId], references: [id])
   week               CustomWeek        @relation(fields: [weekId], references: [id], onDelete: Cascade)
