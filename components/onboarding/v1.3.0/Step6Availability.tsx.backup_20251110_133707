@@ -24,11 +24,13 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   // Modal para adicionar esporte
   const [showAddSportModal, setShowAddSportModal] = useState(false);
   const [newSportName, setNewSportName] = useState('');
+  const [addingSportForDay, setAddingSportForDay] = useState<number | null>(null);
   
   // v1.6.0 - Dia do Longão (lógica melhorada)
   const [longRunDay, setLongRunDay] = useState<number | null>(
     data.longRunDay !== undefined ? data.longRunDay : null
   );
+  const [noLongRunYet, setNoLongRunYet] = useState(false); // "Ainda não faço longões"
   
   // Detecta se é iniciante (vem do Step 2)
   const runningLevel = data.runningLevel || '';
@@ -53,7 +55,6 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     data.trainingPreferences?.outdoor ?? false
   );
   
-  const daysShort = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
   const days = [
     'Domingo',
     'Segunda-feira',
@@ -66,32 +67,23 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   
   // Atividades padrão + customizadas
   const defaultActivities = [
-    { key: 'Musculação', label: 'Musculação', icon: '💪' },
-    { key: 'Natação', label: 'Natação', icon: '🏊' },
-    { key: 'Ciclismo', label: 'Ciclismo', icon: '🚴' },
-    { key: 'Yoga', label: 'Yoga', icon: '🧘' },
-    { key: 'Pilates', label: 'Pilates', icon: '🤸' },
-    { key: 'Luta', label: 'Luta', icon: '🥋' },
+    { key: 'Musculação', label: '💪 Musculação', icon: '💪' },
+    { key: 'Yoga', label: '🧘 Yoga', icon: '🧘' },
+    { key: 'Pilates', label: '🤸 Pilates', icon: '🤸' },
+    { key: 'Natação', label: '🏊 Natação', icon: '🏊' },
+    { key: 'Ciclismo', label: '🚴 Ciclismo', icon: '🚴' },
+    { key: 'Luta', label: '🥋 Luta', icon: '🥋' },
   ];
 
   // Toggle corrida em um dia
   const toggleRunning = (dayIndex: number) => {
-    setTrainingSchedule(prev => {
-      const newSchedule = {
-        ...prev,
-        [dayIndex]: {
-          running: !(prev[dayIndex]?.running || false),
-          activities: prev[dayIndex]?.activities || []
-        }
-      };
-      
-      // Se desmarcar dia de corrida e era o dia do longão, limpa o longão
-      if (!newSchedule[dayIndex].running && longRunDay === dayIndex) {
-        setLongRunDay(null);
+    setTrainingSchedule(prev => ({
+      ...prev,
+      [dayIndex]: {
+        running: !(prev[dayIndex]?.running || false),
+        activities: prev[dayIndex]?.activities || []
       }
-      
-      return newSchedule;
-    });
+    }));
   };
 
   // Toggle atividade em um dia
@@ -114,7 +106,7 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
 
   // Adicionar esporte customizado
   const handleAddCustomSport = () => {
-    if (newSportName.trim()) {
+    if (newSportName.trim() && addingSportForDay !== null) {
       const sportKey = newSportName.toLowerCase().replace(/\s+/g, '_');
       
       // Adiciona à lista de customizados se não existir
@@ -122,9 +114,13 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
         setCustomActivities(prev => [...prev, sportKey]);
       }
       
+      // Adiciona ao dia
+      toggleActivity(addingSportForDay, sportKey);
+      
       // Limpa e fecha
       setNewSportName('');
       setShowAddSportModal(false);
+      setAddingSportForDay(null);
     }
   };
 
@@ -198,7 +194,7 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
     if (runningDays.length > 0 && !isBeginnerOrNever) {
       // Corredores intermediários/avançados DEVEM escolher longão
       if (longRunDay === null) {
-        alert('Por favor, escolha o dia da sua corrida longa (longão).');
+        alert('Por favor, escolha o dia da sua corrida longa (longão) ou marque que ainda não faz corridas longas.');
         return;
       }
     }
@@ -209,254 +205,230 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
   // Obter label do esporte (default ou custom)
   const getActivityLabel = (key: string) => {
     const defaultActivity = defaultActivities.find(a => a.key === key);
-    if (defaultActivity) return `${defaultActivity.icon} ${defaultActivity.label}`;
+    if (defaultActivity) return defaultActivity.label;
     
     // Customizado - formata o nome
     return key.split('_').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
   };
-  
-  // Obter dias com corrida para mostrar seleção de longão
-  const runningDays = Object.keys(trainingSchedule)
-    .filter(day => trainingSchedule[parseInt(day)]?.running)
-    .map(day => parseInt(day));
-  
-  // Contador de dias para cada atividade
-  const getActivityCount = (activityKey: string) => {
-    return Object.values(trainingSchedule).filter(
-      day => day.activities?.includes(activityKey)
-    ).length;
-  };
 
   return (
     <div className="space-y-6">
-      {/* DISPONIBILIDADE SEMANAL - FORMATO COMPACTO HORIZONTAL */}
+      {/* DISPONIBILIDADE SEMANAL */}
       <div>
-        <h3 className="text-lg font-semibold mb-2 text-blue-900">
+        <h3 className="text-lg font-semibold mb-4 text-blue-900">
           📅 Disponibilidade Semanal
         </h3>
         <p className="text-sm text-gray-600 mb-4">
-          Selecione os dias de cada atividade
+          Selecione os dias e atividades que você pode fazer. Você pode escolher múltiplas atividades no mesmo dia.
         </p>
         
-        {/* CORRIDA */}
-        <div className="bg-white border-2 border-gray-200 rounded-lg p-4 mb-3">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🏃</span>
-              <h4 className="font-bold text-gray-900">Corrida</h4>
-            </div>
-            <span className="text-xs text-gray-500">
-              {runningDays.length} {runningDays.length === 1 ? 'dia' : 'dias'}
-            </span>
-          </div>
-          
-          <div className="flex gap-2 justify-between">
-            {daysShort.map((dayShort, idx) => {
-              const isSelected = trainingSchedule[idx]?.running || false;
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => toggleRunning(idx)}
-                  className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                    isSelected
-                      ? 'bg-blue-600 text-white border-2 border-blue-600'
-                      : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:border-blue-300'
-                  }`}
-                >
-                  {dayShort}
-                </button>
-              );
-            })}
-          </div>
-          
-          {/* Seleção do Longão - APARECE LOGO ABAIXO QUANDO TEM DIAS */}
-          {runningDays.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="flex items-start gap-2 mb-3">
-                <span className="text-lg">💡</span>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 mb-1">
-                    Qual dia será seu <strong>longão</strong>?
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    {isBeginnerOrNever 
-                      ? 'Iniciantes: pode deixar em branco por enquanto'
-                      : 'O longão é sua corrida mais longa da semana (recomendado: fim de semana)'
-                    }
-                  </p>
+        <div className="space-y-3">
+          {days.map((day, dayIndex) => {
+            const daySchedule = trainingSchedule[dayIndex] || { running: false, activities: [] };
+            const allActivities = [...defaultActivities.map(a => a.key), ...customActivities];
+            
+            return (
+              <div key={dayIndex} className="border-2 rounded-lg p-4 bg-white">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-gray-900">{day}</h4>
+                  {longRunDay === dayIndex && (
+                    <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                      🏃 Dia do Longão
+                    </span>
+                  )}
                 </div>
-              </div>
-              
-              <div className="flex gap-2 flex-wrap">
-                {isBeginnerOrNever && (
+                
+                {/* Corrida */}
+                <div className="mb-2">
                   <button
                     type="button"
-                    onClick={() => setLongRunDay(null)}
-                    className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                      longRunDay === null
-                        ? 'bg-gray-600 text-white'
-                        : 'bg-gray-100 text-gray-600 border-2 border-gray-200 hover:border-gray-400'
+                    onClick={() => toggleRunning(dayIndex)}
+                    className={`w-full text-left px-4 py-2 rounded-lg border-2 transition-all ${
+                      daySchedule.running
+                        ? 'bg-blue-50 border-blue-500 text-blue-900'
+                        : 'border-gray-200 hover:border-blue-300'
                     }`}
                   >
-                    Sem longão ainda
+                    <span className="text-lg">🏃</span> Corrida
                   </button>
-                )}
+                </div>
                 
-                {runningDays.map(dayIdx => {
-                  const isWeekend = dayIdx === 0 || dayIdx === 6;
-                  const isSelected = longRunDay === dayIdx;
-                  return (
+                {/* Outras Atividades */}
+                <div className="grid grid-cols-2 gap-2 mb-2">
+                  {allActivities.map(activity => (
                     <button
-                      key={dayIdx}
+                      key={activity}
                       type="button"
-                      onClick={() => setLongRunDay(dayIdx)}
-                      className={`px-4 py-2 rounded-lg font-medium text-sm transition-all relative ${
-                        isSelected
-                          ? 'bg-purple-600 text-white border-2 border-purple-600'
-                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-400'
+                      onClick={() => toggleActivity(dayIndex, activity)}
+                      className={`text-left px-3 py-2 rounded-lg border-2 text-sm transition-all ${
+                        daySchedule.activities.includes(activity)
+                          ? 'bg-green-50 border-green-500 text-green-900'
+                          : 'border-gray-200 hover:border-green-300'
                       }`}
                     >
-                      {days[dayIdx]}
-                      {isWeekend && !isSelected && (
-                        <span className="absolute -top-1 -right-1 text-xs">⭐</span>
+                      {getActivityLabel(activity)}
+                      {customActivities.includes(activity) && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Remover "${getActivityLabel(activity)}" da lista?`)) {
+                              removeCustomActivity(activity);
+                            }
+                          }}
+                          className="ml-2 text-red-500 hover:text-red-700"
+                        >
+                          ×
+                        </button>
                       )}
                     </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* MUSCULAÇÃO */}
-        <div className="bg-white border-2 border-gray-200 rounded-lg p-4 mb-3">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">💪</span>
-              <h4 className="font-bold text-gray-900">Musculação</h4>
-            </div>
-            <span className="text-xs text-gray-500">
-              {getActivityCount('Musculação')} dias
-            </span>
-          </div>
-          
-          <div className="flex gap-2 justify-between">
-            {daysShort.map((dayShort, idx) => {
-              const isSelected = trainingSchedule[idx]?.activities?.includes('Musculação') || false;
-              return (
+                  ))}
+                </div>
+                
+                {/* Adicionar Esporte */}
                 <button
-                  key={idx}
                   type="button"
-                  onClick={() => toggleActivity(idx, 'Musculação')}
-                  className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                    isSelected
-                      ? 'bg-green-600 text-white border-2 border-green-600'
-                      : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:border-green-300'
-                  }`}
+                  onClick={() => {
+                    setAddingSportForDay(dayIndex);
+                    setShowAddSportModal(true);
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                 >
-                  {dayShort}
+                  + Adicionar outro esporte
                 </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* OUTRAS ATIVIDADES - COLAPSADAS */}
-        <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-          <h4 className="font-bold text-gray-900 mb-3">🎯 Outras Atividades (opcional)</h4>
-          <div className="space-y-2">
-            {defaultActivities.filter(a => a.key !== 'Musculação').map(activity => (
-              <details key={activity.key} className="group">
-                <summary className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 list-none">
-                  <span className="font-medium">{activity.icon} {activity.label}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500">
-                      {getActivityCount(activity.key)} dias
-                    </span>
-                    <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-                  </div>
-                </summary>
-                <div className="flex gap-2 justify-between mt-2 p-2">
-                  {daysShort.map((dayShort, idx) => {
-                    const isSelected = trainingSchedule[idx]?.activities?.includes(activity.key) || false;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => toggleActivity(idx, activity.key)}
-                        className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                          isSelected
-                            ? 'bg-blue-600 text-white border-2 border-blue-600'
-                            : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:border-blue-300'
-                        }`}
-                      >
-                        {dayShort}
-                      </button>
-                    );
-                  })}
-                </div>
-              </details>
-            ))}
-            
-            {/* Esportes Customizados */}
-            {customActivities.map(activity => (
-              <details key={activity} className="group">
-                <summary className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 list-none">
-                  <span className="font-medium">{getActivityLabel(activity)}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-gray-500">
-                      {getActivityCount(activity)} dias
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm(`Remover "${getActivityLabel(activity)}" da lista?`)) {
-                          removeCustomActivity(activity);
-                        }
-                      }}
-                      className="text-red-500 hover:text-red-700 text-sm"
-                    >
-                      ✕
-                    </button>
-                    <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-                  </div>
-                </summary>
-                <div className="flex gap-2 justify-between mt-2 p-2">
-                  {daysShort.map((dayShort, idx) => {
-                    const isSelected = trainingSchedule[idx]?.activities?.includes(activity) || false;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => toggleActivity(idx, activity)}
-                        className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                          isSelected
-                            ? 'bg-blue-600 text-white border-2 border-blue-600'
-                            : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:border-blue-300'
-                        }`}
-                      >
-                        {dayShort}
-                      </button>
-                    );
-                  })}
-                </div>
-              </details>
-            ))}
-            
-            <button
-              type="button"
-              onClick={() => setShowAddSportModal(true)}
-              className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all"
-            >
-              + Adicionar outro esporte
-            </button>
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      {/* SEÇÃO DO LONGÃO - SEPARADA E INTELIGENTE */}
+      {(() => {
+        // Obter dias com corrida
+        const runningDays = Object.keys(trainingSchedule)
+          .filter(day => trainingSchedule[parseInt(day)]?.running)
+          .map(day => parseInt(day));
+        
+        // Só mostra se tem pelo menos 1 dia de corrida
+        if (runningDays.length === 0) return null;
+        
+        return (
+          <div className="border-t pt-6">
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg border-2 border-purple-300">
+              <h3 className="text-lg font-semibold mb-3 text-purple-900">
+                📅 Dia do Longão (Corrida Longa Semanal)
+              </h3>
+              
+              {/* Texto educacional baseado no nível */}
+              <div className="bg-white/70 p-4 rounded-lg mb-4 text-sm">
+                <p className="flex items-start gap-2">
+                  <span className="text-xl">💡</span>
+                  <span>
+                    {isBeginnerOrNever ? (
+                      <>
+                        <strong>Para iniciantes:</strong> O longão virá naturalmente com sua evolução. 
+                        Por enquanto, foque em criar o hábito de correr regularmente. 
+                        Você pode pular esta etapa por enquanto.
+                      </>
+                    ) : runningLevel.toLowerCase().includes('intermediario') || runningLevel.toLowerCase().includes('intermediate') ? (
+                      <>
+                        <strong>Para intermediários:</strong> O longão é sua corrida mais longa da semana, 
+                        geralmente 30-40% do seu volume semanal total. É essencial para construir 
+                        resistência aeróbica.
+                      </>
+                    ) : (
+                      <>
+                        <strong>Para corredores experientes:</strong> Seu longão é fundamental para 
+                        desenvolver resistência e preparar o corpo para distâncias maiores. 
+                        Recomendamos fim de semana quando você tem mais tempo.
+                      </>
+                    )}
+                  </span>
+                </p>
+              </div>
+              
+              <label className="block font-medium mb-3">
+                Escolha o dia da sua corrida longa:
+                {!isBeginnerOrNever && <span className="text-red-600 ml-1">*</span>}
+              </label>
+              
+              <div className="space-y-2">
+                {days.map((day, dayIndex) => {
+                  // Só mostra dias com corrida
+                  if (!runningDays.includes(dayIndex)) return null;
+                  
+                  const isWeekend = dayIndex === 0 || dayIndex === 6; // Dom ou Sáb
+                  
+                  return (
+                    <label
+                      key={dayIndex}
+                      className={`flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-all ${
+                        longRunDay === dayIndex
+                          ? 'bg-purple-100 border-2 border-purple-500'
+                          : 'bg-white border-2 border-gray-200 hover:border-purple-300'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="longRunDay"
+                        checked={longRunDay === dayIndex}
+                        onChange={() => {
+                          setLongRunDay(dayIndex);
+                          setNoLongRunYet(false);
+                        }}
+                        className="w-5 h-5"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{day}</span>
+                          {isWeekend && (
+                            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                              Recomendado
+                            </span>
+                          )}
+                        </div>
+                        {isWeekend && (
+                          <p className="text-xs text-gray-600 mt-1">
+                            Ideal: você terá mais tempo e poderá correr com calma
+                          </p>
+                        )}
+                      </div>
+                    </label>
+                  );
+                })}
+                
+                {/* Opção "Ainda não faço longões" - APENAS para iniciantes */}
+                {isBeginnerOrNever && (
+                  <label
+                    className={`flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-all ${
+                      noLongRunYet
+                        ? 'bg-gray-100 border-2 border-gray-400'
+                        : 'bg-white border-2 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={noLongRunYet}
+                      onChange={(e) => {
+                        setNoLongRunYet(e.target.checked);
+                        if (e.target.checked) {
+                          setLongRunDay(null);
+                        }
+                      }}
+                      className="w-5 h-5"
+                    />
+                    <span className="text-sm">
+                      Ainda não faço corridas longas (vou construir isso gradualmente)
+                    </span>
+                  </label>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* INFRAESTRUTURA */}
       <div className="border-t pt-6">
