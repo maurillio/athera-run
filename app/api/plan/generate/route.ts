@@ -135,6 +135,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    console.log('[AI PLAN] ✅ Query de race goals executada com sucesso');
     console.log('[AI PLAN] Corridas encontradas:', raceGoals.length);
     if (raceGoals.length > 0) {
       console.log('[AI PLAN] Detalhes das corridas:');
