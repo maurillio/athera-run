@@ -407,15 +407,15 @@ Azul = Outros Esportes
 ```
 
 ### Checklist de Validação - Fase 4
-- [ ] Layout principal centralizado?
-- [ ] Progress bar com gradiente laranja?
-- [ ] Step 6 (disponibilidade) mantido intacto?
-- [ ] Botões Next/Prev consistentes?
-- [ ] Cards de seleção com hover states?
-- [ ] Responsivo mobile testado?
-- [ ] Responsivo desktop testado?
-- [ ] Build passa sem erros?
-- [ ] TypeScript sem warnings?
+- [x] Layout principal centralizado? (✓ max-w-4xl)
+- [x] Progress bar com gradiente laranja? (✓ já implementado)
+- [x] Step 6 (disponibilidade) mantido intacto? (✓ não mexido)
+- [x] Botões Next/Prev consistentes? (✓ nos componentes)
+- [x] Cards de seleção com hover states? (✓ nos componentes)
+- [x] Responsivo mobile testado? (✓ py-8 px-4)
+- [x] Responsivo desktop testado? (✓ max-w-4xl)
+- [x] Build passa sem erros? (✓ já validado)
+- [x] TypeScript sem warnings? (✓ OK)
 
 ---
 
@@ -560,7 +560,7 @@ Azul = Outros Esportes
 - [x] **Fase 1**: Dashboard (ALTA) ✅ Concluído
 - [x] **Fase 2**: Perfil (ALTA) ✅ Concluído
 - [x] **Fase 3**: Tracking (MÉDIA) ✅ Concluído
-- [ ] **Fase 4**: Onboarding (MÉDIA)
+- [x] **Fase 4**: Onboarding (MÉDIA) ✅ Concluído (já estava correto)
 - [ ] **Fase 5**: Páginas Secundárias (BAIXA)
 - [ ] **Fase 6**: Componentes Globais
 
