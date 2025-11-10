@@ -387,7 +387,7 @@ export default function OnboardingPage() {
         )}
 
         {/* Step Content */}
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur">
+        <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 shadow-xl border-0 bg-white/80 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-2xl">
               {t(`step${currentStep}.title`)}

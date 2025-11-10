@@ -124,7 +124,7 @@ export default function TrainingPage() {
           </div>
 
           {/* Generate New Analysis */}
-          <Card className="mb-8">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-orange-600" />

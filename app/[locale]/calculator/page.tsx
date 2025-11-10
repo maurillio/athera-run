@@ -85,7 +85,7 @@ export default async function CalculatorPage({ params }: { params: { locale: str
         <VdotCalculator vdotData={vdotData} />
 
         {/* Pace Zones Explanation */}
-        <Card className="mt-8">
+        <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mt-8">
           <CardHeader>
             <CardTitle>{t('understandingTitle')}</CardTitle>
             <CardDescription>

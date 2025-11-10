@@ -234,7 +234,7 @@ export default function NutritionPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="text-center">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
                 <Apple className="h-6 w-6 text-green-600" />
@@ -244,7 +244,7 @@ export default function NutritionPage() {
             </CardContent>
           </Card>
           
-          <Card className="text-center">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
                 <Target className="h-6 w-6 text-blue-600" />
@@ -254,7 +254,7 @@ export default function NutritionPage() {
             </CardContent>
           </Card>
 
-          <Card className="text-center">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
                 <Droplets className="h-6 w-6 text-cyan-600" />
@@ -264,7 +264,7 @@ export default function NutritionPage() {
             </CardContent>
           </Card>
 
-          <Card className="text-center">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 text-center">
             <CardContent className="p-4">
               <div className="flex justify-center mb-2">
                 <Zap className="h-6 w-6 text-orange-600" />
@@ -276,7 +276,7 @@ export default function NutritionPage() {
         </div>
 
         {/* Nutrition by Phase */}
-        <Card className="mb-8">
+        <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Apple className="h-5 w-5" />
@@ -372,7 +372,7 @@ export default function NutritionPage() {
                     )}
 
                     {phase.nutrition?.special_notes && (
-                      <Card className="bg-amber-50 border-amber-200">
+                      <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 bg-amber-50 border-amber-200">
                         <CardContent className="p-4">
                           <div className="flex items-start gap-3">
                             <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />

@@ -97,7 +97,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
-      <Card className="w-full max-w-md shadow-xl">
+      <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 w-full max-w-md shadow-xl">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-blue-600 rounded-xl shadow-lg">

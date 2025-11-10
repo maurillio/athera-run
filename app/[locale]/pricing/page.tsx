@@ -64,20 +64,20 @@ function PricingContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 py-12 px-4">
+      <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             Escolha o plano ideal
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
             Comece grátis e faça upgrade quando quiser
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {/* FREE */}
-          <Card className="p-6">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 p-6">
             <h3 className="text-2xl font-bold mb-2">Free</h3>
             <p className="text-muted-foreground mb-4">Comece sua jornada</p>
             <div className="text-4xl font-bold mb-6">R$ 0</div>
@@ -92,7 +92,7 @@ function PricingContent() {
           </Card>
 
           {/* PREMIUM MENSAL */}
-          <Card className="p-6 border-2 border-primary shadow-lg relative">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 p-6 border-2 border-primary shadow-lg relative">
             <Badge className="absolute -top-3 left-1/2 -translate-x-1/2"><Zap className="h-3 w-3 mr-1" />Recomendado</Badge>
             <h3 className="text-2xl font-bold mb-2 flex gap-2"><Crown className="h-6 w-6 text-primary" />Premium Mensal</h3>
             <p className="text-muted-foreground mb-4">Máximo desempenho</p>
@@ -113,7 +113,7 @@ function PricingContent() {
           </Card>
 
           {/* PREMIUM ANUAL */}
-          <Card className="p-6 border-2 border-yellow-500 relative">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 p-6 border-2 border-yellow-500 relative">
             <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black">55% OFF</Badge>
             <h3 className="text-2xl font-bold mb-2 flex gap-2"><Crown className="h-6 w-6 text-yellow-500" />Premium Anual</h3>
             <p className="text-muted-foreground mb-4">Melhor custo-benefício</p>
@@ -139,15 +139,15 @@ function PricingContent() {
         <div className="max-w-3xl mx-auto mt-16">
           <h2 className="text-3xl font-bold text-center mb-8">Perguntas Frequentes</h2>
           <div className="space-y-6">
-            <Card className="p-6">
+            <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 p-6">
               <h3 className="font-bold mb-2">Como funciona o trial?</h3>
               <p className="text-muted-foreground">7 dias grátis com acesso completo. Cancele antes e não pague nada.</p>
             </Card>
-            <Card className="p-6">
+            <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 p-6">
               <h3 className="font-bold mb-2">Posso cancelar quando quiser?</h3>
               <p className="text-muted-foreground">Sim! Seu acesso continua até o fim do período pago.</p>
             </Card>
-            <Card className="p-6">
+            <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 p-6">
               <h3 className="font-bold mb-2">Qual a diferença mensal vs anual?</h3>
               <p className="text-muted-foreground">55% de desconto no anual (R$ 159,90/ano vs R$ 358,80/ano).</p>
             </Card>

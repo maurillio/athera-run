@@ -306,7 +306,7 @@ export default function PreventionPage() {
         </Tabs>
 
         {/* Daily Routine */}
-        <Card className="mt-8">
+        <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mt-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Repeat className="h-5 w-5" />

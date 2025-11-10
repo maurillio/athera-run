@@ -96,7 +96,7 @@ export default async function GlossaryPage() {
         <SearchableGlossary terms={terms} groupedTerms={groupedTerms} />
 
         {/* Quick Reference */}
-        <Card className="mt-8">
+        <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mt-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />

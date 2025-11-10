@@ -156,20 +156,20 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Painel Administrativo</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Painel Administrativo</h1>
+          <p className="text-muted-foreground text-lg">
             Gerencie usuários e permissões da plataforma
           </p>
         </div>
 
         {/* Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total de Usuários
@@ -180,36 +180,36 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Usuários Premium
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-600">{stats.premium}</div>
+              <div className="text-2xl font-bold text-yellow-600">{stats.premium}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Administradores
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{stats.admins}</div>
+              <div className="text-2xl font-bold text-blue-600">{stats.admins}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Perfis Criados
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">{stats.withProfile}</div>
+              <div className="text-2xl font-bold text-green-600">{stats.withProfile}</div>
             </CardContent>
           </Card>
         </div>
