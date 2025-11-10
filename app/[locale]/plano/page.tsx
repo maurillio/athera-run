@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle, Trophy, Activity, Heart, Droplets, Mountain, Clock } from 'lucide-react';
 import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
+import { WorkoutDetails } from '@/components/workout-details';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -521,52 +522,14 @@ export default function PlanoPage() {
                                     )}
                                   </div>
                                 ) : (
-                                  // EXPANDIDO - Mostrar todos os treinos com detalhes completos
+                                  // EXPANDIDO - Mostrar todos os treinos com detalhes completos usando WorkoutDetails
                                   <div className="space-y-3 pt-3 border-t border-gray-200">
                                     {dayWorkouts.map((workout) => (
-                                      <div
+                                      <WorkoutDetails 
                                         key={workout.id}
-                                        className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-3"
-                                      >
-                                        <div className="flex items-start gap-3">
-                                          <div className="flex-shrink-0">
-                                            {getWorkoutIcon(workout.type, workout.title)}
-                                          </div>
-                                          <div className="flex-1 min-w-0">
-                                            <p className="text-base font-semibold text-gray-900 mb-2">
-                                              {workout.title}
-                                            </p>
-                                            {workout.isCompleted && (
-                                              <Badge className="bg-green-500 text-white text-xs mb-2">
-                                                ✓ Concluído
-                                              </Badge>
-                                            )}
-                                            {workout.description && (
-                                              <p className="text-sm text-gray-600 leading-relaxed mt-2">
-                                                {workout.description}
-                                              </p>
-                                            )}
-                                          </div>
-                                        </div>
-                                        
-                                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
-                                          {workout.distance && (
-                                            <Badge variant="secondary" className="text-xs">
-                                              📏 {workout.distance} km
-                                            </Badge>
-                                          )}
-                                          {workout.targetPace && (
-                                            <Badge variant="secondary" className="text-xs">
-                                              ⚡ {workout.targetPace}
-                                            </Badge>
-                                          )}
-                                          {workout.duration && !workout.distance && (
-                                            <Badge variant="secondary" className="text-xs">
-                                              ⏱️ {workout.duration} min
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      </div>
+                                        workout={workout}
+                                        isExpanded={true}
+                                      />
                                     ))}
                                   </div>
                                 )}
