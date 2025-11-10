@@ -506,6 +506,188 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
 }
 
 /**
+ * Valida estratégia gerada pela IA com foco em corridas-alvo
+ * Retorna {isValid, errors[], warnings[]}
+ */
+function validateStrategyWithRaces(
+  strategy: any, 
+  profile: AIUserProfile, 
+  totalWeeks: number
+): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  
+  // Verificar campos obrigatórios
+  if (!strategy.phases || !Array.isArray(strategy.phases) || strategy.phases.length === 0) {
+    errors.push('Estratégia sem fases definidas');
+    return { isValid: false, errors, warnings };
+  }
+  
+  // Verificar soma das semanas
+  const totalPhaseWeeks = strategy.phases.reduce((sum: number, p: any) => sum + (p.weeks || 0), 0);
+  if (Math.abs(totalPhaseWeeks - totalWeeks) > 1) {
+    errors.push(`Soma das fases (${totalPhaseWeeks}) diferente do total (${totalWeeks})`);
+  }
+  
+  // Se não há Corrida A, validação básica suficiente
+  const raciaA = profile.raceGoals?.find(r => r.priority === 'A');
+  if (!raciaA) {
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+  
+  console.log('[VALIDAÇÃO] Validando estratégia para Corrida A...');
+  
+  // VALIDAÇÕES CRÍTICAS PARA CORRIDA A
+  
+  // 1. Última fase deve ser Taper
+  const lastPhase = strategy.phases[strategy.phases.length - 1];
+  const isTaperPhase = lastPhase.name.toLowerCase().includes('taper') || 
+                       lastPhase.name.toLowerCase().includes('afinamento') ||
+                       lastPhase.name.toLowerCase().includes('polimento') ||
+                       lastPhase.name.toLowerCase().includes('ajuste');
+  
+  if (!isTaperPhase) {
+    errors.push(`Última fase "${lastPhase.name}" NÃO é taper! Corrida A OBRIGATORIAMENTE precisa de taper.`);
+  }
+  
+  // 2. Taper deve ter 2-3 semanas (mínimo 2 para Corrida A)
+  if (isTaperPhase && lastPhase.weeks < 2) {
+    errors.push(`Taper com apenas ${lastPhase.weeks} semana(s) - INSUFICIENTE! Mínimo 2 semanas para Corrida A.`);
+  }
+  
+  // 3. Volume deve REDUZIR no taper (pelo menos 40%)
+  if (isTaperPhase) {
+    const volumeStart = lastPhase.weeklyKmStart || 0;
+    const volumeEnd = lastPhase.weeklyKmEnd || 0;
+    const reduction = volumeStart > 0 ? (volumeStart - volumeEnd) / volumeStart : 0;
+    
+    if (reduction < 0.4) {
+      errors.push(`Redução de volume no taper ${(reduction * 100).toFixed(0)}% INSUFICIENTE! Mínimo 40% (ideal 60-70%).`);
+    }
+  }
+  
+  // 4. Deve haver fase de PICO antes do taper
+  if (strategy.phases.length >= 3) {
+    const peakPhase = strategy.phases[strategy.phases.length - 2];
+    const isPeakPhase = peakPhase.name.toLowerCase().includes('pico') ||
+                        peakPhase.name.toLowerCase().includes('peak') ||
+                        peakPhase.name.toLowerCase().includes('intensificação') ||
+                        peakPhase.weeklyKmEnd >= peakPhase.weeklyKmStart; // volume crescente ou mantido
+    
+    if (!isPeakPhase) {
+      warnings.push(`Fase antes do taper ("${peakPhase.name}") deveria ser fase de PICO com volume máximo`);
+    }
+  }
+  
+  // 5. Volume deve crescer gradualmente (máx 20% por fase)
+  for (let i = 1; i < strategy.phases.length - 1; i++) { // Não checar última fase (taper)
+    const prevPhase = strategy.phases[i - 1];
+    const currPhase = strategy.phases[i];
+    
+    const prevEnd = prevPhase.weeklyKmEnd || 0;
+    const currStart = currPhase.weeklyKmStart || 0;
+    
+    if (prevEnd > 0 && currStart > prevEnd * 1.3) { // Salto > 30%
+      warnings.push(`Salto de volume muito grande entre fases: ${prevEnd}km → ${currStart}km (+${(((currStart - prevEnd) / prevEnd) * 100).toFixed(0)}%)`);
+    }
+  }
+  
+  const isValid = errors.length === 0;
+  
+  if (isValid) {
+    console.log('[VALIDAÇÃO] ✅ Estratégia VÁLIDA');
+  } else {
+    console.error('[VALIDAÇÃO] ❌ Estratégia INVÁLIDA:', errors);
+  }
+  
+  if (warnings.length > 0) {
+    console.warn('[VALIDAÇÃO] ⚠️ Avisos:', warnings);
+  }
+  
+  return { isValid, errors, warnings };
+}
+
+/**
+ * Tenta corrigir automaticamente uma estratégia inválida
+ */
+function autoCorrectStrategy(
+  strategy: any,
+  profile: AIUserProfile,
+  totalWeeks: number,
+  errors: string[]
+): any {
+  console.log('[AUTO-CORREÇÃO] Tentando corrigir estratégia...');
+  
+  const corrected = JSON.parse(JSON.stringify(strategy)); // Deep clone
+  
+  const raciaA = profile.raceGoals?.find(r => r.priority === 'A');
+  if (!raciaA) return corrected;
+  
+  // CORREÇÃO 1: Garantir fase de Taper no final
+  const lastPhase = corrected.phases[corrected.phases.length - 1];
+  const isTaper = lastPhase.name.toLowerCase().includes('taper') ||
+                  lastPhase.name.toLowerCase().includes('afinamento');
+  
+  if (!isTaper) {
+    console.log('[AUTO-CORREÇÃO] Adicionando fase de Taper...');
+    
+    // Pegar volume da última fase
+    const lastVolume = lastPhase.weeklyKmEnd || lastPhase.weeklyKmStart || 50;
+    
+    // Reduzir última fase em 1-2 semanas
+    if (lastPhase.weeks > 2) {
+      lastPhase.weeks -= 2;
+      
+      // Adicionar taper de 2 semanas
+      corrected.phases.push({
+        name: 'Taper (Afinamento)',
+        weeks: 2,
+        focus: 'Recuperação e preparação final para a prova',
+        description: 'Redução progressiva de volume mantendo intensidade',
+        weeklyKmStart: lastVolume,
+        weeklyKmEnd: Math.round(lastVolume * 0.3),
+        keyWorkouts: {
+          easy: { frequency: 2, description: 'Corridas fáceis curtas para manutenção' },
+          long: { distanceStart: Math.round(lastVolume * 0.3), distanceEnd: 0, description: 'Sem longão na semana da prova' },
+          quality: { type: 'tempo', frequency: 1, description: 'Apenas manter pernas ativas' },
+          strength: { frequency: 1, description: 'Musculação leve' }
+        }
+      });
+    }
+  }
+  
+  // CORREÇÃO 2: Ajustar duração do taper (mínimo 2 semanas)
+  const taperPhase = corrected.phases[corrected.phases.length - 1];
+  if (taperPhase.weeks < 2) {
+    console.log(`[AUTO-CORREÇÃO] Ajustando taper de ${taperPhase.weeks} para 2 semanas...`);
+    const diff = 2 - taperPhase.weeks;
+    
+    // Pegar semanas de outra fase
+    if (corrected.phases.length > 1) {
+      const prevPhase = corrected.phases[corrected.phases.length - 2];
+      if (prevPhase.weeks > diff) {
+        prevPhase.weeks -= diff;
+        taperPhase.weeks = 2;
+      }
+    }
+  }
+  
+  // CORREÇÃO 3: Garantir redução de volume no taper (60-70%)
+  const volumeStart = taperPhase.weeklyKmStart || 50;
+  const volumeEnd = taperPhase.weeklyKmEnd || volumeStart;
+  const reduction = (volumeStart - volumeEnd) / volumeStart;
+  
+  if (reduction < 0.5) {
+    console.log(`[AUTO-CORREÇÃO] Ajustando redução de volume no taper para 65%...`);
+    taperPhase.weeklyKmEnd = Math.round(volumeStart * 0.35); // 65% de redução
+  }
+  
+  console.log('[AUTO-CORREÇÃO] Estratégia corrigida!');
+  
+  return corrected;
+}
+
+/**
  * Gera um plano de treinamento usando IA
  * A IA gera a estrutura e estratégia com exemplos, depois expandimos para todas as semanas
  */
@@ -602,7 +784,116 @@ Você tem liberdade total para ajustar volumes, intensidades e estruturas basead
 *   Você deve retornar **APENAS** o objeto JSON estritamente válido, sem formatação Markdown, comentários ou texto adicional.
 *   O campo planRationale deve ser uma explicação detalhada e profissional da sua estratégia, justificando as fases, o volume e a progressão escolhida.
 
-Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.`;
+Responda APENAS com o JSON válido, sem formatação markdown ou explicações adicionais.
+
+## 📚 EXEMPLO PRÁTICO COMPLETO - APRENDA COM ESTE MODELO
+
+**Cenário:** Atleta intermediário (correndo 35km/sem), objetivo Meia Maratona em 12 semanas.
+
+**Estrutura CORRETA das Fases:**
+
+\`\`\`json
+{
+  "totalWeeks": 12,
+  "vdot": 45,
+  "paces": {
+    "easy": "6:15 min/km",
+    "marathon": "5:30 min/km", 
+    "threshold": "5:10 min/km",
+    "interval": "4:50 min/km",
+    "repetition": "4:30 min/km"
+  },
+  "phases": [
+    {
+      "name": "Base Aeróbica",
+      "weeks": 4,
+      "focus": "Construir volume aeróbico com progressão gradual",
+      "weeklyKmStart": 35,
+      "weeklyKmEnd": 45,
+      "keyWorkouts": {
+        "easy": { "frequency": 2, "description": "Corridas fáceis 5-8km em pace confortável" },
+        "long": { "distanceStart": 12, "distanceEnd": 16, "description": "Progressão gradual do longão" },
+        "quality": { "type": "fartlek", "frequency": 1, "description": "Fartlek leve 1x/sem" },
+        "strength": { "frequency": 2, "description": "Musculação funcional 2x/sem" }
+      }
+    },
+    {
+      "name": "Desenvolvimento",
+      "weeks": 4,
+      "focus": "Introduzir qualidade específica e aumentar volume",
+      "weeklyKmStart": 45,
+      "weeklyKmEnd": 55,
+      "keyWorkouts": {
+        "easy": { "frequency": 2, "description": "Corridas fáceis 6-8km" },
+        "long": { "distanceStart": 16, "distanceEnd": 20, "description": "Longões progressivos" },
+        "quality": { "type": "tempo", "frequency": 2, "description": "Tempo run + intervalos 1km" },
+        "strength": { "frequency": 2, "description": "Musculação + core" }
+      }
+    },
+    {
+      "name": "Pico",
+      "weeks": 2,
+      "focus": "Volume MÁXIMO com qualidade intensa - última corrida longa",
+      "weeklyKmStart": 55,
+      "weeklyKmEnd": 60,
+      "keyWorkouts": {
+        "easy": { "frequency": 2, "description": "Corridas fáceis 6-8km" },
+        "long": { "distanceStart": 20, "distanceEnd": 22, "description": "LONGÃO MÁXIMO na semana 10" },
+        "quality": { "type": "intervals", "frequency": 2, "description": "Ritmo de prova + VO2max" },
+        "strength": { "frequency": 2, "description": "Musculação mantida" }
+      }
+    },
+    {
+      "name": "Taper",
+      "weeks": 2,
+      "focus": "Redução progressiva de volume mantendo intensidade",
+      "weeklyKmStart": 60,
+      "weeklyKmEnd": 20,
+      "keyWorkouts": {
+        "easy": { "frequency": 2, "description": "Corridas fáceis CURTAS 5km" },
+        "long": { "distanceStart": 15, "distanceEnd": 0, "description": "Sem longão na semana da prova!" },
+        "quality": { "type": "tempo", "frequency": 1, "description": "Apenas manter pernas ativas" },
+        "strength": { "frequency": 1, "description": "Musculação LEVE" }
+      }
+    }
+  ]
+}
+\`\`\`
+
+**Distribuição Semanal Correta:**
+
+- Semana 1-4: 35 → 40 → 42 → 45km (Base, +10% máx por semana)
+- Semana 5-8: 48 → 50 → 52 → 55km (Desenvolvimento, introduzir qualidade)
+- Semana 9-10: 57 → 60km (Pico, MÁXIMO volume)
+  * **Semana 10: ÚLTIMA corrida longa (20-22km)**
+- Semana 11: 42km (70% do pico = TAPER 1)
+  * Longão reduzido 14-15km
+  * Qualidade curta em ritmo
+- Semana 12: 20km (30% do pico = TAPER FINAL / SEMANA DA PROVA)
+  * Segunda: 5km fácil
+  * Terça: DESCANSO
+  * Quarta: 5km + 3x800m ritmo prova
+  * Quinta: 3km muito fácil
+  * Sexta: DESCANSO TOTAL
+  * Sábado: DESCANSO TOTAL
+  * **Domingo: 🏁 MEIA MARATONA**
+
+**ERROS QUE VOCÊ NUNCA DEVE COMETER:**
+❌ NUNCA coloque longão na semana da prova
+❌ NUNCA aumente volume até a última semana (pico deve ser semana -3)
+❌ NUNCA pule o taper para Corrida A (2 semanas obrigatório)
+❌ NUNCA faça treinos intensos na semana da prova (só manutenção leve)
+❌ NUNCA ignore corridas cadastradas
+
+**ACERTOS OBRIGATÓRIOS:**
+✅ Pico de volume 3 semanas antes da prova
+✅ Última corrida longa 2 semanas antes  
+✅ Taper progressivo: 100% → 70% → 30%
+✅ Manter intensidade durante taper (reduzir volume, não intensidade)
+✅ Descanso total 1-2 dias antes da prova
+✅ No dia da prova: type='race' com informações da corrida
+
+---`;
 
   const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento COMPLETA e PERSONALIZADA para este atleta.\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
   "paces": {\n    "easy": "X:XX min/km",\n    "marathon": "X:XX min/km",\n    "threshold": "X:XX min/km",\n    "interval": "X:XX min/km",\n    "repetition": "X:XX min/km"\n  },\n  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",\n  "keyConsiderations": ["consideração 1", "consideração 2", ...],
@@ -771,7 +1062,32 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
     );
 
     const strategy = JSON.parse(aiResponse);
-    console.log('[AI PLAN] Estratégia gerada e validada com sucesso!');
+    console.log('[AI PLAN] Estratégia gerada pela IA!');
+    
+    // ✅ VALIDAÇÃO AUTOMÁTICA DA ESTRATÉGIA
+    const validation = validateStrategyWithRaces(strategy, profile, totalWeeks);
+    if (!validation.isValid) {
+      console.error('[AI PLAN] ❌ ESTRATÉGIA INVÁLIDA:', validation.errors);
+      console.error('[AI PLAN] A IA gerou uma estratégia que não respeita as regras críticas!');
+      
+      // Tentar corrigir automaticamente
+      console.log('[AI PLAN] Tentando corrigir automaticamente...');
+      const correctedStrategy = autoCorrectStrategy(strategy, profile, totalWeeks, validation.errors);
+      
+      // Validar novamente
+      const revalidation = validateStrategyWithRaces(correctedStrategy, profile, totalWeeks);
+      if (revalidation.isValid) {
+        console.log('[AI PLAN] ✅ Estratégia corrigida automaticamente!');
+        strategy.phases = correctedStrategy.phases;
+      } else {
+        console.error('[AI PLAN] ❌ Não foi possível corrigir automaticamente. Erros:', revalidation.errors);
+        throw new Error('A estratégia gerada não atende aos requisitos mínimos de qualidade. Por favor, tente novamente.');
+      }
+    } else {
+      console.log('[AI PLAN] ✅ Estratégia validada com sucesso!');
+      validation.warnings.forEach(w => console.warn(`[AI PLAN] ⚠️ ${w}`));
+    }
+    
     console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
 
     // Expandir estratégia em plano completo (com customStartDate se fornecida)
