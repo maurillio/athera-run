@@ -7,6 +7,37 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v2.0.2] - 2025-11-11 00:30 UTC
+
+### 🔧 CORREÇÃO - URL e Character Encoding
+
+**HOTFIX: Correção de URL de produção e encoding UTF-8**
+
+#### ❌ Problemas Corrigidos
+1. **URL Incorreta**: 
+   - HTTP Referer estava configurado como "athera-run.com" (com hífen)
+   - URL correta de produção é "atherarun.com" (SEM hífen)
+   
+2. **Character Encoding**:
+   - Headers não especificavam charset UTF-8 explicitamente
+   - Poderia causar problemas com caracteres portugueses (ç, ã, õ, etc)
+
+#### ✅ Correções Aplicadas
+- **URL Corrigida**: `athera-run.com` → `atherarun.com` em `HTTP-Referer`
+- **UTF-8 Explícito**: Adicionado `charset=utf-8` em todos os headers `Content-Type`
+- **Arquivo**: `lib/llm-client.ts`
+
+#### 🎯 Impacto
+- ✅ URLs de referência corretas para produção
+- ✅ Melhor suporte para caracteres especiais
+- ✅ Prevenção de problemas de encoding
+
+#### 📝 Commit
+- SHA: `2b495bbb`
+- Arquivo modificado: `lib/llm-client.ts`
+
+---
+
 ## [v2.0.1] - 2025-11-10 23:15 UTC
 
 ### 🔧 CORREÇÃO CRÍTICA - LLM Provider
