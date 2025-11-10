@@ -8,6 +8,34 @@
 
 ## 🚀 Linha do Tempo de Versões
 
+### v2.0.0-debug - Debug de Corridas Alvo (10/Nov/2025 22:54 UTC) 🔍
+
+**INVESTIGAÇÃO: Corrida alvo não aparece no dia correto do plano**
+
+**Problema Reportado:**
+- Ao gerar plano, corrida alvo aparece como "Longão" no dia da prova
+- Sistema não está considerando a data cadastrada da corrida
+
+**Debug Implementado:**
+- ✅ Logs extensivos em `/api/plan/generate`
+- ✅ Verificação se corrida alvo está no plano após geração
+- ✅ Logs detalhados semana por semana da detecção de corridas
+- ✅ Debug completo do processo de matching data da corrida x semana do plano
+
+**Arquivos Modificados:**
+- `app/api/plan/generate/route.ts` - Logs de verificação
+- `lib/ai-plan-generator.ts` - Logs de detecção de corrida por semana
+
+**Próximos Passos:**
+1. Testar com novo usuário e coletar logs
+2. Analisar onde exatamente a detecção está falhando
+3. Implementar correção cirúrgica
+4. Validar correção
+
+**Documentação:** Ver `DEBUG_RACE_GOAL_DETECTION.md`
+
+---
+
 ### v2.0.0 - Sistema Avançado de Apresentação de Treinos (10/Nov/2025 22:00 UTC) 🏆
 
 **MAIOR UPGRADE NO SISTEMA DE TREINOS - TRANSFORMAÇÃO COMPLETA**
