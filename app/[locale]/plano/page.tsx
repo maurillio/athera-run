@@ -73,6 +73,7 @@ export default function PlanoPage() {
   const [weeks, setWeeks] = useState<CustomWeek[]>([]);
   const [currentWeekNum, setCurrentWeekNum] = useState(1);
   const [viewingWeek, setViewingWeek] = useState(1);
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -210,6 +211,39 @@ export default function PlanoPage() {
   const getDayNumber = (date: string) => {
     const d = dayjs(date).tz(appTimezone);
     return d.format('DD');
+  };
+
+  // Group workouts by day
+  const groupWorkoutsByDay = (workouts: any[]) => {
+    const grouped = new Map<string, any[]>();
+    
+    workouts.forEach((workout) => {
+      const dateKey = dayjs(workout.date).tz(appTimezone).format('YYYY-MM-DD');
+      if (!grouped.has(dateKey)) {
+        grouped.set(dateKey, []);
+      }
+      grouped.get(dateKey)!.push(workout);
+    });
+    
+    return grouped;
+  };
+
+  const toggleDay = (dateKey: string) => {
+    setExpandedDays(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(dateKey)) {
+        newSet.delete(dateKey);
+      } else {
+        newSet.add(dateKey);
+      }
+      return newSet;
+    });
+  };
+
+  const isDayExpanded = (dateKey: string, isToday: boolean) => {
+    // Dia de hoje sempre expandido
+    if (isToday) return true;
+    return expandedDays.has(dateKey);
   };
 
   return (
@@ -373,106 +407,208 @@ export default function PlanoPage() {
                   </div>
 
                   {/* Weekly Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
                     {currentWeek.workouts.length > 0 ? (
-                      currentWeek.workouts.map((workout: any) => {
-                        const workoutDate = dayjs(workout.date).tz(appTimezone).startOf('day');
-                        const today = dayjs().tz(appTimezone).startOf('day');
-                        const isPastUncompleted = workoutDate.isBefore(today, 'day') && !workout.isCompleted;
-                        const isToday = workoutDate.isSame(today, 'day');
-                        const isFuture = workoutDate.isAfter(today, 'day');
+                      (() => {
+                        const groupedWorkouts = groupWorkoutsByDay(currentWeek.workouts);
+                        const sortedDates = Array.from(groupedWorkouts.keys()).sort();
 
-                        return (
-                          <div
-                            key={workout.id}
-                            className={`
-                              relative p-3 rounded-lg border-2 transition-all hover:shadow-md cursor-pointer
-                              ${workout.isCompleted
-                                ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400'
-                                : isPastUncompleted
-                                  ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400'
-                                  : isToday
-                                    ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 hover:border-orange-500 ring-2 ring-orange-300'
-                                    : 'bg-white border-gray-300 hover:border-gray-400'
-                              }
-                            `}
-                          >
-                            {/* Day Header */}
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="text-center">
-                                <div className="text-xs font-bold text-gray-600">
-                                  {getDayName(workout.date)}
+                        return sortedDates.map((dateKey) => {
+                          const dayWorkouts = groupedWorkouts.get(dateKey)!;
+                          const firstWorkout = dayWorkouts[0];
+                          const workoutDate = dayjs(firstWorkout.date).tz(appTimezone).startOf('day');
+                          const today = dayjs().tz(appTimezone).startOf('day');
+                          const isToday = workoutDate.isSame(today, 'day');
+                          const expanded = isDayExpanded(dateKey, isToday);
+                          
+                          const allCompleted = dayWorkouts.every(w => w.isCompleted);
+                          const someCompleted = dayWorkouts.some(w => w.isCompleted);
+                          const isPastUncompleted = workoutDate.isBefore(today, 'day') && !allCompleted;
+                          const hasRaceDay = dayWorkouts.some(w => 
+                            w.title.toLowerCase().includes('corrida alvo') || 
+                            w.title.toLowerCase().includes('race day') ||
+                            w.title.toLowerCase().includes('prova')
+                          );
+
+                          return (
+                            <div
+                              key={dateKey}
+                              onClick={() => !isToday && toggleDay(dateKey)}
+                              className={`
+                                relative rounded-lg border-2 transition-all cursor-pointer
+                                ${allCompleted
+                                  ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
+                                  : isPastUncompleted
+                                    ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
+                                    : isToday
+                                      ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
+                                      : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
+                                }
+                              `}
+                            >
+                              {/* Day Header - Sempre visível */}
+                              <div className="p-3 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <div className="text-center">
+                                      <div className="text-xs font-bold text-gray-600">
+                                        {getDayName(firstWorkout.date)}
+                                      </div>
+                                      <div className={`text-lg font-bold ${isToday ? 'text-orange-600' : 'text-gray-900'}`}>
+                                        {getDayNumber(firstWorkout.date)}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Contador de atividades quando mais de uma */}
+                                    {dayWorkouts.length > 1 && (
+                                      <Badge variant="secondary" className="text-xs">
+                                        {dayWorkouts.length} atividades
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  
+                                  {/* Status Icon */}
+                                  <div>
+                                    {allCompleted ? (
+                                      <div className="bg-green-500 rounded-full p-1">
+                                        <CheckCircle2 className="h-4 w-4 text-white" />
+                                      </div>
+                                    ) : isPastUncompleted ? (
+                                      <div className="bg-red-500 rounded-full p-1">
+                                        <XCircle className="h-4 w-4 text-white" />
+                                      </div>
+                                    ) : isToday ? (
+                                      <div className="bg-orange-500 rounded-full p-1 animate-pulse">
+                                        <Activity className="h-4 w-4 text-white" />
+                                      </div>
+                                    ) : null}
+                                  </div>
                                 </div>
-                                <div className={`text-lg font-bold ${isToday ? 'text-orange-600' : 'text-gray-900'}`}>
-                                  {getDayNumber(workout.date)}
+
+                                {/* Mini preview quando NÃO expandido - Mostra ícones */}
+                                {!expanded && dayWorkouts.length > 1 && (
+                                  <div className="flex gap-1 mt-2 flex-wrap">
+                                    {dayWorkouts.map((workout, idx) => (
+                                      <div key={idx} className="flex items-center gap-1">
+                                        {getWorkoutIcon(workout.type, workout.title)}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Conteúdo Expandido ou Compacto */}
+                              <div className="p-3">
+                                {!expanded ? (
+                                  // COMPACTO - Uma atividade ou resumo
+                                  <div className="space-y-2">
+                                    {dayWorkouts.length === 1 ? (
+                                      // Apenas 1 treino - mostrar completo
+                                      <div className="text-center space-y-2">
+                                        <div className="flex justify-center">
+                                          {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
+                                        </div>
+                                        <p className="text-xs font-semibold line-clamp-2">
+                                          {firstWorkout.title}
+                                        </p>
+                                        {firstWorkout.distance && (
+                                          <Badge variant="secondary" className="text-xs">
+                                            {firstWorkout.distance} km
+                                          </Badge>
+                                        )}
+                                        {firstWorkout.duration && !firstWorkout.distance && (
+                                          <Badge variant="secondary" className="text-xs">
+                                            {firstWorkout.duration} min
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      // Múltiplos treinos - mostrar primeiro + contador
+                                      <div className="text-center space-y-2">
+                                        <div className="flex justify-center">
+                                          {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
+                                        </div>
+                                        <p className="text-xs font-semibold line-clamp-1">
+                                          {firstWorkout.title}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                          + {dayWorkouts.length - 1} mais
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                ) : (
+                                  // EXPANDIDO - Mostrar todos os treinos
+                                  <div className="space-y-3">
+                                    {dayWorkouts.map((workout) => (
+                                      <div
+                                        key={workout.id}
+                                        className="p-3 bg-white rounded-lg border border-gray-200 space-y-2"
+                                      >
+                                        <div className="flex items-start gap-2">
+                                          {getWorkoutIcon(workout.type, workout.title)}
+                                          <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-semibold line-clamp-2">
+                                              {workout.title}
+                                            </p>
+                                            {workout.isCompleted && (
+                                              <Badge className="bg-green-500 text-white text-xs mt-1">
+                                                ✓ Concluído
+                                              </Badge>
+                                            )}
+                                          </div>
+                                        </div>
+                                        
+                                        {workout.description && (
+                                          <p className="text-xs text-gray-600 line-clamp-3">
+                                            {workout.description}
+                                          </p>
+                                        )}
+                                        
+                                        <div className="flex flex-wrap gap-2">
+                                          {workout.distance && (
+                                            <Badge variant="secondary" className="text-xs">
+                                              📏 {workout.distance} km
+                                            </Badge>
+                                          )}
+                                          {workout.targetPace && (
+                                            <Badge variant="secondary" className="text-xs">
+                                              ⚡ {workout.targetPace}
+                                            </Badge>
+                                          )}
+                                          {workout.duration && !workout.distance && (
+                                            <Badge variant="secondary" className="text-xs">
+                                              ⏱️ {workout.duration} min
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Badges Especiais */}
+                              {hasRaceDay && (
+                                <div className="absolute -top-2 -right-2">
+                                  <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-2 py-1 shadow-lg">
+                                    <Trophy className="h-3 w-3 mr-1" />
+                                    META
+                                  </Badge>
                                 </div>
-                              </div>
-                              
-                              {/* Status Icon */}
-                              <div>
-                                {workout.isCompleted ? (
-                                  <div className="bg-green-500 rounded-full p-1">
-                                    <CheckCircle2 className="h-4 w-4 text-white" />
-                                  </div>
-                                ) : isPastUncompleted ? (
-                                  <div className="bg-red-500 rounded-full p-1">
-                                    <XCircle className="h-4 w-4 text-white" />
-                                  </div>
-                                ) : isToday ? (
-                                  <div className="bg-orange-500 rounded-full p-1 animate-pulse">
-                                    <Activity className="h-4 w-4 text-white" />
-                                  </div>
-                                ) : null}
-                              </div>
-                            </div>
-
-                            {/* Workout Icon */}
-                            <div className="flex justify-center mb-2">
-                              {getWorkoutIcon(workout.type, workout.title)}
-                            </div>
-
-                            {/* Workout Title */}
-                            <div className="text-center">
-                              <p className="text-xs font-semibold line-clamp-2 mb-1">
-                                {workout.title}
-                              </p>
-                              
-                              {/* Distance/Duration Badge */}
-                              {workout.distance && (
-                                <Badge variant="secondary" className="text-xs px-1 py-0">
-                                  {workout.distance} km
-                                </Badge>
                               )}
-                              {workout.duration && !workout.distance && (
-                                <Badge variant="secondary" className="text-xs px-1 py-0">
-                                  {workout.duration} min
-                                </Badge>
+
+                              {isToday && (
+                                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                                  <Badge className="bg-orange-500 text-white text-xs px-2">
+                                    HOJE
+                                  </Badge>
+                                </div>
                               )}
                             </div>
-
-                            {/* Race Badge */}
-                            {(workout.title.toLowerCase().includes('corrida alvo') || 
-                              workout.title.toLowerCase().includes('race day') ||
-                              workout.title.toLowerCase().includes('prova')) && (
-                              <div className="absolute -top-2 -right-2">
-                                <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-2 py-1 shadow-lg">
-                                  <Trophy className="h-3 w-3 mr-1" />
-                                  META
-                                </Badge>
-                              </div>
-                            )}
-
-                            {/* Today Badge */}
-                            {isToday && (
-                              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                                <Badge className="bg-orange-500 text-white text-xs px-2">
-                                  HOJE
-                                </Badge>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })
+                          );
+                        });
+                      })()
                     ) : (
                       <div className="col-span-7 text-center py-8 text-muted-foreground">
                         <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
