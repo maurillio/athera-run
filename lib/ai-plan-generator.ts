@@ -943,6 +943,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
 /**
  * Extrai informações de disponibilidade do perfil, separadas por tipo de atividade
+ * Suporta AMBAS estruturas: v1.7.3 (trainingSchedule) e v1.2.0 (trainingActivities)
  */
 function getActivityAvailability(profile: AIUserProfile): {
   runningDays: number[];
@@ -958,7 +959,61 @@ function getActivityAvailability(profile: AIUserProfile): {
   const otherActivityDays = new Map<string, number[]>();
   const preferredTimes = new Map<string, string>();
   
-  if (profile.trainingActivities && profile.trainingActivities.length > 0) {
+  // PRIORIDADE 1: Nova estrutura (v1.7.3) - trainingSchedule
+  if (profile.trainingSchedule) {
+    console.log('[AVAILABILITY] Usando estrutura v1.7.3 (trainingSchedule)');
+    
+    const schedule = profile.trainingSchedule;
+    const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    
+    Object.keys(schedule).forEach(dayKey => {
+      const dayNum = parseInt(dayKey);
+      const dayData = schedule[dayNum];
+      
+      if (!dayData) return;
+      
+      // Corrida
+      if (dayData.running) {
+        runningDays.push(dayNum);
+        console.log(`[AVAILABILITY] ✅ Corrida no dia ${dayNum} (${daysOfWeek[dayNum]})`);
+      }
+      
+      // Outras atividades
+      if (dayData.activities && Array.isArray(dayData.activities)) {
+        dayData.activities.forEach(activity => {
+          const activityLower = activity.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          
+          if (activityLower === 'musculacao' || activityLower === 'musculação') {
+            strengthDays.push(dayNum);
+            console.log(`[AVAILABILITY] ✅ Musculação no dia ${dayNum} (${daysOfWeek[dayNum]})`);
+          } else if (activityLower === 'natacao' || activityLower === 'natação') {
+            swimmingDays.push(dayNum);
+            console.log(`[AVAILABILITY] ✅ Natação no dia ${dayNum} (${daysOfWeek[dayNum]})`);
+          } else {
+            // Outras atividades (Yoga, Ciclismo, Pilates, etc.)
+            const activityKey = activity.toLowerCase().replace(/\s+/g, '_');
+            if (!otherActivityDays.has(activityKey)) {
+              otherActivityDays.set(activityKey, []);
+            }
+            otherActivityDays.get(activityKey)!.push(dayNum);
+            console.log(`[AVAILABILITY] ✅ ${activity} no dia ${dayNum} (${daysOfWeek[dayNum]})`);
+          }
+        });
+      }
+    });
+    
+    // Esportes customizados
+    if (profile.customActivities && Array.isArray(profile.customActivities)) {
+      profile.customActivities.forEach(sport => {
+        console.log(`[AVAILABILITY] ℹ️ Esporte adicional praticado: ${sport}`);
+        // Esportes customizados já foram mapeados acima no trainingSchedule
+      });
+    }
+  }
+  // FALLBACK: Estrutura antiga (v1.2.0) - trainingActivities
+  else if (profile.trainingActivities && profile.trainingActivities.length > 0) {
+    console.log('[AVAILABILITY] Usando estrutura v1.2.0 (trainingActivities)');
+    
     profile.trainingActivities.forEach((activity: any) => {
       if (!activity.availableDays || activity.availableDays.length === 0) return;
       
@@ -984,21 +1039,28 @@ function getActivityAvailability(profile: AIUserProfile): {
     });
   }
   
-  // Fallbacks caso não haja configuração
-  // APENAS corrida tem fallback (essencial para plano de corrida)
-  // Todas as outras atividades: usuário escolhe 100%
-  const finalRunningDays = runningDays.length > 0 ? [...new Set(runningDays)].sort() : [0, 2, 4]; // Dom, Ter, Qui
-  const finalStrengthDays = [...new Set(strengthDays)].sort(); // SEM fallback - só se usuário configurar
-  const finalSwimmingDays = [...new Set(swimmingDays)].sort(); // SEM fallback - só se usuário configurar
+  // Remover duplicatas e ordenar
+  const finalRunningDays = [...new Set(runningDays)].sort();
+  const finalStrengthDays = [...new Set(strengthDays)].sort();
+  const finalSwimmingDays = [...new Set(swimmingDays)].sort();
   
   // Validar que pelo menos corrida foi configurada
   if (finalRunningDays.length === 0) {
-    throw new Error('Configure pelo menos os dias de corrida para gerar seu plano de treinamento.');
+    console.warn('[AVAILABILITY] ⚠️ Nenhum dia de corrida configurado, usando fallback');
+    finalRunningDays.push(0, 2, 4); // Dom, Ter, Qui
   }
   
   const longRunDay = profile.longRunDay !== null && profile.longRunDay !== undefined 
     ? profile.longRunDay 
     : (finalRunningDays.includes(0) ? 0 : finalRunningDays[finalRunningDays.length - 1]);
+  
+  console.log('[AVAILABILITY] Resumo final:', {
+    runningDays: finalRunningDays,
+    strengthDays: finalStrengthDays,
+    swimmingDays: finalSwimmingDays,
+    otherActivities: Array.from(otherActivityDays.entries()),
+    longRunDay
+  });
   
   return {
     runningDays: finalRunningDays,
