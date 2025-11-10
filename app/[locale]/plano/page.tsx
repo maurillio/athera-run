@@ -436,6 +436,7 @@ export default function PlanoPage() {
                               onClick={() => !isToday && toggleDay(dateKey)}
                               className={`
                                 relative rounded-lg border-2 transition-all cursor-pointer
+                                ${expanded ? 'md:col-span-7' : ''}
                                 ${allCompleted
                                   ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
                                   : isPastUncompleted
@@ -538,21 +539,23 @@ export default function PlanoPage() {
                                     )}
                                   </div>
                                 ) : (
-                                  // EXPANDIDO - Mostrar todos os treinos
-                                  <div className="space-y-3">
+                                  // EXPANDIDO - Mostrar todos os treinos em layout responsivo
+                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {dayWorkouts.map((workout) => (
                                       <div
                                         key={workout.id}
-                                        className="p-3 bg-white rounded-lg border border-gray-200 space-y-2"
+                                        className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm space-y-3 hover:shadow-md transition-shadow"
                                       >
-                                        <div className="flex items-start gap-2">
-                                          {getWorkoutIcon(workout.type, workout.title)}
+                                        <div className="flex items-start gap-3">
+                                          <div className="flex-shrink-0">
+                                            {getWorkoutIcon(workout.type, workout.title)}
+                                          </div>
                                           <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-semibold line-clamp-2">
+                                            <p className="text-sm font-semibold text-gray-900 mb-1">
                                               {workout.title}
                                             </p>
                                             {workout.isCompleted && (
-                                              <Badge className="bg-green-500 text-white text-xs mt-1">
+                                              <Badge className="bg-green-500 text-white text-xs">
                                                 ✓ Concluído
                                               </Badge>
                                             )}
@@ -560,12 +563,12 @@ export default function PlanoPage() {
                                         </div>
                                         
                                         {workout.description && (
-                                          <p className="text-xs text-gray-600 line-clamp-3">
+                                          <p className="text-sm text-gray-600 leading-relaxed">
                                             {workout.description}
                                           </p>
                                         )}
                                         
-                                        <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
                                           {workout.distance && (
                                             <Badge variant="secondary" className="text-xs">
                                               📏 {workout.distance} km

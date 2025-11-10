@@ -7,6 +7,38 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.8.3] - 2025-11-10 19:55 UTC
+
+### ✨ UX ENHANCEMENT - Cards Expandidos em Largura Total
+
+#### Melhoria de Legibilidade
+- **Expansão em Largura Total**: Quando um dia é expandido, o card ocupa toda a linha (7 colunas)
+- **Grid Responsivo de Treinos**: Treinos do dia expandido aparecem em grid de 1-3 colunas
+- **Textos Maiores e Mais Legíveis**: Fontes e espaçamentos aumentados para melhor leitura
+- **Mobile-First**: No mobile, cada treino ocupa largura total (1 coluna)
+
+#### Comportamento por Dispositivo
+- **Mobile (< 768px)**: Card expandido = 1 coluna, treinos em lista vertical
+- **Tablet (768-1024px)**: Card expandido = largura total, treinos em 2 colunas
+- **Desktop (> 1024px)**: Card expandido = largura total, treinos em 3 colunas
+
+#### Benefícios
+- ✅ Leitura muito mais fácil em todos os dispositivos
+- ✅ Informações não ficam comprimidas
+- ✅ Descrições de treinos totalmente legíveis
+- ✅ Layout profissional e espaçoso
+- ✅ Melhor uso do espaço disponível
+- ✅ Perfeito para usuários com baixa compreensão tecnológica
+
+#### Arquivos Modificados
+- `app/[locale]/plano/page.tsx`: 
+  - Adicionado `md:col-span-7` quando expandido
+  - Grid interno dos treinos: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+  - Padding e espaçamentos aumentados
+  - Fontes maiores para melhor legibilidade
+
+---
+
 ## [1.8.2] - 2025-11-10 19:50 UTC
 
 ### ✨ UX REFINEMENT - Calendário Limpo e Simplificado

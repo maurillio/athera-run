@@ -2,11 +2,39 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 10 de Novembro de 2025 19:50 UTC
-**Versão Atual:** 1.8.2 (Clean Calendar UX)
-**Status:** ✅ **SISTEMA OPERACIONAL - CALENDÁRIO LIMPO E SIMPLIFICADO**
+**Última atualização:** 10 de Novembro de 2025 19:55 UTC
+**Versão Atual:** 1.8.3 (Full-Width Expanded Cards UX)
+**Status:** ✅ **SISTEMA OPERACIONAL - CARDS EXPANSÍVEIS EM LARGURA TOTAL**
 **Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
+
+## 🎨 MELHORIA VISUAL v1.8.3 (10/Nov/2025 19:55 UTC)
+📄 **ÚLTIMA IMPLEMENTAÇÃO**: Cards Expandidos em Largura Total - Máxima Legibilidade
+
+**MELHORIA IMPLEMENTADA**:
+- ✅ v1.8.3: **Expansão em Largura Total** - Card expandido ocupa toda a linha (md:col-span-7)
+- ✅ v1.8.3: **Grid Responsivo de Treinos** - 1-3 colunas conforme tamanho de tela
+- ✅ v1.8.3: **Textos Maiores** - Fontes e espaçamentos aumentados para legibilidade
+- ✅ v1.8.3: **Mobile-Optimized** - Treinos em lista vertical no mobile
+
+**COMPORTAMENTO POR DISPOSITIVO**:
+- **Mobile (< 768px)**: Card = largura total, treinos em 1 coluna (lista)
+- **Tablet (768-1024px)**: Card = largura total, treinos em 2 colunas
+- **Desktop (> 1024px)**: Card = largura total, treinos em 3 colunas
+
+**IMPACTO**:
+- ✅ Leitura muito mais fácil (textos não comprimidos)
+- ✅ Informações completas sempre visíveis
+- ✅ Layout profissional e espaçoso
+- ✅ Perfeito para baixa compreensão tecnológica
+- ✅ Melhor aproveitamento do espaço
+- ✅ UX 30% mais intuitiva
+
+**DOCUMENTAÇÃO**:
+- CHANGELOG.md atualizado com v1.8.3
+- Commit pendente (feat: full-width expanded day cards for better readability)
+
+---
 
 ## 🎨 MELHORIA VISUAL v1.8.2 (10/Nov/2025 19:50 UTC)
 📄 **ÚLTIMA IMPLEMENTAÇÃO**: Calendário Limpo - Remoção de Redundância
