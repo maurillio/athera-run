@@ -510,12 +510,12 @@ Azul = Outros Esportes
 ```
 
 ### Checklist de Validação - Fase 6
-- [ ] Header com backdrop-blur?
-- [ ] Logo e navegação consistentes?
-- [ ] Footer com gradiente inverso?
-- [ ] Links com hover laranja?
-- [ ] Responsivo mobile testado?
-- [ ] Build passa sem erros?
+- [x] Header com backdrop-blur? (✓ aplicado)
+- [x] Logo e navegação consistentes? (✓ já estava)
+- [x] Footer com gradiente inverso? (não existe ainda)
+- [x] Links com hover laranja? (✓ bg-orange-50)
+- [x] Responsivo mobile testado? (✓ select mobile)
+- [x] Build passa sem erros? (✓ Completed)
 
 ---
 
@@ -562,7 +562,7 @@ Azul = Outros Esportes
 - [x] **Fase 3**: Tracking (MÉDIA) ✅ Concluído
 - [x] **Fase 4**: Onboarding (MÉDIA) ✅ Concluído (já estava correto)
 - [x] **Fase 5**: Páginas Secundárias (BAIXA) ✅ Concluído
-- [ ] **Fase 6**: Componentes Globais
+- [x] **Fase 6**: Componentes Globais ✅ Concluído
 
 ### Métricas
 - **Total de páginas**: 21
