@@ -407,7 +407,7 @@ export default function PlanoPage() {
                   </div>
 
                   {/* Weekly Calendar Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+                  <div className="space-y-3">
                     {currentWeek.workouts.length > 0 ? (
                       (() => {
                         const groupedWorkouts = groupWorkoutsByDay(currentWeek.workouts);
@@ -436,7 +436,6 @@ export default function PlanoPage() {
                               onClick={() => !isToday && toggleDay(dateKey)}
                               className={`
                                 relative rounded-lg border-2 transition-all cursor-pointer
-                                ${expanded ? 'md:col-span-7' : ''}
                                 ${allCompleted
                                   ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
                                   : isPastUncompleted
@@ -448,14 +447,14 @@ export default function PlanoPage() {
                               `}
                             >
                               {/* Day Header - Sempre visível */}
-                              <div className="p-3 border-b border-gray-200">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-2">
+                              <div className="p-4">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-3">
                                     <div className="text-center">
                                       <div className="text-xs font-bold text-gray-600">
                                         {getDayName(firstWorkout.date)}
                                       </div>
-                                      <div className={`text-lg font-bold ${isToday ? 'text-orange-600' : 'text-gray-900'}`}>
+                                      <div className={`text-xl font-bold ${isToday ? 'text-orange-600' : 'text-gray-900'}`}>
                                         {getDayNumber(firstWorkout.date)}
                                       </div>
                                     </div>
@@ -466,109 +465,91 @@ export default function PlanoPage() {
                                         {dayWorkouts.length} atividades
                                       </Badge>
                                     )}
+                                    
+                                    {/* Mini preview quando NÃO expandido - Mostra ícones lado a lado */}
+                                    {!expanded && dayWorkouts.length > 1 && (
+                                      <div className="flex gap-2 ml-2">
+                                        {dayWorkouts.map((workout, idx) => (
+                                          <div key={idx}>
+                                            {getWorkoutIcon(workout.type, workout.title)}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
                                   </div>
                                   
                                   {/* Status Icon */}
                                   <div>
                                     {allCompleted ? (
-                                      <div className="bg-green-500 rounded-full p-1">
-                                        <CheckCircle2 className="h-4 w-4 text-white" />
+                                      <div className="bg-green-500 rounded-full p-1.5">
+                                        <CheckCircle2 className="h-5 w-5 text-white" />
                                       </div>
                                     ) : isPastUncompleted ? (
-                                      <div className="bg-red-500 rounded-full p-1">
-                                        <XCircle className="h-4 w-4 text-white" />
+                                      <div className="bg-red-500 rounded-full p-1.5">
+                                        <XCircle className="h-5 w-5 text-white" />
                                       </div>
                                     ) : isToday ? (
-                                      <div className="bg-orange-500 rounded-full p-1 animate-pulse">
-                                        <Activity className="h-4 w-4 text-white" />
+                                      <div className="bg-orange-500 rounded-full p-1.5 animate-pulse">
+                                        <Activity className="h-5 w-5 text-white" />
                                       </div>
                                     ) : null}
                                   </div>
                                 </div>
 
-                                {/* Mini preview quando NÃO expandido - Mostra ícones */}
-                                {!expanded && dayWorkouts.length > 1 && (
-                                  <div className="flex gap-1 mt-2 flex-wrap">
-                                    {dayWorkouts.map((workout, idx) => (
-                                      <div key={idx} className="flex items-center gap-1">
-                                        {getWorkoutIcon(workout.type, workout.title)}
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Conteúdo Expandido ou Compacto */}
-                              <div className="p-3">
+                                {/* Conteúdo Expandido ou Compacto */}
                                 {!expanded ? (
-                                  // COMPACTO - Uma atividade ou resumo
-                                  <div className="space-y-2">
+                                  // COMPACTO - Resumo em uma linha
+                                  <div className="text-sm text-gray-700">
                                     {dayWorkouts.length === 1 ? (
-                                      // Apenas 1 treino - mostrar completo
-                                      <div className="text-center space-y-2">
-                                        <div className="flex justify-center">
-                                          {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
-                                        </div>
-                                        <p className="text-xs font-semibold line-clamp-2">
-                                          {firstWorkout.title}
-                                        </p>
+                                      <div className="flex items-center justify-between">
+                                        <span className="font-medium">{firstWorkout.title}</span>
                                         {firstWorkout.distance && (
                                           <Badge variant="secondary" className="text-xs">
                                             {firstWorkout.distance} km
                                           </Badge>
                                         )}
-                                        {firstWorkout.duration && !firstWorkout.distance && (
-                                          <Badge variant="secondary" className="text-xs">
-                                            {firstWorkout.duration} min
-                                          </Badge>
-                                        )}
                                       </div>
                                     ) : (
-                                      // Múltiplos treinos - mostrar primeiro + contador
-                                      <div className="text-center space-y-2">
-                                        <div className="flex justify-center">
-                                          {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
-                                        </div>
-                                        <p className="text-xs font-semibold line-clamp-1">
-                                          {firstWorkout.title}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">
-                                          + {dayWorkouts.length - 1} mais
-                                        </p>
+                                      <div className="font-medium">
+                                        {dayWorkouts.map((w, idx) => (
+                                          <span key={idx}>
+                                            {w.type === 'run' ? '🏃' : w.type === 'gym' ? '💪' : '🚴'} {w.title}
+                                            {idx < dayWorkouts.length - 1 && ' • '}
+                                          </span>
+                                        ))}
                                       </div>
                                     )}
                                   </div>
                                 ) : (
-                                  // EXPANDIDO - Mostrar todos os treinos em layout responsivo
-                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                  // EXPANDIDO - Mostrar todos os treinos com detalhes completos
+                                  <div className="space-y-3 pt-3 border-t border-gray-200">
                                     {dayWorkouts.map((workout) => (
                                       <div
                                         key={workout.id}
-                                        className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm space-y-3 hover:shadow-md transition-shadow"
+                                        className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-3"
                                       >
                                         <div className="flex items-start gap-3">
                                           <div className="flex-shrink-0">
                                             {getWorkoutIcon(workout.type, workout.title)}
                                           </div>
                                           <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-semibold text-gray-900 mb-1">
+                                            <p className="text-base font-semibold text-gray-900 mb-2">
                                               {workout.title}
                                             </p>
                                             {workout.isCompleted && (
-                                              <Badge className="bg-green-500 text-white text-xs">
+                                              <Badge className="bg-green-500 text-white text-xs mb-2">
                                                 ✓ Concluído
                                               </Badge>
+                                            )}
+                                            {workout.description && (
+                                              <p className="text-sm text-gray-600 leading-relaxed mt-2">
+                                                {workout.description}
+                                              </p>
                                             )}
                                           </div>
                                         </div>
                                         
-                                        {workout.description && (
-                                          <p className="text-sm text-gray-600 leading-relaxed">
-                                            {workout.description}
-                                          </p>
-                                        )}
-                                        
-                                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+                                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
                                           {workout.distance && (
                                             <Badge variant="secondary" className="text-xs">
                                               📏 {workout.distance} km
@@ -613,7 +594,7 @@ export default function PlanoPage() {
                         });
                       })()
                     ) : (
-                      <div className="col-span-7 text-center py-8 text-muted-foreground">
+                      <div className="text-center py-8 text-muted-foreground">
                         <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
                         <p>{t('weekNavigation.noWorkouts')}</p>
                       </div>
