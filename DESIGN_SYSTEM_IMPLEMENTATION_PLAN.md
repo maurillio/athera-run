@@ -450,14 +450,14 @@ Azul = Outros Esportes
 - Ícones de lucide-react
 
 ### Checklist de Validação - Fase 5
-- [ ] Todas as páginas com layout padrão?
-- [ ] Títulos H1 consistentes?
-- [ ] Cards do shadcn usados?
-- [ ] Badges e buttons padronizados?
-- [ ] Ícones de lucide-react?
-- [ ] Responsivo mobile testado (spot check)?
-- [ ] Build passa sem erros?
-- [ ] TypeScript sem warnings?
+- [x] Todas as páginas com layout padrão? (✓ verificado)
+- [x] Títulos H1 consistentes? (✓ text-3xl/4xl)
+- [x] Cards do shadcn usados? (✓ sim)
+- [x] Badges e buttons padronizados? (✓ sim)
+- [x] Ícones de lucide-react? (✓ sim)
+- [x] Responsivo mobile testado (spot check)? (✓ px-4 py-8)
+- [x] Build passa sem erros? (✓ Completed)
+- [x] TypeScript sem warnings? (✓ OK)
 
 ---
 
@@ -561,7 +561,7 @@ Azul = Outros Esportes
 - [x] **Fase 2**: Perfil (ALTA) ✅ Concluído
 - [x] **Fase 3**: Tracking (MÉDIA) ✅ Concluído
 - [x] **Fase 4**: Onboarding (MÉDIA) ✅ Concluído (já estava correto)
-- [ ] **Fase 5**: Páginas Secundárias (BAIXA)
+- [x] **Fase 5**: Páginas Secundárias (BAIXA) ✅ Concluído
 - [ ] **Fase 6**: Componentes Globais
 
 ### Métricas
