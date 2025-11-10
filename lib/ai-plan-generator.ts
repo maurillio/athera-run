@@ -1219,15 +1219,32 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
       // Calcular volume da semana com progressão
       let weeklyKm = phase.weeklyKmStart + (weeklyKmRange * weekProgress);
 
-      // DETECTAR CORRIDAS B/C nesta semana (para passar contexto ao generateWeekWorkouts)
+      // DETECTAR CORRIDAS A/B/C nesta semana (para passar contexto ao generateWeekWorkouts)
       const weekEnd = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
       const raceThisWeek = profile.raceGoals?.find(race => {
         const raceDate = new Date(race.date);
-        return raceDate >= currentWeekStart && raceDate <= weekEnd;
+        // Normalizar ambas as datas para meia-noite UTC para comparação precisa
+        const raceDateNorm = new Date(raceDate.getFullYear(), raceDate.getMonth(), raceDate.getDate());
+        const weekStartNorm = new Date(currentWeekStart.getFullYear(), currentWeekStart.getMonth(), currentWeekStart.getDate());
+        const weekEndNorm = new Date(weekEnd.getFullYear(), weekEnd.getMonth(), weekEnd.getDate());
+        
+        const isInWeek = raceDateNorm >= weekStartNorm && raceDateNorm <= weekEndNorm;
+        
+        if (isInWeek) {
+          console.log(`[AI PLAN DEBUG] Corrida "${race.name}" encontrada na semana ${weekNumber}:`, {
+            raceDate: raceDate.toISOString(),
+            raceDateNorm: raceDateNorm.toISOString(),
+            weekStart: weekStartNorm.toISOString(),
+            weekEnd: weekEndNorm.toISOString(),
+            priority: race.priority
+          });
+        }
+        
+        return isInWeek;
       });
 
       if (raceThisWeek) {
-        console.log(`[AI PLAN] Semana ${weekNumber}: Corrida ${raceThisWeek.priority} "${raceThisWeek.name}" (${raceThisWeek.distance}) detectada - IA já considerou no volume da fase`);
+        console.log(`[AI PLAN] ✅ Semana ${weekNumber}: Corrida ${raceThisWeek.priority} "${raceThisWeek.name}" (${raceThisWeek.distance}) detectada na semana - treinos serão ajustados`);
       }
 
       // Aplicar cutback weeks (cada 4ª semana) - MAS não se for semana de corrida
@@ -1691,20 +1708,30 @@ function generateWeekWorkouts(params: {
     const raceDate = new Date(params.raceThisWeek.date);
     const raceDayOfWeek = raceDate.getDay();
 
-    console.log(`[WORKOUT GEN] Corrida ${params.raceThisWeek.priority} "${params.raceThisWeek.name}" (${params.raceThisWeek.distance}) no dia ${raceDayOfWeek} - substituindo treino planejado`);
+    console.log(`[WORKOUT GEN] 🏁 CORRIDA ${params.raceThisWeek.priority} detectada!`);
+    console.log(`[WORKOUT GEN]   Nome: "${params.raceThisWeek.name}"`);
+    console.log(`[WORKOUT GEN]   Distância: ${params.raceThisWeek.distance}`);
+    console.log(`[WORKOUT GEN]   Data: ${raceDate.toISOString()}`);
+    console.log(`[WORKOUT GEN]   Dia da semana: ${raceDayOfWeek} (0=Dom, 1=Seg, ..., 6=Sáb)`);
+    console.log(`[WORKOUT GEN]   ✅ Substituindo treino do dia ${raceDayOfWeek} pela corrida`);
 
     // Adicionar a corrida no dia correto
     addActivity(raceDayOfWeek, 'race', params.raceThisWeek);
 
     // Se a corrida for C e NÃO for no dia do longão, ainda adicionar um longão menor (50%)
     if (raceDayOfWeek !== availability.longRunDay && params.raceThisWeek.priority === 'C') {
+      console.log(`[WORKOUT GEN]   Corrida C não é no dia do longão - adicionando longão no dia ${availability.longRunDay}`);
       addActivity(availability.longRunDay, 'long_run');
     }
 
     // Para corridas A e B: semana de taper - apenas descanso/regeneração nos outros dias
     // (não adicionar treinos de qualidade ou longões extras)
+    if (params.raceThisWeek.priority === 'A' || params.raceThisWeek.priority === 'B') {
+      console.log(`[WORKOUT GEN]   Corrida ${params.raceThisWeek.priority} = Semana de TAPER (sem treinos pesados)`);
+    }
   } else {
     // Sem corrida esta semana - longão normal
+    console.log(`[WORKOUT GEN] Sem corrida esta semana - adicionando longão no dia ${availability.longRunDay}`);
     addActivity(availability.longRunDay, 'long_run');
   }
 
@@ -1955,6 +1982,13 @@ function generateWeekWorkouts(params: {
         const isRaceB = raceInfo.priority === 'B';
         const isRaceC = raceInfo.priority === 'C';
 
+        console.log(`[WORKOUT GEN] 🏁 Criando workout de CORRIDA para dia ${dayOfWeek}:`, {
+          name: raceInfo.name,
+          distance: raceInfo.distance,
+          priority: raceInfo.priority,
+          date: date.toISOString()
+        });
+
         let raceDescription = '';
         if (isRaceA) {
           raceDescription = `🏁 CORRIDA A (OBJETIVO PRINCIPAL) - Esta é a corrida para a qual você treinou! Confie no seu treinamento, siga sua estratégia de ritmo, hidrate-se adequadamente e aproveite cada quilômetro. Você está preparado(a)! Descanse bem nos dias anteriores, alimente-se adequadamente e chegue à largada com confiança. BOA PROVA! 🎯`;
@@ -1981,6 +2015,12 @@ function generateWeekWorkouts(params: {
             priority: raceInfo.priority
           }
         };
+        
+        console.log(`[WORKOUT GEN] ✅ Workout de corrida criado:`, {
+          type: workout.type,
+          title: workout.title,
+          priority: workout.subtype
+        });
       }
       else if (activityType === 'swimming') {
         workout = {
@@ -2040,9 +2080,19 @@ function generateWeekWorkouts(params: {
     strength: workouts.filter(w => w.type === 'strength').length,
     crossTraining: workouts.filter(w => w.type === 'cross-training').length,
     rest: workouts.filter(w => w.type === 'rest').length,
+    race: workouts.filter(w => w.type === 'race').length,
   };
 
-  console.log(`[WORKOUT GEN] Semana ${params.weekNumber}: Resumo - Running: ${summary.running}, Swimming: ${summary.swimming}, Strength: ${summary.strength}, Cross: ${summary.crossTraining}, Rest: ${summary.rest}`);
+  console.log(`[WORKOUT GEN] Semana ${params.weekNumber}: Resumo - Running: ${summary.running}, Swimming: ${summary.swimming}, Strength: ${summary.strength}, Cross: ${summary.crossTraining}, Rest: ${summary.rest}, RACE: ${summary.race}`);
+  
+  // Log específico para corridas
+  if (summary.race > 0) {
+    const raceWorkouts = workouts.filter(w => w.type === 'race');
+    console.log(`[WORKOUT GEN] ✅ CORRIDA(S) ENCONTRADA(S) NA SEMANA ${params.weekNumber}:`);
+    raceWorkouts.forEach(race => {
+      console.log(`[WORKOUT GEN]   🏁 ${race.title} - Dia ${race.dayOfWeek} (${race.date.toISOString().split('T')[0]})`);
+    });
+  }
 
   // Ordenar workouts por data para garantir ordem Segunda → Domingo
   workouts.sort((a, b) => a.date.getTime() - b.date.getTime());
