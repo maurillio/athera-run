@@ -7,6 +7,40 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.8.1] - 2025-11-10 19:45 UTC
+
+### ✨ UX ENHANCEMENT - Cards de Dia com Múltiplos Treinos Expansíveis
+
+#### Melhoria Visual no Calendário
+- **Agrupamento Inteligente**: Múltiplas atividades no mesmo dia aparecem em um card único
+- **Expansão/Colapso**: Clique para expandir e ver todos os treinos do dia
+- **Hoje Sempre Expandido**: Card do dia atual abre automaticamente
+- **Visual Limpo**: Não duplica dias, mantém interface organizada
+
+#### Comportamento Interativo
+- **Compacto (Padrão)**:
+  - Um treino: Mostra completo com ícone + título + badge
+  - Múltiplos: Mostra primeiro treino + contador (ex: "+ 2 mais")
+  - Mini preview com ícones de todas atividades
+- **Expandido (Clique ou Hoje)**:
+  - Lista todos os treinos do dia
+  - Cada treino em card separado com descrição
+  - Badges de distância, pace e duração
+  - Status individual (concluído/pendente)
+
+#### Benefícios
+- ✅ Visual mais limpo sem poluição
+- ✅ Fácil identificação de dias multi-atividades
+- ✅ Mobile-friendly (menos scroll)
+- ✅ Intuitivo para usuários com baixa compreensão tecnológica
+- ✅ Badge mostra quantidade de atividades (ex: "3 atividades")
+- ✅ Indicadores visuais claros (corrida + musculação)
+
+#### Arquivos Modificados
+- `app/[locale]/plano/page.tsx`: Lógica de agrupamento e expansão
+
+---
+
 ## [1.8.0] - 2025-11-10 19:15 UTC
 
 ### ✨ MAJOR UX IMPROVEMENT - Calendário Semanal Redesenhado no Plano

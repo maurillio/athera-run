@@ -2,14 +2,47 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 10 de Novembro de 2025 19:15 UTC
-**Versão Atual:** 1.8.0 (Enhanced Weekly Calendar UX)
-**Status:** ✅ **SISTEMA OPERACIONAL - NOVA UX DO PLANO IMPLEMENTADA**
+**Última atualização:** 10 de Novembro de 2025 19:45 UTC
+**Versão Atual:** 1.8.1 (Collapsible Multi-Workout Days)
+**Status:** ✅ **SISTEMA OPERACIONAL - NOVA UX EXPANDÍVEL IMPLEMENTADA**
 **Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 
+## 🎨 MELHORIA VISUAL v1.8.1 (10/Nov/2025 19:45 UTC)
+📄 **ÚLTIMA IMPLEMENTAÇÃO**: Cards Expansíveis para Múltiplos Treinos no Mesmo Dia
+
+**MELHORIAS IMPLEMENTADAS**:
+- ✅ v1.8.1: **Agrupamento por Dia** - Múltiplas atividades aparecem em um card só
+- ✅ v1.8.1: **Expansão Inteligente** - Clique para ver todos os treinos, hoje sempre expandido
+- ✅ v1.8.1: **Visual Limpo** - Não duplica dias, mantém calendário organizado
+- ✅ v1.8.1: **Badge de Contador** - Mostra quantidade de atividades (ex: "3 atividades")
+- ✅ v1.8.1: **Preview de Ícones** - Quando colapsado, mostra ícones de todas atividades
+- ✅ v1.8.1: **Mobile-First** - Menos scroll, interface mais prática
+
+**COMPORTAMENTO**:
+- **Compacto (padrão)**: 
+  - 1 treino: Mostra completo
+  - Múltiplos: Primeiro + contador "+ X mais"
+  - Mini preview com ícones
+- **Expandido (clique ou hoje)**:
+  - Todos os treinos listados
+  - Descrição completa de cada um
+  - Status individual
+
+**IMPACTO**:
+- ✅ UX 15x melhor para multi-atividades
+- ✅ Visual sem poluição
+- ✅ Intuitivo para iniciantes
+- ✅ Prático para usuários avançados (corrida + musculação + yoga)
+
+**DOCUMENTAÇÃO**:
+- CHANGELOG.md atualizado com v1.8.1
+- Commit b93149da (feat: collapsible multi-workout day cards)
+
+---
+
 ## 🎨 MELHORIA VISUAL v1.8.0 (10/Nov/2025 19:15 UTC)
-📄 **ÚLTIMA IMPLEMENTAÇÃO**: Calendário Semanal Redesenhado no Plano
+📄 **IMPLEMENTAÇÃO ANTERIOR**: Calendário Semanal Redesenhado no Plano
 
 **MELHORIAS IMPLEMENTADAS**:
 - ✅ v1.8.0: **Calendário Grid 7 Dias** - Cards individuais por dia com design limpo
