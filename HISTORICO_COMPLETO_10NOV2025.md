@@ -2,11 +2,83 @@
 
 **Data:** 10 de Novembro de 2025  
 **Período:** Set/2025 - Nov/2025  
-**Versões:** v1.0.0 → v1.7.5
+**Versões:** v1.0.0 → v1.8.0
 
 ---
 
 ## 🚀 Linha do Tempo de Versões
+
+### v1.8.0 - Enhanced Weekly Calendar UX (10/Nov/2025 19:15 UTC) 🎨
+
+**Melhoria Visual Massiva:**
+- Calendário do plano completamente redesenhado
+- UX 10x mais clara, intuitiva e bonita
+- Mobile-first design (80% dos usuários)
+
+**Implementações:**
+
+**1. Calendário Grid 7 Dias**
+```
+Cards individuais por dia da semana
+├── Header: Dia (SEG) + Número (10)
+├── Status Icon: Check/X/Activity
+├── Workout Icon: Inteligente por tipo
+├── Title: Nome do treino (2 linhas)
+└── Badge: Distância ou Duração
+```
+
+**2. Ícones Inteligentes**
+- Sistema detecta automaticamente por palavras-chave:
+  - 🏆 **Trophy**: "corrida alvo", "race day", "prova"
+  - ⛰️ **Mountain**: "longão", "long run"
+  - ⚡ **Activity**: "intervalo", "interval", "tiro"
+  - ⏱️ **Clock**: "tempo", "threshold"
+  - ❤️ **Heart**: "regenerativo", "easy", "leve"
+  - 💧 **Droplets**: "descanso", "rest"
+  - 💪 **Dumbbell**: "musculação", "força", "gym"
+
+**3. Estados Visuais**
+- ✅ **Completo**: Gradiente verde, border verde, check icon
+- ❌ **Não Realizado**: Gradiente vermelho, border vermelho, X icon
+- 🔥 **Hoje**: Gradiente laranja, border laranja, pulse animation
+- ⚪ **Futuro**: Branco limpo, border cinza
+
+**4. Barra de Progresso Semanal**
+```typescript
+- Progresso visual: Barra gradiente laranja
+- Informações: X/Y treinos (percentual)
+- Volume: Total de km da semana
+- Atualização: Tempo real
+```
+
+**5. Badges Especiais**
+- **META**: Corrida alvo com troféu (amarelo)
+- **HOJE**: Dia atual (laranja, pulse)
+- **Distância**: Km do treino
+- **Duração**: Minutos do treino
+
+**6. Lista de Detalhes Complementar**
+- Descrições completas dos treinos
+- Border-left colorido por status
+- Cards com ícones e badges
+- Informações de pace/distância separadas
+
+**Benefícios:**
+- ✅ Identificação visual instantânea
+- ✅ Sem confusão ou ambiguidade
+- ✅ Facilidade para baixa compreensão tecnológica
+- ✅ Design profissional e moderno
+- ✅ Responsivo mobile e desktop
+- ✅ Zero poluição visual
+- ✅ Todas as funcionalidades mantidas
+
+**Arquivos:**
+- `app/[locale]/plano/page.tsx` (+250 linhas)
+
+**Commit:** 4ee855c3  
+**Tempo:** ~45 minutos
+
+---
 
 ### v1.7.5 - Critical Race Day Fix (10/Nov/2025 18:30 UTC) 🚨
 

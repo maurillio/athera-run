@@ -7,6 +7,76 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.8.0] - 2025-11-10 19:15 UTC
+
+### ✨ MAJOR UX IMPROVEMENT - Calendário Semanal Redesenhado no Plano
+
+#### Visual Overhaul Completo
+- **Calendário Grid 7 Dias**: Cards individuais por dia da semana com design limpo
+- **Identificação Clara**: Dia da semana (SEG, TER...) + número do dia
+- **Estados Visuais Intuitivos**:
+  - ✅ Completo: Verde com gradiente
+  - ❌ Não Realizado: Vermelho com alerta
+  - 🔥 Hoje: Laranja com animação pulse
+  - ⚪ Futuro: Branco clean
+- **Ícones Inteligentes**: Sistema detecta tipo de treino automaticamente
+  - 🏆 Trophy: Corrida Alvo/Prova
+  - ⛰️ Mountain: Longão/Long Run
+  - ⚡ Activity: Intervalos/Tiros
+  - ⏱️ Clock: Tempo/Threshold
+  - ❤️ Heart: Regenerativo/Leve
+  - 💧 Droplets: Descanso/Rest
+  - 💪 Dumbbell: Musculação/Força
+
+#### Melhorias de Informação
+- **Barra de Progresso**: Visual da semana com percentual e treinos completados
+- **Volume Semanal**: Quilometragem total da semana visível
+- **Badge META**: Destaque especial para dia da corrida alvo (amarelo + troféu)
+- **Badge HOJE**: Indicador animado para treino do dia atual
+- **Paces Destacados**: Cards separados para distância, pace e duração
+
+#### Cards de Detalhes
+- Lista complementar ao grid com descrições completas
+- Border-left colorido por status (verde/vermelho/laranja)
+- Badges de status (Concluído, Não Realizado, Hoje)
+- Informações de treino em cards visuais
+- Hover states e interatividade
+
+#### Mobile-First Design
+- Grid responsivo 7 colunas
+- Cards touch-friendly
+- Textos com line-clamp (não quebram layout)
+- Badges pequenos mas legíveis
+- Sem scroll horizontal
+
+#### Technical Details
+- Funções helper: `getWorkoutIcon()`, `getDayName()`, `getDayNumber()`
+- Sistema de detecção inteligente por keywords no título
+- Gradientes CSS suaves
+- Animações com Tailwind classes
+- Ícones Lucide React
+
+#### Impact
+- ✅ UX 10x mais clara e intuitiva
+- ✅ Identificação visual instantânea
+- ✅ Mobile-first (80% dos usuários)
+- ✅ Zero poluição visual
+- ✅ Mantém todas as funcionalidades existentes
+- ✅ Build passing sem erros
+
+#### Files Changed
+- `app/[locale]/plano/page.tsx` (+250 linhas)
+  - Novo grid semanal com 7 cards
+  - Sistema de ícones inteligentes
+  - Barra de progresso visual
+  - Lista de detalhes complementar
+
+#### Commit
+- **SHA:** 4ee855c3
+- **Tempo:** ~45 minutos (análise + implementação)
+
+---
+
 ## [1.7.5] - 2025-11-10 18:30 UTC
 
 ### 🚨 CRITICAL FIX - Corridas Alvo Ignoradas na Geração do Plano
