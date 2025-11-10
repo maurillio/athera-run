@@ -35,28 +35,13 @@ export async function callLLM(request: LLMRequest): Promise<string> {
   let body: any;
 
   switch (provider) {
-    case 'openai':
-      url = 'https://api.openai.com/v1/chat/completions';
-      headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-      };
-      body = {
-        model: request.model || process.env.LLM_MODEL || 'gpt-4o-mini',
-        messages: request.messages,
-        temperature: request.temperature ?? 0.5,
-        max_tokens: request.max_tokens ?? 8000,
-        ...(request.response_format && { response_format: request.response_format }),
-      };
-      break;
-
     case 'openrouter':
       url = 'https://openrouter.ai/api/v1/chat/completions';
       headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://athera-run.com', // OpenRouter requires this
-        'X-Title': 'Athera Run', // OpenRouter requires this
+        'HTTP-Referer': 'https://athera-run.com',
+        'X-Title': 'Athera Run',
       };
       body = {
         model: request.model || process.env.LLM_MODEL || 'openai/gpt-4o',
@@ -67,15 +52,15 @@ export async function callLLM(request: LLMRequest): Promise<string> {
       };
       break;
 
-    case 'abacusai':
+    case 'openai':
     default:
-      url = 'https://apps.abacus.ai/v1/chat/completions';
+      url = 'https://api.openai.com/v1/chat/completions';
       headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.ABACUSAI_API_KEY}`,
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       };
       body = {
-        model: request.model || 'gpt-4o',
+        model: request.model || process.env.LLM_MODEL || 'gpt-4o',
         messages: request.messages,
         temperature: request.temperature ?? 0.5,
         max_tokens: request.max_tokens ?? 8000,
