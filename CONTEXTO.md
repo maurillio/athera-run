@@ -2,12 +2,41 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 10 de Novembro de 2025 23:15 UTC
-**Versão Atual:** 2.0.1 (Correção Crítica LLM Provider)
-**Status:** ✅ **TREINOS PROFISSIONAIS + OPENAI CONFIGURADO**
+**Última atualização:** 11 de Novembro de 2025 00:30 UTC
+**Versão Atual:** 2.0.2 (Correção URL e Encoding)
+**Status:** ✅ **TREINOS PROFISSIONAIS + OPENAI CONFIGURADO + URL CORRIGIDO**
 **Build:** ✅ Passou sem erros (67/67 páginas) | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - Abacus AI REMOVIDO
+**URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
+
+---
+
+## 🔧 HOTFIX v2.0.2 - URL e Character Encoding (11/Nov/2025 00:30 UTC)
+
+### ❌ Problemas Corrigidos
+1. **URL Incorreta**: HTTP Referer estava como "athera-run.com" (com hífen) 
+   - ✅ **Corrigido para**: "atherarun.com" (sem hífen)
+2. **Character Encoding**: Headers não especificavam UTF-8
+   - ✅ **Corrigido**: Adicionado `charset=utf-8` em todos os Content-Type headers
+
+### ✅ Correções Aplicadas
+```typescript
+// lib/llm-client.ts
+headers: {
+  'Content-Type': 'application/json; charset=utf-8', // ✅ UTF-8 explícito
+  'HTTP-Referer': 'https://atherarun.com', // ✅ URL correta (SEM hífen)
+}
+```
+
+### 📝 Arquivos Modificados
+- `lib/llm-client.ts` - URLs e encoding corrigidos
+- Commit: `2b495bbb`
+
+### 🎯 Impacto
+- ✅ Geração de planos funcionando corretamente
+- ✅ Caracteres portugueses (ç, ã, õ) preservados corretamente
+- ✅ URLs de produção corretas
 
 ---
 

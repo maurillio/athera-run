@@ -1,12 +1,46 @@
 # 📜 Histórico Completo de Correções - Athera Run
 
-**Data:** 10 de Novembro de 2025  
+**Data:** 11 de Novembro de 2025  
 **Período:** Set/2025 - Nov/2025  
-**Versões:** v1.0.0 → v2.0.0
+**Versões:** v1.0.0 → v2.0.2
 
 ---
 
 ## 🚀 Linha do Tempo de Versões
+
+### v2.0.2 - Correção URL e Character Encoding (11/Nov/2025 00:30 UTC) 🔧
+
+**HOTFIX: URL de produção e encoding UTF-8**
+
+**Problemas Corrigidos:**
+1. **URL Incorreta**:
+   - HTTP Referer estava como "athera-run.com" (com hífen)
+   - URL correta é "atherarun.com" (sem hífen)
+   - Impacto: Chamadas à API com referer incorreto
+
+2. **Character Encoding**:
+   - Headers não especificavam `charset=utf-8` explicitamente
+   - Poderia causar problemas com acentuação portuguesa (ç, ã, õ, etc)
+   - Dados: "Musculação", "Natação", etc.
+
+**Correções Aplicadas:**
+```typescript
+// lib/llm-client.ts
+// ANTES:
+'Content-Type': 'application/json',
+'HTTP-Referer': 'https://athera-run.com',
+
+// DEPOIS:
+'Content-Type': 'application/json; charset=utf-8',
+'HTTP-Referer': 'https://atherarun.com',
+```
+
+**Arquivos Modificados:**
+- `lib/llm-client.ts` - URLs e headers corrigidos
+
+**Commit:** `2b495bbb`
+
+---
 
 ### v2.0.0-debug - Debug de Corridas Alvo (10/Nov/2025 22:54 UTC) 🔍
 
