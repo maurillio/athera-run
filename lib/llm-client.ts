@@ -69,18 +69,50 @@ export async function callLLM(request: LLMRequest): Promise<string> {
       break;
   }
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(body),
-  });
+  console.log(`[LLM] 🔄 Chamando ${provider} API...`);
+  
+  let response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+  } catch (fetchError) {
+    console.error('[LLM] ❌ Erro ao fazer fetch:', fetchError);
+    throw new Error(`Falha na conexão com ${provider}: ${fetchError instanceof Error ? fetchError.message : String(fetchError)}`);
+  }
 
   if (!response.ok) {
     const errorText = await response.text();
+    console.error(`[LLM] ❌ API retornou erro ${response.status}:`, errorText);
+    
+    // Mensagens mais específicas por tipo de erro
+    if (response.status === 401) {
+      throw new Error(`Autenticação falhou com ${provider}: API Key inválida ou expirada. Verifique OPENAI_API_KEY no Vercel.`);
+    } else if (response.status === 429) {
+      throw new Error(`Limite de requisições excedido no ${provider}: Quota atingida ou rate limit. Verifique seu plano em platform.openai.com/usage`);
+    } else if (response.status === 500 || response.status === 502 || response.status === 503) {
+      throw new Error(`${provider} está temporariamente indisponível: ${response.status} ${response.statusText}`);
+    }
+    
     throw new Error(`API request failed: ${response.status} ${response.statusText}\n${errorText}`);
   }
 
-  const data: LLMResponse = await response.json();
+  let data: LLMResponse;
+  try {
+    data = await response.json();
+  } catch (jsonError) {
+    console.error('[LLM] ❌ Erro ao fazer parse do JSON:', jsonError);
+    throw new Error(`Resposta da API em formato inválido: ${jsonError instanceof Error ? jsonError.message : String(jsonError)}`);
+  }
+  
+  if (!data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
+    console.error('[LLM] ❌ Estrutura de resposta inválida:', JSON.stringify(data).substring(0, 200));
+    throw new Error('Resposta da API não contém o campo esperado "choices[0].message.content"');
+  }
+  
+  console.log(`[LLM] ✅ Resposta recebida com sucesso (${data.choices[0].message.content.length} caracteres)`);
   return data.choices[0].message.content;
 }
 
