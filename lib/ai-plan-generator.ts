@@ -13,6 +13,9 @@
 import { callLLM } from './llm-client';
 import { resilientAICall } from './ai-resilience';
 import { buildComprehensiveContext } from './ai-context-builder';
+import { LONG_RUN_EXAMPLE, INTERVALS_EXAMPLE, TEMPO_RUN_EXAMPLE, EASY_RUN_EXAMPLE, getWorkoutExample } from './ai-workout-examples';
+import type { WorkoutGenerationData } from './types/workout-structure';
+import { enhanceWorkout } from './workout-enhancer';
 
 export interface AIUserProfile {
   // Dados básicos
@@ -904,6 +907,174 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
 ✅ Manter intensidade durante taper (reduzir volume, não intensidade)
 ✅ Descanso total 1-2 dias antes da prova
 ✅ No dia da prova: type='race' com informações da corrida
+
+---
+
+## 🎯 ESTRUTURA AVANÇADA DE CADA TREINO - v2.0.0
+
+**IMPORTANTE:** A partir de agora, você deve fornecer treinos DETALHADOS E EDUCACIONAIS seguindo best practices internacionais.
+
+### Estrutura Obrigatória em 3 Fases
+
+**TODOS OS TREINOS** de corrida devem ter 3 fases estruturadas:
+
+#### 1. AQUECIMENTO (warmUpStructure) 🔥
+Duração: 10-20 minutos (treinos intensos = aquecimento mais longo)
+Componentes obrigatórios:
+- Ativação aeróbica leve (5-10 min trote/caminhada)
+- Drills dinâmicos (leg swings, high knees, butt kicks, lunges)
+- Acelerações progressivas (2-4x20-60m a 85-95%)
+
+Para INTERVALOS/TEMPO RUN:
+- Aumentar duração do aquecimento (15-20 min)
+- Incluir ativação específica (glúteos, quadríceps, posteriores)
+- Adicionar strides no pace do treino
+
+#### 2. PARTE PRINCIPAL (mainWorkoutStruct) ⚡
+Varia conforme o tipo de treino:
+
+**A) Corrida Contínua (Easy, Tempo, Longão):**
+- Distância/Duração exata
+- Pace alvo com zona de FC
+- Critério de esforço subjetivo
+- Pontos de atenção (hidratação, alimentação, técnica)
+- Progressão dentro do treino (se aplicável)
+
+**B) Treino Intervalado (intervals):**
+- Work Interval: duração/distância, pace, intensidade, FC
+- Recovery Interval: duração, tipo (jog/walk), pace
+- Número de repetições
+- Ratio work:recovery
+- Instruções para execução
+- Critérios de parada
+
+#### 3. DESAQUECIMENTO (coolDownStructure) 🧘
+Duração: 5-15 minutos
+Componentes obrigatórios:
+- Trote/caminhada leve (5-10 min)
+- Alongamento estático (20-30s cada grupo):
+  * Posteriores de coxa
+  * Quadríceps
+  * Panturrilha
+  * Glúteos
+  * Flexores do quadril
+
+### Enriquecimento Educacional Obrigatório
+
+Para CADA treino, você DEVE incluir:
+
+#### 🎯 OBJECTIVE (objetivo)
+Explique o objetivo fisiológico do treino em 1-2 frases.
+Exemplo: "Desenvolver resistência aeróbica base e melhorar utilização de gordura como combustível"
+
+#### 💡 TIPS (dicas) - 3 a 5 dicas práticas
+- Como executar corretamente
+- Sinais para observar
+- Ajustes durante o treino
+- Alimentação/hidratação específica
+
+Exemplo:
+- "Mantenha cadência de 170-180 passos/min"
+- "Hidrate a cada 20-30 min em longões"
+- "Teste talk test: deve conseguir conversar"
+
+#### ⚠️ COMMON_MISTAKES (erros comuns) - 2 a 3 alertas
+- Erros típicos que atletas cometem
+- Sinais de alerta para parar
+- Prevenção de lesões
+
+Exemplo:
+- "Não comece rápido demais - ritmo deve ser constante"
+- "Se sentir dor aguda, pare imediatamente"
+
+#### ✅ SUCCESS_CRITERIA (critérios de sucesso) - 2 a 3 critérios
+Como saber se executou bem o treino:
+
+Exemplo:
+- "Completou distância mantendo pace alvo (±10s)"
+- "FC permaneceu na zona target (±5 bpm)"
+- "Terminou com energia para cool-down completo"
+
+#### 📚 SCIENTIFIC_BASIS (fundamento científico) - Opcional mas recomendado
+Explique brevemente a ciência por trás do treino.
+
+Exemplo: "Corridas longas em Z2 maximizam adaptações mitocondriais e treinam utilização de gordura"
+
+### Métricas de Intensidade
+
+Sempre forneça para cada treino:
+
+- **intensityLevel**: 1 a 5
+  * 1 = Muito Leve (recuperação)
+  * 2 = Leve (easy run, longão)
+  * 3 = Moderado (tempo run)
+  * 4 = Intenso (intervalos)
+  * 5 = Muito Intenso (repetições, teste)
+
+- **expectedRPE**: 1 a 10 (Rate of Perceived Exertion)
+- **expectedDuration**: Tempo total em minutos
+- **heartRateZones**: Para cada fase (warmup, main, cooldown)
+
+### Tipos de Treino e Especificações
+
+**LONGÃO (long_run):**
+- Intensidade: 2/5 | RPE: 3-5
+- FC: 60-75% máxima
+- Aquecimento: 10 min progressivo
+- Desaquecimento: 10 min + stretching completo
+- Hidratação: a cada 20-30 min
+- Alimentação: se >90min, gel/goma a cada 45-60min
+
+**INTERVALOS (intervals):**
+- Intensidade: 4-5/5 | RPE: 7-9
+- FC: 85-95% máxima
+- Aquecimento: 15-20 min + drills + strides
+- Recuperação COMPLETA entre séries
+- Última rep deve ser tão boa quanto primeira
+
+**TEMPO RUN (tempo):**
+- Intensidade: 3-4/5 | RPE: 6-8
+- FC: 80-90% máxima
+- "Confortavelmente difícil"
+- Pace constante, não comece rápido
+- Teste: consegue falar frases curtas
+
+**REGENERATIVO (easy):**
+- Intensidade: 1/5 | RPE: 2-4
+- FC: 60-70% máxima
+- MUITO confortável
+- Teste: conversa fácil e fluida
+- Foco em recuperação, não performance
+
+### Exemplos de Treinos Perfeitos
+
+Aqui estão 4 exemplos COMPLETOS que você deve seguir como modelo:
+
+**EXEMPLO 1 - LONGÃO 15km:**
+${JSON.stringify(LONG_RUN_EXAMPLE, null, 2)}
+
+**EXEMPLO 2 - INTERVALOS 8x400m:**
+${JSON.stringify(INTERVALS_EXAMPLE, null, 2)}
+
+**EXEMPLO 3 - TEMPO RUN 8km:**
+${JSON.stringify(TEMPO_RUN_EXAMPLE, null, 2)}
+
+**EXEMPLO 4 - REGENERATIVO 6km:**
+${JSON.stringify(EASY_RUN_EXAMPLE, null, 2)}
+
+### Checklist de Validação
+
+Antes de gerar cada treino, certifique-se:
+- [ ] Tem estrutura de 3 fases (warm-up, main, cool-down)
+- [ ] Tem objetivo fisiológico claro
+- [ ] Tem 3-5 dicas práticas
+- [ ] Tem 2-3 alertas/erros comuns
+- [ ] Tem 2-3 critérios de sucesso
+- [ ] Tem intensityLevel e expectedRPE
+- [ ] Paces e zonas de FC são coerentes
+- [ ] Linguagem é clara, específica e motivadora
+
+**ESTA ESTRUTURA É OBRIGATÓRIA.** Não gere treinos simples sem esses detalhes!
 
 ---`;
 
@@ -2080,6 +2251,10 @@ function generateWeekWorkouts(params: {
       }
 
       if (workout) {
+        // 🆕 v2.0.0: Enhance running workouts with detailed structure
+        if (workout.type === 'running') {
+          workout = enhanceWorkout(workout, params.paces);
+        }
         workouts.push(workout);
       }
     });

@@ -252,20 +252,6 @@ export const INTERVALS_EXAMPLE: WorkoutGenerationData = {
     warmUp: { min: 60, max: 75 },
     main: { min: 90, max: 95 },
     coolDown: { min: 50, max: 65 }
-  },
-  
-  intervals: {
-    workInterval: {
-      duration: '400m',
-      pace: '4:30',
-      intensity: '95-100% VO₂max'
-    },
-    recoveryInterval: {
-      duration: '2-3 min',
-      type: 'jog',
-      pace: '7:00'
-    },
-    repetitions: 8
   }
 };
 
