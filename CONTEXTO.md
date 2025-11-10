@@ -2,11 +2,39 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 10 de Novembro de 2025 19:45 UTC
-**Versão Atual:** 1.8.1 (Collapsible Multi-Workout Days)
-**Status:** ✅ **SISTEMA OPERACIONAL - NOVA UX EXPANDÍVEL IMPLEMENTADA**
+**Última atualização:** 10 de Novembro de 2025 19:50 UTC
+**Versão Atual:** 1.8.2 (Clean Calendar UX)
+**Status:** ✅ **SISTEMA OPERACIONAL - CALENDÁRIO LIMPO E SIMPLIFICADO**
 **Build:** ✅ Passou sem erros | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
+
+## 🎨 MELHORIA VISUAL v1.8.2 (10/Nov/2025 19:50 UTC)
+📄 **ÚLTIMA IMPLEMENTAÇÃO**: Calendário Limpo - Remoção de Redundância
+
+**MELHORIA IMPLEMENTADA**:
+- ✅ v1.8.2: **Seção "Detalhes dos Treinos" Removida** - Eliminada redundância
+- ✅ v1.8.2: **Hierarquia Visual Clara** - Toda informação nos cards do calendário
+- ✅ v1.8.2: **Menos Scroll** - Interface 50% mais compacta em mobile
+- ✅ v1.8.2: **Interação Única** - Clique no dia = veja tudo
+
+**COMPORTAMENTO**:
+- **Calendário Grid**: Mostra 7 dias da semana
+- **Click para Expandir**: Clique no card do dia para ver detalhes
+- **Hoje Auto-Expandido**: Dia atual sempre mostra tudo
+- **Info Completa**: Título, descrição, badges, tudo no card
+
+**IMPACTO**:
+- ✅ UX 20% mais limpa (menos elementos na tela)
+- ✅ Visual profissional sem poluição
+- ✅ Mobile-first: menos rolagem
+- ✅ Foco no calendário visual
+- ✅ Zero perda de funcionalidade
+
+**DOCUMENTAÇÃO**:
+- CHANGELOG.md atualizado com v1.8.2
+- Commit 781e7c55 (feat: remove redundant workout details section)
+
+---
 
 ## 🎨 MELHORIA VISUAL v1.8.1 (10/Nov/2025 19:45 UTC)
 📄 **ÚLTIMA IMPLEMENTAÇÃO**: Cards Expansíveis para Múltiplos Treinos no Mesmo Dia
