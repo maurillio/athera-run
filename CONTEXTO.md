@@ -2,11 +2,44 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 10 de Novembro de 2025 22:00 UTC
-**Versão Atual:** 2.0.0 (Sistema Avançado de Apresentação de Treinos - COMPLETO)
-**Status:** ✅ **TREINOS PROFISSIONAIS + DESIGN SYSTEM 100% APLICADO**
+**Última atualização:** 10 de Novembro de 2025 23:15 UTC
+**Versão Atual:** 2.0.1 (Correção Crítica LLM Provider)
+**Status:** ✅ **TREINOS PROFISSIONAIS + OPENAI CONFIGURADO**
 **Build:** ✅ Passou sem erros (67/67 páginas) | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
+**LLM Provider:** 🤖 **OpenAI (gpt-4o)** - Abacus AI REMOVIDO
+
+---
+
+## 🔧 HOTFIX v2.0.1 - LLM Provider (10/Nov/2025 23:15 UTC)
+
+### ❌ Problema Crítico Resolvido
+- **Bug**: Sistema ainda tinha Abacus AI como fallback padrão
+- **Sintoma**: Erro 500 ao gerar planos após onboarding
+- **Causa**: `lib/llm-client.ts` com case 'abacusai' como default
+
+### ✅ Correção Aplicada
+```typescript
+// ANTES (ERRADO):
+case 'abacusai':
+default:
+  url = 'https://apps.abacus.ai/v1/chat/completions';
+
+// DEPOIS (CORRETO):
+case 'openai':
+default:
+  url = 'https://api.openai.com/v1/chat/completions';
+```
+
+### 🔐 Configuração Atual
+- **Provider**: OpenAI (padrão)
+- **Modelo**: gpt-4o
+- **API Key**: OPENAI_API_KEY no Vercel
+- **Status**: ✅ Zero referências ao Abacus AI
+
+### 📝 Arquivos
+- Commit: `6f88f18c`
+- Docs: `CORRECAO_LLM_PROVIDER_10NOV2025.md`
 
 ---
 

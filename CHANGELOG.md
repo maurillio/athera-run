@@ -7,6 +7,36 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v2.0.1] - 2025-11-10 23:15 UTC
+
+### 🔧 CORREÇÃO CRÍTICA - LLM Provider
+
+**HOTFIX: Remoção completa de referências ao Abacus AI**
+
+#### ❌ Problema
+- Sistema ainda tinha Abacus AI como fallback padrão em `lib/llm-client.ts`
+- Causava erro 500 na geração de planos após onboarding
+- Usuário reportou múltiplas vezes que não usa mais Abacus AI
+
+#### ✅ Correções
+- **Removido Abacus AI** do switch case em `llm-client.ts`
+- **OpenAI como default**: Agora é o fallback padrão
+- **Modelo padrão**: gpt-4o
+- **Código limpo**: Zero referências ao Abacus AI
+
+#### 🔐 Configuração Correta
+```bash
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4o
+OPENAI_API_KEY=sk-proj-xxxxx
+```
+
+#### 📝 Commit
+- SHA: `6f88f18c`
+- Arquivo: `CORRECAO_LLM_PROVIDER_10NOV2025.md`
+
+---
+
 ## [v2.0.0] - 2025-11-10 22:00 UTC
 
 ### 🚀 SISTEMA AVANÇADO DE APRESENTAÇÃO DE TREINOS - VERSÃO 2.0
