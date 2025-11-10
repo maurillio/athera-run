@@ -331,44 +331,11 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
           )}
         </div>
 
-        {/* MUSCULAÇÃO */}
-        <div className="bg-white border-2 border-gray-200 rounded-lg p-4 mb-3">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">💪</span>
-              <h4 className="font-bold text-gray-900">Musculação</h4>
-            </div>
-            <span className="text-xs text-gray-500">
-              {getActivityCount('Musculação')} dias
-            </span>
-          </div>
-          
-          <div className="flex gap-2 justify-between">
-            {daysShort.map((dayShort, idx) => {
-              const isSelected = trainingSchedule[idx]?.activities?.includes('Musculação') || false;
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => toggleActivity(idx, 'Musculação')}
-                  className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                    isSelected
-                      ? 'bg-green-600 text-white border-2 border-green-600'
-                      : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:border-green-300'
-                  }`}
-                >
-                  {dayShort}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* OUTRAS ATIVIDADES - COLAPSADAS */}
         <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
           <h4 className="font-bold text-gray-900 mb-3">🎯 Outras Atividades (opcional)</h4>
           <div className="space-y-2">
-            {defaultActivities.filter(a => a.key !== 'Musculação').map(activity => (
+            {defaultActivities.map(activity => (
               <details key={activity.key} className="group">
                 <summary className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 list-none">
                   <span className="font-medium">{activity.icon} {activity.label}</span>
