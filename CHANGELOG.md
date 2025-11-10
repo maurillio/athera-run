@@ -7,6 +7,75 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v2.0.3] - 2025-11-11 01:00 UTC
+
+### 🔧 MELHORIA - Error Handling & Logging
+
+**DIAGNÓSTICO: Melhoria no tratamento de erros e logging para identificar falhas na geração de planos**
+
+#### 🎯 Problema Identificado
+- Usuário `Teste0101019@teste.com` recebe erro 500 ao gerar plano após onboarding
+- Mensagem genérica sem detalhes sobre a causa
+- Difícil diagnosticar o problema em produção
+
+#### ✅ Melhorias Implementadas
+
+**1. Logging Detalhado na API de Geração**
+```typescript
+// app/api/plan/generate/route.ts
+- Logs completos: tipo, nome, mensagem, stack trace
+- Retorno com hint de possíveis causas
+- Identificação da etapa exata onde falhou
+```
+
+**2. Tratamento de Erros Específicos no LLM Client**
+```typescript
+// lib/llm-client.ts
+- 401: "API Key inválida ou expirada. Verifique OPENAI_API_KEY"
+- 429: "Quota atingida. Verifique platform.openai.com/usage"
+- 500+: "OpenAI temporariamente indisponível"
+- Validação de estrutura da resposta JSON
+```
+
+**3. Validação de Resposta da OpenAI**
+- Detecta JSON mal formado
+- Valida estrutura `choices[0].message.content`
+- Log do tamanho da resposta
+
+#### 📊 Causas Prováveis Identificadas
+1. **Quota/Limite OpenAI** (mais provável)
+2. **Timeout Vercel** (>10s no plano hobby)
+3. **JSON Parsing** (formato inválido da IA)
+4. **Validação** (plano não passa nas regras)
+
+#### 🔍 Como Usar
+```bash
+# Ver logs específicos no Vercel
+vercel logs atherarun.com --since 1h
+
+# Procurar por tipos de erro
+grep "429\|Quota" logs.txt    # Quota excedida
+grep "401\|API Key" logs.txt  # Autenticação
+grep "timeout" logs.txt        # Timeout
+```
+
+#### 📝 Arquivos Modificados
+- `app/api/plan/generate/route.ts` (+15 linhas)
+- `lib/llm-client.ts` (+35 linhas de error handling)
+- `HOTFIX_v2.0.3_PLAN_GENERATION_DEBUG.md` (novo - documentação completa)
+
+#### 🎯 Próximos Passos
+1. Usuário testar novamente geração do plano
+2. Verificar logs do Vercel para erro específico
+3. Aplicar correção baseada na causa raiz
+4. Considerar melhorias preventivas (retry, cache, async)
+
+#### 📝 Commit
+- SHA: `ac119e38`
+- Mensagem: "fix(plan-generation): improve error handling and logging"
+
+---
+
 ## [v2.0.2] - 2025-11-11 00:30 UTC
 
 ### 🔧 CORREÇÃO - URL e Character Encoding
