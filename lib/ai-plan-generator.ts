@@ -28,9 +28,16 @@ export interface AIUserProfile {
   age?: number;
   gender?: string;
   
-  // Disponibilidade e preferências
-  trainingActivities?: any[];
+  // Disponibilidade e preferências (v1.7.3 - Nova estrutura)
+  trainingSchedule?: Record<number, {
+    running: boolean;
+    activities: string[];
+  }>;
+  customActivities?: string[];
   longRunDay?: number;
+  
+  // DEPRECATED: Estrutura antiga (mantida para compatibilidade)
+  trainingActivities?: any[];
   
   // Paces usuais (dados reais)
   usualPaces?: Record<string, string>;
@@ -244,9 +251,67 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
     });
   }
   
-  // Disponibilidade
-  if (profile.trainingActivities && profile.trainingActivities.length > 0) {
-    context += `\n## Disponibilidade e Preferências de Treino\n`;
+  // Disponibilidade - Suporta AMBAS estruturas (v1.7.3 e v1.2.0)
+  context += `\n## Disponibilidade e Preferências de Treino\n`;
+  
+  // Nova estrutura (v1.7.3) - PRIORIDADE
+  if (profile.trainingSchedule) {
+    const schedule = profile.trainingSchedule;
+    const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    
+    // Dias de corrida
+    const runningDays = Object.keys(schedule)
+      .filter(day => schedule[parseInt(day)]?.running)
+      .map(day => daysOfWeek[parseInt(day)]);
+    
+    if (runningDays.length > 0) {
+      context += `- **Corrida disponível em:** ${runningDays.join(', ')}\n`;
+    }
+    
+    // Dia do longão
+    if (profile.longRunDay !== null && profile.longRunDay !== undefined) {
+      context += `- **Dia preferido para Longão:** ${daysOfWeek[profile.longRunDay]}\n`;
+    }
+    
+    // Outras atividades por dia
+    const otherActivitiesByDay: Record<string, string[]> = {};
+    Object.keys(schedule).forEach(dayKey => {
+      const dayNum = parseInt(dayKey);
+      const dayData = schedule[dayNum];
+      
+      if (dayData.activities && dayData.activities.length > 0) {
+        const dayName = daysOfWeek[dayNum];
+        const activities = dayData.activities;
+        
+        // Se tem corrida E outras atividades
+        if (dayData.running) {
+          context += `- **${dayName}:** Corrida + ${activities.join(', ')} (ajustar intensidade considerando carga total)\n`;
+        } else {
+          // Só outras atividades (sem corrida)
+          context += `- **${dayName}:** ${activities.join(', ')} - NÃO agendar corrida neste dia, apenas indicar estas atividades\n`;
+        }
+      }
+    });
+    
+    // Esportes customizados
+    if (profile.customActivities && profile.customActivities.length > 0) {
+      context += `\n**Esportes Adicionais Praticados pelo Atleta:**\n`;
+      profile.customActivities.forEach(sport => {
+        const sportName = sport.split('_').map(w => 
+          w.charAt(0).toUpperCase() + w.slice(1)
+        ).join(' ');
+        context += `- ${sportName}\n`;
+      });
+    }
+    
+    context += `\n**IMPORTANTE:** Respeite TODAS as atividades do atleta:\n`;
+    context += `- Dias com CORRIDA: agende treinos de corrida\n`;
+    context += `- Dias com OUTRAS ATIVIDADES SEM corrida: NÃO agende corrida, apenas mencione "realize suas atividades habituais"\n`;
+    context += `- Dias com CORRIDA + OUTRAS ATIVIDADES: ajuste a intensidade da corrida considerando a carga total do dia\n`;
+    context += `- Dias SEM NENHUMA atividade: descanso completo\n`;
+  }
+  // Estrutura antiga (v1.2.0) - FALLBACK
+  else if (profile.trainingActivities && profile.trainingActivities.length > 0) {
     profile.trainingActivities.forEach((activity: any) => {
       if (activity.availableDays && activity.availableDays.length > 0) {
         const days = activity.availableDays.map((d: number) => 

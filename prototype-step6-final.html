@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Step 6 - Disponibilidade Melhorada</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { 
+      -webkit-tap-highlight-color: transparent; 
+      box-sizing: border-box;
+    }
+    
+    .day-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    
+    .day-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .activity-card {
+      background: white;
+      border: 2px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    
+    details > summary {
+      list-style: none;
+    }
+    
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <div class="bg-white border-b p-4 mb-4 sticky top-0 z-10 shadow-sm">
+    <div class="flex items-center justify-between mb-2">
+      <button class="text-blue-600 font-medium">← Voltar</button>
+      <span class="text-sm text-gray-600">Etapa 6 de 7</span>
+    </div>
+    <h1 class="text-xl font-bold text-gray-900">Disponibilidade Semanal</h1>
+    <p class="text-sm text-gray-600">Selecione os dias de cada atividade</p>
+  </div>
+
+  <div class="px-4 pb-32">
+    
+    <!-- CORRIDA -->
+    <div class="activity-card">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🏃</span>
+          <h3 class="font-bold text-gray-900">Corrida</h3>
+        </div>
+        <span id="run-count" class="text-xs text-gray-500">0 dias</span>
+      </div>
+      
+      <div class="flex gap-2 justify-between" id="run-days">
+        <button onclick="toggleRun(0)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          DOM
+        </button>
+        <button onclick="toggleRun(1)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          SEG
+        </button>
+        <button onclick="toggleRun(2)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          TER
+        </button>
+        <button onclick="toggleRun(3)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          QUA
+        </button>
+        <button onclick="toggleRun(4)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          QUI
+        </button>
+        <button onclick="toggleRun(5)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          SEX
+        </button>
+        <button onclick="toggleRun(6)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          SÁB
+        </button>
+      </div>
+      
+      <!-- Seleção do Longão (aparece quando tem dias) -->
+      <div id="longao-section" class="hidden mt-4 pt-4 border-t border-gray-200">
+        <div class="flex items-start gap-2 mb-3">
+          <span class="text-lg">💡</span>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-900 mb-1">
+              Qual dia será seu <strong>longão</strong>?
+            </p>
+            <p class="text-xs text-gray-600" id="longao-hint">
+              O longão é sua corrida mais longa da semana (recomendado: fim de semana)
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 flex-wrap" id="longao-options">
+          <!-- Preenchido dinamicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MUSCULAÇÃO -->
+    <div class="activity-card">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">💪</span>
+          <h3 class="font-bold text-gray-900">Musculação</h3>
+        </div>
+        <span id="gym-count" class="text-xs text-gray-500">0 dias</span>
+      </div>
+      
+      <div class="flex gap-2 justify-between">
+        <button onclick="toggleGym(0)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          DOM
+        </button>
+        <button onclick="toggleGym(1)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          SEG
+        </button>
+        <button onclick="toggleGym(2)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          TER
+        </button>
+        <button onclick="toggleGym(3)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          QUA
+        </button>
+        <button onclick="toggleGym(4)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          QUI
+        </button>
+        <button onclick="toggleGym(5)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          SEX
+        </button>
+        <button onclick="toggleGym(6)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">
+          SÁB
+        </button>
+      </div>
+    </div>
+
+    <!-- OUTRAS ATIVIDADES (COLAPSADAS) -->
+    <div class="activity-card">
+      <h3 class="font-bold text-gray-900 mb-3">🎯 Outras Atividades (opcional)</h3>
+      
+      <div class="space-y-2">
+        <!-- Natação -->
+        <details class="group">
+          <summary class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+            <span class="font-medium">🏊 Natação</span>
+            <div class="flex items-center gap-2">
+              <span id="swim-count" class="text-xs text-gray-500">0 dias</span>
+              <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+            </div>
+          </summary>
+          <div class="flex gap-2 justify-between mt-2 p-2">
+            <button onclick="toggleSwim(0)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">DOM</button>
+            <button onclick="toggleSwim(1)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEG</button>
+            <button onclick="toggleSwim(2)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">TER</button>
+            <button onclick="toggleSwim(3)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUA</button>
+            <button onclick="toggleSwim(4)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUI</button>
+            <button onclick="toggleSwim(5)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEX</button>
+            <button onclick="toggleSwim(6)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SÁB</button>
+          </div>
+        </details>
+
+        <!-- Ciclismo -->
+        <details class="group">
+          <summary class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+            <span class="font-medium">🚴 Ciclismo</span>
+            <div class="flex items-center gap-2">
+              <span id="bike-count" class="text-xs text-gray-500">0 dias</span>
+              <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+            </div>
+          </summary>
+          <div class="flex gap-2 justify-between mt-2 p-2">
+            <button onclick="toggleBike(0)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">DOM</button>
+            <button onclick="toggleBike(1)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEG</button>
+            <button onclick="toggleBike(2)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">TER</button>
+            <button onclick="toggleBike(3)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUA</button>
+            <button onclick="toggleBike(4)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUI</button>
+            <button onclick="toggleBike(5)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEX</button>
+            <button onclick="toggleBike(6)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SÁB</button>
+          </div>
+        </details>
+
+        <!-- Yoga -->
+        <details class="group">
+          <summary class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+            <span class="font-medium">🧘 Yoga</span>
+            <div class="flex items-center gap-2">
+              <span id="yoga-count" class="text-xs text-gray-500">0 dias</span>
+              <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+            </div>
+          </summary>
+          <div class="flex gap-2 justify-between mt-2 p-2">
+            <button onclick="toggleYoga(0)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">DOM</button>
+            <button onclick="toggleYoga(1)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEG</button>
+            <button onclick="toggleYoga(2)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">TER</button>
+            <button onclick="toggleYoga(3)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUA</button>
+            <button onclick="toggleYoga(4)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUI</button>
+            <button onclick="toggleYoga(5)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEX</button>
+            <button onclick="toggleYoga(6)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SÁB</button>
+          </div>
+        </details>
+
+        <!-- Pilates -->
+        <details class="group">
+          <summary class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+            <span class="font-medium">🤸 Pilates</span>
+            <div class="flex items-center gap-2">
+              <span id="pilates-count" class="text-xs text-gray-500">0 dias</span>
+              <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+            </div>
+          </summary>
+          <div class="flex gap-2 justify-between mt-2 p-2">
+            <button onclick="togglePilates(0)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">DOM</button>
+            <button onclick="togglePilates(1)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEG</button>
+            <button onclick="togglePilates(2)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">TER</button>
+            <button onclick="togglePilates(3)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUA</button>
+            <button onclick="togglePilates(4)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">QUI</button>
+            <button onclick="togglePilates(5)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SEX</button>
+            <button onclick="togglePilates(6)" class="day-btn bg-gray-100 text-gray-400 border-2 border-gray-200">SÁB</button>
+          </div>
+        </details>
+      </div>
+
+      <button class="w-full mt-3 p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 font-medium hover:border-blue-400 hover:text-blue-600">
+        + Adicionar outro esporte
+      </button>
+    </div>
+
+    <!-- INFRAESTRUTURA -->
+    <div class="activity-card">
+      <h3 class="font-bold text-gray-900 mb-3">🏢 Infraestrutura Disponível</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <label class="flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+          <input type="checkbox" class="w-5 h-5">
+          <span>🏋️ Academia</span>
+        </label>
+        <label class="flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+          <input type="checkbox" class="w-5 h-5">
+          <span>🏊 Piscina</span>
+        </label>
+        <label class="flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+          <input type="checkbox" class="w-5 h-5">
+          <span>🏃 Pista</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- PREFERÊNCIAS -->
+    <div class="activity-card">
+      <h3 class="font-bold text-gray-900 mb-3">⚙️ Preferências de Treino <span class="text-red-600">*</span></h3>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block font-medium mb-2 text-sm">Como você prefere treinar?</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="checkbox" class="w-5 h-5">
+              <span class="text-sm">🧍 Sozinho(a)</span>
+            </label>
+            <label class="flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="checkbox" class="w-5 h-5">
+              <span class="text-sm">👥 Em grupo</span>
+            </label>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block font-medium mb-2 text-sm">Onde você prefere treinar?</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="checkbox" class="w-5 h-5">
+              <span class="text-sm">🏢 Indoor</span>
+            </label>
+            <label class="flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="checkbox" class="w-5 h-5">
+              <span class="text-sm">🌳 Outdoor</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Fixo -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4">
+    <div id="summary" class="text-sm mb-3 text-gray-600">
+      Selecione seus dias de treino
+    </div>
+    <button class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg active:bg-blue-700">
+      Continuar →
+    </button>
+  </div>
+
+  <script>
+    const state = {
+      run: new Set(),
+      gym: new Set(),
+      swim: new Set(),
+      bike: new Set(),
+      yoga: new Set(),
+      pilates: new Set(),
+      longao: null,
+      isBeginnerOrNever: false // Simular usuário iniciante (mude para true para testar)
+    };
+
+    const daysShort = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+    const daysFull = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
+    function toggleDay(activity, dayIndex, btn) {
+      if (state[activity].has(dayIndex)) {
+        state[activity].delete(dayIndex);
+        btn.classList.remove('bg-blue-600', 'bg-green-600', 'text-white', 'border-blue-600', 'border-green-600');
+        btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200');
+      } else {
+        state[activity].add(dayIndex);
+        btn.classList.remove('bg-gray-100', 'text-gray-400', 'border-gray-200');
+        
+        const color = activity === 'run' ? 'blue' : 'green';
+        btn.classList.add(`bg-${color}-600`, 'text-white', `border-${color}-600`);
+      }
+
+      updateCount(activity);
+      updateSummary();
+      
+      if (activity === 'run') {
+        updateLongaoSection();
+      }
+    }
+
+    function toggleRun(dayIndex) { toggleDay('run', dayIndex, event.currentTarget); }
+    function toggleGym(dayIndex) { toggleDay('gym', dayIndex, event.currentTarget); }
+    function toggleSwim(dayIndex) { toggleDay('swim', dayIndex, event.currentTarget); }
+    function toggleBike(dayIndex) { toggleDay('bike', dayIndex, event.currentTarget); }
+    function toggleYoga(dayIndex) { toggleDay('yoga', dayIndex, event.currentTarget); }
+    function togglePilates(dayIndex) { toggleDay('pilates', dayIndex, event.currentTarget); }
+
+    function updateCount(activity) {
+      const count = state[activity].size;
+      const el = document.getElementById(`${activity}-count`);
+      if (el) {
+        el.textContent = count === 0 ? '0 dias' : count === 1 ? '1 dia' : `${count} dias`;
+      }
+    }
+
+    function updateLongaoSection() {
+      const section = document.getElementById('longao-section');
+      const options = document.getElementById('longao-options');
+      const hint = document.getElementById('longao-hint');
+      
+      if (state.run.size === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+      
+      // Atualizar hint baseado em nível
+      if (state.isBeginnerOrNever) {
+        hint.textContent = 'Iniciantes: pode deixar em branco por enquanto';
+      } else {
+        hint.textContent = 'O longão é sua corrida mais longa da semana (recomendado: fim de semana)';
+      }
+
+      // Criar botões
+      options.innerHTML = '';
+      
+      // Botão "Sem longão ainda" para iniciantes
+      if (state.isBeginnerOrNever) {
+        const noLongaoBtn = document.createElement('button');
+        noLongaoBtn.type = 'button';
+        noLongaoBtn.onclick = () => selectLongao(null);
+        noLongaoBtn.className = `px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+          state.longao === null
+            ? 'bg-gray-600 text-white'
+            : 'bg-gray-100 text-gray-600 border-2 border-gray-200 hover:border-gray-400'
+        }`;
+        noLongaoBtn.textContent = 'Sem longão ainda';
+        options.appendChild(noLongaoBtn);
+      }
+
+      // Botões dos dias selecionados
+      Array.from(state.run).sort((a, b) => a - b).forEach(dayIdx => {
+        const isWeekend = dayIdx === 0 || dayIdx === 6;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => selectLongao(dayIdx);
+        btn.className = `px-4 py-2 rounded-lg font-medium text-sm transition-all relative ${
+          state.longao === dayIdx
+            ? 'bg-purple-600 text-white border-2 border-purple-600'
+            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-400'
+        }`;
+        btn.textContent = daysFull[dayIdx];
+        
+        // Adicionar estrela nos fins de semana não selecionados
+        if (isWeekend && state.longao !== dayIdx) {
+          const star = document.createElement('span');
+          star.className = 'absolute -top-1 -right-1 text-xs';
+          star.textContent = '⭐';
+          btn.appendChild(star);
+        }
+        
+        options.appendChild(btn);
+      });
+    }
+
+    function selectLongao(dayIdx) {
+      state.longao = dayIdx;
+      updateLongaoSection();
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const activities = [];
+      
+      if (state.run.size > 0) activities.push(`🏃 ${state.run.size}x`);
+      if (state.gym.size > 0) activities.push(`💪 ${state.gym.size}x`);
+      if (state.swim.size > 0) activities.push(`🏊 ${state.swim.size}x`);
+      if (state.bike.size > 0) activities.push(`🚴 ${state.bike.size}x`);
+      if (state.yoga.size > 0) activities.push(`🧘 ${state.yoga.size}x`);
+      if (state.pilates.size > 0) activities.push(`🤸 ${state.pilates.size}x`);
+      
+      const summary = document.getElementById('summary');
+      
+      if (activities.length === 0) {
+        summary.textContent = 'Selecione seus dias de treino';
+      } else {
+        let text = activities.join(' | ');
+        if (state.longao !== null) {
+          text += ` | <span class="text-purple-600 font-semibold">⭐ Longão ${daysShort[state.longao]}</span>`;
+        }
+        summary.innerHTML = text;
+      }
+    }
+
+    // Inicializar contadores
+    ['run', 'gym', 'swim', 'bike', 'yoga', 'pilates'].forEach(updateCount);
+  </script>
+
+</body>
+</html>
