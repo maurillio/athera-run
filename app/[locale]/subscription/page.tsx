@@ -82,8 +82,8 @@ export default function SubscriptionPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-gradient-to-b from-background to-muted/20 pt-20">
-          <div className="container max-w-4xl py-8">
+        <main className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 pt-20">
+          <div className="container mx-auto max-w-6xl px-4 py-8">
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
@@ -111,15 +111,15 @@ export default function SubscriptionPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-b from-background to-muted/20 pt-20">
-        <div className="container max-w-4xl py-8">
+      <main className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 pt-20">
+        <div className="container mx-auto max-w-6xl px-4 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-            <p className="text-muted-foreground">{t('subtitle')}</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('title')}</h1>
+            <p className="text-muted-foreground text-lg">{t('subtitle')}</p>
           </div>
 
-          <div className="grid gap-6">
-            <Card>
+          <div className="grid gap-4 lg:gap-6">
+            <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>

@@ -242,7 +242,7 @@ export default function DashboardPage() {
           {hasCustomPlan && <ProgressAnalysisBanner />}
 
           {!hasCustomPlan && (
-            <Card className="mb-8 border-orange-200 bg-orange-50">
+            <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mb-8 border-orange-200 bg-orange-50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertCircle className="h-5 w-5 text-orange-600" />
@@ -348,7 +348,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Próximo Treino - Design System v1.8.3 */}
-              <Card className="mb-8 bg-gradient-to-br from-orange-100 to-orange-50 border-orange-500 border-2">
+              <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mb-8 bg-gradient-to-br from-orange-100 to-orange-50 border-orange-500 border-2">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     🔥 {t('upcomingWorkouts.title')}
@@ -510,7 +510,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Advanced Features */}
-          <Card className="mt-6">
+          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mt-6">
             <CardHeader>
               <CardTitle>{t('advancedFeatures.title')}</CardTitle>
               <CardDescription>{t('advancedFeatures.description')}</CardDescription>
