@@ -253,9 +253,21 @@ export async function POST(request: NextRequest) {
       aiPlan = await generateAIPlan(aiProfile, 3, customStartDate);
       console.log('[AI PLAN] ✅ Plano gerado pela IA! Total de semanas:', aiPlan.totalWeeks);
     } catch (genError) {
-      console.error('[AI PLAN] ❌ ERRO ao gerar plano com IA:', genError);
-      console.error('[AI PLAN] Stack trace:', genError instanceof Error ? genError.stack : 'No stack');
-      throw new Error(`Falha na geração do plano: ${genError instanceof Error ? genError.message : String(genError)}`);
+      console.error('[AI PLAN] ❌ ERRO CRÍTICO ao gerar plano com IA');
+      console.error('[AI PLAN] Erro:', genError);
+      console.error('[AI PLAN] Tipo:', typeof genError);
+      console.error('[AI PLAN] Nome:', genError instanceof Error ? genError.name : 'Unknown');
+      console.error('[AI PLAN] Mensagem:', genError instanceof Error ? genError.message : String(genError));
+      console.error('[AI PLAN] Stack:', genError instanceof Error ? genError.stack : 'No stack');
+      
+      // Retornar erro mais informativo
+      return NextResponse.json({
+        success: false,
+        error: 'Erro ao gerar plano com IA',
+        details: genError instanceof Error ? genError.message : String(genError),
+        type: genError instanceof Error ? genError.name : typeof genError,
+        hint: 'Possíveis causas: limite de quota da OpenAI, timeout, ou erro no formato da resposta. Verifique os logs do Vercel para mais detalhes.'
+      }, { status: 500 });
     }
 
     // Validar plano
