@@ -1240,7 +1240,7 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
           maxDelay: 10000,
           backoffMultiplier: 2,
         },
-        timeout: 60000, // 60 segundos timeout
+        timeout: 120000, // 120 segundos timeout (aumentado para prompt grande)
       }
     );
 
@@ -1286,8 +1286,13 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
 
     return fullPlan;
   } catch (error) {
-    console.error('[AI PLAN] Falha após todas as tentativas de resiliência:', error);
-    throw new Error('Não foi possível gerar o plano de treinamento neste momento. Por favor, tente novamente em alguns instantes. Se o problema persistir, entre em contato com o suporte.');
+    console.error('[AI PLAN] ❌ ERRO CRÍTICO ao gerar plano:', error);
+    console.error('[AI PLAN] Stack trace:', error instanceof Error ? error.stack : 'No stack');
+    console.error('[AI PLAN] Message:', error instanceof Error ? error.message : String(error));
+    
+    // Re-throw com contexto
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+    throw new Error(`Falha ao gerar plano: ${errorMessage}`);
   }
 }
 
@@ -1404,6 +1409,13 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
       // DETECTAR CORRIDAS A/B/C nesta semana (para passar contexto ao generateWeekWorkouts)
       const weekEnd = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+      
+      console.log(`[AI PLAN] Verificando corridas para semana ${weekNumber}:`, {
+        weekStart: currentWeekStart.toISOString().split('T')[0],
+        weekEnd: weekEnd.toISOString().split('T')[0],
+        totalRaceGoals: profile.raceGoals?.length || 0
+      });
+      
       const raceThisWeek = profile.raceGoals?.find(race => {
         const raceDate = new Date(race.date);
         // Normalizar ambas as datas para meia-noite UTC para comparação precisa
@@ -1413,14 +1425,16 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         
         const isInWeek = raceDateNorm >= weekStartNorm && raceDateNorm <= weekEndNorm;
         
+        console.log(`[AI PLAN DEBUG] Checando corrida "${race.name}":`, {
+          raceDate: raceDateNorm.toISOString().split('T')[0],
+          weekStart: weekStartNorm.toISOString().split('T')[0],
+          weekEnd: weekEndNorm.toISOString().split('T')[0],
+          isInWeek,
+          priority: race.priority
+        });
+        
         if (isInWeek) {
-          console.log(`[AI PLAN DEBUG] Corrida "${race.name}" encontrada na semana ${weekNumber}:`, {
-            raceDate: raceDate.toISOString(),
-            raceDateNorm: raceDateNorm.toISOString(),
-            weekStart: weekStartNorm.toISOString(),
-            weekEnd: weekEndNorm.toISOString(),
-            priority: race.priority
-          });
+          console.log(`[AI PLAN DEBUG] ✅ Corrida "${race.name}" encontrada na semana ${weekNumber}!`);
         }
         
         return isInWeek;
