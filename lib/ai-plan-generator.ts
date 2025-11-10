@@ -364,34 +364,83 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
   context += `- Academia/Musculação: ${profile.hasGymAccess ? 'Sim' : 'Não'}\n`;
   context += `- Piscina/Natação: ${profile.hasPoolAccess ? 'Sim' : 'Não'}\n`;
 
-  // Corridas cadastradas (Sistema A, B, C)
+  // 🎯 Corridas cadastradas (Sistema A, B, C) - CRÍTICO PARA O PLANO!
   if (profile.raceGoals && profile.raceGoals.length > 0) {
-    context += `\n## Corridas Cadastradas (Sistema A/B/C)\n`;
+    context += `\n## 🎯 CORRIDAS CADASTRADAS - PLANEJAMENTO OBRIGATÓRIO\n`;
+    context += `\n⚠️ **ATENÇÃO CRÍTICA:** O atleta cadastrou corridas com objetivos específicos.\n`;
+    context += `TODO o plano DEVE ser estruturado em torno destas datas!\n\n`;
+    
+    // Encontrar Corrida A (objetivo principal)
+    const raciaA = profile.raceGoals.find(r => r.priority === 'A');
+    const corridasB = profile.raceGoals.filter(r => r.priority === 'B');
+    const corridasC = profile.raceGoals.filter(r => r.priority === 'C');
+    
     profile.raceGoals.forEach(race => {
       const raceDate = new Date(race.date);
       const daysUntilRace = Math.floor((raceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-      // Usar Math.ceil para incluir a semana da corrida (mesmo que seja parcial)
       const weeksUntilRace = Math.ceil(daysUntilRace / 7);
+      const weekNumber = weeksUntilRace; // Número da semana no plano
 
-      context += `\n### ${race.name} (Corrida ${race.priority})\n`;
-      context += `- Distância: ${race.distance}\n`;
-      context += `- Data: ${raceDate.toLocaleDateString('pt-BR')} (em ${weeksUntilRace} semanas)\n`;
-      if (race.targetTime) context += `- Meta de Tempo: ${race.targetTime}\n`;
-      context += `- Classificação: `;
-
+      context += `### ${race.priority === 'A' ? '🏆' : race.priority === 'B' ? '🥈' : '🥉'} ${race.name}\n`;
+      context += `- **Distância:** ${race.distance}\n`;
+      context += `- **Data:** ${raceDate.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n`;
+      context += `- **Semana do Plano:** Semana ${weekNumber}\n`;
+      context += `- **Dias Restantes:** ${daysUntilRace} dias\n`;
+      if (race.targetTime) context += `- **Meta de Tempo:** ${race.targetTime}\n`;
+      
       if (race.priority === 'A') {
-        context += `**CORRIDA A (Objetivo Principal)** - Todo o plano deve ser estruturado para chegar no pico nesta corrida\n`;
+        context += `\n🏆 **CORRIDA A - OBJETIVO PRINCIPAL DO ATLETA**\n`;
+        context += `\n**ESTRUTURA OBRIGATÓRIA DO PLANO:**\n`;
+        context += `- **Semana ${Math.max(1, weekNumber - 3)}:** PICO (volume máximo, última corrida longa)\n`;
+        context += `- **Semana ${Math.max(1, weekNumber - 2)}:** TAPER 1 (70% volume, longão 60-70% do máximo)\n`;
+        context += `- **Semana ${weekNumber - 1}:** TAPER 2 (50% volume, qualidade curta)\n`;
+        context += `- **Semana ${weekNumber} (SEMANA DA PROVA):** TAPER FINAL (30% volume, descanso 2-3 dias antes)\n`;
+        context += `\n**PROTOCOLO DO TAPER (OBRIGATÓRIO):**\n`;
+        context += `1. Semana -2 (Semana ${weekNumber - 2}):\n`;
+        context += `   - Volume: 70% do pico\n`;
+        context += `   - Longão: 60-70% do máximo (ÚLTIMA corrida longa!)\n`;
+        context += `   - Qualidade: 1x sessão em ritmo de prova (curta)\n`;
+        context += `2. Semana -1 (Semana ${weekNumber - 1}):\n`;
+        context += `   - Volume: 50% do pico\n`;
+        context += `   - Corridas fáceis curtas (5-8km)\n`;
+        context += `   - 1x sessão: 5km com 3-4x 1km ritmo de prova\n`;
+        context += `3. Semana da Prova (Semana ${weekNumber}):\n`;
+        context += `   - Volume: 30% do pico\n`;
+        context += `   - Segunda: Fácil 5km\n`;
+        context += `   - Terça: DESCANSO\n`;
+        context += `   - Quarta: 5km com 3x 800m ritmo (manter pernas ativas)\n`;
+        context += `   - Quinta: Fácil 3km OU descanso\n`;
+        context += `   - Sexta: DESCANSO TOTAL\n`;
+        context += `   - Sábado (se prova domingo): DESCANSO TOTAL\n`;
+        context += `   - **DIA DA PROVA: 🏁 ${race.name}**\n`;
       } else if (race.priority === 'B') {
-        context += `**CORRIDA B (Preparatória)** - Usar como teste de ritmo e simulado, sem taper completo\n`;
+        context += `\n🥈 **CORRIDA B - PREPARATÓRIA/TESTE**\n`;
+        context += `- Use como simulado de ritmo e teste de estratégia\n`;
+        context += `- Mini-taper: Semana da corrida com 80-85% volume\n`;
+        context += `- Descanso 1 dia antes\n`;
+        context += `- Semana seguinte: Volume normal (recuperação ativa)\n`;
       } else {
-        context += `**CORRIDA C (Volume)** - Usar como treino longo, sem taper\n`;
+        context += `\n🥉 **CORRIDA C - TREINO DE VOLUME**\n`;
+        context += `- Tratar como treino longo intenso\n`;
+        context += `- SEM taper, SEM redução de volume\n`;
+        context += `- Substituir o longão da semana pela corrida\n`;
+        context += `- Use para ganhar experiência e acumular km\n`;
       }
+      context += `\n`;
     });
 
-    context += `\n**IMPORTANTE:** O plano deve considerar todas as corridas cadastradas:\n`;
-    context += `- Corrida A: Estruturar periodização para pico nesta data\n`;
-    context += `- Corridas B: Incluir como treinos de teste de ritmo 2-6 semanas antes da A\n`;
-    context += `- Corridas C: Incluir como treinos longos sem redução de volume\n`;
+    if (raciaA) {
+      context += `\n## ⚠️ REGRAS CRÍTICAS PARA O PLANO\n`;
+      context += `\n1. **TODA a periodização** deve culminar na Corrida A (${raciaA.name})\n`;
+      context += `2. **ÚLTIMA corrida longa** OBRIGATÓRIA 2 semanas antes da Corrida A\n`;
+      context += `3. **TAPER de 2 semanas** é OBRIGATÓRIO para Corrida A (não opcional!)\n`;
+      context += `4. **Volume MÁXIMO (pico)** deve ocorrer 3 semanas antes da Corrida A\n`;
+      context += `5. **Manter INTENSIDADE** durante taper, reduzir apenas VOLUME\n`;
+      context += `6. **DESCANSO TOTAL** 1-2 dias antes da Corrida A\n`;
+      context += `7. **Semana da prova:** Máximo 30% do volume pico, corridas muito fáceis\n`;
+      context += `8. Se houver Corridas B: incluir 4-8 semanas antes da A como simulados\n`;
+      context += `9. Se houver Corridas C: incluir como treinos longos (sem taper)\n\n`;
+    }
   }
 
   // Contexto de Execução Recente (SE DISPONÍVEL)
