@@ -247,9 +247,16 @@ export async function POST(request: NextRequest) {
       });
     }
     
-    const aiPlan = await generateAIPlan(aiProfile, 3, customStartDate);
-
-    console.log('[AI PLAN] Plano gerado pela IA! Total de semanas:', aiPlan.totalWeeks);
+    console.log('[AI PLAN] ⏳ Chamando generateAIPlan...');
+    let aiPlan;
+    try {
+      aiPlan = await generateAIPlan(aiProfile, 3, customStartDate);
+      console.log('[AI PLAN] ✅ Plano gerado pela IA! Total de semanas:', aiPlan.totalWeeks);
+    } catch (genError) {
+      console.error('[AI PLAN] ❌ ERRO ao gerar plano com IA:', genError);
+      console.error('[AI PLAN] Stack trace:', genError instanceof Error ? genError.stack : 'No stack');
+      throw new Error(`Falha na geração do plano: ${genError instanceof Error ? genError.message : String(genError)}`);
+    }
 
     // Validar plano
     const validation = validateAIPlan(aiPlan);
@@ -258,7 +265,35 @@ export async function POST(request: NextRequest) {
       throw new Error(`Plano gerado pela IA é inválido: ${validation.errors.join(', ')}`);
     }
 
-    console.log('[AI PLAN] Plano validado com sucesso! Salvando no banco de dados...');
+    console.log('[AI PLAN] ✅ Plano validado com sucesso!');
+    console.log('[AI PLAN] Salvando no banco de dados...');
+    console.log('[AI PLAN] Detalhes do plano:');
+    console.log(`  - Total semanas: ${aiPlan.totalWeeks}`);
+    console.log(`  - Início: ${aiPlan.startDate.toISOString().split('T')[0]}`);
+    console.log(`  - Corrida alvo: ${aiPlan.targetRaceDate.toISOString().split('T')[0]}`);
+    console.log(`  - Total de weeks geradas: ${aiPlan.weeks.length}`);
+    
+    // Verificar se a corrida alvo está no plano
+    if (aiProfile.raceGoals && aiProfile.raceGoals.length > 0) {
+      const raceADate = aiProfile.raceGoals[0].date;
+      const raceDateStr = raceADate.toISOString().split('T')[0];
+      console.log(`[AI PLAN] Verificando se corrida alvo (${raceDateStr}) está no plano...`);
+      
+      let foundRace = false;
+      aiPlan.weeks.forEach((week, idx) => {
+        week.workouts.forEach(w => {
+          const workoutDateStr = w.date.toISOString().split('T')[0];
+          if (workoutDateStr === raceDateStr) {
+            console.log(`[AI PLAN] ✅ Encontrado workout no dia da corrida: ${w.type} - ${w.title}`);
+            foundRace = true;
+          }
+        });
+      });
+      
+      if (!foundRace) {
+        console.error(`[AI PLAN] ❌ CRÍTICO: Corrida alvo (${raceDateStr}) NÃO está no plano gerado!`);
+      }
+    }
 
     // Criar plano no banco
     const customPlan = await prisma.customTrainingPlan.create({
