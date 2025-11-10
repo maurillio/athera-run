@@ -28,7 +28,7 @@ interface LLMResponse {
  * Call LLM API with current configured provider
  */
 export async function callLLM(request: LLMRequest): Promise<string> {
-  const provider = process.env.LLM_PROVIDER || 'abacusai';
+  const provider = process.env.LLM_PROVIDER || 'openai';
 
   let url: string;
   let headers: Record<string, string>;
@@ -104,7 +104,7 @@ export async function callLLM(request: LLMRequest): Promise<string> {
  */
 export async function testLLMConnection(): Promise<{ success: boolean; message: string; provider: string }> {
   try {
-    const provider = process.env.LLM_PROVIDER || 'abacusai';
+    const provider = process.env.LLM_PROVIDER || 'openai';
 
     const response = await callLLM({
       messages: [
@@ -124,7 +124,7 @@ export async function testLLMConnection(): Promise<{ success: boolean; message: 
     return {
       success: false,
       message: error.message || 'Unknown error',
-      provider: process.env.LLM_PROVIDER || 'abacusai',
+      provider: process.env.LLM_PROVIDER || 'openai',
     };
   }
 }
