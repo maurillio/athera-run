@@ -7,6 +7,35 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.8.2] - 2025-11-10 19:50 UTC
+
+### ✨ UX REFINEMENT - Calendário Limpo e Simplificado
+
+#### Remoção de Seção Redundante
+- **Seção "Detalhes dos Treinos" Removida**: A lista abaixo do calendário foi removida
+- **Hierarquia Visual Clara**: Toda informação agora está nos cards do calendário
+- **Interação Única**: Clique no dia → Veja todos os detalhes expandidos
+- **Menos Scroll**: Interface mais compacta, especialmente em mobile
+
+#### Comportamento Atual
+1. **Calendário Grid**: Mostra todos os dias da semana
+2. **Click para Expandir**: Clique em qualquer dia para ver detalhes completos
+3. **Hoje Auto-Expandido**: O dia atual sempre mostra todos os treinos
+4. **Informação Completa**: Título, descrição, distância, pace, duração tudo no card
+
+#### Benefícios
+- ✅ UX mais limpa e profissional
+- ✅ Menos repetição de informação
+- ✅ Mobile-first: menos rolagem da página
+- ✅ Foco no calendário visual
+- ✅ Mantém todas as funcionalidades (zero perda)
+- ✅ Interação mais intuitiva
+
+#### Arquivos Modificados
+- `app/[locale]/plano/page.tsx`: Removida seção de lista duplicada (76 linhas)
+
+---
+
 ## [1.8.1] - 2025-11-10 19:45 UTC
 
 ### ✨ UX ENHANCEMENT - Cards de Dia com Múltiplos Treinos Expansíveis

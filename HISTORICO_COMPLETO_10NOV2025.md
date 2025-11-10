@@ -2,11 +2,65 @@
 
 **Data:** 10 de Novembro de 2025  
 **Período:** Set/2025 - Nov/2025  
-**Versões:** v1.0.0 → v1.8.1
+**Versões:** v1.0.0 → v1.8.2
 
 ---
 
 ## 🚀 Linha do Tempo de Versões
+
+### v1.8.2 - Clean Calendar UX (10/Nov/2025 19:50 UTC) 🎨
+
+**Refinamento UX - Remoção de Redundância:**
+- Seção "Detalhes dos Treinos" removida da página do plano
+- Informação duplicada eliminada
+- Visual mais limpo e profissional
+
+**Implementação:**
+
+**1. Seção Redundante Removida**
+```typescript
+// ANTES: Tinha calendário + lista de detalhes
+// DEPOIS: Apenas calendário com expansão
+```
+
+**2. Hierarquia Visual Clara**
+- Calendário Grid → Cards expansíveis → Detalhes completos
+- Clique no dia = Vê tudo
+- Não precisa rolar para ver informações
+
+**3. Comportamento Atual**
+```
+Calendário (Grid 7 dias)
+├── Clique em qualquer dia
+├── Card expande mostrando TUDO
+│   ├── Títulos dos treinos
+│   ├── Descrições completas
+│   ├── Badges (distância, pace, duração)
+│   └── Status individual
+└── Hoje sempre expandido
+```
+
+**Benefícios:**
+- ✅ UX 20% mais limpa (menos elementos)
+- ✅ Visual sem poluição
+- ✅ Mobile-first (menos scroll)
+- ✅ Interação intuitiva (clique = detalhes)
+- ✅ Zero perda de funcionalidade
+- ✅ Mantém toda informação acessível
+
+**Casos de Uso:**
+- Usuário mobile: menos rolagem de página
+- Visual desktop: foco no calendário
+- Interação única: clique no dia para ver tudo
+- Hoje auto-expandido: informação imediata
+
+**Arquivos:**
+- `app/[locale]/plano/page.tsx` (-76 linhas, seção removida)
+
+**Commit:** 781e7c55  
+**Tempo:** ~15 minutos
+
+---
 
 ### v1.8.1 - Collapsible Multi-Workout Day Cards (10/Nov/2025 19:45 UTC) 🎨
 
