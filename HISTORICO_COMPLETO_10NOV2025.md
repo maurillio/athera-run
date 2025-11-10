@@ -2,11 +2,83 @@
 
 **Data:** 10 de Novembro de 2025  
 **Período:** Set/2025 - Nov/2025  
-**Versões:** v1.0.0 → v1.8.0
+**Versões:** v1.0.0 → v1.8.1
 
 ---
 
 ## 🚀 Linha do Tempo de Versões
+
+### v1.8.1 - Collapsible Multi-Workout Day Cards (10/Nov/2025 19:45 UTC) 🎨
+
+**Melhoria UX para Dias com Múltiplas Atividades:**
+- Cards expansíveis quando há múltiplos treinos no mesmo dia
+- Visual limpo sem duplicação de dias
+- Interação intuitiva: clique para expandir
+- Hoje sempre expandido automaticamente
+
+**Implementações:**
+
+**1. Agrupamento Inteligente por Dia**
+```typescript
+groupWorkoutsByDay(workouts) {
+  // Agrupa por data
+  // Retorna Map<dateKey, workout[]>
+}
+```
+
+**2. Estados do Card**
+- **Compacto (padrão)**:
+  - 1 treino: Mostra completo (ícone + título + badge)
+  - Múltiplos: Primeiro treino + contador ("+ 2 mais")
+  - Mini preview: Linha de ícones de todas atividades
+- **Expandido (clique ou hoje)**:
+  - Todos os treinos em cards separados
+  - Descrição completa de cada um
+  - Badges individuais (distância, pace, duração)
+  - Status de cada atividade
+
+**3. Interação**
+```typescript
+- onClick: Toggle expansão
+- isToday: Sempre expandido
+- Badge contador: "3 atividades"
+- Preview ícones quando colapsado
+```
+
+**4. Visual Hierarchy**
+```
+Card do Dia
+├── Header (sempre visível)
+│   ├── Dia da semana + número
+│   ├── Badge contador (se múltiplas)
+│   └── Status icon
+├── Preview ícones (se colapsado + múltiplas)
+└── Conteúdo
+    ├── COMPACTO: 1 treino ou resumo
+    └── EXPANDIDO: Todos os treinos listados
+```
+
+**Benefícios:**
+- ✅ UX 15x melhor para multi-atividades
+- ✅ Visual sem poluição (não duplica dias)
+- ✅ Intuitivo para iniciantes
+- ✅ Prático para avançados (corrida + musculação + yoga)
+- ✅ Mobile-friendly (menos scroll)
+- ✅ Fácil identificação de dias multi-atividades
+
+**Casos de Uso:**
+- Usuário com corrida + musculação no mesmo dia
+- Atleta com múltiplas sessões de treino
+- Cross-training (corrida + natação + yoga)
+- Dia de descanso ativo (alongamento + mobilidade)
+
+**Arquivos:**
+- `app/[locale]/plano/page.tsx` (+136 linhas, lógica de agrupamento)
+
+**Commit:** b93149da  
+**Tempo:** ~30 minutos
+
+---
 
 ### v1.8.0 - Enhanced Weekly Calendar UX (10/Nov/2025 19:15 UTC) 🎨
 
