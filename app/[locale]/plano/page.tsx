@@ -230,10 +230,10 @@ export default function PlanoPage() {
 
   const toggleDay = (dateKey: string) => {
     setExpandedDays(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(dateKey)) {
-        newSet.delete(dateKey);
-      } else {
+      const newSet = new Set<string>();
+      // Se o dia clicado já estava expandido, fecha ele (set vazio)
+      // Se não estava expandido, abre apenas ele (fecha todos os outros)
+      if (!prev.has(dateKey)) {
         newSet.add(dateKey);
       }
       return newSet;
