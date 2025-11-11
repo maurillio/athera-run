@@ -45,16 +45,27 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ hasProfile: true, hasCustomPlan: false }, { status: 200 });
     }
 
+    const plan = user.athleteProfile.customPlan;
+    
+    // Verificar se o plano tem a estrutura esperada
+    if (!plan.weeks || !Array.isArray(plan.weeks)) {
+      console.error('Plan weeks structure is invalid:', { planId: plan.id, weeks: plan.weeks });
+      return NextResponse.json({ 
+        hasProfile: true, 
+        hasCustomPlan: false,
+        error: 'Estrutura do plano inválida' 
+      }, { status: 200 });
+    }
+
     // Calcular semana atual baseado na data
     const now = new Date();
-    const plan = user.athleteProfile.customPlan;
     let currentWeek = plan.weeks.find(
-      (week) => now >= week.startDate && now <= week.endDate
+      (week) => now >= new Date(week.startDate) && now <= new Date(week.endDate)
     );
 
     if (!currentWeek && plan.weeks.length > 0) {
       // Se não encontrou, pegar a primeira semana futura ou a última semana passada
-      const futureWeeks = plan.weeks.filter((week) => week.startDate > now);
+      const futureWeeks = plan.weeks.filter((week) => new Date(week.startDate) > now);
       if (futureWeeks.length > 0) {
         currentWeek = futureWeeks[0];
       } else {
@@ -63,7 +74,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Calcular a porcentagem de conclusão baseado nos treinos completados
-    const allWorkouts = plan.weeks.flatMap((week: any) => week.workouts);
+    const allWorkouts = plan.weeks.flatMap((week: any) => week.workouts || []);
     const completedWorkouts = allWorkouts.filter((w: any) => w.isCompleted);
     const completionRate = allWorkouts.length > 0 
       ? (completedWorkouts.length / allWorkouts.length) * 100 
@@ -80,6 +91,11 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching plan:', error);
-    return NextResponse.json({ error: 'Erro ao buscar plano' }, { status: 500 });
+    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error stack:', error instanceof Error ? error.stack : '');
+    return NextResponse.json({ 
+      error: 'Erro ao buscar plano',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
