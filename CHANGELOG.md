@@ -7,6 +7,48 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v2.0.6] - 2025-11-11 13:25 UTC
+
+### 🎯 FEATURE - Dashboard v2.0.0 Integration
+
+**Integração completa: Dashboard agora mostra mesma estrutura detalhada do Plano**
+
+#### 🎯 Objetivo
+Eliminar divergência entre Dashboard e Página de Plano:
+- Dashboard mostrava treinos **básicos** ❌
+- Plano mostrava treinos **detalhados v2.0.0** ✅
+- Experiência **inconsistente** para usuário
+
+#### ✅ Solução
+1. **Interface Workout atualizada** (+14 campos v2.0.0)
+2. **Componente WorkoutDetails integrado** (já existente, reutilizado)
+3. **Renderização inline substituída** por componente profissional
+
+#### 🎨 Dashboard Agora Mostra
+- 🔥 **Aquecimento detalhado** (passos, exercícios, duração)
+- ⚡ **Parte principal estruturada** (zonas FC, cadência, paces)
+- 🧘 **Desaquecimento completo** (alongamentos, recuperação)
+- 🎯 **Objetivo** fisiológico explicado
+- 💡 **Dicas práticas** (3-5 por treino)
+- ⚠️ **Erros comuns** a evitar
+- ✅ **Critérios de sucesso** claros
+
+#### 🎯 Resultado
+- ✅ **Consistência total:** Dashboard = Plano
+- ✅ **Informação completa:** Tudo no dashboard
+- ✅ **Experiência profissional:** Qualidade coaching em todo app
+- ✅ **Reutilização:** Componente usado em múltiplos lugares
+
+#### 📝 Arquivos
+- `app/[locale]/dashboard/page.tsx` (interface + integração)
+- `components/workout-details.tsx` (já existente, reutilizado)
+- `FEATURE_v2.0.6_DASHBOARD_INTEGRATION.md` (documentação)
+
+#### 🧪 Teste
+Comparar Dashboard vs Plano → Informações idênticas ✅
+
+---
+
 ## [v2.0.5] - 2025-11-11 13:20 UTC
 
 ### 🐛 BUGFIX - Enhanced Workout Fields Not Persisting
