@@ -7,6 +7,47 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v2.0.5] - 2025-11-11 13:20 UTC
+
+### 🐛 BUGFIX - Enhanced Workout Fields Not Persisting
+
+**CRÍTICO: Campos v2.0.0 eram gerados mas não salvos no banco**
+
+#### ❌ Problema
+- `workout-enhancer.ts` executando corretamente ✅
+- Logs mostravam "Enriquecido: warmUp=true, objective=true" ✅
+- **MAS:** Campos não eram salvos no PostgreSQL ❌
+- Treinos apareciam básicos sem estrutura detalhada
+
+#### 🔍 Causa Raiz
+`app/api/plan/generate/route.ts` mapeava workouts para Prisma mas **não incluía os 14 campos v2.0.0**:
+```typescript
+// ❌ Faltava: warmUpStructure, objective, tips, etc
+```
+
+#### ✅ Correção
+Adicionados **todos os 14 campos** ao mapeamento Prisma:
+- `warmUpStructure`, `mainWorkoutStruct`, `coolDownStructure`
+- `objective`, `scientificBasis`  
+- `tips`, `commonMistakes`, `successCriteria`
+- `intensityLevel`, `expectedRPE`
+- `heartRateZones`, `intervals`, `expectedDuration`
+
+#### 🎯 Impacto
+- ✅ Treinos agora salvam estrutura completa
+- ✅ UX profissional com 3 fases (aquecimento, principal, desaquecimento)
+- ✅ Conteúdo educacional (dicas, erros comuns, critérios)
+- ✅ Experiência de treino de nível internacional
+
+#### 📝 Arquivos
+- `app/api/plan/generate/route.ts` (+14 campos no mapping)
+- `BUGFIX_v2.0.5_ENHANCED_FIELDS_PERSISTENCE.md` (documentação)
+
+#### 🧪 Teste
+Gerar novo plano → Verificar estrutura detalhada nos treinos
+
+---
+
 ## [v2.0.4] - 2025-11-11 12:45 UTC
 
 ### 🔧 HOTFIX - Database Migration Critical Fix
