@@ -353,6 +353,21 @@ export async function POST(request: NextRequest) {
         warmup: workout.warmup || null,
         mainSet: workout.mainSet || null,
         cooldown: workout.cooldown || null,
+        
+        // v2.0.0 - Estrutura detalhada e enriquecimento educacional
+        warmUpStructure: workout.warmUpStructure || null,
+        mainWorkoutStruct: workout.mainWorkoutStruct || null,
+        coolDownStructure: workout.coolDownStructure || null,
+        objective: workout.objective || null,
+        scientificBasis: workout.scientificBasis || null,
+        tips: workout.tips || null,
+        commonMistakes: workout.commonMistakes || null,
+        successCriteria: workout.successCriteria || null,
+        intensityLevel: workout.intensityLevel || null,
+        expectedRPE: workout.expectedRPE || null,
+        heartRateZones: workout.heartRateZones || null,
+        intervals: workout.intervals || null,
+        expectedDuration: workout.expectedDuration || null,
       }));
 
       await prisma.customWorkout.createMany({
