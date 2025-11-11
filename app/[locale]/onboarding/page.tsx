@@ -142,6 +142,13 @@ export default function OnboardingPage() {
       return;
     }
     
+    // Se está no Step 2 e usuário nunca correu, pular Step 3 (Performance)
+    if (currentStep === 2 && formData.hasRunBefore === false) {
+      setCurrentStep(4); // Pula direto para Step 4 (Health)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    
     if (currentStep < TOTAL_STEPS) {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -150,6 +157,13 @@ export default function OnboardingPage() {
 
   // Handle previous step
   const handlePrevious = () => {
+    // Se está no Step 4 e usuário nunca correu, voltar para Step 2 (pula Step 3)
+    if (currentStep === 4 && formData.hasRunBefore === false) {
+      setCurrentStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -349,7 +363,11 @@ export default function OnboardingPage() {
   };
 
   // Calculate progress percentage
-  const progress = (currentStep / TOTAL_STEPS) * 100;
+  // Ajustar progress baseado em pular Step 3 se nunca correu
+  const shouldSkipPerformance = formData.hasRunBefore === false;
+  const effectiveTotalSteps = shouldSkipPerformance ? TOTAL_STEPS - 1 : TOTAL_STEPS;
+  const effectiveCurrentStep = shouldSkipPerformance && currentStep > 3 ? currentStep - 1 : currentStep;
+  const progress = (effectiveCurrentStep / effectiveTotalSteps) * 100;
 
   // Se está gerando o plano, mostrar loading
   if (generatingPlan) {
