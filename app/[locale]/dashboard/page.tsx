@@ -47,6 +47,7 @@ import TrainingChat from '@/components/training-chat';
 import UpgradeBanner from '@/components/subscription/upgrade-banner';
 import ProgressAnalysisBanner from '@/components/progress-analysis-banner';
 import WorkoutLogDialog from '@/components/dashboard/workout-log-dialog';
+import { WorkoutDetails } from '@/components/workout-details';
 
 interface CustomPlan {
   id: number;
@@ -81,6 +82,21 @@ interface Workout {
   duration: number | null;
   targetPace: string | null;
   isCompleted: boolean;
+  
+  // v2.0.0 - Estrutura detalhada e enriquecimento educacional
+  warmUpStructure?: any;
+  mainWorkoutStruct?: any;
+  coolDownStructure?: any;
+  objective?: string;
+  scientificBasis?: string;
+  tips?: string[];
+  commonMistakes?: string[];
+  successCriteria?: string[];
+  intensityLevel?: number;
+  expectedRPE?: number;
+  heartRateZones?: any;
+  intervals?: any;
+  expectedDuration?: number;
 }
 
 export default function DashboardPage() {
@@ -386,59 +402,53 @@ export default function DashboardPage() {
                       return todayAndTomorrow.map((workout: Workout) => {
                         const workoutDate = dayjs(workout.date).tz(appTimezone).startOf('day');
                         const isToday = workoutDate.isSame(today, 'day');
+                        const isMissed = workoutDate.isBefore(today, 'day') && !workout.isCompleted;
                         
                         return (
                           <div
                             key={workout.id}
-                            className={`p-4 rounded-lg border-2 transition-all ${
+                            className={`rounded-lg border-2 transition-all ${
                               workout.isCompleted
                                 ? 'bg-gradient-to-br from-green-100 to-green-50 border-green-500'
-                                : (workoutDate.isBefore(today, 'day') && !workout.isCompleted)
+                                : isMissed
                                   ? 'bg-gradient-to-br from-red-100 to-red-50 border-red-500'
                                   : 'bg-white border-gray-300'
                             }`}
                           >
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex items-center gap-2">
-                                <Badge className={isToday ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-700"}>
-                                  {isToday ? '🔥 ' + t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
-                                </Badge>
-                                {workout.isCompleted ? (
-                                  <CheckCircle2 className="h-5 w-5 text-green-600" />
-                                ) : (workoutDate.isBefore(today, 'day') && !workout.isCompleted) ? (
-                                  <XCircle className="h-5 w-5 text-red-600" />
-                                ) : null}
+                            {/* Header com badges */}
+                            <div className="p-4 border-b">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <Badge className={isToday ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-700"}>
+                                    {isToday ? '🔥 ' + t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
+                                  </Badge>
+                                  {workout.isCompleted ? (
+                                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                  ) : isMissed ? (
+                                    <XCircle className="h-5 w-5 text-red-600" />
+                                  ) : null}
+                                </div>
                               </div>
                             </div>
-                            
-                            <h4 className="font-semibold text-base mb-2">{workout.title}</h4>
-                            <p className="text-sm text-gray-600 mb-3 leading-relaxed">{workout.description}</p>
-                            
-                            <div className="flex flex-wrap gap-2 mb-3">
-                              {workout.distance && (
-                                <Badge className="bg-blue-100 text-blue-700">
-                                  📏 {tPlano('workout.distance', { distance: workout.distance })}
-                                </Badge>
-                              )}
-                              {workout.duration && (
-                                <Badge className="bg-purple-100 text-purple-700">
-                                  ⏱️ {tPlano('workout.duration', { duration: workout.duration })}
-                                </Badge>
-                              )}
-                              {workout.targetPace && (
-                                <Badge className="bg-green-100 text-green-700">
-                                  🎯 {tPlano('workout.pace', { pace: workout.targetPace })}
-                                </Badge>
-                              )}
+
+                            {/* Detalhes do treino usando componente v2.0.0 */}
+                            <div className="p-4">
+                              <WorkoutDetails 
+                                workout={workout as any} 
+                                isExpanded={true}
+                              />
                             </div>
 
+                            {/* Botão de confirmação */}
                             {!workout.isCompleted && isToday && workout.type !== 'rest' && (
-                              <Button 
-                                onClick={() => handleOpenWorkoutLog(workout)}
-                                className="mt-2 bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
-                              >
-                                {t('upcomingWorkouts.confirmButton')}
-                              </Button>
+                              <div className="px-4 pb-4">
+                                <Button 
+                                  onClick={() => handleOpenWorkoutLog(workout)}
+                                  className="w-full bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
+                                >
+                                  {t('upcomingWorkouts.confirmButton')}
+                                </Button>
+                              </div>
                             )}
                           </div>
                         );
