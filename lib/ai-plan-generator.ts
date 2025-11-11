@@ -199,6 +199,44 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
   
   let context = `# PERFIL DO ATLETA\n\n`;
   
+  // Detectar iniciante absoluto
+  const isAbsoluteBeginner = profile.currentWeeklyKm === 0 || profile.longestRun === 0 || (profile as any).hasRunBefore === false;
+  
+  if (isAbsoluteBeginner) {
+    context += `\n⚠️ ⚠️ ⚠️ ATENÇÃO CRÍTICA ⚠️ ⚠️ ⚠️\n`;
+    context += `**INICIANTE ABSOLUTO - NUNCA CORREU ANTES**\n\n`;
+    context += `Este atleta NUNCA correu ou não tem experiência recente em corrida.\n`;
+    context += `O plano DEVE seguir protocolo específico para iniciantes:\n\n`;
+    context += `📋 PROTOCOLO OBRIGATÓRIO PARA INICIANTES:\n`;
+    context += `1. **Semana 1-2**: APENAS CAMINHADAS\n`;
+    context += `   - Iniciar com 20-30 minutos de caminhada rápida\n`;
+    context += `   - Objetivo: preparar articulações e músculos\n`;
+    context += `   - NÃO incluir corrida ainda\n\n`;
+    context += `2. **Semana 3-4**: Método CAMINHADA + TROTE\n`;
+    context += `   - 1 min trote + 2 min caminhada (repetir 8-10x)\n`;
+    context += `   - Total: 24-30 minutos\n`;
+    context += `   - Progressão gradual do tempo de trote\n\n`;
+    context += `3. **Semana 5-6**: Aumentar tempo de trote\n`;
+    context += `   - 2 min trote + 1 min caminhada (repetir 8-10x)\n`;
+    context += `   - Primeira corrida contínua de 10-15 min no final da semana 6\n\n`;
+    context += `4. **Semana 7+**: Corrida contínua curta\n`;
+    context += `   - Iniciar com 15-20 min corrida contínua\n`;
+    context += `   - Aumentar 10% por semana (máximo)\n`;
+    context += `   - Foco em TEMPO, não distância\n\n`;
+    context += `❌ PROIBIDO PARA INICIANTES:\n`;
+    context += `- Começar com mais de 1km de corrida contínua\n`;
+    context += `- Treinos de velocidade nas primeiras 8 semanas\n`;
+    context += `- Aumentar volume mais de 10% por semana\n`;
+    context += `- Longões acima de 50% do volume semanal\n`;
+    context += `- Ignorar dias de descanso\n\n`;
+    context += `✅ OBRIGATÓRIO:\n`;
+    context += `- Progressão MUITO gradual\n`;
+    context += `- Enfatizar prevenção de lesões\n`;
+    context += `- Incluir educação sobre técnica de corrida\n`;
+    context += `- Explicar importância do descanso\n`;
+    context += `- Motivar e encorajar (não intimidar)\n\n`;
+  }
+  
   // Dados básicos
   context += `## Dados Básicos\n`;
   context += `- Nível de Corrida: ${profile.runningLevel}\n`;
@@ -1076,9 +1114,77 @@ Antes de gerar cada treino, certifique-se:
 
 **ESTA ESTRUTURA É OBRIGATÓRIA.** Não gere treinos simples sem esses detalhes!
 
+---
+
+## 🎯 PERSONALIZAÇÃO E VARIAÇÃO OBRIGATÓRIA
+
+### Princípios de Personalização
+
+Cada plano DEVE ser ÚNICO baseado em:
+
+1. **Volume Base do Atleta:**
+   - Iniciante absoluto (0km): Começar com caminhadas
+   - Iniciante (5-10km/sem): Treinos curtos, progressão lenta
+   - Intermediário (20-40km/sem): Volume moderado, qualidade aumenta
+   - Avançado (50+km/sem): Volume alto, treinos complexos
+
+2. **Histórico de Performance:**
+   - Com tempos registrados: Use VDOT real para paces precisos
+   - Sem histórico: Estime conservadoramente e ajuste
+
+3. **Disponibilidade Real:**
+   - Respeite TODOS os dias cadastrados
+   - Adapte volume aos dias disponíveis
+   - Considere outras atividades do atleta
+
+4. **Perfil Fisiológico:**
+   - Idade: Mais velho = mais recuperação
+   - Peso: Ajuste distâncias para impacto articular
+   - Sono/Estresse: Afeta capacidade de treino
+
+### Variação Semanal OBRIGATÓRIA
+
+❌ **PROIBIDO** repetir exatamente o mesmo treino toda semana:
+```
+Semana 1: 5km easy, 5km easy, 8km long
+Semana 2: 5km easy, 5km easy, 8km long  ❌ ERRADO!
+```
+
+✅ **CORRETO** - Variar estímulos:
+```
+Semana 1: 5km easy, 5km easy, 8km long
+Semana 2: 4km easy, 6km fartlek, 9km long  ✅ CERTO!
+Semana 3: 5km easy, 4km tempo, 10km long   ✅ CERTO!
+```
+
+### Progressão Lógica
+
+Cada semana deve ter PROPÓSITO claro:
+- **Semana de Construção:** +10% volume, mantém intensidade
+- **Semana de Qualidade:** Volume estável, adiciona velocidade
+- **Semana de Recuperação:** -20-30% volume (a cada 3-4 semanas)
+- **Semana de Pico:** Máximo volume, qualidade moderada
+- **Semana de Taper:** -30-50% volume, mantém intensidade
+
+### Evitar Monotonia
+
+**Treinos Easy:** Variar distância e pace ligeiramente
+- 4km, 5km, 6km, 7km (não sempre 5km!)
+- Easy conversacional, easy progressivo, easy regenerativo
+
+**Treinos Quality:** Alternar tipos
+- Semana 1: Tempo run
+- Semana 2: Intervalos curtos
+- Semana 3: Fartlek
+- Semana 4: Tempo run (distância diferente)
+
+**Longões:** Progressão clara
+- Não fazer sempre a mesma distância
+- Variar: long easy, long progressivo, long com ritmo de prova
+
 ---`;
 
-  const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento COMPLETA e PERSONALIZADA para este atleta.\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
+  const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento COMPLETA e ALTAMENTE PERSONALIZADA para este atleta ESPECÍFICO.\n\n⚠️ IMPORTANTE: Cada plano deve ser ÚNICO baseado no perfil real do atleta. Use TODOS os dados fornecidos para personalizar.\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
   "paces": {\n    "easy": "X:XX min/km",\n    "marathon": "X:XX min/km",\n    "threshold": "X:XX min/km",\n    "interval": "X:XX min/km",\n    "repetition": "X:XX min/km"\n  },\n  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",\n  "keyConsiderations": ["consideração 1", "consideração 2", ...],
   "progressionStrategy": "Como o plano progride do início ao fim",
   "nutritionAdvice": "Conselhos nutricionais para este objetivo",
