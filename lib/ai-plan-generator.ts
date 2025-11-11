@@ -199,40 +199,163 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
   
   let context = `# PERFIL DO ATLETA\n\n`;
   
-  // Detectar iniciante absoluto e fornecer contexto (não regras fixas)
+  // CONTEXTO PROFUNDO - Análise do Perfil (para TODOS os níveis)
   const isAbsoluteBeginner = profile.currentWeeklyKm === 0 || profile.longestRun === 0 || (profile as any).hasRunBefore === false;
+  const hasExperience = profile.currentWeeklyKm > 0 && profile.longestRun > 0;
+  const hasRaceHistory = profile.usualPaces && Object.keys(profile.usualPaces).length > 0;
+  const isHighVolume = profile.currentWeeklyKm >= 50;
   
+  context += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  context += `🎯 VOCÊ É UM TREINADOR DE ELITE CRIANDO UM PLANO ÚNICO\n`;
+  context += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  context += `⚠️ MISSÃO CRÍTICA:\n`;
+  context += `Analise PROFUNDAMENTE este atleta e crie um plano que seja:\n`;
+  context += `- 100% ÚNICO para esta pessoa específica\n`;
+  context += `- Impossível de confundir com plano de outra pessoa\n`;
+  context += `- Baseado em ANÁLISE REAL, não fórmulas prontas\n\n`;
+  
+  // Análise contextual do perfil
   if (isAbsoluteBeginner) {
-    context += `\n⚠️ CONTEXTO IMPORTANTE: INICIANTE ABSOLUTO\n\n`;
-    context += `Este atleta NUNCA correu ou não tem experiência recente.\n\n`;
-    context += `🎯 **Sua missão como treinador especialista:**\n`;
-    context += `Analise profundamente este perfil e crie um plano que seja:\n`;
-    context += `- **Seguro:** Progressão que evita lesões típicas de iniciantes\n`;
-    context += `- **Motivador:** Objetivos alcançáveis que criam momentum\n`;
-    context += `- **Educacional:** Ensine conceitos básicos de corrida\n`;
-    context += `- **Realista:** Considere que tudo é novo para esta pessoa\n\n`;
-    context += `💡 **Considerações de um bom treinador:**\n`;
-    context += `- Qual é o ponto de partida ideal para ESTA pessoa especificamente?\n`;
-    context += `- Considerando idade, peso, outras atividades físicas, qual progressão faz sentido?\n`;
-    context += `- Como construir confiança sem gerar frustração ou lesão?\n`;
-    context += `- Qual ritmo de evolução é adequado para o tempo disponível até a meta?\n`;
-    context += `- Como tornar cada treino uma pequena vitória?\n\n`;
-    context += `🏃 **Lembre-se:**\n`;
-    context += `- Iniciantes podem ter condicionamento de outros esportes\n`;
-    context += `- Cada pessoa tem capacidade de adaptação diferente\n`;
-    context += `- O plano ideal é aquele que a pessoa CONSEGUE e QUER seguir\n`;
-    context += `- Segurança e prevenção de lesões são prioridade máxima\n\n`;
-  } else {
-    context += `\n💪 **Perfil de corredor com experiência**\n`;
-    context += `Este atleta já tem base de corrida. Analise seus dados reais e crie um plano que:\n`;
-    context += `- Respeite seu volume atual como ponto de partida\n`;
-    context += `- Use seus tempos de prova para calcular paces precisos\n`;
-    context += `- Considere seu histórico de lesões e limitações\n`;
-    context += `- Crie progressão desafiadora mas sustentável\n`;
-    context += `- Varie estímulos para evitar monotonia e platôs\n\n`;
+    context += `📊 PERFIL DETECTADO: Iniciante Absoluto (sem base de corrida)\n\n`;
+    context += `🔍 ANÁLISE OBRIGATÓRIA ANTES DE CRIAR O PLANO:\n\n`;
+    context += `1. **Base Atlética:**\n`;
+    context += `   - Tem experiência em outros esportes? (${(profile as any).otherSportsExperience || 'não informado'})\n`;
+    context += `   - Se sim: Qual capacidade cardiovascular já possui?\n`;
+    context += `   - Se não: Precisa construir tudo do zero?\n\n`;
+    
+    context += `2. **Perfil Físico & Biomecânico:**\n`;
+    context += `   - Idade ${profile.age || '?'} anos: Capacidade de recuperação e adaptação?\n`;
+    context += `   - Peso ${profile.weight}kg + Altura ${profile.height || '?'}cm: Impacto articular a considerar?\n`;
+    context += `   - Histórico de lesões: ${(profile as any).hasInjuryHistory ? 'SIM - ATENÇÃO REDOBRADA' : 'Não'}\n\n`;
+    
+    context += `3. **Estilo de Vida Real:**\n`;
+    context += `   - Sono: ${(profile as any).sleepQuality ? (profile as any).sleepQuality + '/5' : '?'} - Afeta recuperação\n`;
+    context += `   - Estresse: ${(profile as any).stressLevel ? (profile as any).stressLevel + '/5' : '?'} - Afeta capacidade de treino\n`;
+    context += `   - Tempo disponível: ${Object.keys(profile.trainingSchedule || {}).length} dias/semana\n\n`;
+    
+    context += `4. **Ponto de Partida Ideal:**\n`;
+    context += `   🤔 Perguntas que VOCÊ deve responder:\n`;
+    context += `   - Dado TODO esse contexto, qual é o primeiro treino apropriado?\n`;
+    context += `   - Caminhada? Por quanto tempo? Por quê?\n`;
+    context += `   - Ou já pode trotar? Por quanto tempo? Por quê?\n`;
+    context += `   - Qual ritmo de progressão faz sentido para ESTA pessoa?\n`;
+    context += `   - Como balancear segurança com motivação?\n\n`;
+    
+    context += `5. **Progressão Personalizada:**\n`;
+    context += `   - Quanto tempo até corrida contínua? (depende da base atlética!)\n`;
+    context += `   - Qual % de aumento semanal? (depende de idade, peso, recuperação!)\n`;
+    context += `   - Quando introduzir qualidade? (depende de como adapta!)\n\n`;
+    
+  } else if (hasExperience && !hasRaceHistory) {
+    context += `📊 PERFIL DETECTADO: Corredor em Desenvolvimento (${profile.currentWeeklyKm}km/semana)\n\n`;
+    context += `🔍 ANÁLISE OBRIGATÓRIA:\n\n`;
+    
+    context += `1. **Nível Atual Real:**\n`;
+    context += `   - Volume: ${profile.currentWeeklyKm}km/semana - Isto é ALTO ou BAIXO para ele?\n`;
+    context += `   - Longão: ${profile.longestRun}km - Qual % do volume semanal?\n`;
+    context += `   - Anos correndo: ${(profile as any).runningYears || '?'} - Veterano ou ainda adaptando?\n\n`;
+    
+    context += `2. **Capacidade de Progressão:**\n`;
+    context += `   🤔 Analise:\n`;
+    context += `   - Com este volume base, quanto pode aumentar SEM risco?\n`;
+    context += `   - Já tem base aeróbica? Ou precisa construir mais?\n`;
+    context += `   - Pode aguentar treinos de qualidade? Ou ainda precisa volume base?\n`;
+    context += `   - Histórico de lesões indica fragilidade ou resiliência?\n\n`;
+    
+    context += `3. **Gap de Desenvolvimento:**\n`;
+    context += `   - O que falta para alcançar ${profile.goalDistance}?\n`;
+    context += `   - É questão de volume? Velocidade? Resistência mental?\n`;
+    context += `   - Onde estão os pontos fracos desta pessoa?\n`;
+    context += `   - Como transformar fraquezas em forças?\n\n`;
+    
+    context += `4. **Estratégia Individualizada:**\n`;
+    context += `   - Perfil de treino atual parece monótono? Precisa variar?\n`;
+    context += `   - Ou está progredindo bem e só precisa estrutura?\n`;
+    context += `   - Como tornar cada semana diferente e engajante?\n\n`;
+    
+  } else if (hasRaceHistory && !isHighVolume) {
+    context += `📊 PERFIL DETECTADO: Corredor Experiente (${profile.currentWeeklyKm}km/semana, com histórico)\n\n`;
+    context += `🔍 ANÁLISE PROFUNDA:\n\n`;
+    
+    context += `1. **Dados Reais de Performance:**\n`;
+    context += `   ${Object.entries(profile.usualPaces || {}).map(([dist, pace]) => `- ${dist}: ${pace}`).join('\n   ')}\n\n`;
+    context += `   🤔 O que isso revela:\n`;
+    context += `   - Qual é o VDOT real desta pessoa?\n`;
+    context += `   - Está correndo próximo do potencial ou tem margem?\n`;
+    context += `   - Paces são coerentes entre distâncias?\n`;
+    context += `   - Onde está o ponto fraco? (base aeróbica? velocidade? resistência?)\n\n`;
+    
+    context += `2. **Potencial de Melhora:**\n`;
+    context += `   - Volume atual ${profile.currentWeeklyKm}km - Pode aumentar sem overtraining?\n`;
+    context += `   - Tempo disponível: ${weeksUntilRace} semanas - Suficiente para que tipo de ganho?\n`;
+    context += `   - Idade ${profile.age || '?'} - Capacidade de absorver treinos intensos?\n\n`;
+    
+    context += `3. **Plano de Ataque Personalizado:**\n`;
+    context += `   🎯 Decida baseado no perfil real:\n`;
+    context += `   - Este atleta precisa mais de VOLUME ou QUALIDADE?\n`;
+    context += `   - Qual mix de treinos vai gerar máximo ganho?\n`;
+    context += `   - Como evitar que platee ou se lesione?\n`;
+    context += `   - Que tipo de treinos vão mantê-lo engajado?\n\n`;
+    
+  } else if (isHighVolume) {
+    context += `📊 PERFIL DETECTADO: Atleta de Alto Volume (${profile.currentWeeklyKm}km/semana)\n\n`;
+    context += `🔍 ANÁLISE DE ATLETA AVANÇADO:\n\n`;
+    
+    context += `1. **Capacidade Demonstrada:**\n`;
+    context += `   - ${profile.currentWeeklyKm}km/semana - Volume substancial!\n`;
+    context += `   - Anos de experiência: ${(profile as any).runningYears || '?'}\n`;
+    context += `   - Histórico de provas: ${hasRaceHistory ? 'SIM - Use dados reais!' : 'Não disponível'}\n\n`;
+    
+    context += `2. **Desafio do Alto Rendimento:**\n`;
+    context += `   🤔 Questões críticas:\n`;
+    context += `   - Como adicionar estímulo SEM overtraining?\n`;
+    context += `   - Qual é o limitador atual? (não é volume!)\n`;
+    context += `   - Velocidade máxima? Limiar? Economia de corrida?\n`;
+    context += `   - Como periodizar para pico no dia certo?\n\n`;
+    
+    context += `3. **Plano de Elite:**\n`;
+    context += `   - Não precisa "aprender a correr" - precisa OTIMIZAR\n`;
+    context += `   - Qualidade > Quantidade (já tem quantidade)\n`;
+    context += `   - Recuperação estratégica é CRUCIAL\n`;
+    context += `   - Cada treino deve ter propósito cirúrgico\n`;
+    context += `   - Como evitar monotonia em alto volume?\n\n`;
   }
   
+  context += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  context += `💡 PRINCÍPIOS FUNDAMENTAIS PARA TODOS OS NÍVEIS:\n`;
+  context += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  context += `1. **Individualização Total:**\n`;
+  context += `   - Não existe "plano padrão para intermediário"\n`;
+  context += `   - Intermediário de 25 anos ≠ Intermediário de 45 anos\n`;
+  context += `   - Mesmo volume, diferentes históricos = planos diferentes\n\n`;
+  
+  context += `2. **Análise Contextual:**\n`;
+  context += `   - Use TODOS os dados: idade, peso, sono, estresse, lesões, disponibilidade\n`;
+  context += `   - Pergunte: "O que ESTA pessoa precisa para ter sucesso?"\n`;
+  context += `   - Não pergunte: "O que o manual diz para intermediários?"\n\n`;
+  
+  context += `3. **Progressão Inteligente:**\n`;
+  context += `   - Desafiadora mas não temerária\n`;
+  context += `   - Baseada em capacidade real, não categoria\n`;
+  context += `   - Ajustada por resposta individual (sono, estresse, lesões)\n\n`;
+  
+  context += `4. **Variação com Propósito:**\n`;
+  context += `   - Cada semana deve ser DIFERENTE da anterior\n`;
+  context += `   - Mas com LÓGICA de progressão clara\n`;
+  context += `   - Monotonia = abandono\n`;
+  context += `   - Variedade = engajamento = resultados\n\n`;
+  
+  context += `5. **Tom Personalizado:**\n`;
+  context += `   - Escreva como se conhecesse esta pessoa\n`;
+  context += `   - "Dado seu histórico de..." não "Corredores intermediários..."\n`;
+  context += `   - "Considerando que você..." não "Neste nível..."\n\n`;
+  
   // Dados básicos
+  context += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  context += `📋 DADOS COMPLETOS DO ATLETA:\n`;
+  context += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   context += `## Dados Básicos\n`;
   context += `- Nível de Corrida: ${profile.runningLevel}\n`;
   context += `- Objetivo: ${profile.goalDistance}\n`;
