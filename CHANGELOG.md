@@ -7,6 +7,54 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v2.0.4] - 2025-11-11 12:45 UTC
+
+### 🔧 HOTFIX - Database Migration Critical Fix
+
+**CRÍTICO: Aplicação de migrations pendentes v2.0.0 no banco de produção**
+
+#### ❌ Problema Identificado
+```
+PrismaClientKnownRequestError: The column `custom_workouts.warmUpStructure` does not exist in the current database.
+```
+- Schema local com campos v2.0.0 ≠ banco produção
+- 3 migrations pendentes não aplicadas
+- API `/api/plan/current` retornando erro 500
+- Sistema indisponível para usuários
+
+#### ✅ Correção Aplicada
+```bash
+# 1. Resolver migration falhada
+npx prisma migrate resolve --rolled-back 20251103200800_add_comprehensive_athlete_data_v1_3_0
+
+# 2. Aplicar migrations pendentes
+npx prisma migrate deploy
+  ✅ 20251107_make_training_plan_fields_optional_v1_5_3
+  ✅ 20251107121746_make_goal_distance_optional  
+  ✅ 20251110_workout_structure_v2_0_0
+
+# 3. Regenerar Prisma Client
+npx prisma generate
+```
+
+#### 📊 Campos Adicionados (v2.0.0)
+- **Estrutura:** `warmUpStructure`, `mainWorkoutStruct`, `coolDownStructure` (JSON)
+- **Educacional:** `objective`, `scientificBasis`, `tips`, `commonMistakes`, `successCriteria`
+- **Métricas:** `intensityLevel`, `expectedRPE`, `heartRateZones`, `intervals`, `expectedDuration`
+- **Índices:** `intensity_idx`, `type_idx`, `date_idx`
+
+**Total:** 14 campos + 3 índices
+
+#### 🎯 Resultado
+- ✅ Database schema atualizado
+- ✅ Todas migrations aplicadas
+- ✅ Sistema pronto para v2.0.0
+
+#### 📝 Arquivos
+- `HOTFIX_v2.0.4_DATABASE_MIGRATION.md` (documentação completa)
+
+---
+
 ## [v2.0.3] - 2025-11-11 01:00 UTC
 
 ### 🔧 MELHORIA - Error Handling & Logging
