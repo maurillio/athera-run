@@ -199,42 +199,37 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
   
   let context = `# PERFIL DO ATLETA\n\n`;
   
-  // Detectar iniciante absoluto
+  // Detectar iniciante absoluto e fornecer contexto (não regras fixas)
   const isAbsoluteBeginner = profile.currentWeeklyKm === 0 || profile.longestRun === 0 || (profile as any).hasRunBefore === false;
   
   if (isAbsoluteBeginner) {
-    context += `\n⚠️ ⚠️ ⚠️ ATENÇÃO CRÍTICA ⚠️ ⚠️ ⚠️\n`;
-    context += `**INICIANTE ABSOLUTO - NUNCA CORREU ANTES**\n\n`;
-    context += `Este atleta NUNCA correu ou não tem experiência recente em corrida.\n`;
-    context += `O plano DEVE seguir protocolo específico para iniciantes:\n\n`;
-    context += `📋 PROTOCOLO OBRIGATÓRIO PARA INICIANTES:\n`;
-    context += `1. **Semana 1-2**: APENAS CAMINHADAS\n`;
-    context += `   - Iniciar com 20-30 minutos de caminhada rápida\n`;
-    context += `   - Objetivo: preparar articulações e músculos\n`;
-    context += `   - NÃO incluir corrida ainda\n\n`;
-    context += `2. **Semana 3-4**: Método CAMINHADA + TROTE\n`;
-    context += `   - 1 min trote + 2 min caminhada (repetir 8-10x)\n`;
-    context += `   - Total: 24-30 minutos\n`;
-    context += `   - Progressão gradual do tempo de trote\n\n`;
-    context += `3. **Semana 5-6**: Aumentar tempo de trote\n`;
-    context += `   - 2 min trote + 1 min caminhada (repetir 8-10x)\n`;
-    context += `   - Primeira corrida contínua de 10-15 min no final da semana 6\n\n`;
-    context += `4. **Semana 7+**: Corrida contínua curta\n`;
-    context += `   - Iniciar com 15-20 min corrida contínua\n`;
-    context += `   - Aumentar 10% por semana (máximo)\n`;
-    context += `   - Foco em TEMPO, não distância\n\n`;
-    context += `❌ PROIBIDO PARA INICIANTES:\n`;
-    context += `- Começar com mais de 1km de corrida contínua\n`;
-    context += `- Treinos de velocidade nas primeiras 8 semanas\n`;
-    context += `- Aumentar volume mais de 10% por semana\n`;
-    context += `- Longões acima de 50% do volume semanal\n`;
-    context += `- Ignorar dias de descanso\n\n`;
-    context += `✅ OBRIGATÓRIO:\n`;
-    context += `- Progressão MUITO gradual\n`;
-    context += `- Enfatizar prevenção de lesões\n`;
-    context += `- Incluir educação sobre técnica de corrida\n`;
-    context += `- Explicar importância do descanso\n`;
-    context += `- Motivar e encorajar (não intimidar)\n\n`;
+    context += `\n⚠️ CONTEXTO IMPORTANTE: INICIANTE ABSOLUTO\n\n`;
+    context += `Este atleta NUNCA correu ou não tem experiência recente.\n\n`;
+    context += `🎯 **Sua missão como treinador especialista:**\n`;
+    context += `Analise profundamente este perfil e crie um plano que seja:\n`;
+    context += `- **Seguro:** Progressão que evita lesões típicas de iniciantes\n`;
+    context += `- **Motivador:** Objetivos alcançáveis que criam momentum\n`;
+    context += `- **Educacional:** Ensine conceitos básicos de corrida\n`;
+    context += `- **Realista:** Considere que tudo é novo para esta pessoa\n\n`;
+    context += `💡 **Considerações de um bom treinador:**\n`;
+    context += `- Qual é o ponto de partida ideal para ESTA pessoa especificamente?\n`;
+    context += `- Considerando idade, peso, outras atividades físicas, qual progressão faz sentido?\n`;
+    context += `- Como construir confiança sem gerar frustração ou lesão?\n`;
+    context += `- Qual ritmo de evolução é adequado para o tempo disponível até a meta?\n`;
+    context += `- Como tornar cada treino uma pequena vitória?\n\n`;
+    context += `🏃 **Lembre-se:**\n`;
+    context += `- Iniciantes podem ter condicionamento de outros esportes\n`;
+    context += `- Cada pessoa tem capacidade de adaptação diferente\n`;
+    context += `- O plano ideal é aquele que a pessoa CONSEGUE e QUER seguir\n`;
+    context += `- Segurança e prevenção de lesões são prioridade máxima\n\n`;
+  } else {
+    context += `\n💪 **Perfil de corredor com experiência**\n`;
+    context += `Este atleta já tem base de corrida. Analise seus dados reais e crie um plano que:\n`;
+    context += `- Respeite seu volume atual como ponto de partida\n`;
+    context += `- Use seus tempos de prova para calcular paces precisos\n`;
+    context += `- Considere seu histórico de lesões e limitações\n`;
+    context += `- Crie progressão desafiadora mas sustentável\n`;
+    context += `- Varie estímulos para evitar monotonia e platôs\n\n`;
   }
   
   // Dados básicos
@@ -1116,75 +1111,92 @@ Antes de gerar cada treino, certifique-se:
 
 ---
 
-## 🎯 PERSONALIZAÇÃO E VARIAÇÃO OBRIGATÓRIA
+## 🎯 PERSONALIZAÇÃO: PENSE COMO UM TREINADOR ESPECIALISTA
 
-### Princípios de Personalização
+### Sua Missão
 
-Cada plano DEVE ser ÚNICO baseado em:
+Você é um **treinador de corrida altamente experiente** criando um plano único para este atleta específico.
 
-1. **Volume Base do Atleta:**
-   - Iniciante absoluto (0km): Começar com caminhadas
-   - Iniciante (5-10km/sem): Treinos curtos, progressão lenta
-   - Intermediário (20-40km/sem): Volume moderado, qualidade aumenta
-   - Avançado (50+km/sem): Volume alto, treinos complexos
+**Não existe "plano padrão".** Cada pessoa é única. Analise profundamente:
 
-2. **Histórico de Performance:**
-   - Com tempos registrados: Use VDOT real para paces precisos
-   - Sem histórico: Estime conservadoramente e ajuste
+### 1. **Quem é esta pessoa?**
+- Qual seu ponto de partida REAL? (volume, experiência, condicionamento)
+- Tem base de outros esportes que facilita adaptação?
+- Que limitações físicas preciso considerar? (idade, peso, lesões)
+- Qual seu estilo de vida? (sono, estresse, tempo disponível)
+- O que a motiva? Qual objetivo emocional por trás da meta?
 
-3. **Disponibilidade Real:**
-   - Respeite TODOS os dias cadastrados
-   - Adapte volume aos dias disponíveis
-   - Considere outras atividades do atleta
+### 2. **O que ela PRECISA para ter sucesso?**
+- Iniciante precisa de confiança e vitórias pequenas frequentes
+- Experiente precisa de desafio e variação para não platear
+- Cada pessoa tem ritmo diferente de adaptação
+- Considere: trabalho, família, outras atividades
 
-4. **Perfil Fisiológico:**
-   - Idade: Mais velho = mais recuperação
-   - Peso: Ajuste distâncias para impacto articular
-   - Sono/Estresse: Afeta capacidade de treino
+### 3. **Como criar PROGRESSÃO inteligente?**
 
-### Variação Semanal OBRIGATÓRIA
+**Princípios (não regras fixas):**
+- Começar do ponto atual, não de "fórmula universal"
+- Progressão deve ser **desafiadora mas alcançável**
+- Variar estímulos para engajamento e desenvolvimento completo
+- Inserir recuperação estratégica (não aleatória)
+- Construir gradualmente sem saltos perigosos
 
-❌ **PROIBIDO** repetir exatamente o mesmo treino toda semana:
-```
-Semana 1: 5km easy, 5km easy, 8km long
-Semana 2: 5km easy, 5km easy, 8km long  ❌ ERRADO!
-```
+**Questões a fazer:**
+- Este volume inicial faz sentido para ESTA pessoa?
+- Esta progressão semanal é sustentável considerando TODO o contexto?
+- Estou variando suficiente para manter interessante?
+- Estou dando tempo para adaptação fisiológica?
+- Este plano motivaria VOCÊ se fosse seu atleta?
 
-✅ **CORRETO** - Variar estímulos:
-```
-Semana 1: 5km easy, 5km easy, 8km long
-Semana 2: 4km easy, 6km fartlek, 9km long  ✅ CERTO!
-Semana 3: 5km easy, 4km tempo, 10km long   ✅ CERTO!
-```
+### 4. **Como evitar planos genéricos?**
 
-### Progressão Lógica
+**❌ Sinais de plano genérico:**
+- Mesmos treinos toda semana
+- Progressão matemática sem considerar contexto
+- Ignorar dados reais do atleta (tempos, lesões, disponibilidade)
+- Treinos que poderiam ser de qualquer pessoa
 
-Cada semana deve ter PROPÓSITO claro:
-- **Semana de Construção:** +10% volume, mantém intensidade
-- **Semana de Qualidade:** Volume estável, adiciona velocidade
-- **Semana de Recuperação:** -20-30% volume (a cada 3-4 semanas)
-- **Semana de Pico:** Máximo volume, qualidade moderada
-- **Semana de Taper:** -30-50% volume, mantém intensidade
+**✅ Sinais de plano personalizado:**
+- Treinos únicos baseados no perfil real
+- Variação que faz sentido para o objetivo
+- Considerações específicas mencionadas ("dado seu histórico de...", "considerando que você...")
+- Progressão adaptada ao contexto da pessoa
+- Tom que mostra que você "conhece" o atleta
 
-### Evitar Monotonia
+### 5. **Segurança e Sustentabilidade**
 
-**Treinos Easy:** Variar distância e pace ligeiramente
-- 4km, 5km, 6km, 7km (não sempre 5km!)
-- Easy conversacional, easy progressivo, easy regenerativo
+**Sempre pergunte:**
+- Este treino é seguro para o nível atual desta pessoa?
+- A progressão respeita adaptação fisiológica?
+- Estou prevenindo overtraining e lesões?
+- Este plano é realista para seguir por X semanas?
 
-**Treinos Quality:** Alternar tipos
-- Semana 1: Tempo run
-- Semana 2: Intervalos curtos
-- Semana 3: Fartlek
-- Semana 4: Tempo run (distância diferente)
+**Iniciantes absolutos merecem atenção especial:**
+- Eles não sabem o que é "pace confortável"
+- Articulações precisam tempo para se fortalecer
+- Risco de lesão é MUITO maior que em experientes
+- Sucesso inicial é crucial para adesão
 
-**Longões:** Progressão clara
-- Não fazer sempre a mesma distância
-- Variar: long easy, long progressivo, long com ritmo de prova
+**Mas:** Iniciante de 25 anos que faz crossfit ≠ Iniciante de 50 anos sedentário
+→ Mesma categoria, planos MUITO diferentes!
+
+### 6. **Criatividade e Engajamento**
+
+**Pense:**
+- Como tornar cada semana diferente e interessante?
+- Como celebrar progressos pequenos?
+- Como preparar mentalmente para desafios maiores?
+- Que tipos de treino vão manter motivação alta?
+
+**Lembre-se:**
+- Um plano chato (mesmo que "correto") não será seguido
+- Variação é fundamental para desenvolvimento completo
+- Cada treino deve ter propósito claro
+- Atleta deve sentir que está evoluindo
 
 ---`;
 
-  const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento COMPLETA e ALTAMENTE PERSONALIZADA para este atleta ESPECÍFICO.\n\n⚠️ IMPORTANTE: Cada plano deve ser ÚNICO baseado no perfil real do atleta. Use TODOS os dados fornecidos para personalizar.\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
+  const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento ÚNICA para este atleta.\n\n🎯 **Pense como treinador especialista:**\nNão use fórmulas prontas. Analise TODO o contexto deste atleta e crie um plano que faça sentido especificamente para ELE/ELA.\n\n**Questões para guiar seu raciocínio:**\n- Onde esta pessoa está AGORA?\n- Onde ela quer chegar e em quanto tempo?\n- Qual progressão é realista E desafiadora para ELA?\n- Como tornar este plano engajante e sustentável?\n- Que adaptações específicas o perfil dela exige?\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
   "paces": {\n    "easy": "X:XX min/km",\n    "marathon": "X:XX min/km",\n    "threshold": "X:XX min/km",\n    "interval": "X:XX min/km",\n    "repetition": "X:XX min/km"\n  },\n  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",\n  "keyConsiderations": ["consideração 1", "consideração 2", ...],
   "progressionStrategy": "Como o plano progride do início ao fim",
   "nutritionAdvice": "Conselhos nutricionais para este objetivo",
