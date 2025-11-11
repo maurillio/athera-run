@@ -74,20 +74,74 @@ export async function GET(request: NextRequest) {
     }
 
     // Calcular a porcentagem de conclusão baseado nos treinos completados
-    const allWorkouts = plan.weeks.flatMap((week: any) => week.workouts || []);
+    const allWorkouts = plan.weeks?.flatMap((week: any) => week.workouts || []) || [];
     const completedWorkouts = allWorkouts.filter((w: any) => w.isCompleted);
     const completionRate = allWorkouts.length > 0 
       ? (completedWorkouts.length / allWorkouts.length) * 100 
       : 0;
 
+    // Serializar dados para JSON
+    const serializedPlan = {
+      ...plan,
+      startDate: plan.startDate?.toISOString(),
+      targetRaceDate: plan.targetRaceDate?.toISOString(),
+      lastRegenerated: plan.lastRegenerated?.toISOString(),
+      createdAt: plan.createdAt?.toISOString(),
+      updatedAt: plan.updatedAt?.toISOString(),
+      currentWeek: currentWeek?.weekNumber || 1,
+      completionRate: completionRate,
+      weeks: plan.weeks?.map((week: any) => ({
+        ...week,
+        startDate: week.startDate?.toISOString(),
+        endDate: week.endDate?.toISOString(),
+        workouts: week.workouts?.map((workout: any) => ({
+          ...workout,
+          date: workout.date?.toISOString(),
+          createdAt: workout.createdAt?.toISOString(),
+          updatedAt: workout.updatedAt?.toISOString(),
+          completedWorkout: workout.completedWorkout ? {
+            ...workout.completedWorkout,
+            date: workout.completedWorkout.date?.toISOString(),
+            createdAt: workout.completedWorkout.createdAt?.toISOString(),
+          } : null,
+        })),
+      })),
+    };
+
+    const serializedCurrentWeek = currentWeek ? {
+      ...currentWeek,
+      startDate: currentWeek.startDate?.toISOString(),
+      endDate: currentWeek.endDate?.toISOString(),
+      workouts: currentWeek.workouts?.map((workout: any) => ({
+        ...workout,
+        date: workout.date?.toISOString(),
+        createdAt: workout.createdAt?.toISOString(),
+        updatedAt: workout.updatedAt?.toISOString(),
+        completedWorkout: workout.completedWorkout ? {
+          ...workout.completedWorkout,
+          date: workout.completedWorkout.date?.toISOString(),
+          createdAt: workout.completedWorkout.createdAt?.toISOString(),
+        } : null,
+      })),
+    } : null;
+
+    const serializedProfile = {
+      ...user.athleteProfile,
+      targetRaceDate: user.athleteProfile.targetRaceDate?.toISOString(),
+      stravaTokenExpiry: user.athleteProfile.stravaTokenExpiry?.toISOString(),
+      lastAutoAdjustDate: user.athleteProfile.lastAutoAdjustDate?.toISOString(),
+      createdAt: user.athleteProfile.createdAt?.toISOString(),
+      updatedAt: user.athleteProfile.updatedAt?.toISOString(),
+      preferredStartDate: user.athleteProfile.preferredStartDate?.toISOString(),
+      lastInjuryDate: user.athleteProfile.lastInjuryDate?.toISOString(),
+      lastVDOTUpdate: user.athleteProfile.lastVDOTUpdate?.toISOString(),
+      customPlan: undefined, // Evitar duplicação
+    };
+
     return NextResponse.json({
-      plan: {
-        ...plan,
-        currentWeek: currentWeek?.weekNumber || 1, // Sempre retornar o número da semana calculado
-        completionRate: completionRate, // Sempre calcular a taxa de conclusão atual
-      },
-      currentWeek: currentWeek,
-      profile: user.athleteProfile,
+      plan: serializedPlan,
+      currentWeek: serializedCurrentWeek,
+      profile: serializedProfile,
     });
   } catch (error) {
     console.error('Error fetching plan:', error);
