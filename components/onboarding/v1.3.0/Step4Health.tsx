@@ -6,16 +6,33 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step4');
   const tCommon = useTranslations('common');
   
-  const commonInjuries = [
+  // Detectar se o usuário nunca correu para ajustar as perguntas
+  const isAbsoluteBeginner = data.hasRunBefore === false;
+  
+  // Lesões específicas de corrida
+  const runningInjuries = [
     t('injuries.shinSplints'),
     t('injuries.plantarFasciitis'),
     t('injuries.achillesTendinitis'),
     t('injuries.runnersKnee'),
     t('injuries.itBand'),
     t('injuries.stressFracture'),
-    t('injuries.muscleStrain'),
-    t('injuries.other')
   ];
+  
+  // Lesões gerais (para quem nunca correu)
+  const generalInjuries = [
+    t('injuries.muscleStrain'),
+    t('injuries.sprainAnkle'),
+    t('injuries.sprainKnee'),
+    t('injuries.backPain'),
+    t('injuries.shoulderPain'),
+    t('injuries.hipPain'),
+  ];
+  
+  // Combinar ou usar apenas gerais
+  const commonInjuries = isAbsoluteBeginner 
+    ? [...generalInjuries, t('injuries.other')]
+    : [...runningInjuries, ...generalInjuries, t('injuries.other')];
   const [hasInjuryHistory, setHasInjuryHistory] = useState(data.hasInjuryHistory ?? false);
   const [injuries, setInjuries] = useState(data.injuryHistory || []);
   const [currentInjury, setCurrentInjury] = useState('');
@@ -93,7 +110,9 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block font-medium mb-2">{t('hasInjuries')}</label>
+        <label className="block font-medium mb-2">
+          {isAbsoluteBeginner ? t('hasInjuriesBeginners') : t('hasInjuries')}
+        </label>
         <div className="flex gap-4">
           <button onClick={() => setHasInjuryHistory(false)}
             className={`px-6 py-2 rounded-lg ${!hasInjuryHistory ? 'bg-blue-600 text-white' : 'border'}`}>

@@ -228,7 +228,8 @@
     "step4": {
       "title": "Saúde e Histórico",
       "subtitle": "Informações importantes para prevenir lesões",
-      "hasInjuries": "Teve lesões de corrida recentemente?",
+      "hasInjuries": "Já teve alguma lesão (corrida ou outro esporte)?",
+      "hasInjuriesBeginners": "Já teve alguma lesão praticando esportes?",
       "whichInjuries": "Quais lesões?",
       "otherInjuryPlaceholder": "Outra lesão...",
       "injuries": {
@@ -239,6 +240,11 @@
         "itBand": "Lesão IT Band",
         "stressFracture": "Fratura Estresse",
         "muscleStrain": "Distensão Muscular",
+        "sprainAnkle": "Entorse no Tornozelo",
+        "sprainKnee": "Entorse no Joelho",
+        "backPain": "Dor nas Costas",
+        "shoulderPain": "Dor no Ombro",
+        "hipPain": "Dor no Quadril",
         "other": "Outro"
       },
       "injuryDetailsTitle": "Detalhes das Lesões (Opcional)",
