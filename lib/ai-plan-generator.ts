@@ -2267,7 +2267,10 @@ function generateWeekWorkouts(params: {
       if (workout) {
         // 🆕 v2.0.0: Enhance running workouts with detailed structure
         if (workout.type === 'running') {
-          workout = enhanceWorkout(workout, params.paces);
+          console.log(`[WORKOUT ENHANCE] Enriquecendo treino: ${workout.title} (${workout.subtype || workout.type})`);
+          const enhanced = enhanceWorkout(workout, params.paces);
+          console.log(`[WORKOUT ENHANCE] ✅ Enriquecido: warmUp=${!!enhanced.warmUpStructure}, objective=${!!enhanced.objective}, tips=${!!enhanced.tips}`);
+          workout = enhanced;
         }
         workouts.push(workout);
       }
