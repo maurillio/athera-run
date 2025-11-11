@@ -857,13 +857,18 @@
       "peak": "Pico",
       "taper": "Polimento",
       "race": "Corrida",
+      "recovery": "Recuperação",
       "baseaerobia": "Base Aeróbica",
+      "baseaerobica": "Base Aeróbica",
       "base aerobia": "Base Aeróbica",
+      "base aeróbica": "Base Aeróbica",
       "construcao": "Construção",
       "construção": "Construção",
       "pico": "Pico",
       "polimento": "Polimento",
-      "corrida": "Corrida"
+      "corrida": "Corrida",
+      "recuperacao": "Recuperação",
+      "recuperação": "Recuperação"
     },
     "workoutTypes": {
       "easy": "Treino Leve",
@@ -884,7 +889,11 @@
       "manageRaces": "Gerenciar Corridas"
     },
     "goalLabels": {
+      "5k": "5km",
       "10k": "10km",
+      "15k": "15km",
+      "21k": "21km (Meia-Maratona)",
+      "42k": "42km (Maratona)",
       "half_marathon": "Meia-Maratona",
       "marathon": "Maratona"
     },
