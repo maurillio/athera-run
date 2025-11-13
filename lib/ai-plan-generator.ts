@@ -16,7 +16,7 @@ import { buildComprehensiveContext } from './ai-context-builder';
 import { LONG_RUN_EXAMPLE, INTERVALS_EXAMPLE, TEMPO_RUN_EXAMPLE, EASY_RUN_EXAMPLE, getWorkoutExample } from './ai-workout-examples';
 import type { WorkoutGenerationData } from './types/workout-structure';
 import { enhanceWorkout } from './workout-enhancer';
-import { buildAISystemPromptV25 } from './ai-system-prompt-v2.5';
+import { buildEnhancedSystemPrompt } from './ai-system-prompt-v3';
 
 export interface AIUserProfile {
   // Dados básicos
@@ -843,13 +843,30 @@ function autoCorrectStrategy(
   }
   
   // CORREÇÃO 3: Garantir redução de volume no taper (60-70%)
-  const volumeStart = taperPhase.weeklyKmStart || 50;
-  const volumeEnd = taperPhase.weeklyKmEnd || volumeStart;
-  const reduction = (volumeStart - volumeEnd) / volumeStart;
+  // Se volumeStart é 0 ou undefined, calcular baseado no perfil
+  let volumeStart = taperPhase.weeklyKmStart;
   
-  if (reduction < 0.5) {
+  // Se não tem volume definido, estimar baseado nas fases anteriores ou perfil
+  if (!volumeStart || volumeStart === 0) {
+    // Tentar pegar da fase anterior
+    if (corrected.phases.length > 1) {
+      const prevPhase = corrected.phases[corrected.phases.length - 2];
+      volumeStart = prevPhase.weeklyKmEnd || prevPhase.weeklyKmStart || profile.currentWeeklyKm || 30;
+    } else {
+      volumeStart = profile.currentWeeklyKm || 30;
+    }
+    
+    console.log(`[AUTO-CORREÇÃO] Volume de taper não definido, usando ${volumeStart}km baseado no perfil`);
+    taperPhase.weeklyKmStart = volumeStart;
+  }
+  
+  const volumeEnd = taperPhase.weeklyKmEnd || 0;
+  const reduction = volumeStart > 0 ? (volumeStart - volumeEnd) / volumeStart : 0;
+  
+  if (reduction < 0.4 || volumeEnd === 0) {
     console.log(`[AUTO-CORREÇÃO] Ajustando redução de volume no taper para 65%...`);
     taperPhase.weeklyKmEnd = Math.round(volumeStart * 0.35); // 65% de redução
+    console.log(`[AUTO-CORREÇÃO] Taper ajustado: ${volumeStart}km → ${taperPhase.weeklyKmEnd}km (redução de 65%)`);
   }
   
   console.log('[AUTO-CORREÇÃO] Estratégia corrigida!');
@@ -914,7 +931,7 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   console.log(`[AI PLAN] Gerando plano de ${totalWeeks} semanas até ${raceDate.toLocaleDateString('pt-BR')}${isShortNotice ? ' (tempo curto)' : ''}`)
   
   // v2.5.0: Use novo prompt integrado com todas as melhorias
-  const systemPrompt = buildAISystemPromptV25(profile);
+  const systemPrompt = buildEnhancedSystemPrompt(profile);
 
   // User prompt: Tarefa específica
   const userPrompt = `Crie um plano de treino personalizado de ${totalWeeks} semanas para este atleta até a corrida em ${raceDate.toLocaleDateString('pt-BR')}.
