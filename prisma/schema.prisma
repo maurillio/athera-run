@@ -277,6 +277,14 @@ model AthleteProfile {
   motivationFactors     Json?
   trainingSchedule      Json?               // v1.4.0 - Nova estrutura { 0: { running: true, activities: ['gym'] } }
   customActivities      Json?               // v1.4.0 - Esportes customizados ['pilates', 'crossfit']
+  hasRunBefore          Boolean             @default(true)  // v3.0.0 - Distingue iniciante absoluto
+  currentlyInjured      Boolean             @default(false) // v3.0.0 - Flag rápido lesão ativa
+  avgSleepHours         Float?              // v3.0.0 - Horas médias sono/noite
+  tracksMenstrualCycle  Boolean?            @default(false) // v3.0.0 - Tracking ciclo (women, opcional)
+  avgCycleLength        Int?                // v3.0.0 - Duração média ciclo (dias)
+  lastPeriodDate        DateTime?           // v3.0.0 - Data última menstruação
+  workDemand            String?             // v3.0.0 - sedentary/moderate/physical
+  familyDemand          String?             // v3.0.0 - low/moderate/high
   aiAnalyses            AIAnalysis[]
   customPlan            CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
   user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
