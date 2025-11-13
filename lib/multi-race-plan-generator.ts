@@ -281,11 +281,11 @@ FORMATO DA RESPOSTA (JSON):
   "totalWeeks": ${totalWeeks},
   "vdot": <estimativa baseada nos paces>,
   "paces": {
-    "easy": "X:XX min/km",
-    "marathon": "X:XX min/km",
-    "threshold": "X:XX min/km",
-    "interval": "X:XX min/km",
-    "repetition": "X:XX min/km"
+    "easy": "X:XX",
+    "marathon": "X:XX",
+    "threshold": "X:XX",
+    "interval": "X:XX",
+    "repetition": "X:XX"
   },
   "planRationale": "Explicação da estratégia geral do plano",
   "raceIntegrationStrategy": "Como as corridas B e C foram integradas",

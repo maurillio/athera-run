@@ -90,7 +90,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle }: Workou
         {workout.targetPace && (
           <Badge variant="secondary" className="text-xs">
             <Zap className="h-3 w-3 mr-1" />
-            {workout.targetPace}
+            {workout.targetPace.includes('min/km') ? workout.targetPace : `${workout.targetPace} min/km`}
           </Badge>
         )}
         {workout.expectedRPE && (
@@ -254,7 +254,7 @@ function SimpleWorkoutView({ workout }: { workout: EnhancedWorkout }) {
         )}
         {workout.targetPace && (
           <Badge variant="secondary" className="text-xs">
-            ⚡ {workout.targetPace}
+            ⚡ {workout.targetPace.includes('min/km') ? workout.targetPace : `${workout.targetPace} min/km`}
           </Badge>
         )}
         {workout.duration && !workout.distance && (
@@ -312,7 +312,7 @@ function PhaseCard({
       <div className="flex flex-wrap gap-2 ml-6">
         {phase.pace && (
           <Badge variant="secondary" className="text-xs">
-            ⚡ {phase.pace}
+            ⚡ {phase.pace.includes('min/km') ? phase.pace : `${phase.pace} min/km`}
           </Badge>
         )}
         {phase.heartRateZone && (
@@ -357,7 +357,7 @@ function IntervalCard({ interval }: { interval: IntervalStructure }) {
             <Badge variant="outline" className="text-xs">{interval.workInterval.duration}</Badge>
           </div>
           <p className="text-sm text-red-800">
-            Pace: <span className="font-mono font-medium">{interval.workInterval.pace}</span>
+            Pace: <span className="font-mono font-medium">{interval.workInterval.pace.includes('min/km') ? interval.workInterval.pace : `${interval.workInterval.pace} min/km`}</span>
           </p>
           <p className="text-xs text-red-700 mt-1">{interval.workInterval.intensity}</p>
           {interval.workInterval.description && (
@@ -379,7 +379,7 @@ function IntervalCard({ interval }: { interval: IntervalStructure }) {
           </p>
           {interval.recoveryInterval.pace && (
             <p className="text-sm text-blue-800">
-              Pace: <span className="font-mono font-medium">{interval.recoveryInterval.pace}</span>
+              Pace: <span className="font-mono font-medium">{interval.recoveryInterval.pace.includes('min/km') ? interval.recoveryInterval.pace : `${interval.recoveryInterval.pace} min/km`}</span>
             </p>
           )}
           {interval.recoveryInterval.description && (

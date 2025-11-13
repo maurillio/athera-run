@@ -980,11 +980,11 @@ Responda APENAS com o JSON válido, sem formatação markdown ou explicações a
   "totalWeeks": 12,
   "vdot": 45,
   "paces": {
-    "easy": "6:15 min/km",
-    "marathon": "5:30 min/km", 
-    "threshold": "5:10 min/km",
-    "interval": "4:50 min/km",
-    "repetition": "4:30 min/km"
+    "easy": "6:15",
+    "marathon": "5:30", 
+    "threshold": "5:10",
+    "interval": "4:50",
+    "repetition": "4:30"
   },
   "phases": [
     {
@@ -1332,7 +1332,7 @@ Você é um **treinador de corrida altamente experiente** criando um plano únic
 ---`;
 
   const userPrompt = `${userContext}\n\n# TAREFA\n\nCrie uma ESTRATÉGIA de treinamento ÚNICA para este atleta.\n\n🎯 **Pense como treinador especialista:**\nNão use fórmulas prontas. Analise TODO o contexto deste atleta e crie um plano que faça sentido especificamente para ELE/ELA.\n\n**Questões para guiar seu raciocínio:**\n- Onde esta pessoa está AGORA?\n- Onde ela quer chegar e em quanto tempo?\n- Qual progressão é realista E desafiadora para ELA?\n- Como tornar este plano engajante e sustentável?\n- Que adaptações específicas o perfil dela exige?\n\nO plano tem ${totalWeeks} semanas até a prova.\n\nVocê deve definir:\n1. As FASES do treinamento (quantas semanas cada uma)\n2. A ESTRATÉGIA de progressão (como o volume e intensidade evoluem)\n3. EXEMPLOS REPRESENTATIVOS de treinos para cada fase\n4. PACES personalizados baseados no VDOT\n5. CONSELHOS específicos baseados no perfil\n\nFORMATO DA RESPOSTA (JSON):\n{\n  "totalWeeks": ${totalWeeks},\n  "vdot": <número calculado baseado nos paces usuais ou estimativa>,
-  "paces": {\n    "easy": "X:XX min/km",\n    "marathon": "X:XX min/km",\n    "threshold": "X:XX min/km",\n    "interval": "X:XX min/km",\n    "repetition": "X:XX min/km"\n  },\n  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",\n  "keyConsiderations": ["consideração 1", "consideração 2", ...],
+  "paces": {\n    "easy": "X:XX",\n    "marathon": "X:XX",\n    "threshold": "X:XX",\n    "interval": "X:XX",\n    "repetition": "X:XX"\n  },\n  "planRationale": "Explicação detalhada da estratégia e por que foi estruturada assim",\n  "keyConsiderations": ["consideração 1", "consideração 2", ...],
   "progressionStrategy": "Como o plano progride do início ao fim",
   "nutritionAdvice": "Conselhos nutricionais para este objetivo",
   "injuryPreventionTips": ["dica 1", "dica 2", ...],

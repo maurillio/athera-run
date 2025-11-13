@@ -20,7 +20,7 @@ Transformar geração de planos de "boa" para "elite":
 
 ---
 
-### ✅ CONCLUÍDO (30%)
+### ✅ CONCLUÍDO (45%)
 
 #### 1. Database Migration
 **Status:** ✅ COMPLETO  
@@ -142,14 +142,44 @@ familyDemand?: string           // Responsabilidades familiares
 
 ---
 
-#### 7. Dashboard Fixes
-**Status:** 🔴 PENDENTE  
-**Estimativa:** 30 minutos
+#### 5. UI/UX Fixes & Polish
+**Status:** ✅ COMPLETO  
+**Data:** 13/NOV/2025 16:00 UTC
 
-**Fixes:**
-- [ ] Rest days mostrando vermelho → cinza
-- [ ] Display "min/km/km" → "min/km"
-- [ ] Translation keys faltando
+**Correções implementadas:**
+
+##### 🎨 Translation Keys
+- ✅ Corrigido namespace de traduções (`plano.goalLabels`, `plano.phases`)
+- ✅ Todas as distâncias e fases agora traduzem corretamente
+- ✅ Suporte para múltiplas variações (baseaerobica, base aeróbica, etc)
+
+##### 🎨 Rest Day Display
+- ✅ Dias de descanso agora mostram cor cinza ao invés de vermelho
+- ✅ Lógica corrigida: isRestDay checado ANTES de isPastUncompleted
+- ✅ Visual mais intuitivo: cinza = descanso, vermelho = não completado
+
+##### 🎯 Pace Display Fix
+- ✅ Corrigido duplicação "min/km/km" → "min/km"
+- ✅ AI prompts atualizados para retornar apenas "X:XX"
+- ✅ Componentes adicionam " min/km" com fallback para ambos formatos
+- ✅ Aplicado em:
+  - `workout-details.tsx` (3 locais)
+  - `ai-plan-generator.ts` (prompt + exemplo)
+  - `multi-race-plan-generator.ts` (prompt)
+
+**Arquivos modificados:**
+```
+app/[locale]/plano/page.tsx           (translation keys + rest day color)
+components/workout-details.tsx        (pace display)
+lib/ai-plan-generator.ts             (AI prompt)
+lib/multi-race-plan-generator.ts     (AI prompt)
+```
+
+---
+
+#### 6. Dashboard Fixes
+**Status:** ✅ COMPLETO (parte das fixes acima)
+**Data:** 13/NOV/2025 16:00 UTC
 
 ---
 
