@@ -1,18 +1,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { defaultLocale, locales, type Locale } from './lib/i18n/config';
 
-// Get user's preferred locale
-function getLocale(request: NextRequest): Locale {
+const locales = ['pt-BR', 'en', 'es'];
+const defaultLocale = 'pt-BR';
+
+function getLocale(request: NextRequest): string {
   const cookieLocale = request.cookies.get('atherarun_locale')?.value;
-  if (cookieLocale && locales.includes(cookieLocale as Locale)) {
-    return cookieLocale as Locale;
+  if (cookieLocale && locales.includes(cookieLocale)) {
+    return cookieLocale;
   }
 
   const acceptLanguage = request.headers.get('accept-language');
   if (acceptLanguage) {
     const browserLocale = acceptLanguage.split(',')[0].split(';')[0].trim();
-    
     if (browserLocale.startsWith('pt')) return 'pt-BR';
     if (browserLocale.startsWith('es')) return 'es';
     if (browserLocale.startsWith('en')) return 'en';
@@ -24,11 +24,12 @@ function getLocale(request: NextRequest): Locale {
 export default function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  // Skip i18n redirect for API routes and static files
+  // Skip middleware for API, static files, and Next.js internals
   if (
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next/') ||
-    pathname.includes('.')
+    pathname.startsWith('/favicon') ||
+    pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp)$/)
   ) {
     return NextResponse.next();
   }
@@ -38,41 +39,9 @@ export default function middleware(req: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  // Routes that have been migrated to i18n (exist in [locale] folder)
-  const i18nRoutes = [
-    '/',
-    '/dashboard',
-    '/login',
-    '/signup',
-    '/onboarding',
-    '/plano',
-    '/perfil',
-    '/tracking',
-    '/training',
-    '/calculator',
-    '/chat',
-    '/subscription',
-    '/nutrition',
-    '/prevention',
-    '/glossary',
-    '/overtraining',
-    '/pricing',
-    '/admin'
-  ];
-
-  // Only redirect to locale if:
-  // 1. Path doesn't have locale yet
-  // 2. Path is in the i18n routes list
-  if (!pathnameHasLocale) {
-    const shouldRedirect = i18nRoutes.some(route => 
-      pathname === route || pathname.startsWith(route + '/')
-    );
-
-    if (shouldRedirect) {
-      const locale = getLocale(req);
-      const newUrl = new URL(`/${locale}${pathname}`, req.url);
-      return NextResponse.redirect(newUrl);
-    }
+  if (!pathnameHasLocale && pathname === '/') {
+    const locale = getLocale(req);
+    return NextResponse.redirect(new URL(`/${locale}`, req.url));
   }
 
   return NextResponse.next();
@@ -82,11 +51,11 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except:
+     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization)
-     * - favicon.ico (favicon)
-     * - public files (public folder)
+     * - favicon.ico (favicon file)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
