@@ -17,22 +17,31 @@ Aplicar migrations v2.0.0 + v3.0.0 no banco Neon (produção) para resolver erro
 #### Critical (P0) - DATABASE MIGRATION
 - **Erro:** `The column 'custom_workouts.warmUpStructure' does not exist in the current database`
 - **Causa:** Migrations locais não aplicadas em produção (Neon)
-- **Solução:** Scripts SQL consolidados criados para aplicação manual
+- **Solução:** Script SQL seguro criado com IF NOT EXISTS + transações
 
-**Migrations Pendentes:**
-1. ✅ `20251110_workout_structure_v2_0_0` - 13 novos campos em `custom_workouts`
-2. ✅ `20251113144016_add_v3_profile_fields` - 8 novos campos em `athlete_profiles`
+**Migrations Consolidadas:**
+1. ✅ v2.0.0 - 13 novos campos em `custom_workouts` (estrutura detalhada)
+2. ✅ v3.0.0 - 8 novos campos em `athlete_profiles` (perfil multi-dimensional)
 
 **Arquivos Criados:**
-- `prisma/APPLY_MIGRATIONS_NEON.sql` - Migration consolidada para aplicar
-- `prisma/VERIFY_MIGRATIONS_NEON.sql` - Script de verificação pós-aplicação
-- `NEON_MIGRATION_GUIDE.md` - Guia passo-a-passo completo
+- `neon-migration-v3.0.1-SAFE.sql` - Migration consolidada e segura
+- `INSTRUCOES_NEON_V3_0_1.md` - Guia passo-a-passo ilustrado
+- `ACAO_IMEDIATA_V3_0_1.md` - Resumo executivo da ação
+- `VERIFICACAO_IMPLEMENTACAO_V3_0_0.md` - Status completo da implementação
 
-**⚠️ AÇÃO NECESSÁRIA:**
-1. Acessar Neon Console (https://console.neon.tech/)
-2. Executar `APPLY_MIGRATIONS_NEON.sql` no SQL Editor
-3. Validar com `VERIFY_MIGRATIONS_NEON.sql`
-4. Confirmar que query de validação retorna: `13, 8, 3` (colunas v2, v3, índices)
+**Script Features:**
+- ✅ Usa `IF NOT EXISTS` - Seguro para re-execução
+- ✅ Transações `DO $$ blocks` - Rollback automático em erro
+- ✅ Sem DROP - Não apaga dados
+- ✅ RAISE NOTICE - Logs detalhados
+- ✅ Verificação final - Mostra colunas criadas
+
+**⚠️ AÇÃO NECESSÁRIA (5 min):**
+1. Acessar Neon Console → https://console.neon.tech/
+2. SQL Editor → Projeto "Athera Run"
+3. Copiar e executar: `neon-migration-v3.0.1-SAFE.sql`
+4. Verificar retorno: 13 linhas (custom_workouts) + 8 linhas (athlete_profiles)
+5. Deploy: `git push` (Vercel rebuilda automaticamente)
 
 #### High Priority (P1) - TRANSLATIONS
 - **i18n Keys:** Corrigido chaves de tradução quebradas

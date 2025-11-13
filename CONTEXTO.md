@@ -2,13 +2,35 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 13 de Novembro de 2025 17:15 UTC
-**Versão Atual:** 3.0.0 (Elite AI Training Intelligence)
+**Última atualização:** 13 de Novembro de 2025 18:55 UTC
+**Versão Atual:** 3.0.1 ⚠️ (Migration Pendente - 5 min para resolver)
 **Status:** ✅ **PLANOS PERSONALIZADOS + 8 PERFIS + ANÁLISE MULTI-DIMENSIONAL**
 **Build:** ✅ Passou sem erros (67/67 páginas) | **Projeto:** athera-run | **Branch:** main
-**Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
-**LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v2.5.0 Ativo
+**Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia) - ⚠️ **MIGRATION PENDENTE**
+**LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
+
+---
+
+## 🚨 AÇÃO IMEDIATA NECESSÁRIA (5 minutos)
+
+**Problema:** Migration v2.0.0 + v3.0.0 não aplicada no Neon  
+**Impacto:** Geração de planos falha com erro `custom_workouts does not exist`  
+**Solução:** Executar `neon-migration-v3.0.1-SAFE.sql` no Neon SQL Editor
+
+**Arquivos-chave:**
+- 🚨 `ACAO_IMEDIATA_V3_0_1.md` - Resumo executivo (1 página)
+- 📖 `INSTRUCOES_NEON_V3_0_1.md` - Passo a passo ilustrado
+- 💾 `neon-migration-v3.0.1-SAFE.sql` - Script SQL seguro
+- 📊 `STATUS_FINAL_V3_0_1.md` - Status completo
+
+**Quick Start:**
+```bash
+# 1. Acesse: https://console.neon.tech/
+# 2. SQL Editor → Athera Run project
+# 3. Copie/execute: neon-migration-v3.0.1-SAFE.sql
+# 4. Verifique: 13 + 8 linhas retornadas = ✅ SUCESSO!
+```
 
 ---
 
