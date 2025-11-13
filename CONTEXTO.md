@@ -2,52 +2,156 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**Última atualização:** 11 de Novembro de 2025 01:00 UTC
-**Versão Atual:** 2.0.3 (Error Handling & Logging)
-**Status:** ✅ **TREINOS PROFISSIONAIS + OPENAI CONFIGURADO + DIAGNÓSTICO MELHORADO**
+**Última atualização:** 13 de Novembro de 2025 17:15 UTC
+**Versão Atual:** 3.0.0 (Elite AI Training Intelligence)
+**Status:** ✅ **PLANOS PERSONALIZADOS + 8 PERFIS + ANÁLISE MULTI-DIMENSIONAL**
 **Build:** ✅ Passou sem erros (67/67 páginas) | **Projeto:** athera-run | **Branch:** main
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia)
-**LLM Provider:** 🤖 **OpenAI (gpt-4o)** - Abacus AI REMOVIDO
+**LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v2.5.0 Ativo
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
 
 ---
 
-## 🔧 HOTFIX v2.0.3 - Error Handling & Logging (11/Nov/2025 01:00 UTC)
+## 🚀 v3.0.0 - Elite AI Training Intelligence (13/Nov/2025 17:15 UTC)
 
-### 🎯 Problema Identificado
-Usuário `Teste0101019@teste.com` recebe erro 500 ao tentar gerar plano após finalizar onboarding. Erro genérico sem detalhes sobre a causa.
+### 🎯 A Maior Evolução desde o Lançamento
+**De planos genéricos para verdadeiramente personalizados**
 
-### ✅ Melhorias Implementadas
+### ✅ O Que Mudou
 
-**1. Logging Detalhado na API**
-- Logs completos de erro (tipo, nome, mensagem, stack)
-- Retorno com hint de possíveis causas
-- Identificação da etapa exata do erro
+**Antes (v2.0.x):**
+- ❌ Planos bem estruturados mas genéricos
+- ❌ 4 classificações básicas (iniciante/intermediário/avançado/elite)
+- ❌ Não considera: sono, lesões, ciclo hormonal, lifestyle
+- ❌ Iniciante absoluto = mesma lógica que corredor com experiência
 
-**2. Tratamento Específico por Tipo de Erro**
+**Agora (v3.0.0):**
+- ✅ **8 classificações dinâmicas** de corredor
+- ✅ **Análise multi-dimensional** (idade, sono, lesão, ciclo, trabalho, família)
+- ✅ **Walk/Run protocol** para iniciantes absolutos
+- ✅ **Reverse planning** - valida se tempo é suficiente
+- ✅ **8 metodologias elite** integradas (Daniels, Canova, Pfitzinger, etc)
+- ✅ **Ajustes automáticos** por perfil
+
+### 🧠 Classificações de Corredor
+
 ```typescript
-// 401: API Key inválida/expirada
-// 429: Quota OpenAI atingida
-// 500+: OpenAI indisponível
-// Validação de JSON e estrutura
+1. ABSOLUTE_BEGINNER
+   - Nunca correu
+   - Walk/run protocol 8-12 semanas
+   - Volume pico: 15-25km
+   
+2. ABSOLUTE_BEGINNER_WITH_AEROBIC_BASE
+   - Nunca correu mas faz outros esportes
+   - Transição gradual
+   - Volume pico: 25-35km
+   
+3. BEGINNER
+   - <6 meses corrida
+   - Base em construção
+   
+4. INTERMEDIATE
+   - 6 meses - 3 anos
+   - Base sólida
+   
+5. ADVANCED
+   - >3 anos
+   - Performance training
+   
+6. ELITE_SUB_3HR_MARATHONER
+   - Maratonista sub-3h
+   - Alto volume
+   
+7. MASTERS_40_PLUS
+   - 40+ anos
+   - Recovery extra
+   - Força obrigatória
+   
+8. COMEBACK_FROM_INJURY
+   - Retorno após lesão
+   - Protocolo conservador
 ```
 
-**3. Validação de Resposta**
-- Detecta JSON mal formado
-- Valida estrutura da resposta
-- Log do tamanho do conteúdo
+### 📊 Campos Novos (Database)
 
-### 📊 Causas Prováveis
-1. **Quota OpenAI** (mais provável)
-2. **Timeout Vercel** (>10s)
-3. **JSON Parsing** (formato inválido)
-4. **Validação** (plano incorreto)
+**Migration:** `20251113144016_add_v3_profile_fields`
 
-### 📝 Arquivos
-- `app/api/plan/generate/route.ts` (+15)
-- `lib/llm-client.ts` (+35)
-- `HOTFIX_v2.0.3_PLAN_GENERATION_DEBUG.md` (novo)
-- Commit: `ac119e38`
+```typescript
+hasRunBefore?: boolean          // 🎯 Iniciante absoluto?
+currentlyInjured?: boolean      // 🩹 Lesão ativa?
+avgSleepHours?: number         // 😴 Horas sono/noite
+tracksMenstrualCycle?: boolean // 🌙 Tracking ciclo (mulheres)
+avgCycleLength?: number        // 🌙 Duração ciclo
+lastPeriodDate?: Date          // 🌙 Última menstruação
+workDemand?: string            // 💼 Trabalho físico?
+familyDemand?: string          // 👨‍👩‍👧 Responsabilidades?
+```
+
+### 🎯 Ajustes Automáticos
+
+**Masters (40+):**
+- Recovery: +1 dia a cada 2-3 semanas
+- Volume: -10-20%
+- Força: obrigatória 2x/semana
+
+**Sono <6h:**
+- Volume: -15-20%
+- Warning: risco overtraining
+
+**Lesão Ativa:**
+- Volume inicial: -30%
+- Progressão: 5% (vs 10%)
+- Zero qualidade 4 semanas
+
+**Mulheres (ciclo):**
+- Folicular (dias 1-14): treinos intensos OK
+- Lútea (dias 15-28): expectativa ajustada
+- Menstrual: flexibilidade
+
+### 📁 Arquivos Principais
+
+```
+✅ Backend:
+lib/ai-system-prompt-v2.5.ts        (novo prompt consolidado)
+lib/ai-plan-generator.ts            (integração linha 917)
+app/api/profile/create/route.ts     (salva novos campos)
+prisma/schema.prisma                (8 campos novos)
+
+✅ Frontend:
+components/onboarding/v1.3.0/Step2SportBackground.tsx (hasRunBefore)
+components/onboarding/v1.3.0/Step4Health.tsx (injury, sleep, cycle)
+
+📚 Docs:
+ANALYSIS_PLAN_GENERATION.md         (análise inicial)
+DEEP_RESEARCH_TRAINING_SCIENCE.md   (pesquisa 8 metodologias)
+PROMPT_COMPARISON_v2_vs_v3.md       (comparação detalhada)
+V3_0_0_STATUS_IMPLEMENTACAO.md      (status completo)
+```
+
+### 📝 Como Testar
+
+**Teste 1: Iniciante Absoluto**
+```
+Email: teste-iniciante@teste.com
+Step 2: "Já correu?" → NÃO
+Esperado: Walk/run protocol nas primeiras semanas
+```
+
+**Teste 2: Masters com Sono Ruim**
+```
+Email: teste-masters@teste.com
+Idade: 52 anos
+Sono: 5h/noite
+Esperado: Volume reduzido, recovery mais frequente
+```
+
+**Teste 3: Mulher com Tracking Ciclo**
+```
+Email: teste-ciclo@teste.com
+Gênero: feminino
+Tracking: SIM
+Esperado: Treinos intensos agendados dias 7-14 do ciclo
+```
 
 ### 🎯 Próximo Passo
 Usuário deve testar novamente e verificar logs do Vercel para identificar causa raiz específica.
