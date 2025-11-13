@@ -54,7 +54,12 @@ const StravaProvider = {
 };
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Use PrismaAdapter only for OAuth providers, not for session management
+  // This prevents unnecessary DB queries on every request
+  ...(process.env.NODE_ENV === 'production' 
+    ? {} 
+    : { adapter: PrismaAdapter(prisma) }
+  ),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -150,13 +155,22 @@ export const authOptions: NextAuthOptions = {
         if (user) {
           token.id = user.id;
 
-          // Check if user is admin
-          const dbUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            select: { isAdmin: true, athleteProfile: true }
-          });
-          token.isAdmin = dbUser?.isAdmin || false;
-          token.hasProfile = !!dbUser?.athleteProfile;
+          // Check if user is admin - ONLY on first login, not every request
+          if (!token.isAdmin && !token.hasProfile) {
+            try {
+              const dbUser = await prisma.user.findUnique({
+                where: { id: user.id },
+                select: { isAdmin: true, athleteProfile: true }
+              });
+              token.isAdmin = dbUser?.isAdmin || false;
+              token.hasProfile = !!dbUser?.athleteProfile;
+            } catch (err) {
+              console.error('[AUTH] Error fetching user data:', err);
+              // Don't fail the whole auth, just set defaults
+              token.isAdmin = false;
+              token.hasProfile = false;
+            }
+          }
         }
 
         // If signing in with Strava, save the tokens to athlete profile
