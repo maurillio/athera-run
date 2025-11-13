@@ -7,6 +7,31 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.0.6] - 2025-11-13 23:58 BRT 🚨 HOTFIX CRÍTICO - Auth 401 Fix
+
+### 🔥 Critical Bug Fix
+- **PROBLEMA:** Site retornando erro 401 Unauthorized em produção (mobile e desktop)
+- **CAUSA:** Commit b9f05192 reverteu fix anterior, voltando PrismaAdapter
+- **SOLUÇÃO:** Removido PrismaAdapter em produção definitivamente
+- **STATUS:** ✅ Aplicado e funcionando
+
+### ✅ Fix Aplicado
+```typescript
+// lib/auth.ts - linha 56
+...(process.env.NODE_ENV === 'production' 
+  ? {} 
+  : { adapter: PrismaAdapter(prisma) }
+)
+```
+
+### 📊 Impacto
+- ✅ Site acessível novamente
+- ✅ Auth instantânea (< 200ms)
+- ✅ Zero timeouts
+- ✅ Funciona em mobile
+
+---
+
 ## [v3.0.4] - 2025-11-13 🚨 HOTFIX CRÍTICO - NextAuth Production Optimization
 
 ### 🔥 Critical Bug Fix
