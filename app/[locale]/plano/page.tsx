@@ -424,7 +424,12 @@ export default function PlanoPage() {
                           
                           const allCompleted = dayWorkouts.every(w => w.isCompleted);
                           const someCompleted = dayWorkouts.some(w => w.isCompleted);
-                          const isPastUncompleted = workoutDate.isBefore(today, 'day') && !allCompleted;
+                          const isRestDay = dayWorkouts.every(w => 
+                            w.type === 'rest' || 
+                            w.title.toLowerCase().includes('descanso') || 
+                            w.title.toLowerCase().includes('rest')
+                          );
+                          const isPastUncompleted = workoutDate.isBefore(today, 'day') && !allCompleted && !isRestDay;
                           const hasRaceDay = dayWorkouts.some(w => 
                             w.title.toLowerCase().includes('corrida alvo') || 
                             w.title.toLowerCase().includes('race day') ||

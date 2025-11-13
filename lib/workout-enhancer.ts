@@ -86,7 +86,7 @@ function enhanceLongRun(workout: BasicWorkout, paces: any): BasicWorkout & Enhan
       duration,
       description: `${distance}km em ritmo confortável de conversação fácil`,
       steps: [
-        `Mantenha pace constante de ${pace}/km durante todo o percurso`,
+        `Mantenha pace constante de ${pace} durante todo o percurso`,
         'Foque em boa postura: olhar no horizonte, ombros relaxados, core engajado',
         'Cadência ideal: 170-180 passos por minuto',
         'Hidrate a cada 20-30 minutos',
@@ -194,7 +194,7 @@ function enhanceIntervals(workout: BasicWorkout, paces: any): BasicWorkout & Enh
       duration: 30,
       description: `${reps}x${workDistance}m em ritmo intenso com recuperação ativa`,
       steps: [
-        `Execute ${reps} repetições de ${workDistance}m em pace de ${pace}/km`,
+        `Execute ${reps} repetições de ${workDistance}m em pace de ${pace}`,
         `Recuperação: ${recoveryTime} min de trote suave ou caminhada entre cada repetição`,
         'Foque em manter boa forma técnica em todas as repetições',
         'Controle respiração: 2 passos inspira, 2 passos expira',
@@ -314,7 +314,7 @@ function enhanceTempoRun(workout: BasicWorkout, paces: any): BasicWorkout & Enha
       duration: tempoDuration,
       description: `${distance}km em pace de limiar - ritmo "confortavelmente difícil"`,
       steps: [
-        `Mantenha pace constante de ${pace}/km durante ${distance}km`,
+        `Mantenha pace constante de ${pace} durante ${distance}km`,
         'Ritmo: consegue falar frases curtas mas não conversar fluentemente',
         'Esforço: poderia manter por 60 minutos (mas não 90)',
         'Respiração controlada mas trabalhada - ritmo 3:3 ou 2:2',
@@ -414,7 +414,7 @@ function enhanceEasyRun(workout: BasicWorkout, paces: any): BasicWorkout & Enhan
       duration,
       description: `${distance}km em ritmo MUITO confortável - recuperação ativa`,
       steps: [
-        `Mantenha pace de ${pace}/km ou MAIS LENTO`,
+        `Mantenha pace de ${pace} ou MAIS LENTO`,
         'Regra de ouro: deve conseguir conversar fluentemente',
         'Se ficou sem fôlego = MUITO RÁPIDO - reduza pace',
         'Foque em técnica e movimento eficiente',
