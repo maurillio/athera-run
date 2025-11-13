@@ -1,0 +1,118 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                   🚀 ATHERA RUN v2.5.1 - START HERE                   ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+📍 VOCÊ ESTÁ AQUI: v2.5.1 Planning Stage (85% implementado)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PRÓXIMA AÇÃO (3-4 horas):
+
+   1. LER: GUIA_RAPIDO_PROXIMA_SESSAO.md ⭐⭐⭐
+      → Passo a passo EXATO do que fazer
+
+   2. LER: SYSTEM_PROMPT_v2.5.1_IMPROVEMENTS.md
+      → Guia completo de melhorias (12KB)
+
+   3. IMPLEMENTAR: lib/ai-system-prompt-v2.5.ts
+      → Adicionar 4 seções específicas
+
+   4. TESTAR: 5 perfis diferentes
+      → Validar personalização
+
+   5. DEPLOY: git push origin main
+      → Vercel auto-deploy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTOS ESSENCIAIS:
+
+   STATUS:
+   • STATUS_ATUAL_COMPLETO_13NOV2025.md
+     → Estado atual completo (85%)
+
+   GUIAS:
+   • GUIA_RAPIDO_PROXIMA_SESSAO.md ⭐
+     → Passo a passo próxima sessão
+   
+   • SYSTEM_PROMPT_v2.5.1_IMPROVEMENTS.md ⭐⭐⭐
+     → Especificações completas (12KB)
+
+   PROBLEMAS:
+   • PROBLEMAS_IDENTIFICADOS_E_SOLUCOES.md
+     → Bugs e soluções
+
+   NAVEGAÇÃO:
+   • INDICE_NAVEGACAO_v2_5_1.md
+     → Índice completo de todos documentos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ O QUE JÁ ESTÁ PRONTO (85%):
+
+   ✅ Database Schema v2.5.0
+   ✅ Backend AI Logic v2.5.0
+   ✅ API Routes v2.5.0
+   ✅ Frontend Onboarding v2.5.0
+   ✅ Documentação completa v2.5.1
+
+🔴 O QUE FALTA (15%):
+
+   🔴 System Prompt v2.5.1 (personalização extrema)
+      → Walk/Run protocol detalhado
+      → Progressão clara obrigatória
+      → Detalhamento completo treinos
+      → Ajustes especiais aplicados
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 OBJETIVO v2.5.1:
+
+   ANTES:
+   ❌ Planos genéricos
+   ❌ Sem progressão clara
+   ❌ Iniciante absoluto com corrida contínua dia 1
+
+   DEPOIS:
+   ✅ Planos verdadeiramente personalizados
+   ✅ Progressão óbvia semana a semana
+   ✅ Walk/Run gradual para iniciantes
+   ✅ Ajustes especiais aplicados
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️ TIMELINE:
+
+   • Ler documentação: 15 minutos
+   • Implementar system prompt: 2 horas
+   • Testar 5 perfis: 1 hora
+   • Deploy + validação: 30 minutos
+   
+   TOTAL: 3-4 horas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💪 MENSAGEM FINAL:
+
+   ✅ Todo planejamento está feito
+   ✅ Toda pesquisa está completa
+   ✅ Toda documentação está pronta
+   ✅ Roadmap está claro
+   ✅ Exemplos estão prontos
+
+   AGORA É SÓ IMPLEMENTAR SEGUINDO O GUIA!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 COMECE AGORA:
+
+   $ code GUIA_RAPIDO_PROXIMA_SESSAO.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Última atualização: 13/NOV/2025 17:30 UTC
+Versão: v2.5.1 (Planning Complete)
+Status: READY TO IMPLEMENT ✅
+Confiança: 95% 🎯
+
+╚═══════════════════════════════════════════════════════════════════════╝
