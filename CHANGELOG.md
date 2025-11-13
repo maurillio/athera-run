@@ -7,20 +7,28 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-## [v2.5.0] - 2025-11-13 (EM PROGRESSO) 🚧
+## [v2.5.1] - 2025-11-13 (EM PROGRESSO) 🚧
 
-### 🧠 MAJOR FEATURE - Elite AI Training Intelligence
+### 🧠 MAJOR FEATURE - Elite AI Training Intelligence + Personalization
 
 **A maior evolução do gerador de planos desde o lançamento**
 
 #### 🎯 Objetivo
 Transformar geração de planos de "boa" para "elite":
 - v2.0.0: Planos bem estruturados mas genéricos ❌
-- v2.5.0: Planos verdadeiramente personalizados ✅
+- v2.5.0: Planos com novos campos, mas ainda genéricos 🟡
+- v2.5.1: Planos VERDADEIRAMENTE personalizados ✅
+
+**Foco v2.5.1:**
+- ZERO planos "cookie-cutter"
+- Progressão CLARA semana a semana
+- Protocolos específicos por nível (absolute beginner → advanced)
+- Walk/Run protocol para iniciantes absolutos
+- Ajustes especiais aplicados (idade, lesão, sono, ciclo, lifestyle)
 
 ---
 
-### ✅ CONCLUÍDO (45%)
+### ✅ CONCLUÍDO (85%)
 
 #### 1. Database Migration
 **Status:** ✅ COMPLETO  
@@ -111,34 +119,35 @@ familyDemand?: string           // Responsabilidades familiares
 ### 🚧 EM PROGRESSO (70%)
 
 #### 4. System Prompt v2.5 Integration
-**Status:** 🟡 PENDENTE  
-**Estimativa:** 30 minutos
+**Status:** ✅ COMPLETO
+**Data:** 13/NOV/2025
 
-**Tarefas:**
-- [ ] Atualizar `classifyRunner()` para usar hasRunBefore
-- [ ] Criar `buildSpecialAdjustments()` para novos campos
-- [ ] Integrar lógica no system prompt
+**Implementado:**
+- ✅ `classifyRunner()` usa hasRunBefore para detectar iniciante absoluto
+- ✅ `buildSpecialAdjustments()` processa TODOS novos campos
+- ✅ Lógica integrada no system prompt v2.5
 
 ---
 
 #### 5. API Routes - Backend
-**Status:** 🔴 PENDENTE  
-**Estimativa:** 30 minutos
+**Status:** ✅ COMPLETO
+**Data:** 13/NOV/2025
 
-**Arquivos:**
-- [ ] `app/api/athlete-profile/route.ts` (POST)
-- [ ] `app/api/athlete-profile/[id]/route.ts` (PATCH)
+**Arquivos atualizados:**
+- ✅ `app/api/profile/create/route.ts` (POST) - Salva novos campos
+- ✅ `app/api/profile/update/route.ts` (PATCH) - Atualiza novos campos
 
 ---
 
 #### 6. Frontend - Onboarding Updates
-**Status:** 🔴 PENDENTE  
-**Estimativa:** 2.5 horas
+**Status:** ✅ COMPLETO
+**Data:** 13/NOV/2025
 
-**Arquivos:**
-- [ ] `components/onboarding/StepExperience.tsx` - Pergunta "Já correu?"
-- [ ] `components/onboarding/StepHealth.tsx` - Sono + Lesão + Ciclo
-- [ ] `components/onboarding/StepLifestyle.tsx` - NOVO STEP (trabalho + família)
+**Arquivos atualizados:**
+- ✅ `Step2SportBackground.tsx` - Pergunta "Já correu?" (hasRunBefore)
+- ✅ `Step4Health.tsx` - Sono + Lesão + Ciclo menstrual
+- ✅ `Step5Lifestyle.tsx` - NOVO STEP (trabalho + família)
+- ✅ `OnboardingV130.tsx` - Atualizado para 8 steps
 
 ---
 
@@ -174,6 +183,99 @@ components/workout-details.tsx        (pace display)
 lib/ai-plan-generator.ts             (AI prompt)
 lib/multi-race-plan-generator.ts     (AI prompt)
 ```
+
+---
+
+#### 7. v2.5.1 - MAJOR IMPROVEMENTS (Personalização Extrema) 🎯
+**Status:** 📝 DOCUMENTADO - AGUARDANDO IMPLEMENTAÇÃO
+**Data:** 13/NOV/2025 17:15 UTC
+
+**Problema identificado:**
+Mesmo com todos os campos v2.5.0 coletados e integrados, os planos ainda aparecem muito genéricos:
+- ❌ Treinos muito parecidos semana a semana
+- ❌ Progressão não-visível
+- ❌ Iniciante absoluto recebe corrida contínua na semana 1 (inadequado!)
+- ❌ Planos parecem "cookie-cutter" para todos
+
+**Solução v2.5.1:**
+
+##### 1. Protocolo Walk/Run Detalhado (Iniciantes Absolutos)
+```
+Semana 1-4: Walk/Run Adaptation
+- 10x (1min corrida + 2min caminhada) → progressão gradual
+- ZERO corrida contínua até semana 8-9
+- Volume: 8-12km/semana (ultra conservador)
+
+Semana 5-8: Walk/Run Advanced
+- Ratio melhora: 2min corrida / 1min caminhada
+- Primeira corrida contínua: 10-15min
+
+Semana 9-12: Building Continuous Base
+- Corrida contínua 20-30min
+- Progressão 5%/semana (não 10%)
+```
+
+##### 2. Progressão CLARA e MENSURÁVEL
+**Antes (Genérico):**
+```
+Sem 1: Easy 5km, Easy 6km, Easy 5km, Longão 10km = 26km
+Sem 2: Easy 5km, Easy 6km, Easy 5km, Longão 10km = 26km (ZERO progressão!)
+```
+
+**Depois (Personalizado):**
+```
+Sem 1: Easy 5km, Easy 6km, Easy 5km, Longão 10km = 26km
+      Foco: Adaptação
+Sem 2: Easy 5km, Easy 6km, Easy 6km, Longão 11km = 28km (+8%)
+      Foco: Aumentar volume gradualmente
+Sem 3: Easy 5km, Fartlek 6km, Easy 6km, Longão 12km = 29km (+4%)
+      Foco: Introduzir variação de ritmo
+Sem 4: Easy 4km, Easy 5km, Easy 4km, Longão 9km = 22km (-24% Cutback)
+      Foco: Recuperação ativa
+```
+
+##### 3. Detalhamento COMPLETO de TODOS os Treinos
+**Obrigatório em TODOS os workouts:**
+- ✅ `warmUp`: Aquecimento específico
+- ✅ `mainSet`: Descrição detalhada do principal
+- ✅ `coolDown`: Volta à calma + alongamento
+- ✅ `objective`: POR QUÊ fazer este treino
+- ✅ `tips`: Dicas práticas de execução
+- ✅ `pace`: Pace/intensidade clara
+
+##### 4. Protocolos Específicos por Nível
+- **Absolute Beginner:** Walk/Run 12 semanas
+- **Beginner:** Easy running only 4-6 semanas → adicionar qualidade
+- **Intermediate:** Qualidade desde início (moderada), foco volume
+- **Advanced:** Alta intensidade + volume, race-specific desde cedo
+
+##### 5. Ajustes Especiais APLICADOS
+- ✅ Lesão ativa → -50% volume, ZERO qualidade 4 semanas
+- ✅ Sono <6h → -20% volume, +1 dia descanso
+- ✅ Trabalho físico + família alta → -30% volume
+- ✅ Ciclo menstrual → Key workouts dias 7-14
+- ✅ Idade 40+ → Cutback weeks a cada 3 semanas
+- ✅ Idade 50+ → -15% volume, recovery dobrado
+- ✅ Idade 60+ → Força > Volume corrida
+
+##### 6. Linguagem Apropriada ao Nível
+- **Iniciante Absoluto:** Encorajadora, educativa, celebra pequenas vitórias
+- **Iniciante:** Motivadora, progressiva
+- **Intermediário:** Profissional, específica
+- **Avançado:** Técnica, precisa, race-focused
+
+**Documentação completa:**
+- 📄 `SYSTEM_PROMPT_v2.5.1_IMPROVEMENTS.md` (12KB)
+- 📄 `PROBLEMAS_IDENTIFICADOS_E_SOLUCOES.md` (8KB)
+- 📄 `STATUS_ATUAL_COMPLETO_13NOV2025.md` (10KB)
+
+**Próximas ações:**
+1. [ ] Atualizar `lib/ai-system-prompt-v2.5.ts` com melhorias
+2. [ ] Testar 5 perfis diferentes
+3. [ ] Validar progressão clara em todos os casos
+4. [ ] Deploy e validação em produção
+
+**Tempo estimado:** 2-3 horas implementação + testes
 
 ---
 
