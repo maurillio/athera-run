@@ -7,6 +7,58 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.0.2] - 2025-11-13 🚀 HOTFIX - AI Validation & Paces Structure
+
+### 🎯 Objetivo
+Corrigir validação da IA que estava falhando para distâncias curtas (5K/10K).
+
+### 🐛 Bug Fixes
+
+#### Critical (P0) - AI RESPONSE VALIDATION
+- **Erro:** "Resposta da IA não passou na validação" - campos obrigatórios ausentes
+- **Causa:** Validação exigia `paces.marathon` para todas distâncias, mas IA não retorna isso para 5K/10K
+- **Solução:** 
+  - Removido requisito de `marathon` pace da validação
+  - Adicionado logging detalhado para debug
+  - Validação agora aceita qualquer pace válida com `easy` obrigatório
+
+**Arquivo:** `lib/ai-plan-generator.ts`
+```typescript
+// ANTES (❌ Falhava para 5K/10K)
+data.paces && data.paces.easy && data.paces.marathon
+
+// DEPOIS (✅ Funciona para todas distâncias)
+data.paces && data.paces.easy
+```
+
+#### Critical (P0) - AI PROMPT PACES STRUCTURE  
+- **Erro:** Prompt v2.5 não pedia paces no JSON
+- **Causa:** Formato JSON no prompt não incluía objeto `paces`
+- **Solução:** Adicionado estrutura paces ao formato JSON com instruções por distância:
+  - 5K/10K: easy, tempo, interval, race
+  - Meia/Maratona: + marathon pace
+  - Iniciantes: walk/run paces
+
+**Arquivo:** `lib/ai-system-prompt-v2.5.ts`
+
+### ✅ Validações
+- ✅ Build successful
+- ✅ Migrations já aplicadas no Neon
+- ✅ Deploy automático no Vercel
+- ⏳ Aguardando teste com usuário real
+
+### 📝 Arquivos Modificados
+- `lib/ai-plan-generator.ts` - Validação relaxada + logging
+- `lib/ai-system-prompt-v2.5.ts` - Formato JSON corrigido
+
+### 🚀 Deploy
+- **Commit:** ca7e39b9
+- **Branch:** main
+- **Vercel:** Deploy automático em andamento
+- **Migrations:** Já aplicadas (v2.0.0 + v3.0.0)
+
+---
+
 ## [v3.0.1] - 2025-11-13 ✅ APPLIED - Database Schema Update
 
 ### 🎯 Objetivo
