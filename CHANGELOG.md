@@ -18,8 +18,9 @@ Corrigir validação da IA que estava falhando para distâncias curtas (5K/10K).
 - **Erro:** "Resposta da IA não passou na validação" - campos obrigatórios ausentes
 - **Causa:** Validação exigia `paces.marathon` para todas distâncias, mas IA não retorna isso para 5K/10K
 - **Solução:** 
-  - Removido requisito de `marathon` pace da validação
-  - Adicionado logging detalhado para debug
+  - Removido requisito de `marathon` pace da validação (só meia/maratona precisam)
+  - Adicionado `taperWeeks` como campo obrigatório na validação
+  - Logging detalhado com breakdown de campos faltantes
   - Validação agora aceita qualquer pace válida com `easy` obrigatório
 
 **Arquivo:** `lib/ai-plan-generator.ts`
@@ -28,34 +29,43 @@ Corrigir validação da IA que estava falhando para distâncias curtas (5K/10K).
 data.paces && data.paces.easy && data.paces.marathon
 
 // DEPOIS (✅ Funciona para todas distâncias)
-data.paces && data.paces.easy
+data.paces && data.paces.easy && data.taperWeeks !== undefined
 ```
 
-#### Critical (P0) - AI PROMPT PACES STRUCTURE  
-- **Erro:** Prompt v2.5 não pedia paces no JSON
-- **Causa:** Formato JSON no prompt não incluía objeto `paces`
-- **Solução:** Adicionado estrutura paces ao formato JSON com instruções por distância:
-  - 5K/10K: easy, tempo, interval, race
-  - Meia/Maratona: + marathon pace
-  - Iniciantes: walk/run paces
+#### Critical (P0) - AI PROMPT STRUCTURE CLARITY  
+- **Problema:** Prompt v2.5 não deixava claro quais campos eram obrigatórios vs opcionais
+- **Causa:** Exemplo JSON incompleto e instruções ambíguas
+- **Solução:** 
+  - Exemplo JSON completo com 3 fases (Base → Build → Taper)
+  - Seção "CAMPOS OBRIGATÓRIOS" documentando cada campo
+  - Instruções claras: marathon pace APENAS para 21K/42K
+  - Aviso: "NUNCA retorne paces vazios ou undefined"
 
 **Arquivo:** `lib/ai-system-prompt-v2.5.ts`
 
 ### ✅ Validações
 - ✅ Build successful
-- ✅ Migrations já aplicadas no Neon
+- ✅ Migrations já aplicadas no Neon (v2.0.0 + v3.0.0)
+- ✅ Prisma Client gerado
 - ✅ Deploy automático no Vercel
+- ✅ Commit: f9ee1bb1
 - ⏳ Aguardando teste com usuário real
 
 ### 📝 Arquivos Modificados
-- `lib/ai-plan-generator.ts` - Validação relaxada + logging
-- `lib/ai-system-prompt-v2.5.ts` - Formato JSON corrigido
+- `lib/ai-plan-generator.ts` - Validação corrigida + logging detalhado
+- `lib/ai-system-prompt-v2.5.ts` - Formato JSON completo + documentação
 
 ### 🚀 Deploy
-- **Commit:** ca7e39b9
+- **Commit:** f9ee1bb1
 - **Branch:** main
-- **Vercel:** Deploy automático em andamento
-- **Migrations:** Já aplicadas (v2.0.0 + v3.0.0)
+- **Vercel:** Deploy automático concluído
+- **Migrations:** ✅ Aplicadas (6 migrations no Neon)
+- **Database:** ✅ Sincronizado
+
+### 🧪 Próximos Testes
+1. Gerar plano para 5K (beginner) - Verificar aceita sem marathon pace
+2. Gerar plano para 10K (intermediate) - Verificar taperWeeks = 1-2
+3. Gerar plano para Meia (advanced) - Verificar inclui marathon pace
 
 ---
 
