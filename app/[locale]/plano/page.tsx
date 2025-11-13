@@ -31,13 +31,37 @@ const appTimezone = 'America/Sao_Paulo';
 
 // Helper function to normalize phase names for translation keys
 function normalizePhaseKey(phase: string): string {
+  if (!phase) return 'base';
+  
+  // Mapa de fases para chaves de tradução
+  const phaseMap: Record<string, string> = {
+    'base': 'base',
+    'baseaerobica': 'base',
+    'base aerobica': 'base',
+    'base aeróbica': 'base',
+    'build': 'build',
+    'desenvolvimento': 'build',
+    'construcao': 'build',
+    'construção': 'build',
+    'peak': 'peak',
+    'pico': 'peak',
+    'intensidade': 'peak',
+    'taper': 'taper',
+    'polimento': 'taper',
+    'recuperacao': 'recovery',
+    'recuperação': 'recovery',
+    'recovery': 'recovery',
+    'race': 'race',
+    'corrida': 'race'
+  };
+  
   const normalized = phase
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Remove accents
     .replace(/\s+/g, ''); // Remove spaces
   
-  return normalized;
+  return phaseMap[normalized] || phaseMap[phase.toLowerCase()] || 'base';
 }
 
 interface CustomPlan {
@@ -160,7 +184,28 @@ export default function PlanoPage() {
   const currentWeek = weeks.find(w => w.weekNumber === viewingWeek);
   
   const getDistanceLabel = (distance: string) => {
-    return t(`plano.goalLabels.${distance}`, distance);
+    // Normalizar distância para mapear corretamente
+    const normalizeDistance = (dist: string) => {
+      const map: Record<string, string> = {
+        '5k': '5k',
+        '10k': '10k',
+        '15k': '15k',
+        '21k': '21k',
+        '42k': '42k',
+        'half_marathon': '21k',
+        'marathon': '42k',
+        'halfmarathon': '21k'
+      };
+      return map[dist?.toLowerCase()] || dist;
+    };
+
+    const normalized = normalizeDistance(distance);
+    // Tentar traduzir, se não existir usa o valor normalizado
+    try {
+      return t(`plano.goalLabels.${normalized}`, { defaultValue: normalized });
+    } catch {
+      return normalized;
+    }
   };
 
   // Removed - using formatShortDate from date-formatter.ts instead
