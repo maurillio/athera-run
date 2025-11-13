@@ -7,6 +7,56 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.0.1] - 2025-11-13 ⚠️ HOTFIX - Correções Críticas
+
+### 🔧 Bug Fixes
+
+#### Critical (P0)
+- **Database Migration:** Preparado script SQL para aplicar migration v2.0.0 manualmente no Neon
+  - Migration `20251110_workout_structure_v2_0_0` não estava aplicada em produção
+  - Criado `apply-migration-neon.sql` com todas as alterações necessárias
+  - **⚠️ AÇÃO NECESSÁRIA:** Executar SQL no Neon Dashboard para liberar geração de planos
+  - Erro: `The column 'custom_workouts.warmUpStructure' does not exist`
+
+#### High Priority (P1)
+- **i18n Translations:** Corrigido chaves de tradução quebradas
+  - ❌ Antes: `goalLabels.5k`, `phases.baseaerobica`
+  - ✅ Depois: `5km`, `Base`
+  - Implementado `normalizeDistance()` helper
+  - Expandido `normalizePhaseKey()` com mapa completo de variações
+  - Mapeia: baseaerobica → base, desenvolvimento → build, etc
+
+#### Medium Priority (P2)
+- **Pace Display:** Removido duplicação de unidade
+  - ❌ Antes: `5:30 min/km/km`
+  - ✅ Depois: `5:30 min/km`
+  - Implementado `cleanPace` em 3 locais do `workout-details.tsx`
+
+### ✅ Verified Working
+- **Rest Day Display:** Confirmado que dias de descanso NÃO aparecem vermelhos
+  - Lógica `isRestDay` já funcionando corretamente
+  - Falso positivo no relato, provavelmente cache
+
+### 📚 Documentation
+- Criado `MIGRACAO_URGENTE_V3_0_1.md` - Guia completo de correções
+- Criado `apply-migration-neon.sql` - Script SQL pronto para executar
+- Criado `validate-v3.0.1.sh` - Script de validação
+- Criado `RESUMO_SESSAO_13NOV2025_PARTE4.md` - Resumo executivo
+
+### 🚀 Deployment
+- **Commit:** 71752591
+- **Status:** ✅ Código deployado
+- **Vercel:** Auto-deploy em andamento
+- **Database:** ⏳ Aguardando aplicação manual da migration
+
+### 📋 Next Steps
+1. ⚠️ **CRÍTICO:** Aplicar migration no Neon via SQL Editor
+2. Testar geração de plano
+3. Validar traduções
+4. Coletar feedback usuários
+
+---
+
 ## [v3.0.0] - 2025-11-13 ✅ DEPLOYADO EM PRODUÇÃO - 100% VERIFICADO
 
 ### 🧠 MAJOR FEATURE - Elite AI Training Intelligence + Multi-Dimensional Personalization
