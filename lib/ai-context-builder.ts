@@ -82,6 +82,16 @@ export interface ComprehensiveProfile {
   motivationFactors?: any;
   longRunDay?: number;
   
+  // v2.5.0: Novos campos para personalização avançada
+  hasRunBefore?: boolean;          // Detecta iniciante absoluto
+  currentlyInjured?: boolean;      // Flag lesão ativa
+  avgSleepHours?: number;          // Horas de sono (recovery)
+  tracksMenstrualCycle?: boolean;  // Mulheres (opcional)
+  avgCycleLength?: number;         // Duração ciclo menstrual
+  lastPeriodDate?: Date;           // Data última menstruação
+  workDemand?: string;             // 'sedentary' | 'moderate' | 'physical'
+  familyDemand?: string;           // 'low' | 'moderate' | 'high'
+  
   // Contexto de execução
   recentWorkoutCompletion?: any;
 }
@@ -141,6 +151,33 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   context += `\n═══════════════════════════════════════\n`;
   context += `2. BASE ESPORTIVA E EXPERIÊNCIA\n`;
   context += `═══════════════════════════════════════\n\n`;
+  
+  // ✅ v2.5.0: Detecção de iniciante absoluto
+  if (profile.hasRunBefore === false) {
+    context += `\n🚨 ATENÇÃO: INICIANTE ABSOLUTO\n`;
+    context += `═══════════════════════════════════════\n`;
+    context += `Esta pessoa NUNCA correu antes!\n\n`;
+    
+    context += `PROTOCOLO OBRIGATÓRIO:\n`;
+    context += `1. Começar com protocolo Walk/Run (Couch to 5K)\n`;
+    context += `2. ZERO treinos de qualidade por 8-12 semanas\n`;
+    context += `3. Foco: Criar hábito sem lesão\n`;
+    context += `4. Progressão ULTRA conservadora (5% semanal)\n`;
+    context += `5. Celebrar cada pequena vitória\n`;
+    context += `6. Linguagem acolhedora e encorajadora\n\n`;
+    
+    if (profile.otherSportsExperience && profile.otherSportsExperience.length > 0) {
+      context += `✅ PONTO POSITIVO: Tem experiência em outros esportes\n`;
+      context += `   ${profile.otherSportsExperience}\n`;
+      context += `   Isso indica base aeróbica existente\n`;
+      context += `   Progressão pode ser um pouco mais rápida (mas ainda conservadora!)\n\n`;
+    } else {
+      context += `⚠️ SEM base aeróbica de outros esportes\n`;
+      context += `   Progressão deve ser EXTREMAMENTE gradual\n\n`;
+    }
+    
+    context += `═══════════════════════════════════════\n\n`;
+  }
   
   context += `Nível de Corrida: ${profile.runningLevel}\n`;
   if (profile.runningYears) {
@@ -202,6 +239,25 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   context += `4. HISTÓRICO DE LESÕES E SAÚDE\n`;
   context += `═══════════════════════════════════════\n\n`;
   
+  // ✅ v2.5.0: Detecção de lesão ativa
+  if (profile.currentlyInjured === true) {
+    context += `\n🚨 LESÃO ATIVA DETECTADA!\n`;
+    context += `═══════════════════════════════════════\n`;
+    context += `PROTOCOLO DE SEGURANÇA OBRIGATÓRIO:\n\n`;
+    
+    context += `1. Volume inicial: 50% do volume atual\n`;
+    context += `2. ZERO intensidade alta por 4 semanas mínimo\n`;
+    context += `3. Progressão: 5% semanal (ao invés de 10%)\n`;
+    context += `4. Incluir strength training & cross-training\n`;
+    context += `5. Monitorar dor a CADA treino\n`;
+    context += `6. Recomendar consulta médica antes de iniciar\n`;
+    context += `7. Se dor retornar: PARAR imediatamente\n\n`;
+    
+    context += `⚠️ PRIORIDADE: Recuperação > Performance\n`;
+    context += `   Melhor prevenir recaída do que forçar progressão\n\n`;
+    context += `═══════════════════════════════════════\n\n`;
+  }
+  
   if (profile.injuryDetails && profile.injuryDetails.length > 0) {
     const analysis = analyzeInjuryHistory(profile.injuryDetails);
     
@@ -243,22 +299,180 @@ export function buildComprehensiveContext(profile: ComprehensiveProfile): string
   }
   
   // ═══════════════════════════════════════
-  // 5. RECUPERAÇÃO E CARGA MENTAL
+  // 5. SONO, LIFESTYLE E RECUPERAÇÃO (v2.5.0)
   // ═══════════════════════════════════════
   
   context += `\n═══════════════════════════════════════\n`;
-  context += `5. RECUPERAÇÃO E CARGA MENTAL\n`;
+  context += `5. SONO, LIFESTYLE E RECUPERAÇÃO\n`;
   context += `═══════════════════════════════════════\n\n`;
   
-  if (profile.sleepQuality) {
-    context += `Sono: ${profile.sleepQuality}/5 (${interpretSleep(profile.sleepQuality)})\n`;
+  // ✅ v2.5.0: Sono médio (mais preciso que sleepQuality 1-5)
+  if (profile.avgSleepHours !== undefined && profile.avgSleepHours !== null) {
+    context += `Sono Médio: ${profile.avgSleepHours}h por noite\n`;
+    
+    if (profile.avgSleepHours < 6) {
+      context += `🚨 CRÍTICO: Sono INSUFICIENTE (<6h)\n`;
+      context += `\nIMPACTO NO TREINAMENTO:\n`;
+      context += `  • Reduzir volume planejado em 20%\n`;
+      context += `  • Aumentar dias de descanso\n`;
+      context += `  • Priorizar recuperação sobre intensidade\n`;
+      context += `  • Monitorar sinais de overtraining\n`;
+      context += `  • Recomendar melhorar higiene do sono\n\n`;
+    } else if (profile.avgSleepHours < 7) {
+      context += `⚠️ Sono LIMÍTROFE (6-7h)\n`;
+      context += `  • Volume moderado recomendado\n`;
+      context += `  • Dar atenção extra a recuperação\n`;
+      context += `  • Evitar treinos muito intensos\n\n`;
+    } else if (profile.avgSleepHours >= 8) {
+      context += `✅ EXCELENTE! Sono adequado (≥8h)\n`;
+      context += `  Capacidade de recuperação otimizada\n`;
+      context += `  Pode suportar volume e intensidade maiores\n\n`;
+    } else {
+      context += `✅ Sono ADEQUADO (7-8h)\n`;
+      context += `  Recuperação normal esperada\n\n`;
+    }
+  } else if (profile.sleepQuality) {
+    // Fallback para estrutura antiga (1-5)
+    context += `Qualidade do Sono: ${profile.sleepQuality}/5 (${interpretSleep(profile.sleepQuality)})\n\n`;
   }
   
+  // ✅ v2.5.0: Demanda de trabalho
+  if (profile.workDemand) {
+    context += `Demanda de Trabalho: ${profile.workDemand}\n`;
+    
+    if (profile.workDemand === 'physical') {
+      context += `⚠️ Trabalho FÍSICO detectado\n`;
+      context += `  • Considerar fadiga acumulada diária\n`;
+      context += `  • Trabalho JÁ é treinamento de resistência\n`;
+      context += `  • Volume de corrida deve ser moderado\n`;
+      context += `  • Priorizar qualidade > quantidade\n\n`;
+    } else if (profile.workDemand === 'sedentary') {
+      context += `  Sedentário (escritório)\n`;
+      context += `  • Pode absorver mais volume de treino\n`;
+      context += `  • Incluir mobility work (compensar postura)\n\n`;
+    } else {
+      context += `  Moderado\n\n`;
+    }
+  }
+  
+  // ✅ v2.5.0: Demanda familiar
+  if (profile.familyDemand) {
+    context += `Demanda Familiar: ${profile.familyDemand}\n`;
+    
+    if (profile.familyDemand === 'high') {
+      context += `⚠️ Alta demanda familiar detectada\n`;
+      context += `  • Planejar treinos flexíveis\n`;
+      context += `  • Considerar treinos mais curtos e intensos\n`;
+      context += `  • Evitar longões muito longos\n`;
+      context += `  • Realismo na programação é CRÍTICO\n\n`;
+    } else if (profile.familyDemand === 'low') {
+      context += `  Baixa (flexibilidade alta)\n`;
+      context += `  • Pode planejar treinos longos\n\n`;
+    } else {
+      context += `  Moderada\n\n`;
+    }
+  }
+  
+  // ✅ v2.5.0: Ajuste de volume por lifestyle
+  if ((profile.workDemand === 'physical' || profile.familyDemand === 'high') ||
+      (profile.avgSleepHours && profile.avgSleepHours < 6)) {
+    context += `\n💡 AJUSTE DE VOLUME POR LIFESTYLE:\n`;
+    context += `   Vida exigente detectada!\n`;
+    
+    let reductionPercent = 0;
+    const reasons = [];
+    
+    if (profile.avgSleepHours && profile.avgSleepHours < 6) {
+      reductionPercent += 20;
+      reasons.push('Sono insuficiente');
+    }
+    if (profile.workDemand === 'physical') {
+      reductionPercent += 10;
+      reasons.push('Trabalho físico');
+    }
+    if (profile.familyDemand === 'high') {
+      reductionPercent += 10;
+      reasons.push('Alta demanda familiar');
+    }
+    
+    reductionPercent = Math.min(reductionPercent, 30); // Cap em 30%
+    
+    context += `   Redução recomendada: ${reductionPercent}%\n`;
+    context += `   Motivos: ${reasons.join(', ')}\n`;
+    context += `   Estratégia: Qualidade > Quantidade\n`;
+    context += `   Foco: Treinos eficientes e flexíveis\n\n`;
+  }
+  
+  // Estresse (estrutura antiga mantida)
   if (profile.stressLevel) {
-    context += `Estresse: ${profile.stressLevel}/5 (${interpretStress(profile.stressLevel)})\n\n`;
+    context += `Nível de Estresse: ${profile.stressLevel}/5 (${interpretStress(profile.stressLevel)})\n\n`;
   }
   
-  // Calcular capacidade de recuperação
+  // ✅ v2.5.0: Ciclo menstrual (apenas mulheres)
+  if (profile.gender === 'female' && profile.tracksMenstrualCycle === true) {
+    context += `\n📊 OTIMIZAÇÃO POR CICLO MENSTRUAL\n`;
+    context += `═══════════════════════════════════════\n`;
+    context += `Atleta rastreia ciclo: SIM\n`;
+    
+    if (profile.avgCycleLength) {
+      context += `Duração média do ciclo: ${profile.avgCycleLength} dias\n`;
+    } else {
+      context += `Duração média do ciclo: 28 dias (padrão)\n`;
+    }
+    
+    if (profile.lastPeriodDate) {
+      const lastPeriod = new Date(profile.lastPeriodDate);
+      const today = new Date();
+      const daysSinceLastPeriod = Math.floor((today.getTime() - lastPeriod.getTime()) / (1000 * 60 * 60 * 24));
+      context += `Última menstruação: ${daysSinceLastPeriod} dias atrás\n`;
+      
+      const cycleLength = profile.avgCycleLength || 28;
+      const currentDay = (daysSinceLastPeriod % cycleLength) + 1;
+      
+      let currentPhase = '';
+      if (currentDay >= 1 && currentDay <= 5) {
+        currentPhase = 'Menstruação (dias 1-5)';
+      } else if (currentDay >= 6 && currentDay <= 14) {
+        currentPhase = 'Fase Folicular (dias 6-14) - MELHOR PARA INTENSIDADE';
+      } else if (currentDay >= 15 && currentDay <= cycleLength) {
+        currentPhase = 'Fase Lútea (dias 15-28) - MELHOR PARA VOLUME';
+      }
+      
+      context += `Fase atual estimada: ${currentPhase}\n\n`;
+    }
+    
+    context += `\n💡 ESTRATÉGIA DE PERIODIZAÇÃO HORMONAL:\n`;
+    context += `\n1. FASE FOLICULAR (dias 1-14):\n`;
+    context += `   • ALTA testosterona/estrogênio = melhor performance\n`;
+    context += `   • PRIORIZAR: Treinos de ALTA intensidade\n`;
+    context += `   • Treinos chave: Intervalados, tempo runs, testes\n`;
+    context += `   • Energia e força em pico\n`;
+    context += `   • Recuperação mais rápida\n\n`;
+    
+    context += `2. FASE LÚTEA (dias 15-28):\n`;
+    context += `   • ALTA progesterona = metabolismo diferente\n`;
+    context += `   • PRIORIZAR: Treinos de VOLUME, intensidade moderada\n`;
+    context += `   • Treinos chave: Longões, easy runs, base aeróbica\n`;
+    context += `   • Pode ter mais fadiga\n`;
+    context += `   • Recuperação mais lenta\n`;
+    context += `   • Retenção de líquidos possível\n\n`;
+    
+    context += `3. MENSTRUAÇÃO (dias 1-5):\n`;
+    context += `   • Ajustar volume conforme energia\n`;
+    context += `   • OK para treinar (não é obrigatório parar)\n`;
+    context += `   • Evitar treinos muito intensos se sentir mal\n`;
+    context += `   • Hidratação e ferro importantes\n\n`;
+    
+    context += `⚠️ INSTRUÇÕES PARA IA:\n`;
+    context += `   • Planejar treinos CHAVE para dias 7-14 (melhor janela)\n`;
+    context += `   • Longões e volume em fase lútea\n`;
+    context += `   • Flexibilidade na primeira semana do ciclo\n`;
+    context += `   • Educação sobre ajustes por fase\n\n`;
+    
+    context += `═══════════════════════════════════════\n\n`;
+  }
+  
+  // Cálculo de capacidade de recuperação (estrutura antiga mantida)
   const recoveryCapacity = calculateRecoveryCapacity({
     sleepQuality: profile.sleepQuality || 3,
     stressLevel: profile.stressLevel || 3,

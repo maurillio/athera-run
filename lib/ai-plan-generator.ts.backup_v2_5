@@ -100,16 +100,6 @@ export interface AIUserProfile {
     goals?: string[];
   };
 
-  // v2.5.0: Novos campos para personalização avançada
-  hasRunBefore?: boolean;          // Detecta iniciante absoluto
-  currentlyInjured?: boolean;      // Flag lesão ativa
-  avgSleepHours?: number;          // Horas de sono (recovery)
-  tracksMenstrualCycle?: boolean;  // Mulheres (opcional)
-  avgCycleLength?: number;         // Duração ciclo menstrual
-  lastPeriodDate?: Date;           // Data última menstruação
-  workDemand?: string;             // 'sedentary' | 'moderate' | 'physical'
-  familyDemand?: string;           // 'low' | 'moderate' | 'high'
-
   // Contexto de Execução (para ajustes/regeneração)
   recentWorkoutCompletion?: {
     completedCount: number;
