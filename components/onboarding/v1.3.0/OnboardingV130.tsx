@@ -4,6 +4,7 @@ import Step1BasicData from './Step1BasicData';
 import Step2SportBackground from './Step2SportBackground';
 import Step3Performance from './Step3Performance';
 import Step4Health from './Step4Health';
+import Step5Lifestyle from './Step5Lifestyle';
 import Step5Goals from './Step5Goals';
 import Step6Availability from './Step6Availability';
 import Step7Review from './Step7Review';
@@ -22,7 +23,7 @@ export default function OnboardingV130({ onComplete, initialData = {} }: Onboard
   };
 
   const handleNext = () => {
-    if (currentStep < 7) {
+    if (currentStep < 8) { // v2.5.0: Agora são 8 steps
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -42,13 +43,14 @@ export default function OnboardingV130({ onComplete, initialData = {} }: Onboard
     { num: 2, title: 'Base Esportiva', component: Step2SportBackground },
     { num: 3, title: 'Performance', component: Step3Performance },
     { num: 4, title: 'Saúde', component: Step4Health },
-    { num: 5, title: 'Objetivos', component: Step5Goals },
-    { num: 6, title: 'Disponibilidade', component: Step6Availability },
-    { num: 7, title: 'Revisão', component: Step7Review },
+    { num: 5, title: 'Estilo de Vida', component: Step5Lifestyle }, // v2.5.0: Novo step
+    { num: 6, title: 'Objetivos', component: Step5Goals },
+    { num: 7, title: 'Disponibilidade', component: Step6Availability },
+    { num: 8, title: 'Revisão', component: Step7Review },
   ];
 
   const CurrentStepComponent = steps[currentStep - 1].component;
-  const progress = (currentStep / 7) * 100;
+  const progress = (currentStep / 8) * 100; // v2.5.0: Atualizado para 8 steps
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
@@ -57,7 +59,7 @@ export default function OnboardingV130({ onComplete, initialData = {} }: Onboard
         <div className="mb-8">
           <div className="flex justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">
-              Etapa {currentStep} de 7
+              Etapa {currentStep} de 8
             </span>
             <span className="text-sm font-medium text-blue-600">
               {Math.round(progress)}% completo

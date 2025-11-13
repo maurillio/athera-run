@@ -160,6 +160,14 @@ export async function POST(req: NextRequest) {
       // v1.4.0 - Nova estrutura de disponibilidade
       trainingSchedule, // { 0: { running: true, activities: ['gym'] } }
       customActivities, // ['pilates', 'crossfit']
+      // v2.5.0 - Novos campos personalização avançada
+      currentlyInjured,
+      avgSleepHours,
+      tracksMenstrualCycle,
+      lastPeriodDate,
+      avgCycleLength,
+      workDemand,
+      familyDemand,
     } = body;
 
     // Validar campos obrigatórios
@@ -225,6 +233,7 @@ export async function POST(req: NextRequest) {
       // Paces habituais (salvar apenas os paces, sem wrapper)
       ...(usualPaces && { usualPaces: usualPaces }),
       // Campos de experiência
+      hasRunBefore: hasRunBefore !== undefined ? hasRunBefore : true, // v2.5.0
       runningYears: runningYears ? parseInt(runningYears) : null,
       maxHeartRate: maxHeartRate ? parseInt(maxHeartRate) : null,
       recentLongRunPace: null, // Será preenchido com dados do Strava/logs
@@ -246,6 +255,14 @@ export async function POST(req: NextRequest) {
       // v1.4.0 - Nova estrutura de disponibilidade
       trainingSchedule: trainingSchedule || null,
       customActivities: customActivities || null,
+      // v2.5.0 - Novos campos personalização avançada
+      currentlyInjured: currentlyInjured === true || currentlyInjured === 'true',
+      avgSleepHours: avgSleepHours ? parseFloat(avgSleepHours) : null,
+      tracksMenstrualCycle: gender === 'female' ? (tracksMenstrualCycle === true || tracksMenstrualCycle === 'true') : false,
+      lastPeriodDate: (gender === 'female' && lastPeriodDate) ? new Date(lastPeriodDate) : null,
+      avgCycleLength: (gender === 'female' && avgCycleLength) ? parseInt(avgCycleLength) : null,
+      workDemand: cleanString(workDemand),
+      familyDemand: cleanString(familyDemand),
       // v1.5.4 - Mark as ready for plan generation
       hasCustomPlan: true, // Always true if we got here (validated above)
     };
