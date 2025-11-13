@@ -963,16 +963,32 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
         validateResponse: (response: string) => {
           try {
             const data = JSON.parse(response);
+            console.log('[AI PLAN] Validando resposta:', { 
+              totalWeeks: data.totalWeeks, 
+              phasesCount: data.phases?.length,
+              hasEasyPace: !!data.paces?.easy,
+              taperWeeks: data.taperWeeks
+            });
+
             // Validar campos obrigatórios
             const hasRequiredFields =
               data.totalWeeks &&
               data.phases &&
               Array.isArray(data.phases) &&
               data.paces &&
-              data.paces.easy;
+              data.paces.easy &&
+              data.taperWeeks !== undefined;
 
             if (!hasRequiredFields) {
               console.error('[AI PLAN] Resposta inválida: campos obrigatórios ausentes');
+              console.error('[AI PLAN] Missing:', {
+                totalWeeks: !data.totalWeeks,
+                phases: !data.phases,
+                isArray: !Array.isArray(data.phases),
+                paces: !data.paces,
+                easyPace: !data.paces?.easy,
+                taperWeeks: data.taperWeeks === undefined
+              });
               console.error('[AI PLAN] Data recebida:', JSON.stringify(data, null, 2).substring(0, 500));
               return false;
             }
@@ -985,7 +1001,7 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
 
             return true;
           } catch (e) {
-            console.error('[AI PLAN] Resposta inválida: JSON malformado');
+            console.error('[AI PLAN] Resposta inválida: JSON malformado:', e);
             return false;
           }
         },
