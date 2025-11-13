@@ -7,47 +7,105 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-## [v3.0.1] - 2025-11-13 ⚠️ HOTFIX - Correções Críticas
+## [v3.0.1] - 2025-11-13 ⚠️ MIGRATION READY - Database Schema Update
+
+### 🎯 Objetivo
+Aplicar migrations v2.0.0 + v3.0.0 no banco Neon (produção) para resolver erro de geração de planos.
 
 ### 🔧 Bug Fixes
 
-#### Critical (P0)
-- **Database Migration:** Preparado script SQL para aplicar migration v2.0.0 manualmente no Neon
-  - Migration `20251110_workout_structure_v2_0_0` não estava aplicada em produção
-  - Criado `apply-migration-neon.sql` com todas as alterações necessárias
-  - **⚠️ AÇÃO NECESSÁRIA:** Executar SQL no Neon Dashboard para liberar geração de planos
-  - Erro: `The column 'custom_workouts.warmUpStructure' does not exist`
+#### Critical (P0) - DATABASE MIGRATION
+- **Erro:** `The column 'custom_workouts.warmUpStructure' does not exist in the current database`
+- **Causa:** Migrations locais não aplicadas em produção (Neon)
+- **Solução:** Scripts SQL consolidados criados para aplicação manual
 
-#### High Priority (P1)
-- **i18n Translations:** Corrigido chaves de tradução quebradas
-  - ❌ Antes: `goalLabels.5k`, `phases.baseaerobica`
-  - ✅ Depois: `5km`, `Base`
+**Migrations Pendentes:**
+1. ✅ `20251110_workout_structure_v2_0_0` - 13 novos campos em `custom_workouts`
+2. ✅ `20251113144016_add_v3_profile_fields` - 8 novos campos em `athlete_profiles`
+
+**Arquivos Criados:**
+- `prisma/APPLY_MIGRATIONS_NEON.sql` - Migration consolidada para aplicar
+- `prisma/VERIFY_MIGRATIONS_NEON.sql` - Script de verificação pós-aplicação
+- `NEON_MIGRATION_GUIDE.md` - Guia passo-a-passo completo
+
+**⚠️ AÇÃO NECESSÁRIA:**
+1. Acessar Neon Console (https://console.neon.tech/)
+2. Executar `APPLY_MIGRATIONS_NEON.sql` no SQL Editor
+3. Validar com `VERIFY_MIGRATIONS_NEON.sql`
+4. Confirmar que query de validação retorna: `13, 8, 3` (colunas v2, v3, índices)
+
+#### High Priority (P1) - TRANSLATIONS
+- **i18n Keys:** Corrigido chaves de tradução quebradas
+  - ❌ Antes: `goalLabels.5k`, `phases.baseaerobica`, `PHASES.BASEAEROBICA`
+  - ✅ Depois: `5km`, `Base`, `Base`
   - Implementado `normalizeDistance()` helper
   - Expandido `normalizePhaseKey()` com mapa completo de variações
-  - Mapeia: baseaerobica → base, desenvolvimento → build, etc
+  - Mapeia automático: baseaerobica → base, desenvolvimento → build, etc
 
-#### Medium Priority (P2)
+#### Medium Priority (P2) - UI/UX
 - **Pace Display:** Removido duplicação de unidade
   - ❌ Antes: `5:30 min/km/km`
   - ✅ Depois: `5:30 min/km`
   - Implementado `cleanPace` em 3 locais do `workout-details.tsx`
 
 ### ✅ Verified Working
-- **Rest Day Display:** Confirmado que dias de descanso NÃO aparecem vermelhos
-  - Lógica `isRestDay` já funcionando corretamente
-  - Falso positivo no relato, provavelmente cache
+- **Rest Day Display:** Dias de descanso não aparecem vermelhos ✓
+  - Lógica `isRestDay` funcionando corretamente
+  - Falso positivo no relato original
 
 ### 📚 Documentation
-- Criado `MIGRACAO_URGENTE_V3_0_1.md` - Guia completo de correções
-- Criado `apply-migration-neon.sql` - Script SQL pronto para executar
-- Criado `validate-v3.0.1.sh` - Script de validação
-- Criado `RESUMO_SESSAO_13NOV2025_PARTE4.md` - Resumo executivo
 
-### 🚀 Deployment
-- **Commit:** 71752591
-- **Status:** ✅ Código deployado
-- **Vercel:** Auto-deploy em andamento
-- **Database:** ⏳ Aguardando aplicação manual da migration
+#### Guias Técnicos
+- ✅ `NEON_MIGRATION_GUIDE.md` - Guia completo de aplicação (5.7KB)
+- ✅ `prisma/APPLY_MIGRATIONS_NEON.sql` - Script consolidado v2+v3 (6.6KB)
+- ✅ `prisma/VERIFY_MIGRATIONS_NEON.sql` - Validação automática (5.8KB)
+
+#### Referências
+- Schema atualizado: `prisma/schema.prisma`
+- Migration v2.0.0: `prisma/migrations/20251110_workout_structure_v2_0_0/`
+- Migration v3.0.0: `prisma/migrations/20251113144016_add_v3_profile_fields/`
+
+### 🚀 Deployment Status
+
+| Componente | Status | Observações |
+|------------|--------|-------------|
+| **Código** | ✅ Deployado | Commit 71752591 |
+| **Vercel** | ✅ Live | Auto-deploy concluído |
+| **Database** | ⏳ PENDENTE | **Aplicar APPLY_MIGRATIONS_NEON.sql** |
+| **Prisma Client** | ✅ Gerado | Sincronizado com schema.prisma |
+
+### ⚡ Quick Start (Aplicar Migrations)
+
+```bash
+# Passo 1: Abrir Neon Console
+# https://console.neon.tech/ → Athera Run → SQL Editor
+
+# Passo 2: Executar migration
+# Copiar/colar conteúdo de: prisma/APPLY_MIGRATIONS_NEON.sql
+# Run → Aguardar conclusão (< 5s)
+
+# Passo 3: Validar
+# Executar: prisma/VERIFY_MIGRATIONS_NEON.sql
+# Resultado esperado: 13, 8, 3 ✅
+
+# Passo 4: Testar geração de plano
+# Frontend → Criar novo plano
+# Verificar logs Vercel (não deve mais ter erro P2022)
+```
+
+### 🎉 Impacto Pós-Aplicação
+
+**Funcionalidades Desbloqueadas:**
+- ✅ Geração de planos v2.0.0 (treinos enriquecidos)
+- ✅ IA v3.0.0 (perfil multi-dimensional)
+- ✅ Workout enhancement (aquecimento/principal/desaquecimento estruturados)
+- ✅ Campos educacionais (objetivo, base científica, dicas, erros comuns)
+- ✅ Métricas avançadas (intensidade, RPE, zonas FC)
+
+**Performance:**
+- ⚡ Sem downtime (migrations são adições, não alterações)
+- ⚡ Execução rápida (< 5 segundos)
+- ⚡ Backwards compatible (dados existentes não afetados)
 
 ### 📋 Next Steps
 1. ⚠️ **CRÍTICO:** Aplicar migration no Neon via SQL Editor
