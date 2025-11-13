@@ -69,6 +69,16 @@ export async function POST(req: NextRequest) {
     if (body.motivationFactors !== undefined) updateData.motivationFactors = body.motivationFactors;
     if (body.runningYears !== undefined) updateData.runningYears = body.runningYears ? parseInt(body.runningYears) : null;
     if (body.maxHeartRate !== undefined) updateData.maxHeartRate = body.maxHeartRate ? parseInt(body.maxHeartRate) : null;
+    
+    // v2.5.0 - Novos campos personalização avançada
+    if (body.hasRunBefore !== undefined) updateData.hasRunBefore = body.hasRunBefore;
+    if (body.currentlyInjured !== undefined) updateData.currentlyInjured = body.currentlyInjured;
+    if (body.avgSleepHours !== undefined) updateData.avgSleepHours = body.avgSleepHours ? parseFloat(body.avgSleepHours) : null;
+    if (body.tracksMenstrualCycle !== undefined) updateData.tracksMenstrualCycle = body.tracksMenstrualCycle;
+    if (body.lastPeriodDate !== undefined) updateData.lastPeriodDate = body.lastPeriodDate ? new Date(body.lastPeriodDate) : null;
+    if (body.avgCycleLength !== undefined) updateData.avgCycleLength = body.avgCycleLength ? parseInt(body.avgCycleLength) : null;
+    if (body.workDemand !== undefined) updateData.workDemand = body.workDemand;
+    if (body.familyDemand !== undefined) updateData.familyDemand = body.familyDemand;
 
     const updated = await prisma.athleteProfile.update({
       where: { id: profile.id },
