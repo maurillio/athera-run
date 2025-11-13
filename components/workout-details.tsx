@@ -312,7 +312,12 @@ function PhaseCard({
       <div className="flex flex-wrap gap-2 ml-6">
         {phase.pace && (
           <Badge variant="secondary" className="text-xs">
-            ⚡ {phase.pace.includes('min/km') ? phase.pace : `${phase.pace} min/km`}
+            ⚡ {(() => {
+              // Remove duplicações de /km
+              const cleanPace = phase.pace.replace(/(min\/km)\/km/gi, 'min/km');
+              // Se não tem unidade, adiciona
+              return cleanPace.includes('min/km') ? cleanPace : `${cleanPace} min/km`;
+            })()}
           </Badge>
         )}
         {phase.heartRateZone && (
@@ -357,7 +362,11 @@ function IntervalCard({ interval }: { interval: IntervalStructure }) {
             <Badge variant="outline" className="text-xs">{interval.workInterval.duration}</Badge>
           </div>
           <p className="text-sm text-red-800">
-            Pace: <span className="font-mono font-medium">{interval.workInterval.pace.includes('min/km') ? interval.workInterval.pace : `${interval.workInterval.pace} min/km`}</span>
+            Pace: <span className="font-mono font-medium">{(() => {
+              const pace = interval.workInterval.pace;
+              const cleanPace = pace.replace(/(min\/km)\/km/gi, 'min/km');
+              return cleanPace.includes('min/km') ? cleanPace : `${cleanPace} min/km`;
+            })()}</span>
           </p>
           <p className="text-xs text-red-700 mt-1">{interval.workInterval.intensity}</p>
           {interval.workInterval.description && (
@@ -379,7 +388,11 @@ function IntervalCard({ interval }: { interval: IntervalStructure }) {
           </p>
           {interval.recoveryInterval.pace && (
             <p className="text-sm text-blue-800">
-              Pace: <span className="font-mono font-medium">{interval.recoveryInterval.pace.includes('min/km') ? interval.recoveryInterval.pace : `${interval.recoveryInterval.pace} min/km`}</span>
+              Pace: <span className="font-mono font-medium">{(() => {
+                const pace = interval.recoveryInterval.pace;
+                const cleanPace = pace.replace(/(min\/km)\/km/gi, 'min/km');
+                return cleanPace.includes('min/km') ? cleanPace : `${cleanPace} min/km`;
+              })()}</span>
             </p>
           )}
           {interval.recoveryInterval.description && (
