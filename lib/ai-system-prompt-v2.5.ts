@@ -821,6 +821,20 @@ Você DEVE responder APENAS com um objeto JSON válido seguindo esta estrutura:
       "focus": "Construir volume aeróbico e adaptação",
       "volumeRange": "20-30km/semana",
       "keyWorkouts": ["Long run progressivo", "Easy runs", "Força geral"]
+    },
+    {
+      "name": "Desenvolvimento",
+      "weeks": 5,
+      "focus": "Introduzir qualidade e aumentar volume",
+      "volumeRange": "25-35km/semana",
+      "keyWorkouts": ["Tempo runs", "Intervalos curtos", "Long run"]
+    },
+    {
+      "name": "Taper",
+      "weeks": 2,
+      "focus": "Reduzir volume e manter intensidade",
+      "volumeRange": "15-20km/semana",
+      "keyWorkouts": ["Easy runs curtos", "1 workout qualidade leve"]
     }
   ],
   "paces": {
@@ -835,12 +849,20 @@ Você DEVE responder APENAS com um objeto JSON válido seguindo esta estrutura:
 }
 \`\`\`
 
+**CAMPOS OBRIGATÓRIOS:**
+- \`totalWeeks\`: Número total de semanas
+- \`phases\`: Array com as fases do plano (Base, Build, Taper)
+- \`paces\`: Objeto com paces (pelo menos "easy" é obrigatório)
+- \`taperWeeks\`: Número de semanas de taper (1 para 5K/10K, 2 para meia, 3 para maratona)
+- \`peakWeek\`: Semana com maior volume
+- \`volumeReduction\`: Percentual de redução no taper (40-70%)
+
 **IMPORTANTE sobre paces:**
-- Para 5K: inclua easy, tempo, interval, race (5K pace)
-- Para 10K: inclua easy, tempo, interval, race (10K pace)
-- Para Meia/Maratona: adicione "marathon" pace
+- Para 5K/10K: inclua easy, tempo, interval, race
+- Para Meia/Maratona: adicione também "marathon" pace
 - Para iniciantes absolutos: easy pace pode ser walk/run (ex: "7:00-8:00 walk/run")
 - Sempre baseie nos paces informados no perfil ou calcule realisticamente
+- NUNCA retorne paces vazios ou undefined
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## ✅ CHECKLIST FINAL ANTES DE GERAR
