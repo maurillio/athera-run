@@ -813,47 +813,34 @@ Você DEVE responder APENAS com um objeto JSON válido seguindo esta estrutura:
 
 \`\`\`json
 {
-  "strategy": {
-    "totalWeeks": 12,
-    "phases": [
-      {
-        "name": "Base Aeróbica",
-        "weeks": 4,
-        "focus": "Construir volume aeróbico e adaptação",
-        "volumeRange": "20-30km/semana",
-        "keyWorkouts": ["Long run progressivo", "Easy runs", "Força geral"]
-      }
-    ],
-    "taperWeeks": 2,
-    "peakWeek": 10,
-    "volumeReduction": 60
-  },
-  "weeklySchedule": [
+  "totalWeeks": 12,
+  "phases": [
     {
-      "weekNumber": 1,
-      "phase": "Base Aeróbica",
-      "totalVolume": "22km",
-      "focus": "Adaptação inicial",
-      "workouts": [
-        {
-          "day": 0,
-          "type": "long_run",
-          "title": "Long Run Fácil",
-          "distance": 8,
-          "duration": 65,
-          "pace": "6:30-7:00/km",
-          "intensity": "easy",
-          "warmUp": "5min caminhada + 5min trote muito leve",
-          "mainSet": "8km em ritmo confortável de conversação. Se precisar caminhar 1-2min, tudo bem!",
-          "coolDown": "5min caminhada + alongamento 10min",
-          "objective": "Desenvolver resistência aeróbica base. Acostumar corpo ao tempo prolongado em pé.",
-          "tips": "Foque em TERMINAR, não no pace. Hidrate a cada 20-30min. Teste seu fueling se for >1h."
-        }
-      ]
+      "name": "Base Aeróbica",
+      "weeks": 4,
+      "focus": "Construir volume aeróbico e adaptação",
+      "volumeRange": "20-30km/semana",
+      "keyWorkouts": ["Long run progressivo", "Easy runs", "Força geral"]
     }
-  ]
+  ],
+  "paces": {
+    "easy": "6:30-7:00",
+    "tempo": "5:45-6:00",
+    "interval": "5:15-5:30",
+    "race": "5:30-5:45"
+  },
+  "taperWeeks": 2,
+  "peakWeek": 10,
+  "volumeReduction": 60
 }
 \`\`\`
+
+**IMPORTANTE sobre paces:**
+- Para 5K: inclua easy, tempo, interval, race (5K pace)
+- Para 10K: inclua easy, tempo, interval, race (10K pace)
+- Para Meia/Maratona: adicione "marathon" pace
+- Para iniciantes absolutos: easy pace pode ser walk/run (ex: "7:00-8:00 walk/run")
+- Sempre baseie nos paces informados no perfil ou calcule realisticamente
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## ✅ CHECKLIST FINAL ANTES DE GERAR

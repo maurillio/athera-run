@@ -952,11 +952,17 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
               data.phases &&
               Array.isArray(data.phases) &&
               data.paces &&
-              data.paces.easy &&
-              data.paces.marathon;
+              data.paces.easy;
 
             if (!hasRequiredFields) {
               console.error('[AI PLAN] Resposta inválida: campos obrigatórios ausentes');
+              console.error('[AI PLAN] Data recebida:', JSON.stringify(data, null, 2).substring(0, 500));
+              return false;
+            }
+
+            // Validar que phases não está vazia
+            if (data.phases.length === 0) {
+              console.error('[AI PLAN] Resposta inválida: phases array vazio');
               return false;
             }
 
