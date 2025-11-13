@@ -466,38 +466,3 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
     </div>
   );
 }
-            <span className="text-sm text-gray-500 ml-2">
-              {stressLevel === 1 ? t('qualityLevels.veryPoor') : 
-               stressLevel === 2 ? t('qualityLevels.poor') : 
-               stressLevel === 3 ? t('qualityLevels.fair') : 
-               stressLevel === 4 ? t('qualityLevels.good') : 
-               t('qualityLevels.veryGood')}
-            </span>
-          </label>
-          <input type="range" min="1" max="5" value={stressLevel} onChange={(e) => setStressLevel(parseInt(e.target.value))}
-            className="w-full" />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>{t('qualityLevels.veryPoor')}</span>
-            <span>{t('qualityLevels.veryGood')}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t pt-6">
-        <label className="block font-medium mb-3">Liberação Médica</label>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-3">
-          <p className="text-sm text-yellow-800">
-            ⚠️ Recomendamos check-up médico antes de iniciar treinos intensos
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <input type="checkbox" checked={doctorCleared} onChange={(e) => setDoctorCleared(e.target.checked)}
-            className="w-5 h-5" id="cleared" />
-          <label htmlFor="cleared" className="text-sm">
-            Estou liberado(a) para treinar / Sem restrições médicas
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-}

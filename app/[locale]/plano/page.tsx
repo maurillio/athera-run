@@ -160,7 +160,7 @@ export default function PlanoPage() {
   const currentWeek = weeks.find(w => w.weekNumber === viewingWeek);
   
   const getDistanceLabel = (distance: string) => {
-    return t(`goalLabels.${distance}`, distance);
+    return t(`plano.goalLabels.${distance}`, distance);
   };
 
   // Removed - using formatShortDate from date-formatter.ts instead
@@ -292,7 +292,7 @@ export default function PlanoPage() {
                   {currentWeekNum}/{plan.totalWeeks}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {currentWeek && t(`phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase)}
+                  {currentWeek && t(`plano.phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase)}
                 </p>
               </CardContent>
             </Card>
@@ -340,7 +340,7 @@ export default function PlanoPage() {
                     <CardDescription>
                       {formatShortDate(currentWeek.startDate, locale)} - {formatShortDate(currentWeek.endDate, locale)}
                       <Badge className={`${getPhaseColor(currentWeek.phase)} text-white ml-2`}>
-                        {t(`phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase).toUpperCase()}
+                        {t(`plano.phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase).toUpperCase()}
                       </Badge>
                     </CardDescription>
                   )}
@@ -444,10 +444,12 @@ export default function PlanoPage() {
                                 relative rounded-lg border-2 transition-all cursor-pointer
                                 ${allCompleted
                                   ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
-                                  : isPastUncompleted
-                                    ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
-                                    : isToday
-                                      ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
+                                  : isRestDay
+                                    ? 'bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300 hover:border-gray-400 hover:shadow-md'
+                                    : isPastUncompleted
+                                      ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
+                                      : isToday
+                                        ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
                                       : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
                                 }
                               `}
