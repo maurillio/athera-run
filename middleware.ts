@@ -1,6 +1,5 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth } from 'next-auth/middleware';
 import { defaultLocale, locales, type Locale } from './lib/i18n/config';
 
 // Get user's preferred locale
@@ -22,88 +21,62 @@ function getLocale(request: NextRequest): Locale {
   return defaultLocale;
 }
 
-export default withAuth(
-  function middleware(req) {
-    const pathname = req.nextUrl.pathname;
+export default function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
 
-    // Skip i18n redirect for API routes and static files
-    if (
-      pathname.startsWith('/api/') ||
-      pathname.startsWith('/_next/') ||
-      pathname.includes('.')
-    ) {
-      return NextResponse.next();
-    }
+  // Skip i18n redirect for API routes and static files
+  if (
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next();
+  }
 
-    // Check if pathname already has locale
-    const pathnameHasLocale = locales.some(
-      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  // Check if pathname already has locale
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+
+  // Routes that have been migrated to i18n (exist in [locale] folder)
+  const i18nRoutes = [
+    '/',
+    '/dashboard',
+    '/login',
+    '/signup',
+    '/onboarding',
+    '/plano',
+    '/perfil',
+    '/tracking',
+    '/training',
+    '/calculator',
+    '/chat',
+    '/subscription',
+    '/nutrition',
+    '/prevention',
+    '/glossary',
+    '/overtraining',
+    '/pricing',
+    '/admin'
+  ];
+
+  // Only redirect to locale if:
+  // 1. Path doesn't have locale yet
+  // 2. Path is in the i18n routes list
+  if (!pathnameHasLocale) {
+    const shouldRedirect = i18nRoutes.some(route => 
+      pathname === route || pathname.startsWith(route + '/')
     );
 
-    // Routes that have been migrated to i18n (exist in [locale] folder)
-    const i18nRoutes = [
-      '/',
-      '/dashboard',
-      '/login',
-      '/signup',
-      '/onboarding',
-      '/plano',
-      '/perfil',
-      '/tracking',
-      '/training',
-      '/calculator',
-      '/chat',
-      '/subscription',
-      '/nutrition',
-      '/prevention',
-      '/glossary',
-      '/overtraining',
-      '/pricing',
-      '/admin'
-    ];
-
-    // Only redirect to locale if:
-    // 1. Path doesn't have locale yet
-    // 2. Path is in the i18n routes list
-    if (!pathnameHasLocale) {
-      const shouldRedirect = i18nRoutes.some(route => 
-        pathname === route || pathname.startsWith(route + '/')
-      );
-
-      if (shouldRedirect) {
-        const locale = getLocale(req);
-        const newUrl = new URL(`/${locale}${pathname}`, req.url);
-        return NextResponse.redirect(newUrl);
-      }
+    if (shouldRedirect) {
+      const locale = getLocale(req);
+      const newUrl = new URL(`/${locale}${pathname}`, req.url);
+      return NextResponse.redirect(newUrl);
     }
-
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ req, token }) => {
-        // Allow access to public pages
-        const publicPaths = ['/login', '/signup', '/'];
-        const pathname = req.nextUrl.pathname;
-        
-        // Always allow API routes (including auth callbacks)
-        if (pathname.startsWith('/api/')) {
-          return true;
-        }
-        
-        // Check for locale prefix and extract actual path
-        const pathWithoutLocale = pathname.replace(/^\/(pt-BR|en|es)/, '') || '/';
-        
-        if (publicPaths.includes(pathWithoutLocale)) {
-          return true;
-        }
-        
-        // Protected routes require token
-        return !!token;
-      },
-    },
   }
-);
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
