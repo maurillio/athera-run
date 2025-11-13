@@ -299,7 +299,10 @@ Campos obrigatórios:
 - targetRaceDate
 - vdot (calculado)
 - paces (easy, marathon, threshold, interval, repetition)
-- phases (array com name, weeks, focus, description)
+- phases (array com name, weeks, focus, description, weeklyKmStart, weeklyKmEnd)
+  * weeklyKmStart: volume km/semana no INÍCIO da fase
+  * weeklyKmEnd: volume km/semana no FINAL da fase
+  * CRÍTICO: Fase taper DEVE ter weeklyKmEnd 40-70% MENOR que weeklyKmStart
 - weeks (array detalhado com workouts)
 - planRationale (explicação profunda e personalizada da estratégia)
 - keyConsiderations (array de pontos críticos)
@@ -322,6 +325,92 @@ Campos obrigatórios:
 5. **Expectativas Realísticas:**
    "Com esta preparação, você deve alcançar [performance esperada], desde que..."
 
+### Exemplo estrutura phases (OBRIGATÓRIO seguir):
+
+\`\`\`json
+{
+  "phases": [
+    {
+      "name": "Base Aeróbica",
+      "weeks": 4,
+      "focus": "Construir volume aeróbico",
+      "description": "Adaptação cardiovascular...",
+      "weeklyKmStart": 25,
+      "weeklyKmEnd": 35
+    },
+    {
+      "name": "Desenvolvimento",
+      "weeks": 3,
+      "focus": "Intensidade e ritmo",
+      "description": "Treinos de ritmo...",
+      "weeklyKmStart": 35,
+      "weeklyKmEnd": 42
+    },
+    {
+      "name": "Taper e Recuperação",
+      "weeks": 2,
+      "focus": "Recuperação para prova",
+      "description": "Redução de volume...",
+      "weeklyKmStart": 42,
+      "weeklyKmEnd": 15
+    }
+  ]
+}
+\`\`\`
+
+**⚠️ VALIDAÇÃO AUTOMÁTICA:** Fase de Taper DEVE ter weeklyKmEnd entre 30-60% de weeklyKmStart (redução 40-70%).
+
+## 🚨 REGRAS CRÍTICAS DE VOLUME (NÃO NEGOCIÁVEIS):
+
+1. **SEMPRE** especifique weeklyKmStart e weeklyKmEnd para TODAS as fases
+2. **NUNCA** deixe weeklyKmStart ou weeklyKmEnd em 0 ou null
+3. **Fase de Taper OBRIGATORIAMENTE:**
+   - weeklyKmStart = volume de pico (volume máximo alcançado)
+   - weeklyKmEnd = 30-40% do volume de pico (redução de 60-70%)
+   - Exemplo: se pico é 42km → taper deve terminar em 12-17km
+4. **Progressão gradual:** Cada fase deve aumentar volume em 10-20% máximo
+5. **Validação automática irá REJEITAR o plano se volume do taper não estiver correto**
+
+### Exemplo CORRETO de fases:
+\`\`\`json
+{
+  "phases": [
+    {
+      "name": "Base",
+      "weeks": 4,
+      "weeklyKmStart": 20,
+      "weeklyKmEnd": 30
+    },
+    {
+      "name": "Desenvolvimento",
+      "weeks": 4,
+      "weeklyKmStart": 30,
+      "weeklyKmEnd": 42
+    },
+    {
+      "name": "Taper",
+      "weeks": 2,
+      "weeklyKmStart": 42,   // Volume de pico
+      "weeklyKmEnd": 15      // 35% do pico (redução de 65%) ✅
+    }
+  ]
+}
+\`\`\`
+
+### Exemplo ERRADO (será rejeitado):
+\`\`\`json
+{
+  "phases": [
+    {
+      "name": "Taper",
+      "weeks": 2,
+      "weeklyKmStart": 0,     // ❌ NUNCA deixe em 0!
+      "weeklyKmEnd": 0        // ❌ Sistema rejeitará!
+    }
+  ]
+}
+\`\`\`
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🏆 YOUR MISSION
@@ -330,6 +419,7 @@ Criar um plano que seja:
 ✅ Cientificamente fundamentado
 ✅ Totalmente personalizado
 ✅ Seguro e sustentável
+✅ Com volumes SEMPRE especificados (nunca 0 ou null)
 ✅ Desafiador mas realista
 ✅ Engajante e variado
 ✅ Impossível de confundir com plano de outra pessoa
