@@ -38,7 +38,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 #### 1. Database Schema & Migration ✅
 **Status:** ✅ DEPLOYADO EM PRODUÇÃO  
 **Migration:** `20251113144016_add_v3_profile_fields`  
-**Data:** 13/NOV/2025 14:40 UTC
+**Data Deploy:** 13/NOV/2025 17:35 UTC  
+**Commit:** b0537fd3
 
 **8 Novos Campos:**
 ```typescript
