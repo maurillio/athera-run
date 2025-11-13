@@ -7,6 +7,27 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.0.3] - 2025-11-13 🚨 HOTFIX CRÍTICO - Middleware 401 Error
+
+### 🔥 Critical Bug Fix
+- **PROBLEMA:** Site completamente inacessível - erro 401 e timeout em todas as rotas
+- **CAUSA:** `withAuth` middleware do NextAuth causando timeout e bloqueio de todas as requisições
+- **SOLUÇÃO:** Removido `withAuth` do middleware, mantendo apenas lógica de i18n
+- **SEGURANÇA:** Proteção de rotas mantida via `getServerSession` nas páginas individuais
+- **IMPACTO:** Site voltou ao ar imediatamente após deploy
+
+**Arquivo modificado:** `middleware.ts`
+- ❌ Removido wrapper `withAuth`
+- ✅ Mantido middleware simples com apenas i18n redirect
+- ✅ Auth verificação nas páginas via `getServerSession(authOptions)`
+
+### ✅ Deploy
+- Commit: `e64a1ea3`
+- Deploy automático no Vercel
+- Validação: ✅ Site acessível novamente
+
+---
+
 ## [v3.0.2] - 2025-11-13 🚀 HOTFIX - AI Validation & Paces Structure
 
 ### 🎯 Objetivo
