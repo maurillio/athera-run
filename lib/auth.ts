@@ -54,12 +54,7 @@ const StravaProvider = {
 };
 
 export const authOptions: NextAuthOptions = {
-  // Use PrismaAdapter only for OAuth providers, not for session management
-  // This prevents unnecessary DB queries on every request
-  ...(process.env.NODE_ENV === 'production' 
-    ? {} 
-    : { adapter: PrismaAdapter(prisma) }
-  ),
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
