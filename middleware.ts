@@ -39,9 +39,10 @@ export default function middleware(req: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  if (!pathnameHasLocale && pathname === '/') {
+  // If no locale, redirect to locale-prefixed route
+  if (!pathnameHasLocale) {
     const locale = getLocale(req);
-    return NextResponse.redirect(new URL(`/${locale}`, req.url));
+    return NextResponse.redirect(new URL(`/${locale}${pathname}`, req.url));
   }
 
   return NextResponse.next();
