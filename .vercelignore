@@ -34,3 +34,4 @@ test_*.ts
 .env.development.local
 .env.test.local
 .env.production.local
+# Force Vercel Rebuild Fri Nov 14 12:58:50 UTC 2025
