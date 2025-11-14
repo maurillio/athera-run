@@ -1924,7 +1924,7 @@ function generateWeekWorkouts(params: {
         };
       }
       else if (activityType === 'quality') {
-        const qualityType = keyWorkouts.quality.type;
+        const qualityType = keyWorkouts.quality?.type || 'tempo';
 
         if (qualityType === 'tempo') {
           const tempoKm = Math.round(easyRunKm * 10) / 10;
@@ -1934,7 +1934,7 @@ function generateWeekWorkouts(params: {
             type: 'running',
             subtype: 'tempo',
             title: `Treino de Ritmo - ${tempoKm}km${timeInfoShort}`,
-            description: params.keyWorkouts.quality.description || `Treino de ${tempoKm}km em ritmo controlado e sustentado (threshold). Aquecimento 10min + parte principal 20-30min + desaquecimento 10min.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            description: params.keyWorkouts?.quality?.description || `Treino de ${tempoKm}km em ritmo controlado e sustentado (threshold). Aquecimento 10min + parte principal 20-30min + desaquecimento 10min.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
             distance: tempoKm,
             duration: null,
             targetPace: params.paces.threshold,
@@ -1950,7 +1950,7 @@ function generateWeekWorkouts(params: {
             type: 'running',
             subtype: 'intervals',
             title: `Treino Intervalado - ${intervalKm}km${timeInfoShort}`,
-            description: params.keyWorkouts.quality.description || `Treino de velocidade de ${intervalKm}km total. Aquecimento 15min + 6-8 tiros de 800m em ritmo forte + desaquecimento 10min.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+            description: params.keyWorkouts?.quality?.description || `Treino de velocidade de ${intervalKm}km total. Aquecimento 15min + 6-8 tiros de 800m em ritmo forte + desaquecimento 10min.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
             distance: intervalKm,
             duration: null,
             targetPace: params.paces.interval,
