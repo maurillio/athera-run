@@ -2141,12 +2141,14 @@ export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors:
     errors.push(`Número de semanas inconsistente: esperado ${plan.totalWeeks}, recebido ${plan.weeks?.length || 0}`);
   }
   
-  if (!plan.vdot || plan.vdot < 20 || plan.vdot > 85) {
+  // VDOT: permitir null para iniciantes absolutos (v3.0.0)
+  if (plan.vdot && (plan.vdot < 20 || plan.vdot > 85)) {
     errors.push('VDOT fora do intervalo esperado (20-85)');
   }
   
-  if (!plan.paces || !plan.paces.easy || !plan.paces.marathon) {
-    errors.push('Paces obrigatórios ausentes');
+  // Paces: exigir apenas easy pace (pode ser descritivo para iniciantes)
+  if (!plan.paces || !plan.paces.easy) {
+    errors.push('Pace mínimo (easy) ausente');
   }
   
   plan.weeks?.forEach((week, index) => { 
