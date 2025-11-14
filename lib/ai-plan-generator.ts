@@ -1100,6 +1100,7 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
  */
 function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks: number, customStartDate?: Date): AIGeneratedPlan { 
   console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
+  console.log('[AI PLAN] DEBUG - strategy.paces recebido:', JSON.stringify(strategy.paces));
   
   // Usar data customizada se fornecida, caso contrário usar próxima segunda-feira
   let startDate: Date;
