@@ -1635,6 +1635,13 @@ function generateWeekWorkouts(params: {
 
   console.log(`[WORKOUT GEN] DEBUG - strengthDaysToUse que serão usados:`, availability.strengthDays);
   console.log(`[WORKOUT GEN] DEBUG - Tem domingo (0) em strengthDays?`, availability.strengthDays.includes(0));
+  console.log(`[WORKOUT GEN] 🔍 DEBUG - params.paces recebido:`, JSON.stringify(params.paces));
+  
+  // ✅ CRITICAL: Garantir que paces existe e tem os campos necessários
+  if (!params.paces || !params.paces.easy) {
+    console.error('[WORKOUT GEN] ❌ ERRO: paces undefined ou sem .easy!', params.paces);
+    throw new Error('paces não foi passado corretamente para generateWeekWorkouts');
+  }
   
   // Calcular frequências desejadas
   const easyRunsCount = params.keyWorkouts.easy.frequency || 2;
