@@ -1023,6 +1023,7 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
     console.log('[AI PLAN] Estratégia gerada pela IA!');
     
     // 🔧 GARANTIR PACES PADRÃO se IA não retornou ou retornou null
+    // IMPORTANTE: Fazer isso ANTES da validação para que correctedStrategy também tenha os paces
     if (!strategy.paces || !strategy.paces.easy || strategy.paces.easy === null) {
       console.warn('[AI PLAN] ⚠️ Paces ausentes/null na resposta da IA, gerando fallback baseado em VDOT');
       
@@ -1061,6 +1062,7 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
       if (revalidation.isValid) {
         console.log('[AI PLAN] ✅ Estratégia corrigida automaticamente!');
         strategy.phases = correctedStrategy.phases;
+        // ✅ MANTER paces e taperWeeks do strategy original (que já têm fallbacks)
       } else {
         console.error('[AI PLAN] ❌ Não foi possível corrigir automaticamente. Erros:', revalidation.errors);
         throw new Error('A estratégia gerada não atende aos requisitos mínimos de qualidade. Por favor, tente novamente.');
