@@ -17,6 +17,7 @@ import { LONG_RUN_EXAMPLE, INTERVALS_EXAMPLE, TEMPO_RUN_EXAMPLE, EASY_RUN_EXAMPL
 import type { WorkoutGenerationData } from './types/workout-structure';
 import { enhanceWorkout } from './workout-enhancer';
 import { buildEnhancedSystemPrompt } from './ai-system-prompt-v3';
+import { calculatePaces } from './planGenerator';
 
 export interface AIUserProfile {
   // Dados básicos
