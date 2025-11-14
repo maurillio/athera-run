@@ -7,7 +7,43 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-## [v3.0.6] - 2025-11-13 23:58 BRT 🚨 HOTFIX CRÍTICO - Auth 401 Fix
+## [v3.0.2] - 2025-11-14 🚨 HOTFIX - Beginner Plan Generation
+
+### 🔥 Critical Bug Fixes
+- **PROBLEMA:** Planos não geravam para iniciantes absolutos
+- **CAUSA 1:** Workout enhancer falhava com pace null
+- **CAUSA 2:** Validação rejeitava VDOT null e paces descritivos
+- **SOLUÇÃO:** 2 hotfixes aplicados
+
+### ✅ Fix 1: Workout Enhancer (86da0c7c)
+```typescript
+// Proteção contra pace null
+const duration = pace && typeof pace === 'string' 
+  ? Math.round(distance * parseFloat(pace.replace(':', '.')))
+  : Math.round(distance * 6); // fallback: ~6 min/km
+```
+
+### ✅ Fix 2: Validation Relaxation (438ab48c)
+```typescript
+// VDOT pode ser null para iniciantes
+if (plan.vdot && (plan.vdot < 20 || plan.vdot > 85)) {
+  errors.push('VDOT fora do intervalo');
+}
+// Apenas easy pace obrigatório
+if (!plan.paces.easy) {
+  errors.push('Pace mínimo (easy) ausente');
+}
+```
+
+### 📊 Impacto
+- ✅ Iniciantes absolutos podem gerar planos
+- ✅ Paces descritivos aceitos ("conversational pace")
+- ✅ VDOT null permitido (sem histórico de corrida)
+- ✅ Planos sendo gerados com sucesso
+
+---
+
+## [v3.0.1] - 2025-11-14 📝 Documentation & Validation
 
 ### 🔥 Critical Bug Fix
 - **PROBLEMA:** Site retornando erro 401 Unauthorized em produção (mobile e desktop)
