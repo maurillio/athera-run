@@ -1643,10 +1643,17 @@ function generateWeekWorkouts(params: {
     throw new Error('paces não foi passado corretamente para generateWeekWorkouts');
   }
   
-  // Calcular frequências desejadas (com fallback caso keyWorkouts não exista)
-  const easyRunsCount = params.keyWorkouts?.easy?.frequency || 2;
-  const qualityFreq = params.keyWorkouts?.quality?.frequency || 1;
-  const strengthFreq = params.keyWorkouts?.strength?.frequency || 2;
+  // Garantir que keyWorkouts existe com valores default
+  const keyWorkouts = params.keyWorkouts || {
+    easy: { frequency: 2 },
+    quality: { type: 'tempo', frequency: 1, description: 'Treino de qualidade' },
+    strength: { frequency: 2, description: 'Treino de força' }
+  };
+  
+  // Calcular frequências desejadas
+  const easyRunsCount = keyWorkouts.easy?.frequency || 2;
+  const qualityFreq = keyWorkouts.quality?.frequency || 1;
+  const strengthFreq = keyWorkouts.strength?.frequency || 2;
   
   // Calcular km para treinos fáceis (excluindo o longão)
   const totalEasyKm = Math.max(params.weeklyKm - params.longRunKm, 10);
@@ -1917,7 +1924,7 @@ function generateWeekWorkouts(params: {
         };
       }
       else if (activityType === 'quality') {
-        const qualityType = params.keyWorkouts.quality.type;
+        const qualityType = keyWorkouts.quality.type;
 
         if (qualityType === 'tempo') {
           const tempoKm = Math.round(easyRunKm * 10) / 10;
