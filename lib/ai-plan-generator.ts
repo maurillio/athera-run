@@ -966,42 +966,45 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
             console.log('[AI PLAN] Validando resposta:', { 
               totalWeeks: data.totalWeeks, 
               phasesCount: data.phases?.length,
+              hasPaces: !!data.paces,
               hasEasyPace: !!data.paces?.easy,
+              easyPaceValue: data.paces?.easy,
               taperWeeks: data.taperWeeks
             });
 
-            // Validar campos obrigatórios
+            // Validar apenas campos ESSENCIAIS
+            // Paces podem ser null/undefined (geramos fallback depois)
             const hasRequiredFields =
               data.totalWeeks &&
               data.phases &&
               Array.isArray(data.phases) &&
-              data.paces &&
-              data.paces.easy &&
-              data.taperWeeks !== undefined;
+              data.phases.length > 0;
 
             if (!hasRequiredFields) {
-              console.error('[AI PLAN] Resposta inválida: campos obrigatórios ausentes');
+              console.error('[AI PLAN] Resposta inválida: campos ESSENCIAIS ausentes');
               console.error('[AI PLAN] Missing:', {
                 totalWeeks: !data.totalWeeks,
                 phases: !data.phases,
                 isArray: !Array.isArray(data.phases),
-                paces: !data.paces,
-                easyPace: !data.paces?.easy,
-                taperWeeks: data.taperWeeks === undefined
+                phasesLength: data.phases?.length
               });
-              console.error('[AI PLAN] Data recebida:', JSON.stringify(data, null, 2).substring(0, 500));
+              console.error('[AI PLAN] Data recebida:', JSON.stringify(data, null, 2).substring(0, 1000));
               return false;
             }
 
-            // Validar que phases não está vazia
-            if (data.phases.length === 0) {
-              console.error('[AI PLAN] Resposta inválida: phases array vazio');
-              return false;
+            // Log warnings para campos opcionais
+            if (!data.paces || !data.paces.easy || data.paces.easy === null) {
+              console.warn('[AI PLAN] ⚠️ Paces ausentes ou null, mas aceitando resposta (fallback será gerado)');
+            }
+            if (data.taperWeeks === undefined || data.taperWeeks === null) {
+              console.warn('[AI PLAN] ⚠️ taperWeeks ausente ou null, mas aceitando resposta (default será usado)');
             }
 
+            console.log('[AI PLAN] ✅ Validação passou (campos mínimos presentes)');
             return true;
           } catch (e) {
             console.error('[AI PLAN] Resposta inválida: JSON malformado:', e);
+            console.error('[AI PLAN] Response raw:', response.substring(0, 500));
             return false;
           }
         },
@@ -1017,6 +1020,30 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
 
     const strategy = JSON.parse(aiResponse);
     console.log('[AI PLAN] Estratégia gerada pela IA!');
+    
+    // 🔧 GARANTIR PACES PADRÃO se IA não retornou ou retornou null
+    if (!strategy.paces || !strategy.paces.easy || strategy.paces.easy === null) {
+      console.warn('[AI PLAN] ⚠️ Paces ausentes/null na resposta da IA, gerando fallback baseado em VDOT');
+      
+      // Calcular paces básicos a partir do VDOT ou usar defaults seguros
+      const vdot = strategy.vdot || profile.currentVDOT || 35;
+      const calculatedPaces = calculatePaces(vdot);
+      
+      strategy.paces = {
+        easy: calculatedPaces.easy,
+        marathon: calculatedPaces.marathon,
+        threshold: calculatedPaces.threshold,
+        interval: calculatedPaces.interval,
+        repetition: calculatedPaces.repetition
+      };
+      console.log('[AI PLAN] ✅ Paces fallback gerados:', strategy.paces);
+    }
+    
+    // 🔧 GARANTIR taperWeeks padrão se ausente ou null
+    if (strategy.taperWeeks === undefined || strategy.taperWeeks === null) {
+      strategy.taperWeeks = Math.min(2, Math.floor(totalWeeks * 0.1));
+      console.warn(`[AI PLAN] ⚠️ taperWeeks ausente/null, usando default: ${strategy.taperWeeks}`);
+    }
     
     // ✅ VALIDAÇÃO AUTOMÁTICA DA ESTRATÉGIA
     const validation = validateStrategyWithRaces(strategy, profile, totalWeeks);
