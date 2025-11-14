@@ -296,7 +296,9 @@ function enhanceIntervals(workout: BasicWorkout, paces: any): BasicWorkout & Enh
 function enhanceTempoRun(workout: BasicWorkout, paces: any): BasicWorkout & EnhancedWorkoutFields {
   const distance = workout.distance || 8;
   const pace = workout.targetPace || paces.threshold;
-  const tempoDuration = Math.round(distance * parseFloat(pace.replace(':', '.')));
+  const tempoDuration = pace && typeof pace === 'string' 
+    ? Math.round(distance * parseFloat(pace.replace(':', '.')))
+    : Math.round(distance * 6); // fallback: ~6 min/km
   
   return {
     ...workout,
@@ -397,7 +399,9 @@ function enhanceTempoRun(workout: BasicWorkout, paces: any): BasicWorkout & Enha
 function enhanceEasyRun(workout: BasicWorkout, paces: any): BasicWorkout & EnhancedWorkoutFields {
   const distance = workout.distance || 6;
   const pace = workout.targetPace || paces.easy;
-  const duration = Math.round(distance * parseFloat(pace.replace(':', '.')));
+  const duration = pace && typeof pace === 'string' 
+    ? Math.round(distance * parseFloat(pace.replace(':', '.')))
+    : Math.round(distance * 6); // fallback: ~6 min/km
   
   return {
     ...workout,
