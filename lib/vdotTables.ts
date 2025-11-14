@@ -105,6 +105,7 @@ export function estimateVDOTFromLevel(level: string, hasRecentRace: boolean = fa
 
 // Converte pace string (min:seg/km) para segundos por km
 export function paceToSeconds(pace: string): number {
+  if (!pace || typeof pace !== 'string') return 0;
   const [min, sec] = pace.replace('/km', '').split(':').map(Number);
   return min * 60 + sec;
 }

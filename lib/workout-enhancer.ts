@@ -59,7 +59,15 @@ export function enhanceWorkout(workout: BasicWorkout, paces: any): BasicWorkout 
 function enhanceLongRun(workout: BasicWorkout, paces: any): BasicWorkout & EnhancedWorkoutFields {
   const distance = workout.distance || 15;
   const pace = workout.targetPace || paces.easy;
-  const duration = Math.round((distance / (1 / parseFloat(pace.split(':')[0]) * 60 + parseFloat(pace.split(':')[1]))) * 60);
+  
+  // Proteção: se pace não existir ou não tiver o formato correto
+  let duration = 60; // default 60 min
+  if (pace && typeof pace === 'string' && pace.includes(':')) {
+    const [minStr, secStr] = pace.split(':');
+    const min = parseFloat(minStr) || 0;
+    const sec = parseFloat(secStr) || 0;
+    duration = Math.round((distance / (1 / min * 60 + sec)) * 60);
+  }
   
   return {
     ...workout,

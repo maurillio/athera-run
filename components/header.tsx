@@ -12,17 +12,20 @@ export default function Header() {
   const pathname = usePathname();
   const t = useTranslations('header');
   
+  // Extract locale from pathname (e.g., /pt-BR/dashboard -> pt-BR)
+  const locale = pathname.split('/')[1] || 'pt-BR';
+  
   const navigation = [
-    { name: t('navigation.dashboard'), href: '/dashboard', icon: Trophy },
-    { name: t('navigation.plano'), href: '/plano', icon: Calendar },
-    { name: t('navigation.treinos'), href: '/tracking', icon: Target },
+    { name: t('navigation.dashboard'), href: `/${locale}/dashboard`, icon: Trophy },
+    { name: t('navigation.plano'), href: `/${locale}/plano`, icon: Calendar },
+    { name: t('navigation.treinos'), href: `/${locale}/tracking`, icon: Target },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto max-w-6xl">
         <div className="flex h-16 items-center justify-between px-4">
-          <Link href="/dashboard" className="flex items-center space-x-3">
+          <Link href={`/${locale}/dashboard`} className="flex items-center space-x-3">
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-orange-500 to-blue-600 rounded-lg shadow-lg">
               <span className="text-white font-bold text-base">AR</span>
             </div>
