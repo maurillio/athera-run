@@ -28,11 +28,24 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  
+  // LGPD - Consentimentos
+  const [consents, setConsents] = useState({
+    terms: false,
+    privacy: false,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+
+    // LGPD - Validar consentimentos
+    if (!consents.terms || !consents.privacy) {
+      setError('Você deve aceitar os Termos de Uso e Política de Privacidade para continuar');
+      setIsLoading(false);
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError(t('errors.passwordMismatch'));
@@ -59,6 +72,24 @@ export default function SignupPage() {
         setError(data.error || tErrors('default'));
         setIsLoading(false);
         return;
+      }
+
+      // Registrar consentimentos LGPD
+      try {
+        await fetch('/api/consent/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ consentType: 'terms', version: '1.0' }),
+        });
+        
+        await fetch('/api/consent/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ consentType: 'privacy', version: '1.0' }),
+        });
+      } catch (consentError) {
+        console.error('Erro ao registrar consentimentos:', consentError);
+        // Não bloqueia o cadastro se falhar
       }
 
       // Auto-login após cadastro
@@ -218,10 +249,50 @@ export default function SignupPage() {
               </div>
             </div>
 
+            {/* LGPD - Consentimentos Obrigatórios */}
+            <div className="space-y-3 border-t pt-4 mt-4">
+              <label className="flex items-start gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={consents.terms}
+                  onChange={(e) => setConsents({...consents, terms: e.target.checked})}
+                  required
+                  disabled={isLoading}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                />
+                <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                  Li e aceito os{' '}
+                  <a 
+                    href={`/${locale}/terms-of-service`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-orange-600 hover:text-orange-700 underline font-medium"
+                  >
+                    Termos de Uso
+                  </a>
+                  {' '}e a{' '}
+                  <a 
+                    href={`/${locale}/privacy-policy`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-orange-600 hover:text-orange-700 underline font-medium"
+                  >
+                    Política de Privacidade
+                  </a>
+                  {' '}*
+                </span>
+              </label>
+
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-3 rounded text-xs text-blue-900">
+                <strong>🔒 Seus direitos (LGPD):</strong> Você pode acessar, corrigir, exportar ou excluir 
+                seus dados a qualquer momento através do seu perfil.
+              </div>
+            </div>
+
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700"
-              disabled={isLoading}
+              disabled={isLoading || !consents.terms || !consents.privacy}
             >
               {isLoading ? (
                 <>

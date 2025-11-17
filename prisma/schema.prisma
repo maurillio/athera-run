@@ -569,3 +569,18 @@ enum SubscriptionPlan {
   PREMIUM_MONTHLY
   PREMIUM_ANNUAL
 }
+
+model UserConsent {
+  id            Int       @id @default(autoincrement())
+  userId        String
+  consentType   String
+  consentedAt   DateTime  @default(now())
+  ipAddress     String?
+  userAgent     String?
+  version       String    @default("1.0")
+  revokedAt     DateTime?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, consentType, version])
+  @@map("user_consents")
+}

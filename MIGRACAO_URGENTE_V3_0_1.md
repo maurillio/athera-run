@@ -1,343 +1,224 @@
-# 🚨 MIGRAÇÃO URGENTE v3.0.1 - Correções Críticas
+# 🚨 PROBLEMA IDENTIFICADO: Banco Errado!
 
-**Data:** 13/NOV/2025  
-**Versão:** v3.0.1  
-**Status:** ⚠️ CORREÇÕES URGENTES NECESSÁRIAS
+## ❌ DIAGNÓSTICO:
 
----
+Você está conectado no banco: **`neondb`** (default do Neon)
 
-## 🔥 PROBLEMAS IDENTIFICADOS
+Este banco tem apenas **1 tabela**: `_prisma_migrations`
 
-### 1. ❌ Database Migration Não Aplicada (CRÍTICO)
-**Erro:** `The column 'custom_workouts.warmUpStructure' does not exist`
-
-**Causa:** Migration `20251110_workout_structure_v2_0_0` não foi aplicada em produção
-
-**Impacto:** ❌ **GERAÇÃO DE PLANOS QUEBRADA**
-
-### 2. ❌ Traduções i18n Quebradas
-**Erro:** Mostrando `goalLabels.5k`, `phases.baseaerobica`, `PHASES.BASEAEROBICA`
-
-**Causa:** Chaves de tradução erradas
-
-**Impacto:** 🟡 UX ruim, mas sistema funciona
-
-### 3. ❌ Descanso Aparecendo Vermelho
-**Erro:** Dia de descanso marca como atividade não executada
-
-**Impacto:** 🟡 Confunde usuário
-
-### 4. ❌ Unidade Errada: "min/km/km"
-**Erro:** Mostrando "min/km/km" ao invés de "min/km"
-
-**Impacto:** 🟡 Confunde usuário
-
-### 5. ⚠️ Planos Genéricos (Médio)
-**Causa:** Prompt v2.5.0 pode não estar sendo usado
-
-**Impacto:** 🟡 Personalização insuficiente
+**Isso significa:**
+- ❌ Este NÃO é o banco de produção
+- ❌ Este banco está VAZIO (sem dados do app)
+- ❌ Precisa conectar no banco CORRETO
 
 ---
 
-## ✅ SOLUÇÃO IMEDIATA
+## ✅ SOLUÇÃO: Encontrar o banco de produção
 
-### PASSO 1: Aplicar Migration no Neon (VIA VERCEL)
+### PASSO 1: Descobrir qual banco a Vercel usa
 
-**Opção A: Via Vercel CLI (RECOMENDADO)**
-```bash
-# No seu terminal local com Vercel CLI instalado
-vercel env pull
-npx prisma migrate deploy
+1. **Acesse:** https://vercel.com/[seu-usuario]/athera-run
+2. **Vá em:** Settings → Environment Variables
+3. **Procure:** `DATABASE_URL`
+4. **Clique:** "Show" para revelar o valor
+
+**A URL será algo como:**
+```
+postgresql://user:password@ep-xxx-xxx.us-east-2.aws.neon.tech/NOME_DO_BANCO?sslmode=require
+                                                                 ^^^^^^^^^^^^^^^
+                                                                 ESTE É O NOME!
 ```
 
-**Opção B: Via Vercel Dashboard**
-1. Acessar: https://vercel.com/settings/environment-variables
-2. Copiar `DATABASE_URL`
-3. No terminal local:
-```bash
-export DATABASE_URL="<cole_aqui>"
-npx prisma migrate deploy
-npx prisma generate
-```
+**Anote o nome do banco:** `_____________`
 
-**Opção C: Via GitHub Action**
-Criar `.github/workflows/migrate.yml`:
-```yaml
-name: Apply Migrations
-on:
-  workflow_dispatch:
+Possíveis nomes:
+- `athera`
+- `athera_production`
+- `main`
+- `verceldb`
+- Outro nome customizado
 
-jobs:
-  migrate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install
-      - run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-```
+---
 
-### PASSO 2: Verificar Migrations Aplicadas
+### PASSO 2: Listar todos os bancos disponíveis
+
+**Execute no Neon SQL Editor:**
 
 ```sql
--- Conectar no Neon e rodar:
-SELECT column_name, data_type 
-FROM information_schema.columns 
-WHERE table_name = 'custom_workouts' 
-  AND column_name IN ('warmUpStructure', 'mainWorkoutStruct', 'coolDownStructure');
+SELECT datname FROM pg_database WHERE datistemplate = false;
 ```
 
-**Esperado:** 3 linhas (warmUpStructure, mainWorkoutStruct, coolDownStructure)
+**Resultado esperado:**
+```
+   datname
+1  neondb       ← Você está AQUI (errado!)
+2  athera       ← Provavelmente o correto
+3  postgres
+```
 
 ---
 
-## 🔧 CORREÇÕES DE CÓDIGO
+### PASSO 3: Conectar no banco correto
 
-### CORREÇÃO 1: I18n - goalLabels e phases
+#### No Neon SQL Editor:
 
-**Arquivo:** `app/[locale]/plano/page.tsx`
+1. **Procure no CANTO SUPERIOR:** Dropdown que mostra "neondb"
+2. **Clique nele**
+3. **Selecione:** O banco que você anotou no PASSO 1
+   (Se não souber, tente: `athera` ou `main`)
+4. **Confirme:** Banco mudou no dropdown
 
-**Problema atual (linha 163):**
-```typescript
-return t(`plano.goalLabels.${distance}`, distance);
+#### Ou via URL direta:
+
+1. **Neon Console** → **Seu Projeto** → **Databases** (menu lateral)
+2. **Ver lista de bancos**
+3. **Clicar no banco correto**
+4. **Abrir SQL Editor** desse banco específico
+
+---
+
+### PASSO 4: Verificar se é o banco correto
+
+**Agora execute:**
+
+```sql
+SELECT tablename 
+FROM pg_tables 
+WHERE schemaname = 'public' 
+ORDER BY tablename;
 ```
 
-**Correção:**
-```typescript
-// Normalizar distância
-const normalizeDistance = (dist: string) => {
-  const map: Record<string, string> = {
-    '5k': '5k',
-    '10k': '10k',
-    '15k': '15k',
-    '21k': '21k',
-    '42k': '42k',
-    'half_marathon': '21k',
-    'marathon': '42k'
-  };
-  return map[dist] || dist;
-};
-
-const normalized = normalizeDistance(distance);
-return t(`plano.goalLabels.${normalized}`, normalized);
+**Deve aparecer MUITAS tabelas:**
+```
+   tablename
+1  _prisma_migrations
+2  accounts
+3  athlete_profiles        ← ESTA!
+4  race_goals
+5  sessions
+6  training_plans
+7  users
+8  workouts
+... (10-20 tabelas no total)
 ```
 
-### CORREÇÃO 2: Phases Tradução
+**Se aparecer `athlete_profiles`:** ✅ **CORRETO! Está no banco certo!**
 
-**Problema:** `phases.baseaerobica` → deve ser `phases.base`
+**Se continuar aparecendo só 1 tabela:** ❌ Ainda no banco errado
 
-**Solução:** Mapear fase para tradução correta
+---
 
-```typescript
-const phaseNameMap: Record<string, string> = {
-  'base': 'base',
-  'baseaerobica': 'base',
-  'build': 'build',
-  'desenvolvimento': 'build',
-  'peak': 'peak',
-  'pico': 'peak',
-  'taper': 'taper',
-  'polimento': 'taper',
-  'recovery': 'recovery',
-  'recuperacao': 'recovery'
-};
+### PASSO 5: Aplicar a migration (agora sim!)
 
-const normalizedPhase = phaseNameMap[phase.toLowerCase()] || 'base';
-return t(`plano.phases.${normalizedPhase}`);
+**Agora que está no banco correto:**
+
+1. **Abra:** `NEON_MIGRATION_SIMPLE.sql`
+2. **Copie:** TODO o conteúdo
+3. **Cole:** No SQL Editor
+4. **Execute:** Run (Ctrl+Enter)
+
+**Deve funcionar agora!** ✅
+
+---
+
+## 🎯 DIAGRAMA DO PROBLEMA:
+
+```
+┌─────────────────────────────────────────────┐
+│ NEON PROJECT: athera-run                    │
+├─────────────────────────────────────────────┤
+│                                             │
+│ Banco 1: neondb (default - VAZIO)          │
+│   └─ 1 tabela: _prisma_migrations          │
+│   └─ ❌ Você está AQUI (errado!)           │
+│                                             │
+│ Banco 2: athera (produção - COM DADOS)     │
+│   └─ 20+ tabelas                            │
+│   └─ athlete_profiles, users, etc          │
+│   └─ ✅ Precisa estar AQUI!                │
+│                                             │
+│ Vercel usa: Banco 2 (athera)                │
+└─────────────────────────────────────────────┘
 ```
 
-### CORREÇÃO 3: Descanso Vermelho
+---
 
-**Arquivo:** Componente que exibe status do treino
+## 📋 CHECKLIST:
 
-**Problema:** Rest day marcado como "not completed"
+```
+✅ Passo 1: Ver DATABASE_URL na Vercel
+   Nome do banco: _____________
 
-**Solução:**
-```typescript
-// Se é descanso E data já passou, não marcar como erro
-const isRestDay = workout.type === 'rest';
-const isPast = isAfter(today, workoutDate);
+✅ Passo 2: Listar bancos disponíveis
+   [ ] Executei query
+   [ ] Vi lista de bancos
 
-const shouldMarkAsIncomplete = isPast && !workout.isCompleted && !isRestDay;
+✅ Passo 3: Conectar no banco correto
+   [ ] Mudei dropdown do Neon
+   [ ] Banco atual agora: _____________
+
+✅ Passo 4: Verificar tabelas
+   [ ] Vi athlete_profiles na lista?
+       ☐ SIM (correto!) → PASSO 5
+       ☐ NÃO (errado) → voltar PASSO 3
+
+✅ Passo 5: Aplicar migration
+   [ ] Executei NEON_MIGRATION_SIMPLE.sql
+   [ ] Sem erros
+   [ ] 8 campos criados
 ```
 
-### CORREÇÃO 4: "min/km/km" → "min/km"
+---
 
-**Buscar:** Onde renderiza pace
+## 🚀 OPÇÃO ALTERNATIVA (Mais Fácil):
+
+**Se preferir, deixe a Vercel aplicar automaticamente:**
+
+### Via Vercel CLI:
+
 ```bash
-grep -r "min/km/km" app/ components/
-```
+# Instalar Vercel CLI (se não tiver)
+npm i -g vercel
 
-**Correção:**
-```typescript
-// Antes
-const paceDisplay = `${pace} min/km/km`;
+# Login
+vercel login
 
-// Depois
-const paceDisplay = `${pace} min/km`;
-```
+# Link ao projeto
+vercel link
 
----
+# Baixar env vars
+vercel env pull .env.local
 
-## 🧪 TESTES PÓS-MIGRAÇÃO
-
-### Teste 1: Criar Novo Plano
-```
-Email: teste-migracao@teste.com
-Objetivo: 10km em 8 semanas
-```
-
-**Verificar:**
-- ✅ Plano criado sem erro
-- ✅ `warmUpStructure` salvo corretamente
-- ✅ Traduções corretas
-- ✅ Descanso não vermelho
-- ✅ Pace mostra "min/km"
-
-### Teste 2: Personalização
-```
-Teste 3 perfis diferentes:
-1. Iniciante absoluto (hasRunBefore = false)
-2. Experiente (40km/semana)
-3. Masters 50+ (5h sono)
-```
-
-**Verificar:**
-- ✅ Planos diferentes entre si
-- ✅ Iniciante: walk/run protocol
-- ✅ Masters: recovery extra
-
----
-
-## 📊 CHECKLIST DE DEPLOY
-
-### Pré-Deploy
-- [ ] Revisar código das correções
-- [ ] Testar localmente se possível
-- [ ] Backup do DATABASE_URL
-
-### Deploy
-- [ ] Aplicar migrations no Neon
-- [ ] Verificar migrations aplicadas (SQL query)
-- [ ] Push código corrigido
-- [ ] Vercel auto-deploy
-- [ ] Aguardar build (3-5min)
-
-### Pós-Deploy
-- [ ] Criar usuário teste
-- [ ] Gerar plano
-- [ ] Verificar traduções
-- [ ] Verificar descanso
-- [ ] Verificar pace
-- [ ] Testar 3 perfis diferentes
-
----
-
-## 🚀 COMANDOS RÁPIDOS
-
-### Local (se tiver Vercel CLI)
-```bash
-# 1. Baixar env vars
-vercel env pull
-
-# 2. Aplicar migrations
+# Aplicar migration
 npx prisma migrate deploy
 
-# 3. Gerar Prisma Client
-npx prisma generate
-
-# 4. Build local (opcional)
-npm run build
+# Confirmar
+npx prisma migrate status
 ```
 
-### Via Vercel Dashboard
-```bash
-# 1. Conectar ao banco via Neon Dashboard
-# 2. Rodar SQL manualmente (ver migration file)
-cat prisma/migrations/20251110_workout_structure_v2_0_0/migration.sql
+**OU simplesmente:**
 
-# 3. Executar no SQL Editor do Neon
-```
+1. Aguardar próximo deploy da Vercel
+2. Vercel vai detectar migration pendente
+3. Vai aplicar automaticamente
+4. Verificar logs do deploy
 
 ---
 
-## 📞 SUPORTE
+## 💡 RESUMO:
 
-### Arquivos para Revisar:
-1. `app/[locale]/plano/page.tsx` - Traduções goalLabels
-2. `app/[locale]/dashboard/page.tsx` - Dashboard
-3. `components/*` - Componentes que usam i18n
-4. `prisma/migrations/20251110_workout_structure_v2_0_0/` - Migration
+**Problema:** Banco `neondb` está vazio (só 1 tabela)
 
-### Logs Úteis:
-```bash
-# Ver logs Vercel
-vercel logs atherarun --follow
+**Solução:** Conectar no banco que a Vercel usa (provavelmente `athera`)
 
-# Ver último deploy
-vercel ls atherarun
-
-# Ver env vars
-vercel env ls
-```
+**Como:** 
+1. Ver DATABASE_URL na Vercel
+2. Mudar dropdown do banco no Neon
+3. Executar migration no banco correto
 
 ---
 
-## ⏱️ ESTIMATIVA DE TEMPO
+**Qual o nome do banco que aparece na DATABASE_URL da Vercel?**
 
-- **Aplicar migration:** 5 minutos
-- **Correções de código:** 15 minutos
-- **Testes:** 10 minutos
-- **Deploy:** 5 minutos
+Compartilhe para eu confirmar qual banco conectar.
 
-**TOTAL:** ~35 minutos
-
----
-
-## 🎯 PRIORIDADE
-
-1. **P0 (CRÍTICO):** Migration database ← **FAZER AGORA**
-2. **P1 (ALTO):** Traduções i18n
-3. **P1 (ALTO):** Descanso vermelho
-4. **P2 (MÉDIO):** Pace "min/km/km"
-5. **P3 (BAIXO):** Melhorar personalização
-
----
-
-## ✅ CRITÉRIOS DE SUCESSO
-
-### Migration Aplicada ✅
-```sql
--- Deve retornar 3 linhas
-SELECT column_name FROM information_schema.columns 
-WHERE table_name = 'custom_workouts' 
-  AND column_name LIKE '%Structure%';
-```
-
-### Geração de Plano ✅
-```
-POST /api/plan/generate
-Status: 200
-Response: { success: true, planId: 123 }
-Logs: Sem erros "column does not exist"
-```
-
-### Traduções ✅
-```
-Página do plano: "10km" (não "goalLabels.10k")
-Fases: "Base" (não "phases.baseaerobica")
-```
-
-### UX ✅
-```
-Descanso: ✅ Verde ou neutro (não vermelho)
-Pace: "5:30 min/km" (não "5:30 min/km/km")
-```
-
----
-
-**🔥 AÇÃO IMEDIATA: APLICAR MIGRATION NO NEON VIA VERCEL! 🔥**

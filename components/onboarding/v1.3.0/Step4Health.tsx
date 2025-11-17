@@ -106,35 +106,89 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
     lastPeriodDate, avgCycleLength, data.gender
   ]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // Registrar consentimento de dados de saúde se fornecido
+    if (healthDataConsent) {
+      try {
+        await fetch('/api/consent/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ consentType: 'health_data', version: '1.0' }),
+        });
+      } catch (error) {
+        console.error('Erro ao registrar consentimento de saúde:', error);
+      }
+    }
+
     onUpdate({
-      hasInjuryHistory,
-      injuryHistory: hasInjuryHistory && injuries.length > 0 ? injuries : undefined,
+      healthDataConsent,
+      hasInjuryHistory: healthDataConsent ? hasInjuryHistory : undefined,
+      injuryHistory: (healthDataConsent && hasInjuryHistory && injuries.length > 0) ? injuries : undefined,
       medicalClearance: doctorCleared,
-      // v1.3.0 - Dados fisiológicos
-      restingHeartRate: restingHeartRate ? parseInt(restingHeartRate) : null,
-      sleepQuality,
-      stressLevel,
+      // v1.3.0 - Dados fisiológicos (só se consentiu)
+      restingHeartRate: (healthDataConsent && restingHeartRate) ? parseInt(restingHeartRate) : null,
+      sleepQuality: healthDataConsent ? sleepQuality : undefined,
+      stressLevel: healthDataConsent ? stressLevel : undefined,
       // v1.3.0 - Lesões detalhadas
-      injuryDetails: injuryDetails.length > 0 ? injuryDetails : undefined,
-      injuryRecoveryStatus: hasInjuryHistory && injuries.length > 0 ? injuryRecoveryStatus : undefined,
-      lastInjuryDate: lastInjuryDate || undefined,
+      injuryDetails: (healthDataConsent && injuryDetails.length > 0) ? injuryDetails : undefined,
+      injuryRecoveryStatus: (healthDataConsent && hasInjuryHistory && injuries.length > 0) ? injuryRecoveryStatus : undefined,
+      lastInjuryDate: (healthDataConsent && lastInjuryDate) ? lastInjuryDate : undefined,
       // v2.5.0 - Novos campos
-      currentlyInjured,
-      avgSleepHours: avgSleepHours ? parseFloat(avgSleepHours) : undefined,
-      tracksMenstrualCycle: data.gender === 'female' ? tracksMenstrualCycle : undefined,
-      lastPeriodDate: (data.gender === 'female' && tracksMenstrualCycle && lastPeriodDate) ? lastPeriodDate : undefined,
-      avgCycleLength: (data.gender === 'female' && tracksMenstrualCycle && avgCycleLength) ? parseInt(avgCycleLength) : undefined,
+      currentlyInjured: healthDataConsent ? currentlyInjured : undefined,
+      avgSleepHours: (healthDataConsent && avgSleepHours) ? parseFloat(avgSleepHours) : undefined,
+      tracksMenstrualCycle: (healthDataConsent && data.gender === 'female') ? tracksMenstrualCycle : undefined,
+      lastPeriodDate: (healthDataConsent && data.gender === 'female' && tracksMenstrualCycle && lastPeriodDate) ? lastPeriodDate : undefined,
+      avgCycleLength: (healthDataConsent && data.gender === 'female' && tracksMenstrualCycle && avgCycleLength) ? parseInt(avgCycleLength) : undefined,
     });
     onNext();
   };
 
+  // LGPD - Consentimento dados sensíveis de saúde
+  const [healthDataConsent, setHealthDataConsent] = useState(data.healthDataConsent ?? false);
+
   return (
     <div className="space-y-6">
-      <div>
-        <label className="block font-medium mb-2">
-          {isAbsoluteBeginner ? t('hasInjuriesBeginners') : t('hasInjuries')}
+      {/* LGPD - Aviso Dados Sensíveis */}
+      <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg">
+        <h3 className="font-bold text-orange-900 mb-2">⚠️ Dados Sensíveis de Saúde (LGPD)</h3>
+        <p className="text-sm text-orange-800 mb-3">
+          As informações desta página são <strong>OPCIONAIS</strong> e consideradas <strong>dados sensíveis</strong> 
+          pela legislação brasileira (LGPD). Você pode pular esta etapa e ainda usar o serviço normalmente. 
+          Elas servem apenas para personalização avançada do seu plano de treino.
+        </p>
+        
+        <label className="flex items-start gap-2 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={healthDataConsent}
+            onChange={(e) => {
+              setHealthDataConsent(e.target.checked);
+              onUpdate({ healthDataConsent: e.target.checked });
+            }}
+            className="mt-1 h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+          />
+          <span className="text-sm text-orange-900 group-hover:text-orange-950">
+            <strong>Autorizo</strong> o tratamento dos meus dados de saúde (lesões, ciclo menstrual, 
+            qualidade de sono) para personalização avançada do plano de treino. Posso revogar este 
+            consentimento a qualquer momento através do meu perfil.
+          </span>
         </label>
+
+        {!healthDataConsent && (
+          <div className="mt-3 p-3 bg-blue-50 rounded text-sm text-blue-900">
+            <strong>Sem problema!</strong> Você pode pular esta etapa clicando em "Avançar". 
+            Seu plano será gerado normalmente com base nos dados básicos.
+          </div>
+        )}
+      </div>
+
+      {/* Só mostrar campos se consentiu */}
+      {healthDataConsent && (
+        <>
+          <div>
+            <label className="block font-medium mb-2">
+              {isAbsoluteBeginner ? t('hasInjuriesBeginners') : t('hasInjuries')}
+            </label>
         <div className="flex gap-4">
           <button onClick={() => setHasInjuryHistory(false)}
             className={`px-6 py-2 rounded-lg ${!hasInjuryHistory ? 'bg-blue-600 text-white' : 'border'}`}>
@@ -454,6 +508,8 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
           )}
         </div>
       </div>
+      </>
+      )} {/* Fim do condicional healthDataConsent */}
 
       <div className="flex gap-4 mt-8">
         <button onClick={onBack} className="px-6 py-2 border rounded-lg hover:bg-gray-50">

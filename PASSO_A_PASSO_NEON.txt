@@ -1,0 +1,180 @@
+╔═══════════════════════════════════════════════════════════════╗
+║          PASSO-A-PASSO: Aplicar Migration v3.0.0 no Neon     ║
+║                 (Solução para erro _prisma_migrations)        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+🎯 OBJETIVO: Adicionar 8 campos v3.0.0 no banco de produção
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 PASSO 1: Abrir Neon Console
+
+  1. Acesse: https://console.neon.tech/
+  2. Faça login
+  3. Selecione o projeto: athera-run
+  4. Clique em: "SQL Editor" (menu lateral)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 PASSO 2: Copiar e Colar o SQL
+
+  Arquivo: NEON_MIGRATION_SIMPLE.sql
+  
+  1. Abra o arquivo NEON_MIGRATION_SIMPLE.sql
+  2. Copie TODO o conteúdo (Ctrl+A, Ctrl+C)
+  3. Cole no SQL Editor do Neon (Ctrl+V)
+  4. Clique em "Run" ou pressione Ctrl+Enter
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 PASSO 3: Verificar Resultado
+
+  Você deve ver 3 resultados:
+
+  ✅ Resultado 1 (PASSO 2 do SQL):
+     - 0 linhas = Campos NÃO existem (OK, vai criar)
+     - 3 linhas = Campos JÁ existem (OK, já aplicado antes)
+
+  ✅ Resultado 2 (PASSO 5 do SQL):
+     - 8 linhas com os campos v3:
+       • hasRunBefore
+       • currentlyInjured
+       • avgSleepHours
+       • tracksMenstrualCycle
+       • avgCycleLength
+       • lastPeriodDate
+       • workDemand
+       • familyDemand
+
+  ✅ Resultado 3 (PASSO 6 do SQL):
+     - 5 perfis de atletas com os novos campos
+     - Valores default para perfis antigos:
+       • hasRunBefore = true
+       • currentlyInjured = false
+       • avgSleepHours = NULL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 PASSO 4: Validação Manual (Opcional)
+
+  Execute cada query separadamente para confirmar:
+
+  Query 1 - Ver campos criados:
+  ─────────────────────────────────────────────────────
+  SELECT column_name 
+  FROM information_schema.columns 
+  WHERE table_name = 'athlete_profiles' 
+    AND column_name IN (
+      'hasRunBefore',
+      'currentlyInjured',
+      'avgSleepHours'
+    );
+  ─────────────────────────────────────────────────────
+  Esperado: 3 linhas
+
+  Query 2 - Testar SELECT:
+  ─────────────────────────────────────────────────────
+  SELECT 
+    id,
+    "hasRunBefore",
+    "currentlyInjured",
+    "avgSleepHours"
+  FROM "athlete_profiles"
+  LIMIT 3;
+  ─────────────────────────────────────────────────────
+  Esperado: Perfis com valores
+
+  Query 3 - Verificar migration registrada:
+  ─────────────────────────────────────────────────────
+  SELECT 
+    migration_name,
+    finished_at
+  FROM "_prisma_migrations"
+  WHERE migration_name LIKE '%v3_profile%';
+  ─────────────────────────────────────────────────────
+  Esperado: 1 linha (20251113144016_add_v3_profile_fields)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST DE SUCESSO
+
+  [ ] SQL executou sem erros
+  [ ] 8 campos aparecem na validação
+  [ ] SELECT funciona com novos campos
+  [ ] Migration registrada em _prisma_migrations
+  [ ] Perfis antigos têm valores default
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PRÓXIMO PASSO: Testar em Produção
+
+  1. Acesse: https://seu-app.vercel.app/onboarding
+  
+  2. Verifique Step 2:
+     ✅ Campo "Você já correu antes?" aparece?
+  
+  3. Verifique Step 4:
+     ✅ Campo "Está lesionado?" aparece?
+     ✅ Campo "Horas de sono?" aparece?
+     ✅ Campo "Ciclo menstrual?" aparece (mulheres)?
+  
+  4. Complete o onboarding
+  
+  5. Volte no Neon e execute:
+     ─────────────────────────────────────────────────
+     SELECT 
+       "hasRunBefore",
+       "currentlyInjured",
+       "avgSleepHours"
+     FROM "athlete_profiles"
+     ORDER BY "createdAt" DESC
+     LIMIT 1;
+     ─────────────────────────────────────────────────
+     
+     Deve mostrar os valores que você preencheu!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚨 SE DER ERRO:
+
+  Erro: "permission denied"
+  ─────────────────────────────────────────────────────
+  Solução: Use usuário admin/owner do Neon
+  ─────────────────────────────────────────────────────
+
+  Erro: "table athlete_profiles does not exist"
+  ─────────────────────────────────────────────────────
+  Solução: Verifique se está no banco correto
+  Execute: SELECT current_database();
+  ─────────────────────────────────────────────────────
+
+  Erro: "column already exists"
+  ─────────────────────────────────────────────────────
+  Solução: Campos já foram adicionados! Tudo OK ✅
+  Apenas registre a migration (PASSO 4 do SQL)
+  ─────────────────────────────────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 ARQUIVOS DE APOIO:
+
+  1. NEON_MIGRATION_SIMPLE.sql       (Execute este!)
+  2. FIX_NEON_MIGRATION.md           (Guia detalhado)
+  3. PASSO_A_PASSO_NEON.txt          (Este arquivo)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 QUANDO TUDO FUNCIONAR:
+
+  ✅ 8 campos v3 no banco
+  ✅ Migration registrada
+  ✅ Onboarding mostra campos novos
+  ✅ Dados são salvos corretamente
+  ✅ Planos são gerados com v3
+  
+  🚀 v3.0.0 ESTÁ EM PRODUÇÃO! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 DICA: Salve este arquivo para referência futura!
+
