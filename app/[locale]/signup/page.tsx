@@ -30,10 +30,7 @@ export default function SignupPage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   
   // LGPD - Consentimentos
-  const [consents, setConsents] = useState({
-    terms: false,
-    privacy: false,
-  });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +38,7 @@ export default function SignupPage() {
     setError('');
 
     // LGPD - Validar consentimentos
-    if (!consents.terms || !consents.privacy) {
+    if (!acceptedTerms) {
       setError('Você deve aceitar os Termos de Uso e Política de Privacidade para continuar');
       setIsLoading(false);
       return;
@@ -254,8 +251,8 @@ export default function SignupPage() {
               <label className="flex items-start gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
-                  checked={consents.terms}
-                  onChange={(e) => setConsents({...consents, terms: e.target.checked})}
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
                   required
                   disabled={isLoading}
                   className="mt-1 h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
@@ -292,7 +289,7 @@ export default function SignupPage() {
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700"
-              disabled={isLoading || !consents.terms || !consents.privacy}
+              disabled={isLoading || !acceptedTerms}
             >
               {isLoading ? (
                 <>
