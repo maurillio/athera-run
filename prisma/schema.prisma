@@ -57,6 +57,7 @@ model User {
   athleteProfile       AthleteProfile?
   sessions             Session[]
   subscription         Subscription?
+  consents             UserConsent[]
 
   @@index([locale])
   @@map("users")
@@ -275,16 +276,16 @@ model AthleteProfile {
   hasTrackAccess        Boolean?            @default(false)
   trainingPreferences   Json?
   motivationFactors     Json?
-  trainingSchedule      Json?               // v1.4.0 - Nova estrutura { 0: { running: true, activities: ['gym'] } }
-  customActivities      Json?               // v1.4.0 - Esportes customizados ['pilates', 'crossfit']
-  hasRunBefore          Boolean             @default(true)  // v3.0.0 - Distingue iniciante absoluto
+  trainingSchedule      Json? // v1.4.0 - Nova estrutura { 0: { running: true, activities: ['gym'] } }
+  customActivities      Json? // v1.4.0 - Esportes customizados ['pilates', 'crossfit']
+  hasRunBefore          Boolean             @default(true) // v3.0.0 - Distingue iniciante absoluto
   currentlyInjured      Boolean             @default(false) // v3.0.0 - Flag rápido lesão ativa
-  avgSleepHours         Float?              // v3.0.0 - Horas médias sono/noite
+  avgSleepHours         Float? // v3.0.0 - Horas médias sono/noite
   tracksMenstrualCycle  Boolean?            @default(false) // v3.0.0 - Tracking ciclo (women, opcional)
-  avgCycleLength        Int?                // v3.0.0 - Duração média ciclo (dias)
-  lastPeriodDate        DateTime?           // v3.0.0 - Data última menstruação
-  workDemand            String?             // v3.0.0 - sedentary/moderate/physical
-  familyDemand          String?             // v3.0.0 - low/moderate/high
+  avgCycleLength        Int? // v3.0.0 - Duração média ciclo (dias)
+  lastPeriodDate        DateTime? // v3.0.0 - Data última menstruação
+  workDemand            String? // v3.0.0 - sedentary/moderate/physical
+  familyDemand          String? // v3.0.0 - low/moderate/high
   aiAnalyses            AIAnalysis[]
   customPlan            CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
   user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -388,7 +389,7 @@ model CustomWeek {
 }
 
 model CustomWorkout {
-  id                 Int               @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   weekId             Int
   dayOfWeek          Int
   date               DateTime
@@ -402,37 +403,37 @@ model CustomWorkout {
   warmup             String?
   mainSet            String?
   cooldown           String?
-  isCompleted        Boolean           @default(false)
-  completedWorkoutId Int?              @unique
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
+  isCompleted        Boolean  @default(false)
+  completedWorkoutId Int?     @unique
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
   equipmentRequired  String?
-  isStrengthSpecific Boolean           @default(false)
+  isStrengthSpecific Boolean  @default(false)
   targetHeartRate    String?
   targetRPE          Int?
-  
+
   // v2.0.0 - Estrutura Detalhada de Treinos
-  warmUpStructure    Json?             // Aquecimento detalhado (fase 1)
-  mainWorkoutStruct  Json?             // Parte principal estruturada (fase 2)
-  coolDownStructure  Json?             // Desaquecimento detalhado (fase 3)
-  
+  warmUpStructure   Json? // Aquecimento detalhado (fase 1)
+  mainWorkoutStruct Json? // Parte principal estruturada (fase 2)
+  coolDownStructure Json? // Desaquecimento detalhado (fase 3)
+
   // v2.0.0 - Enriquecimento Educacional
-  objective          String?           // Objetivo fisiológico do treino
-  scientificBasis    String?           // Fundamento científico
-  tips               Json?             // Array de dicas práticas
-  commonMistakes     Json?             // Erros comuns a evitar
-  successCriteria    Json?             // Critérios de sucesso
-  
+  objective       String? // Objetivo fisiológico do treino
+  scientificBasis String? // Fundamento científico
+  tips            Json? // Array de dicas práticas
+  commonMistakes  Json? // Erros comuns a evitar
+  successCriteria Json? // Critérios de sucesso
+
   // v2.0.0 - Métricas Avançadas
-  intensityLevel     Int?              // 1-5 (Muito Leve → Muito Intenso)
-  expectedRPE        Int?              // Rate of Perceived Exertion (1-10)
-  heartRateZones     Json?             // Zonas de FC para cada fase
-  intervals          Json?             // Estrutura de intervalos se aplicável
-  expectedDuration   Int?              // Duração total esperada (minutos)
-  
-  athleteFeedback    AthleteFeedback[]
-  completedWorkout   CompletedWorkout? @relation(fields: [completedWorkoutId], references: [id])
-  week               CustomWeek        @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  intensityLevel   Int? // 1-5 (Muito Leve → Muito Intenso)
+  expectedRPE      Int? // Rate of Perceived Exertion (1-10)
+  heartRateZones   Json? // Zonas de FC para cada fase
+  intervals        Json? // Estrutura de intervalos se aplicável
+  expectedDuration Int? // Duração total esperada (minutos)
+
+  athleteFeedback  AthleteFeedback[]
+  completedWorkout CompletedWorkout? @relation(fields: [completedWorkoutId], references: [id])
+  week             CustomWeek        @relation(fields: [weekId], references: [id], onDelete: Cascade)
 
   @@map("custom_workouts")
 }
@@ -571,16 +572,33 @@ enum SubscriptionPlan {
 }
 
 model UserConsent {
-  id            Int       @id @default(autoincrement())
-  userId        String
-  consentType   String
-  consentedAt   DateTime  @default(now())
-  ipAddress     String?
-  userAgent     String?
-  version       String    @default("1.0")
-  revokedAt     DateTime?
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id          Int       @id @default(autoincrement())
+  userId      String
+  consentType String
+  consentedAt DateTime  @default(now())
+  ipAddress   String?
+  userAgent   String?
+  version     String    @default("1.0")
+  revokedAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, consentType, version])
   @@map("user_consents")
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  userId     String?
+  action     String
+  entityType String?
+  entityId   String?
+  ipAddress  String?
+  userAgent  String?
+  metadata   String?
+  timestamp  DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("audit_logs")
 }
