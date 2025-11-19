@@ -21,60 +21,60 @@ export default async function CalculatorPage({ params }: { params: { locale: str
   const t = await getTranslations(params.locale, 'calculator');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <Header />
       
       <main className="container mx-auto max-w-4xl px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold mb-4 text-slate-900">
+            <span className="bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
               {t('title')}
             </span>
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-slate-600 max-w-2xl mx-auto">
             {t('description')}
           </p>
         </div>
 
         {/* VDOT Info */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
+          <Card className="border-slate-200 shadow-elevation-2">
             <CardContent className="p-6 text-center">
               <div className="flex justify-center mb-3">
-                <div className="p-3 bg-blue-100 rounded-full">
+                <div className="p-3 bg-blue-50 rounded-full">
                   <Calculator className="h-6 w-6 text-blue-600" />
                 </div>
               </div>
-              <h3 className="font-semibold mb-2">{t('vdotLevel')}</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-semibold mb-2 text-slate-900">{t('vdotLevel')}</h3>
+              <p className="text-sm text-slate-600">
                 {t('vdotLevelDesc')}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-slate-200 shadow-elevation-2">
             <CardContent className="p-6 text-center">
               <div className="flex justify-center mb-3">
-                <div className="p-3 bg-orange-100 rounded-full">
-                  <Target className="h-6 w-6 text-orange-600" />
+                <div className="p-3 bg-orange-50 rounded-full">
+                  <Target className="h-6 w-6 text-brand-primary" />
                 </div>
               </div>
-              <h3 className="font-semibold mb-2">{t('goalTitle')}</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-semibold mb-2 text-slate-900">{t('goalTitle')}</h3>
+              <p className="text-sm text-slate-600">
                 {t('goalDesc')}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-slate-200 shadow-elevation-2">
             <CardContent className="p-6 text-center">
               <div className="flex justify-center mb-3">
-                <div className="p-3 bg-green-100 rounded-full">
-                  <Activity className="h-6 w-6 text-green-600" />
+                <div className="p-3 bg-emerald-50 rounded-full">
+                  <Activity className="h-6 w-6 text-emerald-600" />
                 </div>
               </div>
-              <h3 className="font-semibold mb-2">{t('zonesTitle')}</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-semibold mb-2 text-slate-900">{t('zonesTitle')}</h3>
+              <p className="text-sm text-slate-600">
                 {t('zonesDesc')}
               </p>
             </CardContent>

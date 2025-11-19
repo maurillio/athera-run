@@ -124,18 +124,18 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
-      <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 w-full max-w-md shadow-xl">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4">
+      <Card className="transition-all duration-200 hover:shadow-elevation-3 hover:-translate-y-0.5 w-full max-w-md border-slate-200 shadow-elevation-2">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-blue-600 rounded-xl shadow-lg">
-              <span className="text-white font-bold text-2xl">M</span>
+            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-xl shadow-elevation-2">
+              <span className="text-white font-bold text-2xl">A</span>
             </div>
           </div>
-          <CardTitle className="text-2xl text-center font-bold">
+          <CardTitle className="text-2xl text-center font-bold text-slate-900">
             {t('title')}
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-center text-slate-600">
             {t('subtitle')}
           </CardDescription>
         </CardHeader>
@@ -151,7 +151,7 @@ export default function SignupPage() {
               variant="outline"
               onClick={handleGoogleSignIn}
               disabled={isGoogleLoading || isLoading}
-              className="w-full max-w-xs"
+              className="w-full max-w-xs border-slate-300 text-slate-700 hover:bg-slate-50"
             >
               {isGoogleLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -166,10 +166,10 @@ export default function SignupPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <Separator />
+              <Separator className="bg-slate-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
+              <span className="bg-white px-2 text-slate-500">
                 {t('orSignUpWith')}
               </span>
             </div>
@@ -177,7 +177,7 @@ export default function SignupPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">{t('name')}</Label>
+              <Label htmlFor="name" className="text-slate-700">{t('name')}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
