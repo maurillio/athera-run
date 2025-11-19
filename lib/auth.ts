@@ -54,12 +54,8 @@ const StravaProvider = {
 };
 
 export const authOptions: NextAuthOptions = {
-  // In production, use JWT-only (no DB queries on every request)
-  // In development, use PrismaAdapter for better OAuth handling
-  ...(process.env.NODE_ENV === 'production' 
-    ? {} 
-    : { adapter: PrismaAdapter(prisma) }
-  ),
+  // Always use PrismaAdapter to ensure OAuth users are created in database
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
