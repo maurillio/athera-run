@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athera Run - Comparação de Paletas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: #f8fafc;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .palettes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .palette-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .palette-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .palette-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .palette-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .palette-description {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .color-swatches {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: #e2e8f0;
+        }
+
+        .color-swatch {
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .color-hex {
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            opacity: 0.8;
+        }
+
+        .color-usage {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        /* Opção 1: Athletic Performance */
+        .palette-1 .color-primary { background: #E64A19; color: white; }
+        .palette-1 .color-secondary { background: #1E293B; color: white; }
+        .palette-1 .color-accent { background: #10B981; color: white; }
+        .palette-1 .color-background { background: #FFFFFF; color: #0F172A; border: 1px solid #e2e8f0; }
+        .palette-1 .color-text { background: #0F172A; color: white; }
+        .palette-1 .color-muted { background: #64748B; color: white; }
+
+        /* Opção 2: Premium Tech */
+        .palette-2 .color-primary { background: #7C3AED; color: white; }
+        .palette-2 .color-secondary { background: #0F172A; color: white; }
+        .palette-2 .color-accent { background: #F59E0B; color: white; }
+        .palette-2 .color-background { background: #FFFFFF; color: #0F172A; border: 1px solid #e2e8f0; }
+        .palette-2 .color-text { background: #0F172A; color: white; }
+        .palette-2 .color-muted { background: #64748B; color: white; }
+
+        /* Opção 3: Clean Runner */
+        .palette-3 .color-primary { background: #2563EB; color: white; }
+        .palette-3 .color-secondary { background: #DC2626; color: white; }
+        .palette-3 .color-accent { background: #059669; color: white; }
+        .palette-3 .color-background { background: #F9FAFB; color: #111827; border: 1px solid #e2e8f0; }
+        .palette-3 .color-text { background: #111827; color: white; }
+        .palette-3 .color-muted { background: #6B7280; color: white; }
+
+        /* Exemplos de UI */
+        .ui-examples {
+            margin-top: 40px;
+        }
+
+        .example-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #0f172a;
+        }
+
+        .ui-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .ui-preview {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            background: #f8fafc;
+        }
+
+        .ui-preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary-1 {
+            background: #E64A19;
+            color: white;
+        }
+        .btn-primary-1:hover {
+            background: #d94216;
+        }
+
+        .btn-primary-2 {
+            background: #7C3AED;
+            color: white;
+        }
+        .btn-primary-2:hover {
+            background: #6d32d1;
+        }
+
+        .btn-primary-3 {
+            background: #2563EB;
+            color: white;
+        }
+        .btn-primary-3:hover {
+            background: #1e56d8;
+        }
+
+        /* Cards */
+        .card-demo {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card-demo h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .card-demo p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .card-demo-1 h3 { color: #E64A19; }
+        .card-demo-2 h3 { color: #7C3AED; }
+        .card-demo-3 h3 { color: #2563EB; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .badge-1 {
+            background: #FEF3F2;
+            color: #E64A19;
+        }
+
+        .badge-2 {
+            background: #F5F3FF;
+            color: #7C3AED;
+        }
+
+        .badge-3 {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .badge-success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        /* Stats */
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value-1 { color: #E64A19; }
+        .stat-value-2 { color: #7C3AED; }
+        .stat-value-3 { color: #2563EB; }
+
+        .stat-change {
+            font-size: 14px;
+            color: #10B981;
+            font-weight: 500;
+        }
+
+        /* Header Preview */
+        .header-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .logo-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .logo-icon-1 { background: linear-gradient(135deg, #E64A19, #2563EB); }
+        .logo-icon-2 { background: linear-gradient(135deg, #7C3AED, #F59E0B); }
+        .logo-icon-3 { background: linear-gradient(135deg, #2563EB, #DC2626); }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item-1:hover { background: #FEF3F2; color: #E64A19; }
+        .nav-item-2:hover { background: #F5F3FF; color: #7C3AED; }
+        .nav-item-3:hover { background: #EFF6FF; color: #2563EB; }
+
+        @media (max-width: 768px) {
+            .palettes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ui-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-items {
+                display: none;
+            }
+        }
+
+        .recommendation {
+            background: #ECFDF5;
+            border: 2px solid #10B981;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .recommendation-badge {
+            display: inline-block;
+            background: #10B981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-text {
+            color: #047857;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Athera Run - Comparação de Paletas de Cores</h1>
+        <p class="subtitle">Escolha a paleta que melhor representa a identidade profissional do Athera Run</p>
+
+        <!-- Swatches das Paletas -->
+        <div class="palettes-grid">
+            <!-- Opção 1: Athletic Performance -->
+            <div class="palette-card palette-1">
+                <div class="palette-header">
+                    <div class="palette-title">Opção 1: Athletic Performance</div>
+                    <div class="palette-description">Energia, movimento e conquista</div>
+                </div>
+                <div class="color-swatches">
+                    <div class="color-swatch color-primary">
+                        <div class="color-name">Primary</div>
+                        <div class="color-hex">#E64A19</div>
+                        <div class="color-usage">Deep Orange - Botões, links, destaque</div>
+                    </div>
+                    <div class="color-swatch color-secondary">
+                        <div class="color-name">Secondary</div>
+                        <div class="color-hex">#1E293B</div>
+                        <div class="color-usage">Slate 800 - Textos, headers</div>
+                    </div>
+                    <div class="color-swatch color-accent">
+                        <div class="color-name">Accent</div>
+                        <div class="color-hex">#10B981</div>
+                        <div class="color-usage">Emerald - Progresso, sucesso</div>
+                    </div>
+                    <div class="color-swatch color-background">
+                        <div class="color-name">Background</div>
+                        <div class="color-hex">#FFFFFF</div>
+                        <div class="color-usage">Fundo principal</div>
+                    </div>
+                    <div class="color-swatch color-text">
+                        <div class="color-name">Text</div>
+                        <div class="color-hex">#0F172A</div>
+                        <div class="color-usage">Texto principal</div>
+                    </div>
+                    <div class="color-swatch color-muted">
+                        <div class="color-name">Muted</div>
+                        <div class="color-hex">#64748B</div>
+                        <div class="color-usage">Texto secundário</div>
+                    </div>
+                </div>
+                <div class="recommendation">
+                    <span class="recommendation-badge">RECOMENDADA</span>
+                    <div class="recommendation-text">Inspirada no Strava, transmite energia atlética e profissionalismo</div>
+                </div>
+            </div>
+
+            <!-- Opção 2: Premium Tech -->
+            <div class="palette-card palette-2">
+                <div class="palette-header">
+                    <div class="palette-title">Opção 2: Premium Tech</div>
+                    <div class="palette-description">Inovação, tecnologia e exclusividade</div>
+                </div>
+                <div class="color-swatches">
+                    <div class="color-swatch color-primary">
+                        <div class="color-name">Primary</div>
+                        <div class="color-hex">#7C3AED</div>
+                        <div class="color-usage">Violet - Botões, links, destaque</div>
+                    </div>
+                    <div class="color-swatch color-secondary">
+                        <div class="color-name">Secondary</div>
+                        <div class="color-hex">#0F172A</div>
+                        <div class="color-usage">Slate 900 - Textos, headers</div>
+                    </div>
+                    <div class="color-swatch color-accent">
+                        <div class="color-name">Accent</div>
+                        <div class="color-hex">#F59E0B</div>
+                        <div class="color-usage">Amber - Destaque, warnings</div>
+                    </div>
+                    <div class="color-swatch color-background">
+                        <div class="color-name">Background</div>
+                        <div class="color-hex">#FFFFFF</div>
+                        <div class="color-usage">Fundo principal</div>
+                    </div>
+                    <div class="color-swatch color-text">
+                        <div class="color-name">Text</div>
+                        <div class="color-hex">#0F172A</div>
+                        <div class="color-usage">Texto principal</div>
+                    </div>
+                    <div class="color-swatch color-muted">
+                        <div class="color-name">Muted</div>
+                        <div class="color-hex">#64748B</div>
+                        <div class="color-usage">Texto secundário</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opção 3: Clean Runner -->
+            <div class="palette-card palette-3">
+                <div class="palette-header">
+                    <div class="palette-title">Opção 3: Clean Runner</div>
+                    <div class="palette-description">Confiança, intensidade e conquista</div>
+                </div>
+                <div class="color-swatches">
+                    <div class="color-swatch color-primary">
+                        <div class="color-name">Primary</div>
+                        <div class="color-hex">#2563EB</div>
+                        <div class="color-usage">Blue 600 - Botões, links, destaque</div>
+                    </div>
+                    <div class="color-swatch color-secondary">
+                        <div class="color-name">Secondary</div>
+                        <div class="color-hex">#DC2626</div>
+                        <div class="color-usage">Red 600 - Intensidade, alertas</div>
+                    </div>
+                    <div class="color-swatch color-accent">
+                        <div class="color-name">Accent</div>
+                        <div class="color-hex">#059669</div>
+                        <div class="color-usage">Emerald 600 - Progresso, sucesso</div>
+                    </div>
+                    <div class="color-swatch color-background">
+                        <div class="color-name">Background</div>
+                        <div class="color-hex">#F9FAFB</div>
+                        <div class="color-usage">Fundo principal</div>
+                    </div>
+                    <div class="color-swatch color-text">
+                        <div class="color-name">Text</div>
+                        <div class="color-hex">#111827</div>
+                        <div class="color-usage">Texto principal</div>
+                    </div>
+                    <div class="color-swatch color-muted">
+                        <div class="color-name">Muted</div>
+                        <div class="color-hex">#6B7280</div>
+                        <div class="color-usage">Texto secundário</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exemplos de UI - Opção 1 -->
+        <div class="example-section">
+            <div class="example-title">Opção 1: Athletic Performance - Exemplos de Interface</div>
+            
+            <div class="header-preview">
+                <div class="logo-preview">
+                    <div class="logo-icon logo-icon-1">AR</div>
+                    <div class="logo-text" style="background: linear-gradient(135deg, #E64A19, #2563EB); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Athera Run</div>
+                </div>
+                <div class="nav-items">
+                    <div class="nav-item nav-item-1">Dashboard</div>
+                    <div class="nav-item nav-item-1">Treinos</div>
+                    <div class="nav-item nav-item-1">Perfil</div>
+                </div>
+            </div>
+
+            <div class="ui-grid">
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Botões</div>
+                    <button class="btn btn-primary-1">Iniciar Treino</button>
+                    <button class="btn btn-primary-1" style="margin-top: 8px; opacity: 0.8;">Ver Detalhes</button>
+                </div>
+
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Card de Treino</div>
+                    <div class="card-demo card-demo-1">
+                        <h3>Treino Intervalado</h3>
+                        <p>8x 400m com recuperação de 90s</p>
+                        <span class="badge badge-1">Intervalado</span>
+                        <span class="badge badge-success">Concluído</span>
+                    </div>
+                </div>
+
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Estatísticas</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Distância Total</div>
+                        <div class="stat-value stat-value-1">42.5 km</div>
+                        <div class="stat-change">↑ 12% vs semana passada</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exemplos de UI - Opção 2 -->
+        <div class="example-section">
+            <div class="example-title">Opção 2: Premium Tech - Exemplos de Interface</div>
+            
+            <div class="header-preview">
+                <div class="logo-preview">
+                    <div class="logo-icon logo-icon-2">AR</div>
+                    <div class="logo-text" style="background: linear-gradient(135deg, #7C3AED, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Athera Run</div>
+                </div>
+                <div class="nav-items">
+                    <div class="nav-item nav-item-2">Dashboard</div>
+                    <div class="nav-item nav-item-2">Treinos</div>
+                    <div class="nav-item nav-item-2">Perfil</div>
+                </div>
+            </div>
+
+            <div class="ui-grid">
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Botões</div>
+                    <button class="btn btn-primary-2">Iniciar Treino</button>
+                    <button class="btn btn-primary-2" style="margin-top: 8px; opacity: 0.8;">Ver Detalhes</button>
+                </div>
+
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Card de Treino</div>
+                    <div class="card-demo card-demo-2">
+                        <h3>Treino Intervalado</h3>
+                        <p>8x 400m com recuperação de 90s</p>
+                        <span class="badge badge-2">Intervalado</span>
+                        <span class="badge badge-success">Concluído</span>
+                    </div>
+                </div>
+
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Estatísticas</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Distância Total</div>
+                        <div class="stat-value stat-value-2">42.5 km</div>
+                        <div class="stat-change">↑ 12% vs semana passada</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exemplos de UI - Opção 3 -->
+        <div class="example-section">
+            <div class="example-title">Opção 3: Clean Runner - Exemplos de Interface</div>
+            
+            <div class="header-preview">
+                <div class="logo-preview">
+                    <div class="logo-icon logo-icon-3">AR</div>
+                    <div class="logo-text" style="background: linear-gradient(135deg, #2563EB, #DC2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Athera Run</div>
+                </div>
+                <div class="nav-items">
+                    <div class="nav-item nav-item-3">Dashboard</div>
+                    <div class="nav-item nav-item-3">Treinos</div>
+                    <div class="nav-item nav-item-3">Perfil</div>
+                </div>
+            </div>
+
+            <div class="ui-grid">
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Botões</div>
+                    <button class="btn btn-primary-3">Iniciar Treino</button>
+                    <button class="btn btn-primary-3" style="margin-top: 8px; opacity: 0.8;">Ver Detalhes</button>
+                </div>
+
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Card de Treino</div>
+                    <div class="card-demo card-demo-3">
+                        <h3>Treino Intervalado</h3>
+                        <p>8x 400m com recuperação de 90s</p>
+                        <span class="badge badge-3">Intervalado</span>
+                        <span class="badge badge-success">Concluído</span>
+                    </div>
+                </div>
+
+                <div class="ui-preview">
+                    <div class="ui-preview-title">Estatísticas</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Distância Total</div>
+                        <div class="stat-value stat-value-3">42.5 km</div>
+                        <div class="stat-change">↑ 12% vs semana passada</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px; padding: 40px; background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+            <h2 style="margin-bottom: 16px; color: #0f172a;">Qual paleta escolher?</h2>
+            <p style="color: #64748b; max-width: 600px; margin: 0 auto;">
+                A <strong>Opção 1 (Athletic Performance)</strong> é recomendada por transmitir energia atlética, 
+                ser similar ao Strava (referência de mercado) e ter excelente legibilidade. 
+                Mas a decisão final é sua!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
