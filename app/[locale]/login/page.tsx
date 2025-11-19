@@ -107,18 +107,18 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
-      <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 w-full max-w-md shadow-xl">
-        <CardHeader className="space-y-1">
-          <div className="flex justify-center mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-blue-600 rounded-xl shadow-lg">
-              <span className="text-white font-bold text-2xl">M</span>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-slate-50 p-4">
+      <Card className="w-full max-w-md shadow-elevation-3 border-slate-200">
+        <CardHeader className="space-y-3 text-center">
+          <div className="flex justify-center mb-2">
+            <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-brand-primary to-blue-600 rounded-xl shadow-md">
+              <Mail className="text-white h-7 w-7" strokeWidth={2.5} />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center font-bold">
+          <CardTitle className="text-2xl font-bold text-slate-900">
             {t('title')}
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-slate-600">
             {t('subtitle')}
           </CardDescription>
         </CardHeader>
@@ -131,9 +131,9 @@ function LoginContent() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{t('email')}</Label>
+              <Label htmlFor="email" className="text-slate-700 font-medium">{t('email')}</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                 <Input
                   id="email"
                   type="email"
@@ -148,9 +148,9 @@ function LoginContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">{t('password')}</Label>
+              <Label htmlFor="password" className="text-slate-700 font-medium">{t('password')}</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                 <Input
                   id="password"
                   type="password"
@@ -166,7 +166,7 @@ function LoginContent() {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700"
+              className="w-full shadow-md"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -182,37 +182,35 @@ function LoginContent() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <Separator />
+              <Separator className="bg-slate-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
+              <span className="bg-white px-2 text-slate-500 font-medium">
                 {t('orContinueWith')}
               </span>
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <Button
-              variant="outline"
-              onClick={handleGoogleSignIn}
-              disabled={isGoogleLoading || isLoading}
-              className="w-full max-w-xs"
-            >
-              {isGoogleLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <Chrome className="mr-2 h-4 w-4" />
-                  {t('googleSignIn')}
-                </>
-              )}
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            onClick={handleGoogleSignIn}
+            disabled={isGoogleLoading || isLoading}
+            className="w-full border-2"
+          >
+            {isGoogleLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <Chrome className="mr-2 h-4 w-4" />
+                {t('googleSignIn')}
+              </>
+            )}
+          </Button>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-center text-muted-foreground">
+        <CardFooter className="flex flex-col space-y-2 border-t border-slate-100 pt-6">
+          <div className="text-sm text-center text-slate-600">
             {t('noAccount')}{' '}
-            <Link href={`/${locale}/signup`} className="text-orange-600 hover:text-orange-700 font-medium">
+            <Link href={`/${locale}/signup`} className="text-brand-primary hover:text-brand-primary-dark font-semibold">
               {t('signUpLink')}
             </Link>
           </div>
@@ -228,10 +226,10 @@ export default function LoginPage() {
   
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
-          <p className="text-sm text-muted-foreground">{t('loading', 'common.loading')}</p>
+          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+          <p className="text-sm text-slate-600">{t('loading', 'common.loading')}</p>
         </div>
       </div>
     }>
