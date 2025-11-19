@@ -82,22 +82,23 @@
 
 ## 📊 Progresso Geral
 
-**Completo:** 5/20 fases (25%) ⭐
+**Completo:** 7/20 fases (35%) ⭐
 
 - ✅ Fase 1: Design System
 - ✅ Fase 2: Header
 - ✅ Fase 3: Landing Page
 - ✅ Fase 4: Dashboard
-- ✅ Fase 5: Plano de Treino ⭐ **COMPLETA**
-- ⏳ Fase 6: Tracking (NEXT)
-- ⏳ Fase 7-20: Restante
+- ✅ Fase 5: Plano de Treino
+- ✅ Fase 6: Tracking ⭐ **COMPLETA**
+- ✅ Fase 7: Profile ⭐ **COMPLETA**
+- ⏳ Fase 8-20: Restante (65%)
 
-**Arquivos Modificados:** 14 arquivos
-**Commits:** 8 commits limpos
-**Emojis Removidos Fase 5:** 5+ (📊, 🏃, 💪, 🚴)
-**Total Emojis Removidos:** 40+
+**Arquivos Modificados:** 16 arquivos
+**Commits:** 11 commits limpos
+**Emojis Removidos:** 50+
+**Páginas Principais:** 7/7 completas ✅
 
-**Status:** 25% completo - 1/4 do projeto!
+**Status:** 35% completo - Mais de 1/3 do projeto!
 **Branch:** redesign/athletic-performance
 **Última atualização:** 19/11/2025
 
