@@ -76,16 +76,16 @@ export default function SubscriptionStatusCard() {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-slate-200 shadow-elevation-2">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-slate-900">
+            <Crown className="w-5 h-5 text-brand-primary" />
             Assinatura
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            <Loader2 className="w-6 h-6 animate-spin text-brand-primary" />
           </div>
         </CardContent>
       </Card>
@@ -100,11 +100,11 @@ export default function SubscriptionStatusCard() {
   const isCanceled = subscription.subscription?.cancelAtPeriodEnd || false;
 
   const getStatusBadge = () => {
-    if (isFree) return <Badge variant="secondary">Gratuito</Badge>;
+    if (isFree) return <Badge variant="secondary" className="bg-slate-100 text-slate-800">Gratuito</Badge>;
     if (isCanceled) return <Badge variant="destructive">Cancelado</Badge>;
-    if (isTrial) return <Badge className="bg-blue-500">Trial</Badge>;
-    if (isActive) return <Badge className="bg-green-500">Ativo</Badge>;
-    return <Badge variant="secondary">{subscription.subscription?.status || 'FREE'}</Badge>;
+    if (isTrial) return <Badge className="bg-blue-500 hover:bg-blue-600">Trial</Badge>;
+    if (isActive) return <Badge className="bg-emerald-500 hover:bg-emerald-600">Ativo</Badge>;
+    return <Badge variant="secondary" className="bg-slate-100 text-slate-800">{subscription.subscription?.status || 'FREE'}</Badge>;
   };
 
   const getPlanName = () => {
@@ -126,15 +126,15 @@ export default function SubscriptionStatusCard() {
   const nextBilling = getNextBillingDate();
 
   return (
-    <Card>
+    <Card className="border-slate-200 shadow-elevation-2">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Crown className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-slate-900">
+              <Crown className="w-5 h-5 text-brand-primary" />
               Assinatura
             </CardTitle>
-            <CardDescription className="mt-2">
+            <CardDescription className="mt-2 text-slate-600">
               {getPlanName()}
             </CardDescription>
           </div>

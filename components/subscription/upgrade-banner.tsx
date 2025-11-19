@@ -43,41 +43,41 @@ export default function UpgradeBanner({ feature, className = '' }: UpgradeBanner
   }
 
   return (
-    <Card className={`relative overflow-hidden border-yellow-500/50 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 ${className}`}>
+    <Card className={`relative overflow-hidden border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 ${className}`}>
       <button
         onClick={handleDismiss}
-        className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-slate-900/5 transition-colors"
       >
-        <X className="w-4 h-4" />
+        <X className="w-4 h-4 text-slate-600" />
       </button>
 
       <div className="p-6">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center shadow-elevation-2">
               <Crown className="w-6 h-6 text-white" />
             </div>
           </div>
 
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-slate-900 mb-1 flex items-center gap-2">
               Desbloqueie Todo o Potencial do Athera Run
-              <Sparkles className="w-4 h-4 text-yellow-600" />
+              <Sparkles className="w-4 h-4 text-brand-primary" />
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-slate-600 mb-4">
               {feature 
                 ? `Para acessar ${feature}, faça upgrade para Premium e tenha:`
                 : 'Faça upgrade para Premium e tenha acesso a:'
               }
             </p>
 
-            <ul className="space-y-2 mb-4 text-sm">
+            <ul className="space-y-2 mb-4 text-sm text-slate-700">
               <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-600" />
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
                 Integração completa com Strava
               </li>
               <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-600" />
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
                 Auto-ajuste inteligente de treinos
               </li>
               <li className="flex items-center gap-2">
