@@ -81,50 +81,50 @@ export default function UserDropdown() {
           title={t('label')}
           role="button"
         >
-          <Avatar className="h-10 w-10 border-2 border-orange-200 hover:border-orange-300 transition-colors">
+          <Avatar className="h-10 w-10 border-2 border-brand-primary/20 hover:border-brand-primary/40 transition-all shadow-sm">
             <AvatarImage src={session.user.image || ''} alt={session.user.name || ''} />
-            <AvatarFallback className="bg-gradient-to-r from-orange-500 to-blue-600 text-white font-semibold">
+            <AvatarFallback className="bg-gradient-to-br from-brand-primary to-orange-600 text-white font-semibold text-sm">
               {getInitials(session.user.name)}
             </AvatarFallback>
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56 shadow-elevation-3 border-slate-200" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-1.5">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-medium leading-none">{session.user.name}</p>
+              <p className="text-sm font-semibold leading-none text-slate-900">{session.user.name}</p>
               {subscriptionStatus && <PremiumBadge status={subscriptionStatus as 'FREE' | 'TRIAL' | 'ACTIVE'} />}
             </div>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-xs leading-none text-slate-500">
               {session.user.email}
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-slate-200" />
         {!isPremium && (
           <>
-            <DropdownMenuItem onClick={() => router.push('/pricing')} className="cursor-pointer text-orange-600 font-medium">
+            <DropdownMenuItem onClick={() => router.push('/pricing')} className="cursor-pointer text-brand-primary font-semibold hover:bg-orange-50 focus:bg-orange-50">
               <Crown className="mr-2 h-4 w-4" />
               <span>{t('upgrade')}</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-slate-200" />
           </>
         )}
-        <DropdownMenuItem onClick={() => router.push('/perfil')} className="cursor-pointer">
-          <Settings className="mr-2 h-4 w-4" />
-          <span>{t('editProfile')}</span>
+        <DropdownMenuItem onClick={() => router.push('/perfil')} className="cursor-pointer hover:bg-slate-50 focus:bg-slate-50">
+          <Settings className="mr-2 h-4 w-4 text-slate-600" />
+          <span className="text-slate-700">{t('editProfile')}</span>
         </DropdownMenuItem>
         {session.user.isAdmin && (
-          <DropdownMenuItem onClick={() => router.push('/admin')} className="cursor-pointer">
-            <Shield className="mr-2 h-4 w-4" />
-            <span>{t('adminPanel')}</span>
+          <DropdownMenuItem onClick={() => router.push('/admin')} className="cursor-pointer hover:bg-slate-50 focus:bg-slate-50">
+            <Shield className="mr-2 h-4 w-4 text-slate-600" />
+            <span className="text-slate-700">{t('adminPanel')}</span>
           </DropdownMenuItem>
         )}
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-slate-200" />
         <DropdownMenuItem 
           onClick={handleLogout} 
-          className="cursor-pointer text-red-600 focus:text-red-600"
+          className="cursor-pointer text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-600"
           disabled={isLoggingOut}
         >
           {isLoggingOut ? (
