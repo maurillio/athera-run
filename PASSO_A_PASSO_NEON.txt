@@ -1,180 +1,135 @@
-╔═══════════════════════════════════════════════════════════════╗
-║          PASSO-A-PASSO: Aplicar Migration v3.0.0 no Neon     ║
-║                 (Solução para erro _prisma_migrations)        ║
-╚═══════════════════════════════════════════════════════════════╝
+═══════════════════════════════════════════════════════════
+   🗄️ PASSO A PASSO - APLICAR MIGRATION NO NEON
+═══════════════════════════════════════════════════════════
 
-🎯 OBJETIVO: Adicionar 8 campos v3.0.0 no banco de produção
+⏱️ TEMPO: 2 minutos
+📁 ARQUIVO: apply_lgpd_migration.sql
+✅ STATUS: Pronto para aplicar
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+───────────────────────────────────────────────────────────
+PASSO 1: Acessar Neon Dashboard
+───────────────────────────────────────────────────────────
 
-📋 PASSO 1: Abrir Neon Console
+1. Abra seu navegador
+2. Acesse: https://console.neon.tech
+3. Faça login (se necessário)
+4. Selecione o projeto: athera-run
 
-  1. Acesse: https://console.neon.tech/
-  2. Faça login
-  3. Selecione o projeto: athera-run
-  4. Clique em: "SQL Editor" (menu lateral)
+───────────────────────────────────────────────────────────
+PASSO 2: Abrir SQL Editor
+───────────────────────────────────────────────────────────
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. No menu lateral esquerdo, clique em: "SQL Editor"
+   OU
+2. Clique na aba "SQL" no topo
 
-📋 PASSO 2: Copiar e Colar o SQL
+Você verá um editor de SQL em branco.
 
-  Arquivo: NEON_MIGRATION_SIMPLE.sql
-  
-  1. Abra o arquivo NEON_MIGRATION_SIMPLE.sql
-  2. Copie TODO o conteúdo (Ctrl+A, Ctrl+C)
-  3. Cole no SQL Editor do Neon (Ctrl+V)
-  4. Clique em "Run" ou pressione Ctrl+Enter
+───────────────────────────────────────────────────────────
+PASSO 3: Copiar Migration SQL
+───────────────────────────────────────────────────────────
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Abra o arquivo: apply_lgpd_migration.sql
+2. Selecione TODO o conteúdo (Ctrl+A)
+3. Copie (Ctrl+C)
 
-📋 PASSO 3: Verificar Resultado
+OU use este comando se estiver no terminal:
+cat apply_lgpd_migration.sql | pbcopy  # Mac
+cat apply_lgpd_migration.sql | xclip   # Linux
 
-  Você deve ver 3 resultados:
+───────────────────────────────────────────────────────────
+PASSO 4: Colar e Executar
+───────────────────────────────────────────────────────────
 
-  ✅ Resultado 1 (PASSO 2 do SQL):
-     - 0 linhas = Campos NÃO existem (OK, vai criar)
-     - 3 linhas = Campos JÁ existem (OK, já aplicado antes)
+1. No SQL Editor do Neon, cole o conteúdo (Ctrl+V)
+2. Revise rapidamente o SQL
+3. Clique no botão: "Run" (ou pressione Ctrl+Enter)
+4. Aguarde a execução (deve demorar 1-2 segundos)
 
-  ✅ Resultado 2 (PASSO 5 do SQL):
-     - 8 linhas com os campos v3:
-       • hasRunBefore
-       • currentlyInjured
-       • avgSleepHours
-       • tracksMenstrualCycle
-       • avgCycleLength
-       • lastPeriodDate
-       • workDemand
-       • familyDemand
+───────────────────────────────────────────────────────────
+PASSO 5: Verificar Sucesso
+───────────────────────────────────────────────────────────
 
-  ✅ Resultado 3 (PASSO 6 do SQL):
-     - 5 perfis de atletas com os novos campos
-     - Valores default para perfis antigos:
-       • hasRunBefore = true
-       • currentlyInjured = false
-       • avgSleepHours = NULL
+Você deve ver uma mensagem:
+✅ "Query executed successfully"
+✅ "Affected rows: 0"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Se aparecer erro, veja a seção de troubleshooting abaixo.
 
-📋 PASSO 4: Validação Manual (Opcional)
+───────────────────────────────────────────────────────────
+PASSO 6: Validar Tabelas Criadas
+───────────────────────────────────────────────────────────
 
-  Execute cada query separadamente para confirmar:
+Execute estas queries para confirmar:
 
-  Query 1 - Ver campos criados:
-  ─────────────────────────────────────────────────────
-  SELECT column_name 
-  FROM information_schema.columns 
-  WHERE table_name = 'athlete_profiles' 
-    AND column_name IN (
-      'hasRunBefore',
-      'currentlyInjured',
-      'avgSleepHours'
-    );
-  ─────────────────────────────────────────────────────
-  Esperado: 3 linhas
+-- Ver tabela user_consents
+SELECT * FROM user_consents LIMIT 1;
 
-  Query 2 - Testar SELECT:
-  ─────────────────────────────────────────────────────
-  SELECT 
-    id,
-    "hasRunBefore",
-    "currentlyInjured",
-    "avgSleepHours"
-  FROM "athlete_profiles"
-  LIMIT 3;
-  ─────────────────────────────────────────────────────
-  Esperado: Perfis com valores
+-- Ver tabela audit_logs
+SELECT * FROM audit_logs LIMIT 1;
 
-  Query 3 - Verificar migration registrada:
-  ─────────────────────────────────────────────────────
-  SELECT 
-    migration_name,
-    finished_at
-  FROM "_prisma_migrations"
-  WHERE migration_name LIKE '%v3_profile%';
-  ─────────────────────────────────────────────────────
-  Esperado: 1 linha (20251113144016_add_v3_profile_fields)
+-- Listar todas as tabelas
+SELECT tablename FROM pg_tables 
+WHERE schemaname = 'public' 
+ORDER BY tablename;
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Deve aparecer:
+✅ user_consents
+✅ audit_logs
+✅ users (já existia)
+✅ athlete_profiles (já existia)
+✅ ... outras tabelas existentes
 
-✅ CHECKLIST DE SUCESSO
+───────────────────────────────────────────────────────────
+✅ PRONTO!
+───────────────────────────────────────────────────────────
 
-  [ ] SQL executou sem erros
-  [ ] 8 campos aparecem na validação
-  [ ] SELECT funciona com novos campos
-  [ ] Migration registrada em _prisma_migrations
-  [ ] Perfis antigos têm valores default
+Tabelas criadas com sucesso!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Próximo passo: Testar o sistema
+Arquivo: GUIA_TESTES_LGPD_COMPLETO.md
 
-🎯 PRÓXIMO PASSO: Testar em Produção
+───────────────────────────────────────────────────────────
+🚨 TROUBLESHOOTING
+───────────────────────────────────────────────────────────
 
-  1. Acesse: https://seu-app.vercel.app/onboarding
-  
-  2. Verifique Step 2:
-     ✅ Campo "Você já correu antes?" aparece?
-  
-  3. Verifique Step 4:
-     ✅ Campo "Está lesionado?" aparece?
-     ✅ Campo "Horas de sono?" aparece?
-     ✅ Campo "Ciclo menstrual?" aparece (mulheres)?
-  
-  4. Complete o onboarding
-  
-  5. Volte no Neon e execute:
-     ─────────────────────────────────────────────────
-     SELECT 
-       "hasRunBefore",
-       "currentlyInjured",
-       "avgSleepHours"
-     FROM "athlete_profiles"
-     ORDER BY "createdAt" DESC
-     LIMIT 1;
-     ─────────────────────────────────────────────────
-     
-     Deve mostrar os valores que você preencheu!
+ERRO: "relation user_consents already exists"
+✅ SOLUÇÃO: Tabela já foi criada! Tudo OK, pode testar.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ERRO: "relation users does not exist"
+❌ PROBLEMA: Banco de dados errado ou vazio
+✅ SOLUÇÃO: Verificar se está no projeto correto
 
-🚨 SE DER ERRO:
+ERRO: "syntax error at or near..."
+❌ PROBLEMA: SQL colado incorretamente
+✅ SOLUÇÃO: Copiar novamente TODO o arquivo
 
-  Erro: "permission denied"
-  ─────────────────────────────────────────────────────
-  Solução: Use usuário admin/owner do Neon
-  ─────────────────────────────────────────────────────
+ERRO: "permission denied"
+❌ PROBLEMA: Sem permissão de admin
+✅ SOLUÇÃO: Usar usuário owner do projeto
 
-  Erro: "table athlete_profiles does not exist"
-  ─────────────────────────────────────────────────────
-  Solução: Verifique se está no banco correto
-  Execute: SELECT current_database();
-  ─────────────────────────────────────────────────────
+───────────────────────────────────────────────────────────
+📞 SUPORTE
+───────────────────────────────────────────────────────────
 
-  Erro: "column already exists"
-  ─────────────────────────────────────────────────────
-  Solução: Campos já foram adicionados! Tudo OK ✅
-  Apenas registre a migration (PASSO 4 do SQL)
-  ─────────────────────────────────────────────────────
+Se continuar com erro:
+1. Tire print do erro
+2. Copie a mensagem completa
+3. Verifique se é o banco de produção
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Documentação Neon:
+https://neon.tech/docs/get-started-with-neon/query-with-neon-sql-editor
 
-📄 ARQUIVOS DE APOIO:
+───────────────────────────────────────────────────────────
+✅ APÓS APLICAR A MIGRATION
+───────────────────────────────────────────────────────────
 
-  1. NEON_MIGRATION_SIMPLE.sql       (Execute este!)
-  2. FIX_NEON_MIGRATION.md           (Guia detalhado)
-  3. PASSO_A_PASSO_NEON.txt          (Este arquivo)
+1. ✅ Tabelas criadas
+2. ➡️ PRÓXIMO: Testar signup em https://atherarun.com/signup
+3. ➡️ Verificar checkboxes aparecem
+4. ➡️ Criar conta de teste
+5. ➡️ Fazer onboarding completo
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Guia completo: GUIA_TESTES_LGPD_COMPLETO.md
 
-🎉 QUANDO TUDO FUNCIONAR:
-
-  ✅ 8 campos v3 no banco
-  ✅ Migration registrada
-  ✅ Onboarding mostra campos novos
-  ✅ Dados são salvos corretamente
-  ✅ Planos são gerados com v3
-  
-  🚀 v3.0.0 ESTÁ EM PRODUÇÃO! 🚀
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-💡 DICA: Salve este arquivo para referência futura!
-
+═══════════════════════════════════════════════════════════
