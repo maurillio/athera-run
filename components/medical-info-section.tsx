@@ -120,9 +120,9 @@ export default function MedicalInfoSection() {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-slate-200 shadow-elevation-2">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
         </CardContent>
       </Card>
     );
@@ -130,30 +130,30 @@ export default function MedicalInfoSection() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'mild': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'mild': return 'bg-amber-100 text-amber-800 border-amber-300';
       case 'moderate': return 'bg-orange-100 text-orange-800 border-orange-300';
       case 'severe': return 'bg-red-100 text-red-800 border-red-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+      default: return 'bg-slate-100 text-slate-800 border-slate-300';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'recovered': return 'bg-green-100 text-green-800 border-green-300';
+      case 'recovered': return 'bg-emerald-100 text-emerald-800 border-emerald-300';
       case 'recovering': return 'bg-blue-100 text-blue-800 border-blue-300';
       case 'chronic': return 'bg-purple-100 text-purple-800 border-purple-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+      default: return 'bg-slate-100 text-slate-800 border-slate-300';
     }
   };
 
   return (
-    <Card>
+    <Card className="border-slate-200 shadow-elevation-2">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Heart className="h-5 w-5 text-red-500" />
+        <CardTitle className="flex items-center gap-2 text-slate-900">
+          <Heart className="h-5 w-5 text-red-600" />
           Informações Médicas
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-slate-600">
           Histórico de lesões e condições que podem afetar seu treinamento
         </CardDescription>
       </CardHeader>
@@ -161,14 +161,15 @@ export default function MedicalInfoSection() {
         {/* Histórico de Lesões */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-500" />
+            <Label className="flex items-center gap-2 text-slate-700">
+              <AlertTriangle className="h-4 w-4 text-orange-600" />
               Histórico de Lesões
             </Label>
             <Button
               size="sm"
               variant="outline"
               onClick={() => setShowAddInjury(!showAddInjury)}
+              className="border-slate-300 text-slate-700 hover:bg-slate-50"
             >
               <Plus className="h-4 w-4 mr-1" />
               Adicionar Lesão
@@ -176,7 +177,7 @@ export default function MedicalInfoSection() {
           </div>
 
           {showAddInjury && (
-            <div className="p-4 border rounded-lg bg-gray-50 space-y-3">
+            <div className="p-4 border border-slate-200 rounded-lg bg-slate-50 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">Tipo de Lesão</Label>

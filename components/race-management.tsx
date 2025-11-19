@@ -173,9 +173,9 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
 
   const getPriorityColor = (priority: 'A' | 'B' | 'C') => {
     const colors = {
-      'A': 'bg-red-500 text-white',
-      'B': 'bg-yellow-500 text-black',
-      'C': 'bg-blue-500 text-white'
+      'A': 'bg-red-600 text-white hover:bg-red-700',
+      'B': 'bg-amber-500 text-white hover:bg-amber-600',
+      'C': 'bg-blue-600 text-white hover:bg-blue-700'
     };
     return colors[priority];
   };
@@ -185,15 +185,15 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
   };
 
   return (
-    <Card>
+    <Card className="border-slate-200 shadow-elevation-2">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-slate-900">
+              <Calendar className="h-5 w-5 text-brand-primary" />
               {t('title')}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-600">
               {t('description')}
             </CardDescription>
           </div>
@@ -203,6 +203,7 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
               disabled={isClassifying || races.length === 0}
               variant="outline"
               size="sm"
+              className="border-slate-300 text-slate-700 hover:bg-slate-50"
             >
               {isClassifying ? (
                 <>
@@ -532,20 +533,29 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-2 text-sm mb-2">
-                  <span>📍 {race.distance}</span>
-                  {race.targetTime && <span>🎯 {t('goal')}: {race.targetTime}</span>}
+                <div className="flex flex-wrap gap-2 text-sm mb-2 text-slate-700">
+                  <span className="flex items-center gap-1">
+                    <Target className="h-3.5 w-3.5 text-brand-primary" />
+                    {race.distance}
+                  </span>
+                  {race.targetTime && (
+                    <span className="flex items-center gap-1">
+                      <Target className="h-3.5 w-3.5 text-emerald-600" />
+                      {t('goal')}: {race.targetTime}
+                    </span>
+                  )}
                   {race.weeksBeforeA !== null && race.priority !== 'A' && (
-                    <span className="text-muted-foreground">
+                    <span className="text-slate-500">
                       • {t('weeksBeforeA', { weeks: race.weeksBeforeA })}
                     </span>
                   )}
                 </div>
 
                 {race.trainingSuggest && (
-                  <p className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
-                    💡 {race.trainingSuggest}
-                  </p>
+                  <div className="flex items-start gap-2 text-xs text-slate-600 bg-blue-50 p-2 rounded border border-blue-200">
+                    <Info className="h-3.5 w-3.5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <span>{race.trainingSuggest}</span>
+                  </div>
                 )}
               </div>
             ))}
