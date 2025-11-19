@@ -139,10 +139,10 @@ export default function AdminPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
         <Header />
         <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
         </div>
       </div>
     );
@@ -156,44 +156,44 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <Header />
       
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Painel Administrativo</h1>
-          <p className="text-muted-foreground text-lg">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-slate-900">Painel Administrativo</h1>
+          <p className="text-slate-600 text-lg">
             Gerencie usuários e permissões da plataforma
           </p>
         </div>
 
         {/* Estatísticas */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8">
-          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+          <Card className="transition-all duration-200 hover:shadow-elevation-2 hover:-translate-y-0.5 border-slate-200 shadow-elevation-1">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Total de Usuários
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stats.total}</div>
+              <div className="text-3xl font-bold text-slate-900">{stats.total}</div>
             </CardContent>
           </Card>
 
-          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+          <Card className="transition-all duration-200 hover:shadow-elevation-2 hover:-translate-y-0.5 border-slate-200 shadow-elevation-1">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Usuários Premium
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600">{stats.premium}</div>
+              <div className="text-2xl font-bold text-amber-600">{stats.premium}</div>
             </CardContent>
           </Card>
 
-          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+          <Card className="transition-all duration-200 hover:shadow-elevation-2 hover:-translate-y-0.5 border-slate-200 shadow-elevation-1">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Administradores
               </CardTitle>
             </CardHeader>
