@@ -212,13 +212,13 @@ export default function PlanoPage() {
 
   const getPhaseColor = (phase: string) => {
     const colors: Record<string, string> = {
-      'base': 'bg-blue-500',
-      'build': 'bg-green-500',
-      'peak': 'bg-orange-500',
-      'taper': 'bg-purple-500',
-      'race': 'bg-red-500'
+      'base': 'bg-blue-600',
+      'build': 'bg-emerald-600',
+      'peak': 'bg-brand-primary',
+      'taper': 'bg-purple-600',
+      'race': 'bg-red-600'
     };
-    return colors[phase] || 'bg-gray-500';
+    return colors[phase] || 'bg-slate-600';
   };
 
   const getWorkoutIcon = (type: string, title: string) => {
@@ -295,80 +295,92 @@ export default function PlanoPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
-              <Calendar className="h-8 w-8" />
+            <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+              <Calendar className="h-8 w-8 text-brand-primary" />
               {t('title')}
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-slate-600 text-lg">
               {t('subtitle', { goal: getDistanceLabel(plan.goalDistance) })}
             </p>
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <Card>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {t('summary.goal')}
-                </CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="h-4 w-4 text-brand-primary" />
+                  <CardTitle className="text-sm font-medium text-slate-600">
+                    {t('summary.goal')}
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl sm:text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">
                   {getDistanceLabel(plan.goalDistance)}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {formatLocalizedDate(plan.targetRaceDate, locale)}
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {t('summary.currentWeek')}
-                </CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="h-4 w-4 text-blue-600" />
+                  <CardTitle className="text-sm font-medium text-slate-600">
+                    {t('summary.currentWeek')}
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl sm:text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">
                   {currentWeekNum}/{plan.totalWeeks}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {currentWeek && t(`plano.phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase)}
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {t('summary.progress')}
-                </CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  <CardTitle className="text-sm font-medium text-slate-600">
+                    {t('summary.progress')}
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl sm:text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold text-brand-primary">
                   {Math.round(plan.completionRate)}%
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {t('summary.completedWorkouts')}
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {t('summary.totalDuration')}
-                </CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="h-4 w-4 text-slate-600" />
+                  <CardTitle className="text-sm font-medium text-slate-600">
+                    {t('summary.totalDuration')}
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl sm:text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">
                   {plan.totalWeeks}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {t('summary.weeks')}
                 </p>
               </CardContent>
@@ -376,13 +388,15 @@ export default function PlanoPage() {
           </div>
 
           {/* Week Navigation */}
-          <Card className="mb-8">
+          <Card className="mb-8 border-slate-200 shadow-elevation-2">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>{t('weekNavigation.week')} {viewingWeek} {t('weekNavigation.of')} {plan.totalWeeks}</CardTitle>
+                  <CardTitle className="text-slate-900">
+                    {t('weekNavigation.week')} {viewingWeek} {t('weekNavigation.of')} {plan.totalWeeks}
+                  </CardTitle>
                   {currentWeek && (
-                    <CardDescription>
+                    <CardDescription className="text-slate-600">
                       {formatShortDate(currentWeek.startDate, locale)} - {formatShortDate(currentWeek.endDate, locale)}
                       <Badge className={`${getPhaseColor(currentWeek.phase)} text-white ml-2`}>
                         {t(`plano.phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase).toUpperCase()}
@@ -435,10 +449,13 @@ export default function PlanoPage() {
                         style={{ width: `${(currentWeek.completedWorkouts / currentWeek.totalWorkouts) * 100}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>📊 Volume: {currentWeek.totalDistance.toFixed(1)} km</span>
-                      <span className="font-medium">
-                        {Math.round((currentWeek.completedWorkouts / currentWeek.totalWorkouts) * 100)}% concluído
+                    <div className="flex justify-between items-center text-sm text-slate-600">
+                      <span className="flex items-center gap-1.5">
+                        <Activity className="h-4 w-4 text-brand-primary" />
+                        {t('weekNavigation.volume')}: {currentWeek.totalDistance.toFixed(1)} km
+                      </span>
+                      <span className="font-semibold">
+                        {Math.round((currentWeek.completedWorkouts / currentWeek.totalWorkouts) * 100)}% {t('weekNavigation.completed')}
                       </span>
                     </div>
                   </div>
@@ -563,13 +580,16 @@ export default function PlanoPage() {
                                         )}
                                       </div>
                                     ) : (
-                                      <div className="font-medium">
-                                        {dayWorkouts.map((w, idx) => (
-                                          <span key={idx}>
-                                            {w.type === 'run' ? '🏃' : w.type === 'gym' ? '💪' : '🚴'} {w.title}
-                                            {idx < dayWorkouts.length - 1 && ' • '}
-                                          </span>
-                                        ))}
+                                      <div className="font-medium text-slate-700">
+                                        {dayWorkouts.map((w, idx) => {
+                                          const icon = getWorkoutIcon(w.type, w.title);
+                                          return (
+                                            <span key={idx} className="inline-flex items-center gap-1">
+                                              {icon} {w.title}
+                                              {idx < dayWorkouts.length - 1 && ' • '}
+                                            </span>
+                                          );
+                                        })}
                                       </div>
                                     )}
                                   </div>
