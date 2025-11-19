@@ -216,8 +216,8 @@ export default function DashboardPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-orange-600" />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
       </div>
     );
   }
@@ -233,17 +233,17 @@ export default function DashboardPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="container mx-auto max-w-6xl px-4 py-8">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">
+            <h1 className="text-4xl font-bold text-slate-900 mb-2">
               {session.user?.name 
                 ? t('welcome', { name: session.user.name })
                 : t('welcomeDefault')
               }
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-slate-600 text-lg">
               {hasCustomPlan 
                 ? t('subtitle')
                 : t('createPlanSubtitle')
@@ -258,13 +258,13 @@ export default function DashboardPage() {
           {hasCustomPlan && <ProgressAnalysisBanner />}
 
           {!hasCustomPlan && (
-            <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mb-8 border-orange-200 bg-orange-50">
+            <Card className="mb-8 border-2 border-orange-200 bg-orange-50 shadow-elevation-2">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-orange-600" />
+                <CardTitle className="flex items-center gap-2 text-slate-900">
+                  <Zap className="h-5 w-5 text-brand-primary" />
                   {t('generatePlan.title')}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-slate-600">
                   {t('generatePlan.description')}
                 </CardDescription>
               </CardHeader>
@@ -272,7 +272,7 @@ export default function DashboardPage() {
                 <Button 
                   onClick={handleGeneratePlan}
                   disabled={generatingPlan}
-                  className="bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
+                  className="shadow-md"
                 >
                   {generatingPlan ? (
                     <>
@@ -292,84 +292,97 @@ export default function DashboardPage() {
 
           {hasCustomPlan && plan && currentWeek && (
             <>
-              {/* Quick Stats - Design System v1.8.3 */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8">
-                <Card>
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t('stats.nextWorkout')}
-                    </CardTitle>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="h-4 w-4 text-brand-primary" />
+                      <CardTitle className="text-sm font-medium text-slate-600">
+                        {t('stats.nextWorkout')}
+                      </CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     {nextWorkout ? (
                       <>
-                        <div className="text-2xl font-bold">
+                        <div className="text-2xl font-bold text-slate-900">
                           {formatShortDate(nextWorkout.date, locale)}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-1">
                           {nextWorkout.title}
                         </p>
                       </>
                     ) : (
-                      <div className="text-sm">{t('stats.noWorkout')}</div>
+                      <div className="text-sm text-slate-600">{t('stats.noWorkout')}</div>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t('stats.currentWeek')}
-                    </CardTitle>
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="h-4 w-4 text-blue-600" />
+                      <CardTitle className="text-sm font-medium text-slate-600">
+                        {t('stats.currentWeek')}
+                      </CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">
+                    <div className="text-2xl font-bold text-slate-900">
                       {currentWeek.weekNumber}/{plan.totalWeeks}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">{currentWeek.phase}</p>
+                    <p className="text-xs text-slate-500 mt-1">{currentWeek.phase}</p>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t('stats.goal')}
-                    </CardTitle>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Target className="h-4 w-4 text-brand-primary" />
+                      <CardTitle className="text-sm font-medium text-slate-600">
+                        {t('stats.goal')}
+                      </CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">
+                    <div className="text-2xl font-bold text-slate-900">
                       {getDistanceLabel(plan.goalDistance)}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       {formatShortDate(plan.targetRaceDate, locale)}
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border-slate-200 shadow-elevation-2 hover:shadow-elevation-3 transition-shadow">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t('stats.progress')}
-                    </CardTitle>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Award className="h-4 w-4 text-emerald-600" />
+                      <CardTitle className="text-sm font-medium text-slate-600">
+                        {t('stats.progress')}
+                      </CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">
+                    <div className="text-2xl font-bold text-brand-primary">
                       {Math.round(plan.completionRate)}%
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       {currentWeek.completedWorkouts}/{currentWeek.totalWorkouts} {t('stats.completed')}
                     </p>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Próximo Treino - Design System v1.8.3 */}
-              <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mb-8 bg-gradient-to-br from-orange-100 to-orange-50 border-orange-500 border-2">
+              {/* Próximo Treino */}
+              <Card className="mb-8 border-2 border-brand-primary bg-gradient-to-br from-orange-50 to-white shadow-elevation-3">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    🔥 {t('upcomingWorkouts.title')}
+                  <CardTitle className="flex items-center gap-2 text-slate-900">
+                    <Zap className="h-5 w-5 text-brand-primary" />
+                    {t('upcomingWorkouts.title')}
                   </CardTitle>
-                  <CardDescription>{t('upcomingWorkouts.description')}</CardDescription>
+                  <CardDescription className="text-slate-600">{t('upcomingWorkouts.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-2">
                   <div className="space-y-3">
@@ -388,10 +401,10 @@ export default function DashboardPage() {
 
                       if (todayAndTomorrow.length === 0) {
                         return (
-                          <div className="text-center py-8 text-muted-foreground">
+                          <div className="text-center py-8 text-slate-600">
                             <p>{t('upcomingWorkouts.noWorkouts')}</p>
                             <p className="text-sm mt-2">
-                              <Link href={`/${locale}/plano`} className="text-orange-600 hover:underline">
+                              <Link href={`/${locale}/plano`} className="text-brand-primary hover:text-brand-primary-dark font-semibold">
                                 {t('upcomingWorkouts.viewFullPlan')}
                               </Link>
                             </p>
@@ -416,14 +429,15 @@ export default function DashboardPage() {
                             }`}
                           >
                             {/* Header com badges */}
-                            <div className="p-4 border-b">
+                            <div className="p-4 border-b border-slate-200">
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
-                                  <Badge className={isToday ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-700"}>
-                                    {isToday ? '🔥 ' + t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
+                                  <Badge variant={isToday ? "default" : "secondary"} className="gap-1">
+                                    {isToday && <Zap className="h-3 w-3" />}
+                                    {isToday ? t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
                                   </Badge>
                                   {workout.isCompleted ? (
-                                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                                   ) : isMissed ? (
                                     <XCircle className="h-5 w-5 text-red-600" />
                                   ) : null}
@@ -444,8 +458,9 @@ export default function DashboardPage() {
                               <div className="px-4 pb-4">
                                 <Button 
                                   onClick={() => handleOpenWorkoutLog(workout)}
-                                  className="w-full bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-700 hover:to-blue-700"
+                                  className="w-full shadow-md"
                                 >
+                                  <CheckCircle2 className="mr-2 h-4 w-4" />
                                   {t('upcomingWorkouts.confirmButton')}
                                 </Button>
                               </div>
@@ -475,12 +490,12 @@ export default function DashboardPage() {
           {/* Main Content */}
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-6">
-              <Card>
+              <Card className="border-slate-200 shadow-elevation-2">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle>{t('quickAccess.title')}</CardTitle>
-                      <CardDescription>{t('quickAccess.description')}</CardDescription>
+                      <CardTitle className="text-slate-900">{t('quickAccess.title')}</CardTitle>
+                      <CardDescription className="text-slate-600">{t('quickAccess.description')}</CardDescription>
                     </div>
                     <TrainingLogDialog onSuccess={() => window.location.reload()} />
                   </div>
@@ -488,26 +503,26 @@ export default function DashboardPage() {
                 <CardContent className="space-y-2">
                 {hasCustomPlan && (
                   <Link href={`/${locale}/plano`}>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button variant="outline" className="w-full justify-start border-2">
                       <Calendar className="mr-2 h-4 w-4" />
                       {t('quickAccess.viewPlan')}
                     </Button>
                   </Link>
                 )}
                 <Link href={`/${locale}/tracking`}>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start border-2">
                     <Activity className="mr-2 h-4 w-4" />
                     {t('quickAccess.registerWorkout')}
                   </Button>
                 </Link>
                 <Link href={`/${locale}/calculator`}>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start border-2">
                     <Target className="mr-2 h-4 w-4" />
                     {t('quickAccess.calculator')}
                   </Button>
                 </Link>
                 <Link href={`/${locale}/training`}>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start border-2">
                     <TrendingUp className="mr-2 h-4 w-4" />
                     {t('quickAccess.aiAnalysis')}
                   </Button>
@@ -520,17 +535,17 @@ export default function DashboardPage() {
           </div>
 
           {/* Advanced Features */}
-          <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 mt-6">
+          <Card className="mt-6 border-slate-200 shadow-elevation-2">
             <CardHeader>
-              <CardTitle>{t('advancedFeatures.title')}</CardTitle>
-              <CardDescription>{t('advancedFeatures.description')}</CardDescription>
+              <CardTitle className="text-slate-900">{t('advancedFeatures.title')}</CardTitle>
+              <CardDescription className="text-slate-600">{t('advancedFeatures.description')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Zap className="h-5 w-5 text-orange-600 mt-0.5" />
+                  <Zap className="h-5 w-5 text-brand-primary mt-0.5" />
                   <div>
-                    <p className="font-medium">{t('advancedFeatures.personalizedPlan')}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-semibold text-slate-900">{t('advancedFeatures.personalizedPlan')}</p>
+                    <p className="text-sm text-slate-600">
                       {hasCustomPlan 
                         ? t('advancedFeatures.personalizedPlanDesc')
                         : t('advancedFeatures.personalizedPlanDescFuture')
@@ -541,15 +556,15 @@ export default function DashboardPage() {
                 <div className="flex items-start gap-3">
                   <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5" />
                   <div>
-                    <p className="font-medium">{t('advancedFeatures.aiAnalysis')}</p>
-                    <p className="text-sm text-muted-foreground">{t('advancedFeatures.aiAnalysisDesc')}</p>
+                    <p className="font-semibold text-slate-900">{t('advancedFeatures.aiAnalysis')}</p>
+                    <p className="text-sm text-slate-600">{t('advancedFeatures.aiAnalysisDesc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Award className="h-5 w-5 text-green-600 mt-0.5" />
+                  <Award className="h-5 w-5 text-emerald-600 mt-0.5" />
                   <div>
-                    <p className="font-medium">{t('advancedFeatures.stravaIntegration')}</p>
-                    <p className="text-sm text-muted-foreground">{t('advancedFeatures.stravaIntegrationDesc')}</p>
+                    <p className="font-semibold text-slate-900">{t('advancedFeatures.stravaIntegration')}</p>
+                    <p className="text-sm text-slate-600">{t('advancedFeatures.stravaIntegrationDesc')}</p>
                   </div>
                 </div>
               </CardContent>
