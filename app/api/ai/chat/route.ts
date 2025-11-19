@@ -118,7 +118,7 @@ DIRETRIZES:
 4. Se a pergunta for sobre ajuste de treino, sugira falar com análise automática
 5. Mencione condições médicas quando relevante
 6. Seja conciso (máximo 200 palavras)
-7. Use emojis apropriados para tornar mais amigável
+7. Use linguagem profissional e objetiva, sem emojis
 8. Responda em português brasileiro
 
 TIPOS DE PERGUNTAS COMUNS:
