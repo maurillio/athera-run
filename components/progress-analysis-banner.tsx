@@ -114,15 +114,17 @@ export default function ProgressAnalysisBanner() {
         <AlertDescription>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div className="flex-1">
-              <p className="font-semibold text-amber-900 mb-1">
-                🎯 Análise Inteligente Disponível
+              <p className="font-semibold text-amber-900 mb-1 flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Análise Inteligente Disponível
               </p>
               <p className="text-sm text-amber-800">
                 {analysis.message}
               </p>
               {analysis.teaser && (
-                <p className="text-xs text-amber-700 mt-2 italic">
-                  💡 {analysis.teaser}
+                <p className="text-xs text-amber-700 mt-2 italic flex items-start gap-1">
+                  <Info className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                  {analysis.teaser}
                 </p>
               )}
               {analysis.completionRate !== undefined && (
@@ -194,6 +196,7 @@ export default function ProgressAnalysisBanner() {
               size="sm" 
               variant="outline"
               onClick={() => setAnalysis(null)}
+              className="border-slate-300 text-slate-700 hover:bg-slate-50"
             >
               Dispensar
             </Button>
