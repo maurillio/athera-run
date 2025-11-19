@@ -59,8 +59,8 @@ export default function TrackingPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-orange-600" />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
       </div>
     );
   }
@@ -72,12 +72,12 @@ export default function TrackingPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">{t('title')}</h1>
-            <p className="text-muted-foreground text-lg">
+            <h1 className="text-4xl font-bold text-slate-900 mb-2">{t('title')}</h1>
+            <p className="text-slate-600 text-lg">
               {t('subtitle')}
             </p>
           </div>
