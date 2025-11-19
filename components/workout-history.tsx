@@ -101,23 +101,30 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
     return t(`subtypes.${subtype}` as any) || subtype;
   };
 
-  const getFeelingEmoji = (feeling: string | null) => {
-    const emojis: { [key: string]: string } = {
-      great: '🔥',
-      good: '👍',
-      ok: '😐',
-      tired: '😴',
-      bad: '😰'
+  const getFeelingIcon = (feeling: string | null) => {
+    if (!feeling) return null;
+    
+    const icons: { [key: string]: { icon: any; color: string } } = {
+      great: { icon: TrendingUp, color: 'text-emerald-600' },
+      good: { icon: Heart, color: 'text-green-600' },
+      ok: { icon: Activity, color: 'text-slate-600' },
+      tired: { icon: Clock, color: 'text-amber-600' },
+      bad: { icon: Activity, color: 'text-red-600' }
     };
-    return feeling ? emojis[feeling] || '' : '';
+    
+    const config = icons[feeling];
+    if (!config) return null;
+    
+    const Icon = config.icon;
+    return <Icon className={`h-4 w-4 ${config.color}`} />;
   };
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-slate-200 shadow-elevation-2">
         <CardContent className="p-6">
           <div className="flex items-center justify-center h-32">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary"></div>
           </div>
         </CardContent>
       </Card>
@@ -126,16 +133,16 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
 
   if (workouts.length === 0) {
     return (
-      <Card>
+      <Card className="border-slate-200 shadow-elevation-2">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <History className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-slate-900">
+            <History className="h-5 w-5 text-brand-primary" />
             {t('title')}
           </CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
+          <CardDescription className="text-slate-600">{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-32 text-muted-foreground">
+          <div className="flex items-center justify-center h-32 text-slate-500">
             <p>{t('noWorkouts')}</p>
           </div>
         </CardContent>
@@ -144,37 +151,40 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
   }
 
   return (
-    <Card>
+    <Card className="border-slate-200 shadow-elevation-2">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <History className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-slate-900">
+          <History className="h-5 w-5 text-brand-primary" />
           {t('title')}
         </CardTitle>
-        <CardDescription>{t('description')}</CardDescription>
+        <CardDescription className="text-slate-600">{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {workouts.map((workout) => (
             <div
               key={workout.id}
-              className="p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+              className="p-4 border border-slate-200 rounded-lg hover:shadow-elevation-2 transition-all"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <Activity className="h-5 w-5 text-orange-600" />
+                  <Activity className="h-5 w-5 text-brand-primary" />
                   <div>
-                    <h4 className="font-semibold">
+                    <h4 className="font-semibold text-slate-900">
                       {getTypeLabel(workout.type)}
                       {workout.subtype && ` - ${getSubtypeLabel(workout.subtype)}`}
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-slate-500">
                       {formatDate(workout.date)}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {workout.feeling && (
-                    <span className="text-2xl">{getFeelingEmoji(workout.feeling)}</span>
+                    <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-md">
+                      {getFeelingIcon(workout.feeling)}
+                      <span className="text-xs font-medium text-slate-600 capitalize">{workout.feeling}</span>
+                    </div>
                   )}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
