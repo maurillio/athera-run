@@ -58,37 +58,42 @@ export default function AIAnalysisSection() {
 
   const getAlertIcon = (severity: string) => {
     switch (severity) {
-      case 'high': return <AlertTriangle className="h-5 w-5 text-red-500" />;
-      case 'medium': return <Info className="h-5 w-5 text-yellow-500" />;
-      default: return <CheckCircle className="h-5 w-5 text-blue-500" />;
+      case 'high': return <AlertTriangle className="h-5 w-5 text-red-600" />;
+      case 'medium': return <Info className="h-5 w-5 text-amber-600" />;
+      default: return <CheckCircle className="h-5 w-5 text-blue-600" />;
     }
   };
 
   const getAlertColor = (severity: string) => {
     switch (severity) {
       case 'high': return 'border-red-200 bg-red-50';
-      case 'medium': return 'border-yellow-200 bg-yellow-50';
+      case 'medium': return 'border-amber-200 bg-amber-50';
       default: return 'border-blue-200 bg-blue-50';
     }
   };
 
-  const getFeelingEmoji = (feeling: string | null) => {
-    switch (feeling) {
-      case 'excellent': return '😄';
-      case 'good': return '🙂';
-      case 'ok': return '😐';
-      case 'tired': return '😴';
-      case 'bad': return '😔';
-      case 'exhausted': return '😫';
-      default: return '❓';
-    }
+  const getFeelingIcon = (feeling: string | null) => {
+    if (!feeling) return null;
+    
+    const icons: { [key: string]: { icon: any; color: string } } = {
+      excellent: { icon: Sparkles, color: 'text-emerald-600' },
+      good: { icon: CheckCircle, color: 'text-green-600' },
+      ok: { icon: Info, color: 'text-slate-600' },
+      tired: { icon: AlertTriangle, color: 'text-amber-600' },
+      bad: { icon: AlertTriangle, color: 'text-orange-600' },
+      exhausted: { icon: AlertTriangle, color: 'text-red-600' }
+    };
+    
+    const config = icons[feeling] || { icon: Info, color: 'text-slate-600' };
+    const Icon = config.icon;
+    return <Icon className={`h-4 w-4 ${config.color}`} />;
   };
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-slate-200 shadow-elevation-2">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
         </CardContent>
       </Card>
     );
@@ -98,13 +103,13 @@ export default function AIAnalysisSection() {
     <div className="space-y-6">
       {/* Alertas */}
       {alerts.length > 0 && (
-        <Card>
+        <Card className="border-slate-200 shadow-elevation-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-500" />
+            <CardTitle className="flex items-center gap-2 text-slate-900">
+              <AlertTriangle className="h-5 w-5 text-amber-600" />
               Alertas e Recomendações
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-600">
               Pontos de atenção identificados pela IA
             </CardDescription>
           </CardHeader>
@@ -131,31 +136,36 @@ export default function AIAnalysisSection() {
       )}
 
       {/* Últimos Relatos */}
-      <Card>
+      <Card className="border-slate-200 shadow-elevation-2">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-500" />
+          <CardTitle className="flex items-center gap-2 text-slate-900">
+            <Sparkles className="h-5 w-5 text-brand-primary" />
             Últimos Relatos
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-slate-600">
             Seu histórico recente de treinos e sensações
           </CardDescription>
         </CardHeader>
         <CardContent>
           {logs.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-slate-500">
               <p>Nenhum relato ainda.</p>
               <p className="text-sm mt-2">Comece a registrar seus treinos!</p>
             </div>
           ) : (
             <div className="space-y-3">
               {logs.map((log) => (
-                <div key={log.id} className="p-4 border rounded-lg hover:border-orange-300 transition-colors">
+                <div key={log.id} className="p-4 border border-slate-200 rounded-lg hover:shadow-elevation-2 transition-all">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-lg">{getFeelingEmoji(log.overallFeeling)}</span>
-                        <span className="font-semibold">
+                        <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-md">
+                          {getFeelingIcon(log.overallFeeling)}
+                          <span className="text-xs font-medium text-slate-600 capitalize">
+                            {log.overallFeeling || 'N/A'}
+                          </span>
+                        </div>
+                        <span className="font-semibold text-slate-900">
                           {new Date(log.date).toLocaleDateString('pt-BR', { 
                             weekday: 'long', 
                             year: 'numeric', 
@@ -166,12 +176,12 @@ export default function AIAnalysisSection() {
                       </div>
                       <div className="flex gap-2 flex-wrap">
                         {log.workoutCompleted ? (
-                          <Badge variant="outline" className="bg-green-50 border-green-300 text-green-800">
+                          <Badge variant="outline" className="bg-emerald-50 border-emerald-300 text-emerald-800">
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Treino Completado
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="bg-gray-50 border-gray-300 text-gray-800">
+                          <Badge variant="outline" className="bg-slate-50 border-slate-300 text-slate-800">
                             Treino Não Completado
                           </Badge>
                         )}
@@ -192,7 +202,7 @@ export default function AIAnalysisSection() {
                           </Badge>
                         )}
                         {log.energyLevel && (
-                          <Badge variant="outline">
+                          <Badge variant="outline" className="bg-slate-50 border-slate-300 text-slate-800">
                             Energia: {log.energyLevel}/10
                           </Badge>
                         )}
