@@ -180,43 +180,43 @@ export default function PerfilPage() {
         cache: 'no-store' // Forçar sem cache
       });
       
-      console.log('[FRONTEND] 📥 Response status:', response.status, response.statusText);
+      console.log('[FRONTEND] Response status:', response.status, response.statusText);
       
       const data = await response.json();
-      console.log('[FRONTEND] 📊 Response data:', data);
+      console.log('[FRONTEND] Response data:', data);
 
       if (response.ok && data.success) {
-        console.log('[FRONTEND] ✅ Exclusão bem-sucedida!');
+        console.log('[FRONTEND] Deletion successful!');
         
         toast.success(t('actions.deleteProfile.success'), {
           description: data.message,
           duration: 3000
         });
         
-        // Limpar TODOS os caches
-        console.log('[FRONTEND] 🧹 Limpando caches...');
+        // Clear all caches
+        console.log('[FRONTEND] Clearing caches...');
         if (typeof window !== 'undefined') {
-          // Limpar storages
+          // Clear storages
           sessionStorage.clear();
           localStorage.clear();
           
-          // Limpar cookies relacionados ao atleta
+          // Clear athlete cookies
           const cookiesToClear = ['athleteProfile', 'onboardingData', 'planData'];
           cookiesToClear.forEach(name => {
             document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
           });
         }
         
-        console.log('[FRONTEND] 🔄 Redirecionando para:', data.redirectTo);
+        console.log('[FRONTEND] Redirecting to:', data.redirectTo);
         
-        // Redirecionar para onboarding (hard redirect)
+        // Redirect to onboarding (hard redirect)
         const redirectPath = data.redirectTo || '/onboarding';
         setTimeout(() => {
-          console.log('[FRONTEND] 🎯 Executando redirect...');
-          window.location.replace(redirectPath); // Use replace em vez de href
+          console.log('[FRONTEND] Executing redirect...');
+          window.location.replace(redirectPath);
         }, 1500);
       } else {
-        console.error('[FRONTEND] ❌ Erro na resposta:', data);
+        console.error('[FRONTEND] Error in response:', data);
         
         toast.error(data.error || t('actions.deleteProfile.error'), {
           description: data.details || 'Detalhes não disponíveis'
@@ -237,10 +237,10 @@ export default function PerfilPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-orange-600 mx-auto mb-4" />
-          <p className="text-gray-600">{t('loading')}</p>
+          <Loader2 className="h-12 w-12 animate-spin text-brand-primary mx-auto mb-4" />
+          <p className="text-slate-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -248,9 +248,9 @@ export default function PerfilPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="text-center">
-          <p className="text-gray-600">{tCommon('loading')}</p>
+          <p className="text-slate-600">{tCommon('loading')}</p>
         </div>
       </div>
     );
@@ -258,10 +258,10 @@ export default function PerfilPage() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="text-center">
-          <AlertTriangle className="h-12 w-12 text-orange-600 mx-auto mb-4" />
-          <p className="text-gray-600 mb-4">{t('error')}</p>
+          <AlertTriangle className="h-12 w-12 text-brand-primary mx-auto mb-4" />
+          <p className="text-slate-600 mb-4">{t('error')}</p>
           <Button onClick={() => window.location.reload()}>
             {t('reloadPage')}
           </Button>
@@ -273,14 +273,14 @@ export default function PerfilPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-slate-50">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
-              <User className="h-8 w-8" />
+            <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+              <User className="h-8 w-8 text-brand-primary" />
               {t('title')}
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-slate-600 text-lg">
               {t('subtitle')}
             </p>
           </div>
