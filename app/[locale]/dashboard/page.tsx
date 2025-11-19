@@ -216,8 +216,62 @@ export default function DashboardPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
+      <div className="min-h-screen bg-slate-50 p-6 animate-fade-in">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header Skeleton */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="space-y-2">
+              <div className="h-8 w-48 bg-slate-200 rounded skeleton" />
+              <div className="h-4 w-64 bg-slate-200 rounded skeleton" />
+            </div>
+            <div className="h-10 w-32 bg-slate-200 rounded-lg skeleton" />
+          </div>
+
+          {/* Stats Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="border border-slate-200 rounded-lg p-6 bg-white shadow-elevation-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 bg-slate-200 rounded-full skeleton" />
+                  <div className="flex-1">
+                    <div className="h-6 w-16 bg-slate-200 rounded skeleton mb-2" />
+                    <div className="h-3 w-24 bg-slate-200 rounded skeleton" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Main Content Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="border border-slate-200 rounded-lg p-6 bg-white shadow-elevation-2">
+                <div className="h-6 w-32 bg-slate-200 rounded skeleton mb-4" />
+                <div className="space-y-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="h-12 w-12 bg-slate-200 rounded skeleton" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 w-full bg-slate-200 rounded skeleton" />
+                        <div className="h-3 w-3/4 bg-slate-200 rounded skeleton" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="border border-slate-200 rounded-lg p-6 bg-white shadow-elevation-2">
+                <div className="h-6 w-24 bg-slate-200 rounded skeleton mb-4" />
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-16 bg-slate-200 rounded skeleton" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
