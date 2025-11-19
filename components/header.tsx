@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Calendar, Trophy, Target } from 'lucide-react';
+import { Calendar, Activity, Target } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import UserDropdown from './user-dropdown';
 import LanguageSwitcher from './i18n/LanguageSwitcher';
@@ -16,27 +16,31 @@ export default function Header() {
   const locale = pathname.split('/')[1] || 'pt-BR';
   
   const navigation = [
-    { name: t('navigation.dashboard'), href: `/${locale}/dashboard`, icon: Trophy },
+    { name: t('navigation.dashboard'), href: `/${locale}/dashboard`, icon: Activity },
     { name: t('navigation.plano'), href: `/${locale}/plano`, icon: Calendar },
     { name: t('navigation.treinos'), href: `/${locale}/tracking`, icon: Target },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-elevation-1">
       <div className="container mx-auto max-w-6xl">
         <div className="flex h-16 items-center justify-between px-4">
-          <Link href={`/${locale}/dashboard`} className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-orange-500 to-blue-600 rounded-lg shadow-lg">
-              <span className="text-white font-bold text-base">AR</span>
+          <Link href={`/${locale}/dashboard`} className="flex items-center space-x-3 group">
+            {/* Logo Icon - Gradient without emoji */}
+            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-brand-primary to-blue-600 rounded-lg shadow-md group-hover:shadow-lg transition-shadow">
+              <Activity className="h-5 w-5 text-white" strokeWidth={2.5} />
             </div>
+            
+            {/* Brand Text */}
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-brand-primary via-orange-600 to-blue-600 bg-clip-text text-transparent">
                 {t('brand')}
               </h1>
-              <p className="text-xs text-muted-foreground -mt-1">{t('tagline')}</p>
+              <p className="text-xs text-slate-500 -mt-1">{t('tagline')}</p>
             </div>
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -47,23 +51,25 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "flex items-center space-x-2 px-3 py-2 text-sm rounded-md transition-colors hover:bg-accent",
+                    "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
                     isActive 
-                      ? "bg-orange-50 text-orange-700 font-medium" 
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-orange-50 text-brand-primary shadow-sm" 
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4" strokeWidth={2} />
                   <span>{item.name}</span>
                 </Link>
               );
             })}
           </nav>
 
-          <div className="flex items-center space-x-2 md:space-x-4">
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-3">
+            {/* Mobile Navigation Select */}
             <div className="flex lg:hidden">
               <select 
-                className="px-3 py-1.5 text-sm border rounded-md bg-background"
+                className="px-3 py-2 text-sm border-2 border-slate-300 rounded-lg bg-background focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all"
                 value={pathname}
                 onChange={(e) => window.location.href = e.target.value}
                 aria-label={t('mobileSelect')}
