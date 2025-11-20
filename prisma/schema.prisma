@@ -286,14 +286,6 @@ model AthleteProfile {
   lastPeriodDate        DateTime? // v3.0.0 - Data última menstruação
   workDemand            String? // v3.0.0 - sedentary/moderate/physical
   familyDemand          String? // v3.0.0 - low/moderate/high
-  stravaProfileData     Json? // v2.6.0 - Strava profile: clubs, bikes, shoes
-  stravaStatsData       Json? // v2.6.0 - Strava stats: recent, YTD, all-time
-  stravaLastSync        DateTime? // v2.6.0 - Last Strava sync timestamp
-  personalRecords       Json? // v2.6.0 - PRs from Strava + manual
-  trainingZones         Json? // v2.6.0 - HR and pace zones
-  shoeRotation          Json? // v2.6.0 - Shoe tracking with mileage
-  preferredRoutes       Json? // v2.6.0 - Favorite routes
-  trainingPrefs         Json? // v2.6.0 - Surface, time, weather prefs
   aiAnalyses            AIAnalysis[]
   customPlan            CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
   user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -301,7 +293,6 @@ model AthleteProfile {
   raceGoals             RaceGoal[]
   trainingLogs          TrainingLog[]
 
-  @@index([stravaLastSync])
   @@index([stravaConnected])
   @@map("athlete_profiles")
 }
