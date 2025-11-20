@@ -7,6 +7,50 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.3.0] - 2025-11-20 🚀 Complete Strava Enhanced Integration v2.1
+
+### 🎯 Integração Completa de Dados do Strava
+
+Expansão massiva da integração Strava - agora importamos TODOS os dados relevantes para análise pela IA e personalização de treinos.
+
+#### 📊 Novos Dados Importados
+
+**Personal Records (PRs)**
+- 5K, 10K, Half Marathon, Marathon
+- Tempos, paces e datas
+- Análise automática de progressão
+
+**Estatísticas Agregadas**
+- Total de corridas (last 4 weeks + YTD)
+- Distância total acumulada
+- Elevação total conquistada
+- Maior corrida realizada
+- Total de conquistas
+
+**Equipamentos (Gear)**
+- Tênis com quilometragem
+- Status (ativo/aposentado)
+- Alerta de troca (~500km)
+- Múltiplos equipamentos
+
+**Zonas de Treino**
+- Zonas cardíacas personalizadas
+- Zonas de pace/ritmo
+- FC máxima e repouso
+- Distribuição de treinos
+
+#### 🔥 Features Implementadas
+
+**6 Fases Completas:**
+1. ✅ Database Schema (6 tabelas sincronizadas)
+2. ✅ API Endpoints (5 rotas + refresh automático)
+3. ✅ Frontend Integration (Dashboard + Perfil)
+4. ✅ Manual Entry Forms (Fallback para Free users)
+5. ✅ AI Integration (Prompts enriquecidos)
+6. ✅ Documentation & Testing
+
+---
+
 ## [v3.2.0] - 2024-11-20 🚀 Complete Strava Integration v2.1
 
 ### 🎯 Major Update - 6 Fases Completas
