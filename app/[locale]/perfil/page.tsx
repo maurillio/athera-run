@@ -17,6 +17,7 @@ import MedicalInfoSection from '@/components/medical-info-section';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
 import AthleteStatsSection from '@/components/profile/athlete-stats-section';
+import StravaDataSection from '@/components/profile/strava-data-section';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
@@ -330,6 +331,7 @@ export default function PerfilPage() {
 
             <TabsContent value="stats" className="space-y-6">
               <AthleteStatsSection />
+              <StravaDataSection />
             </TabsContent>
 
             <TabsContent value="medical" className="space-y-6">
