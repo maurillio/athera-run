@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function Step3Performance({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step3');
@@ -120,6 +121,12 @@ export default function Step3Performance({ data, onUpdate, onNext, onBack }: any
       <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
         <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
           ⏱️ Adicionar Melhor Tempo
+          <AIFieldIcon
+            label="Melhores Tempos"
+            importance="critical"
+            impact="Cálculo do VDOT e ritmos de treino"
+            howUsed="Calcula VDOT atual e define zonas de treino personalizadas"
+          />
         </h3>
         
         {/* Seleção de distância */}

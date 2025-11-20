@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function Step2SportBackground({ data, onUpdate, onNext, onBack, onPrevious }: any) {
   const t = useTranslations('onboarding.step2');
@@ -96,20 +97,50 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
 
       {formData.hasRunBefore && (
         <>
-          <div><label className="block font-medium mb-2">{t('yearsRunning')}</label>
+          <div>
+            <label className="flex items-center font-medium mb-2">
+              {t('yearsRunning')}
+              <AIFieldIcon
+                label="Anos de Experiência"
+                importance="medium"
+                impact="Adaptação neuromuscular e resiliência"
+                howUsed="Influencia velocidade de progressão e complexidade de treinos"
+              />
+            </label>
             <input type="number" value={formData.runningYears}
               onChange={(e) => setFormData({...formData, runningYears: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg" placeholder={t('yearsRunningPlaceholder')} /></div>
+              className="w-full px-4 py-2 border rounded-lg" placeholder={t('yearsRunningPlaceholder')} />
+          </div>
 
-          <div><label className="block font-medium mb-2">{t('weeklyVolume')}</label>
+          <div>
+            <label className="flex items-center font-medium mb-2">
+              {t('weeklyVolume')}
+              <AIFieldIcon
+                label="Quilometragem Semanal Atual"
+                importance="critical"
+                impact="Volume inicial do plano"
+                howUsed="Ponto de partida para progressão segura (regra dos 10%)"
+              />
+            </label>
             <input type="number" value={formData.currentWeeklyKm}
               onChange={(e) => setFormData({...formData, currentWeeklyKm: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg" placeholder={t('weeklyVolumePlaceholder')} /></div>
+              className="w-full px-4 py-2 border rounded-lg" placeholder={t('weeklyVolumePlaceholder')} />
+          </div>
 
-          <div><label className="block font-medium mb-2">{t('longestRun')}</label>
+          <div>
+            <label className="flex items-center font-medium mb-2">
+              {t('longestRun')}
+              <AIFieldIcon
+                label="Maior Corrida Recente"
+                importance="high"
+                impact="Distância do longão inicial"
+                howUsed="Define o ponto de partida dos longões e progressão de distância"
+              />
+            </label>
             <input type="number" value={formData.longestRun}
               onChange={(e) => setFormData({...formData, longestRun: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg" placeholder={t('longestRunPlaceholder')} /></div>
+              className="w-full px-4 py-2 border rounded-lg" placeholder={t('longestRunPlaceholder')} />
+          </div>
         </>
       )}
 
