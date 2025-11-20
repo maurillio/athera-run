@@ -22,6 +22,8 @@ export default function DashboardStravaWidget({ compact = false }: DashboardStra
 
   const loadQuickStats = async () => {
     try {
+      setLoading(true);
+      
       const [profileRes, statsRes, prsRes] = await Promise.all([
         fetch('/api/profile/create', { method: 'POST' }),
         fetch('/api/strava/import-stats').catch(() => null),

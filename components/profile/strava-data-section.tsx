@@ -93,19 +93,22 @@ export default function StravaDataSection() {
     }
 
     setSyncing(true);
+    const syncToast = toast.loading('Sincronizando dados do Strava...');
+    
     try {
       const response = await fetch('/api/strava/sync-all', { method: 'POST' });
       
       if (response.ok) {
         const result = await response.json();
-        toast.success('Dados sincronizados com sucesso!');
+        toast.success('Dados sincronizados com sucesso!', { id: syncToast });
         await loadData();
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Erro ao sincronizar');
+        toast.error(error.error || 'Erro ao sincronizar', { id: syncToast });
       }
     } catch (error) {
-      toast.error('Erro ao sincronizar com Strava');
+      toast.error('Erro ao conectar com Strava', { id: syncToast });
+      console.error('Sync error:', error);
     } finally {
       setSyncing(false);
     }
