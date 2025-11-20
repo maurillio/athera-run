@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 interface DaySchedule {
   running: boolean;
@@ -278,8 +279,14 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
               <div className="flex items-start gap-2 mb-3">
                 <span className="text-lg">💡</span>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 mb-1">
+                  <p className="flex items-center text-sm font-medium text-gray-900 mb-1">
                     Qual dia será seu <strong>longão</strong>?
+                    <AIFieldIcon
+                      label="Dia do Longão"
+                      importance="high"
+                      impact="Distribuição de volume semanal"
+                      howUsed="Organiza treinos para maximizar recuperação antes/depois"
+                    />
                   </p>
                   <p className="text-xs text-gray-600">
                     {isBeginnerOrNever 

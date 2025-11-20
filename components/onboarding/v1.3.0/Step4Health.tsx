@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step4');
@@ -293,8 +294,14 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         <h3 className="font-semibold text-lg">📊 Dados Fisiológicos</h3>
         
         <div>
-          <label className="block font-medium mb-2">
+          <label className="flex items-center font-medium mb-2">
             {t('restingHR')} ({tCommon('optional')})
+            <AIFieldIcon
+              label="FC em Repouso"
+              importance="high"
+              impact="Zonas de treino e recuperação"
+              howUsed="Calcula zonas de FC personalizadas e monitora recuperação"
+            />
             <span className="text-sm text-gray-500 ml-2">40-80 bpm</span>
           </label>
           <input type="number" value={restingHeartRate} onChange={(e) => setRestingHeartRate(e.target.value)}
@@ -303,8 +310,14 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         </div>
 
         <div>
-          <label className="block font-medium mb-2">
+          <label className="flex items-center font-medium mb-2">
             {t('sleepQuality')}
+            <AIFieldIcon
+              label="Qualidade do Sono"
+              importance="medium"
+              impact="Capacidade de recuperação"
+              howUsed="Ajusta intensidade e volume baseado na recuperação"
+            />
             <span className="text-sm text-gray-500 ml-2">
               {sleepQuality === 1 ? t('qualityLevels.veryPoor') : 
                sleepQuality === 2 ? t('qualityLevels.poor') : 
@@ -322,8 +335,14 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         </div>
 
         <div>
-          <label className="block font-medium mb-2">
+          <label className="flex items-center font-medium mb-2">
             {t('stressLevel')}
+            <AIFieldIcon
+              label="Nível de Estresse"
+              importance="medium"
+              impact="Risco de overtraining"
+              howUsed="Ajusta carga de treino para prevenir sobrecarga"
+            />
             <span className="text-sm text-gray-500 ml-2">
               {stressLevel === 1 ? t('stressLevels.veryLow') : 
                stressLevel === 2 ? t('stressLevels.low') : 
