@@ -76,15 +76,34 @@
 
 ---
 
-## 📋 FASE 4: DASHBOARD APRIMORADO - PENDENTE
+## ✅ FASE 4: DASHBOARD APRIMORADO - COMPLETA
 
-### Widgets a Adicionar
-- [ ] Card de estatísticas gerais do Strava
-- [ ] Card de progresso semanal/mensal
-- [ ] Card de PRs recentes
-- [ ] Card de equipamentos ativos
-- [ ] Gráfico de evolução de distância
-- [ ] Gráfico de evolução de pace
+### Widgets Criados
+- ✅ `DashboardStravaWidget` - Widget modular com 2 modos (compact/full)
+- ✅ Modo Compact: 3 cards horizontais (Semana, PR, Progresso)
+- ✅ Modo Full: Card único com estatísticas detalhadas
+
+### Integração no Dashboard
+- ✅ Widget compact adicionado entre Quick Stats e Upcoming Workouts
+- ✅ Mostra apenas se Strava estiver conectado
+- ✅ Cards com gradientes temáticos:
+  - Laranja: Atividade semanal
+  - Amarelo: Último PR
+  - Azul: Progresso anual
+
+### Funcionalidades
+- ✅ Estatísticas das últimas 4 semanas
+- ✅ Top 3 records pessoais
+- ✅ Total do ano (corridas + km)
+- ✅ Link direto para página de perfil (Ver todos)
+- ✅ Loading states
+- ✅ Auto-hide quando não conectado
+
+### Design
+- ✅ Gradientes sutis por categoria
+- ✅ Ícones temáticos (Activity, Trophy, TrendingUp)
+- ✅ Responsivo (grid adaptativo)
+- ✅ Consistente com tema do dashboard
 
 ---
 

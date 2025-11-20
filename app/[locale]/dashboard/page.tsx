@@ -48,6 +48,7 @@ import UpgradeBanner from '@/components/subscription/upgrade-banner';
 import ProgressAnalysisBanner from '@/components/progress-analysis-banner';
 import WorkoutLogDialog from '@/components/dashboard/workout-log-dialog';
 import { WorkoutDetails } from '@/components/workout-details';
+import DashboardStravaWidget from '@/components/dashboard/strava-widget';
 
 interface CustomPlan {
   id: number;
@@ -427,6 +428,11 @@ export default function DashboardPage() {
                     </p>
                   </CardContent>
                 </Card>
+              </div>
+
+              {/* Strava Widget - Compact */}
+              <div className="mb-8">
+                <DashboardStravaWidget compact={true} />
               </div>
 
               {/* Próximo Treino */}
