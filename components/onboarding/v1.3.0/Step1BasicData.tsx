@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { validateStep1, OnboardingData } from '@/lib/onboarding-validator';
 import { calculateIMC, interpretIMC } from '@/lib/vdot-calculator';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import { AI_FIELD_CONFIGS } from '@/types/ai-transparency';
 
 interface Step1Props {
   data: Partial<OnboardingData>;
@@ -84,13 +86,29 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
 
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">{t('age')} *</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('age')} *
+            <AIFieldIcon
+              label="Idade"
+              importance="critical"
+              impact="FC máxima teórica e capacidade de recuperação"
+              howUsed="Calcula FC máxima (220 - idade) e ajusta volume/intensidade por faixa etária"
+            />
+          </label>
           <input type="number" value={formData.age} onChange={(e) => handleChange('age', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" placeholder={t('agePlaceholder')} min="15" max="100" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">{t('gender')} *</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('gender')} *
+            <AIFieldIcon
+              label="Gênero"
+              importance="high"
+              impact="Ajustes hormonais e biomecânicos"
+              howUsed="Considera diferenças fisiológicas e pode ajustar treino por ciclo menstrual"
+            />
+          </label>
           <select value={formData.gender} onChange={(e) => handleChange('gender', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg">
             <option value="">{tCommon('select')}...</option>
@@ -100,13 +118,29 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">{t('weight')} *</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('weight')} *
+            <AIFieldIcon
+              label="Peso"
+              importance="high"
+              impact="Cálculo de zonas de FC e ritmo recomendado"
+              howUsed="Usado no cálculo do VDOT e ajuste de intensidade baseado em peso corporal"
+            />
+          </label>
           <input type="number" value={formData.weight} onChange={(e) => handleChange('weight', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" placeholder={t('weightPlaceholder')} step="0.1" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">{t('height')} *</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('height')} *
+            <AIFieldIcon
+              label="Altura"
+              importance="medium"
+              impact="Análise biomecânica e estimativa de passada"
+              howUsed="Usado para estimar comprimento de passada ideal e postura"
+            />
+          </label>
           <input type="number" value={formData.height} onChange={(e) => handleChange('height', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" placeholder={t('heightPlaceholder')} />
         </div>
