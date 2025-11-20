@@ -602,3 +602,223 @@ model AuditLog {
   @@index([timestamp])
   @@map("audit_logs")
 }
+
+// ========================================
+// STRAVA ENHANCEMENT - v2.6.0
+// Novas tabelas para dados avançados do Strava
+// ========================================
+
+model StravaStats {
+  id        Int    @id @default(autoincrement())
+  userId    String @unique
+  athleteId String @unique
+
+  // Totais históricos
+  allRunsTotals    Json? // { count, distance, moving_time, elapsed_time, elevation_gain }
+  recentRunsTotals Json? // últimos 4 semanas
+  ytdRunsTotals    Json? // year to date
+
+  // Totais de outros esportes
+  allRideTotals    Json?
+  recentRideTotals Json?
+  ytdRideTotals    Json?
+
+  allSwimTotals    Json?
+  recentSwimTotals Json?
+  ytdSwimTotals    Json?
+
+  // Médias e estatísticas
+  avgDistance      Float?
+  avgPace          String?
+  avgHeartRate     Float?
+  avgElevationGain Float?
+
+  // Frequência
+  weeklyFrequency  Int?
+  monthlyFrequency Int?
+
+  // Última sincronização
+  lastSyncAt DateTime @default(now())
+  syncedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([athleteId])
+  @@map("strava_stats")
+}
+
+model StravaPersonalRecord {
+  id        Int    @id @default(autoincrement())
+  userId    String
+  athleteId String
+
+  // Tipo de PR
+  type     String // '400m', '1k', '5k', '10k', 'half_marathon', 'marathon', etc
+  distance Float // em metros
+
+  // Dados do PR
+  time         Int // em segundos
+  pace         String // formato mm:ss
+  activityId   String? // ID da atividade no Strava
+  activityDate DateTime
+
+  // Metadados
+  heartRate     Int?
+  elevationGain Float?
+  temperature   Float?
+
+  // Contexto
+  isOfficial Boolean @default(false) // se foi em prova oficial
+  raceName   String?
+  location   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, type])
+  @@index([userId])
+  @@index([athleteId])
+  @@index([type])
+  @@map("strava_personal_records")
+}
+
+model StravaGear {
+  id        Int    @id @default(autoincrement())
+  userId    String
+  athleteId String
+  gearId    String @unique // ID do equipamento no Strava
+
+  // Dados do equipamento
+  name        String
+  brand       String?
+  model       String?
+  description String?
+
+  // Tipo
+  type    String // 'shoe', 'bike', etc
+  primary Boolean @default(false)
+
+  // Estatísticas
+  distance      Float @default(0) // km totais
+  activityCount Int   @default(0)
+
+  // Datas
+  purchaseDate DateTime?
+  retiredDate  DateTime?
+  isRetired    Boolean   @default(false)
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  lastUsedAt DateTime?
+
+  @@index([userId])
+  @@index([athleteId])
+  @@index([gearId])
+  @@index([type])
+  @@map("strava_gear")
+}
+
+model StravaTrainingZones {
+  id        Int    @id @default(autoincrement())
+  userId    String @unique
+  athleteId String @unique
+
+  // Zonas de Frequência Cardíaca
+  heartRateZones   Json? // { zone1: {min, max}, zone2: {min, max}, ... }
+  maxHeartRate     Int?
+  restingHeartRate Int?
+
+  // Zonas de Potência (para ciclismo)
+  powerZones Json?
+  ftp        Int? // Functional Threshold Power
+
+  // Zonas de Pace (corrida)
+  paceZones     Json? // { easy: {min, max}, tempo: {min, max}, ... }
+  thresholdPace String?
+
+  // Dados calculados pelo Strava
+  stravaCalculated Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([athleteId])
+  @@map("strava_training_zones")
+}
+
+model StravaActivity {
+  id         Int    @id @default(autoincrement())
+  userId     String
+  athleteId  String
+  activityId String @unique // ID da atividade no Strava
+
+  // Dados básicos (já importados, mas vamos manter histórico completo)
+  name      String
+  type      String // 'Run', 'Ride', 'Swim', etc
+  sportType String? // tipo específico
+
+  // Distância e tempo
+  distance    Float // metros
+  movingTime  Int // segundos
+  elapsedTime Int // segundos
+
+  // Performance
+  averageSpeed Float? // m/s
+  maxSpeed     Float? // m/s
+  averagePace  String? // min/km
+
+  // Frequência cardíaca
+  averageHeartRate Float?
+  maxHeartRate     Int?
+  hasHeartRate     Boolean @default(false)
+
+  // Elevação
+  totalElevationGain Float?
+  elevHigh           Float?
+  elevLow            Float?
+
+  // Temperatura e condições
+  averageTemp Float?
+
+  // Kudos e interações
+  kudosCount   Int @default(0)
+  commentCount Int @default(0)
+
+  // Equipamento
+  gearId String?
+
+  // Localização
+  startLatLng     Json?
+  endLatLng       Json?
+  locationCity    String?
+  locationState   String?
+  locationCountry String?
+
+  // Datas
+  startDate      DateTime
+  startDateLocal DateTime
+  timezone       String?
+
+  // Flags
+  manual  Boolean @default(false)
+  trainer Boolean @default(false)
+  commute Boolean @default(false)
+  private Boolean @default(false)
+  flagged Boolean @default(false)
+
+  // Metadados
+  description String?
+  calories    Float?
+  deviceName  String?
+
+  // Sincronização
+  importedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([athleteId])
+  @@index([activityId])
+  @@index([startDate])
+  @@index([type])
+  @@map("strava_activities")
+}
