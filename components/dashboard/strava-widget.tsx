@@ -26,8 +26,8 @@ export default function DashboardStravaWidget({ compact = false }: DashboardStra
       
       const [profileRes, statsRes, prsRes] = await Promise.all([
         fetch('/api/profile/create', { method: 'POST' }),
-        fetch('/api/strava/import-stats').catch(() => null),
-        fetch('/api/strava/import-prs').catch(() => null),
+        fetch('/api/strava/stats').catch(() => null),
+        fetch('/api/strava/prs').catch(() => null),
       ]);
 
       if (profileRes.ok) {

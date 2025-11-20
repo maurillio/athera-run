@@ -7,12 +7,12 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const profile = await prisma.athleteProfile.findUnique({
-      where: { userEmail: session.user.email },
+      where: { userId: session.user.id },
       select: {
         pr5k: true,
         pr10k: true,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     const { pr5k, pr10k, prHalfMarathon, prMarathon } = body;
 
     const profile = await prisma.athleteProfile.update({
-      where: { userEmail: session.user.email },
+      where: { userId: session.user.id },
       data: {
         pr5k: pr5k || null,
         pr10k: pr10k || null,

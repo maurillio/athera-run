@@ -56,18 +56,17 @@ export default function StravaDataSection() {
 
   const loadData = async () => {
     try {
-      const [statsRes, prsRes, gearRes, zonesRes] = await Promise.all([
-        fetch('/api/strava/import-stats').then(r => r.ok ? r.json() : null),
-        fetch('/api/strava/import-prs').then(r => r.ok ? r.json() : null),
-        fetch('/api/strava/import-gear').then(r => r.ok ? r.json() : null),
-        fetch('/api/strava/import-zones').then(r => r.ok ? r.json() : null),
+      const [statsRes, prsRes, gearRes] = await Promise.all([
+        fetch('/api/strava/stats').then(r => r.ok ? r.json() : null),
+        fetch('/api/strava/prs').then(r => r.ok ? r.json() : null),
+        fetch('/api/strava/gear').then(r => r.ok ? r.json() : null),
       ]);
 
       setData({
         stats: statsRes,
         prs: prsRes?.prs || [],
         gear: gearRes?.gear || [],
-        zones: zonesRes,
+        zones: null, // Não implementado ainda
         lastSync: statsRes?.lastSync || null,
       });
     } catch (error) {

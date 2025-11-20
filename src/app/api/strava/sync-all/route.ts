@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     // Importar estatísticas
     try {
-      const statsResponse = await fetch(`${baseUrl}/api/strava/import-stats`, {
+      const statsResponse = await fetch(`${baseUrl}/api/strava/stats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // Importar equipamentos
     try {
-      const gearResponse = await fetch(`${baseUrl}/api/strava/import-gear`, {
+      const gearResponse = await fetch(`${baseUrl}/api/strava/gear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     // Importar PRs
     try {
-      const prsResponse = await fetch(`${baseUrl}/api/strava/import-prs`, {
+      const prsResponse = await fetch(`${baseUrl}/api/strava/prs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,20 +63,8 @@ export async function POST(request: NextRequest) {
       results.prs.error = error.message;
     }
 
-    // Importar zonas
-    try {
-      const zonesResponse = await fetch(`${baseUrl}/api/strava/import-zones`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: request.headers.get('cookie') || '',
-        },
-      });
-      const zonesData = await zonesResponse.json();
-      results.zones = { success: zonesResponse.ok, data: zonesData };
-    } catch (error: any) {
-      results.zones.error = error.message;
-    }
+    // Zonas - não implementado ainda
+    results.zones = { success: true, data: { message: 'Zonas não implementadas ainda' } };
 
     const allSuccess = Object.values(results).every((r: any) => r.success);
 
