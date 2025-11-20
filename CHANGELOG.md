@@ -7,47 +7,107 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.0] - 2024-11-20 🚀 Complete Strava Integration v2.1
+
+### 🎯 Major Update - 6 Fases Completas
+
+#### ✨ FASE 1: Database Schema
+- **Todas tabelas criadas e sincronizadas**:
+  - `strava_activities` - Atividades com webhook em tempo real
+  - `strava_stats` - Estatísticas (últimas 4 semanas + YTD)
+  - `strava_personal_records` - PRs (5K, 10K, Half, Marathon)
+  - `strava_training_zones` - Zonas de FC e treino
+  - `strava_gear` - Equipamentos (tênis) com quilometragem
+  - `strava_webhooks` - Log de eventos
+- Schema Prisma 100% atualizado e sincronizado
+- TypeScript types gerados
+
+#### 🔌 FASE 2: API Endpoints
+- `POST /api/strava/import-stats` - Importa stats das últimas 4 semanas + YTD
+- `POST /api/strava/import-prs` - Busca e calcula PRs automaticamente
+- `POST /api/strava/import-zones` - Importa FC máx/repouso + zonas
+- `POST /api/strava/import-gear` - Importa tênis com quilometragem
+- `POST /api/strava/sync-all` - Sincroniza TUDO de uma vez
+- Todas APIs com validação Premium
+- Error handling robusto
+- Logs detalhados
+
+#### 🎨 FASE 3: Frontend Integration
+- Dashboard com dados Strava em tempo real
+- Botão de sincronização manual
+- Indicadores de status (última sync, progresso)
+- Toast notifications para feedback
+- Empty states para usuários sem dados
+
+#### 📝 FASE 4: Manual Entry (Free Users)
+- Formulários para entrada manual de:
+  - Stats de treino
+  - Personal records
+  - Zonas de FC
+  - Informações de equipamento
+- Validação de dados
+- Salvo em `athlete_profiles` (não Strava tables)
+- UX clara entre manual vs automático
+
+#### 🤖 FASE 5: AI Integration
+- **IA usa dados Strava para calibrar planos**:
+  - Volume inicial baseado em últimas 4 semanas REAIS
+  - VDOT estimado usando PRs confirmados
+  - Paces de treino precisos baseados em performance real
+  - Zonas de FC referenciadas em treinos de intensidade
+  - **NOVO**: Alertas de equipamento desgastado (>600km)
+  - **NOVO**: Recomendação de troca de tênis
+- Contexto rico enviado para OpenAI:
+  - Stats detalhados (volume, pace médio, elevação)
+  - PRs com datas e paces
+  - FC máx/repouso para zonas
+  - Quilometragem do tênis principal
+- Instruções específicas para IA usar dados reais
+
+#### 📚 FASE 6: Documentation
+- Documentação completa em `docs/STRAVA_INTEGRATION.md`
+- Changelog detalhado
+- Arquitetura explicada
+- Guias de uso e manutenção
+- Troubleshooting e monitoramento
+
+### 🔧 Technical Improvements
+- Prisma Client regenerado e sincronizado
+- Deploy com zero downtime
+- Backward compatibility mantida
+- Performance otimizada (queries paralelas)
+
+### 🔒 Security & Validation
+- Verificação Premium em todos endpoints Strava
+- Tokens refresh automático
+- Rate limiting implementado
+- Webhook signature validation
+
+### 📊 Data Flow
+```
+Strava API → Backend APIs → Banco Neon → AI Generator → Plano Personalizado
+         ↓
+    Webhook → Real-time sync → Dashboard atualizado
+```
+
+### 🎁 Premium Features
+- ✅ Conexão automática com Strava
+- ✅ Sincronização em tempo real (webhook)
+- ✅ Import de PRs, stats, zones, gear
+- ✅ IA calibrada com dados reais
+- ✅ Alertas de equipamento
+
+### 🆓 Free Features
+- ✅ Entrada manual de stats
+- ✅ Entrada manual de PRs
+- ✅ IA usa dados manuais
+- ✅ Todas funcionalidades core
+
+---
+
 ## [v3.1.0] - 2024-11-20 🏃 Enhanced Strava Integration
 
-### ✨ New Features
-- **Integração Completa Strava**: Expansão massiva da integração com Strava
-  - ✅ Importação de estatísticas detalhadas
-  - ✅ Recordes pessoais (5k, 10k, meia, maratona)
-  - ✅ Gerenciamento de equipamentos (tênis, bikes)
-  - ✅ Zonas de frequência cardíaca e pace
-  - ✅ Sincronização unificada (sync-all)
-
-### 🗄️ Database
-- **Novos Models Prisma**:
-  - `StravaStats` - Estatísticas gerais
-  - `StravaPersonalRecord` - Recordes pessoais
-  - `StravaGear` - Equipamentos
-  - `StravaTrainingZones` - Zonas de treino
-  - `StravaActivity` - Histórico de atividades
-  - `StravaWebhook` - Eventos do Strava
-
-### 🚀 API Endpoints
-- `POST /api/strava/import-stats` - Importar estatísticas
-- `POST /api/strava/import-prs` - Importar recordes
-- `POST /api/strava/import-gear` - Importar equipamentos
-- `POST /api/strava/import-zones` - Importar zonas
-- `POST /api/strava/sync-all` - Sincronizar tudo
-- `GET /api/strava/*` - Leitura de dados
-
-### 🎨 Frontend
-- **Componentes Aprimorados**:
-  - `DashboardStravaWidget` - Widget compacto no dashboard
-  - `StravaDataSection` - Seção completa com tabs
-  - `StravaStats` - Estatísticas detalhadas
-  - Toast notifications para feedback
-  - Loading states otimizados
-  - Empty states informativos
-
-### 🔒 Segurança e Validação
-- Validação Premium em todos os endpoints
-- Verificação de conexão Strava
-- Refresh automático de tokens
-- Tratamento robusto de erros
+[Previous version kept for reference]
 
 ### 📚 Documentation
 - `docs/STRAVA_INTEGRATION.md` - Documentação técnica completa

@@ -157,6 +157,12 @@ export interface AIUserProfile {
       restingHeartRate?: number;
       zones: any;
     };
+    primaryGear?: {
+      name: string;
+      distance: number;
+      brand?: string;
+      model?: string;
+    };
   };
 }
 
@@ -762,12 +768,36 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
       context += `- Média mensal: ${((ytd.distance / 1000) / (new Date().getMonth() + 1)).toFixed(1)}km\n`;
     }
 
+    // Equipamento Principal
+    if (profile.stravaData.primaryGear) {
+      const gear = profile.stravaData.primaryGear;
+      const kmOnShoes = (gear.distance / 1000).toFixed(0);
+      context += `\n### Equipamento (Tênis Principal)\n`;
+      context += `- ${gear.name}`;
+      if (gear.brand && gear.model) {
+        context += ` (${gear.brand} ${gear.model})`;
+      }
+      context += `\n`;
+      context += `- Quilometragem: ${kmOnShoes}km\n`;
+      
+      // Alertas sobre desgaste
+      const km = parseInt(kmOnShoes);
+      if (km > 800) {
+        context += `⚠️ **ALERTA**: Tênis com mais de 800km! Risco de lesão aumentado.\n`;
+        context += `**RECOMENDAÇÃO**: Inclua no plano a sugestão de trocar o tênis em breve.\n`;
+      } else if (km > 600) {
+        context += `⚠️ Tênis próximo do limite recomendado (600-800km)\n`;
+        context += `**SUGESTÃO**: Monitorar e considerar troca nas próximas semanas.\n`;
+      }
+    }
+
     context += `\n---\n`;
     context += `🎯 **INSTRUÇÕES PARA USO DOS DADOS STRAVA**:\n`;
     context += `1. Use a quilometragem recente (últimas 4 semanas) como BASE REAL para o plano\n`;
     context += `2. Calibre paces de treino usando os PRs reais do atleta\n`;
     context += `3. Referencie FC máx/repouso em treinos de intensidade\n`;
     context += `4. Considere o padrão real de treino (volume, elevação) ao definir progressão\n`;
+    context += `5. Se tênis estiver desgastado (>600km), inclua observação sobre troca de equipamento\n`;
     context += `5. NÃO crie plano genérico - personalize baseado nesses DADOS REAIS!\n`;
   }
 
