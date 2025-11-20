@@ -7,6 +7,16 @@ export async function getSubscriptionStatus(userId: string) {
   });
 
   if (!subscription) {
+    // Verify user exists before creating subscription
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true }
+    });
+
+    if (!userExists) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
     // Create a free subscription if none exists
     return await prisma.subscription.create({
       data: {
