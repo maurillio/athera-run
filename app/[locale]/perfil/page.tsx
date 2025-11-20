@@ -10,12 +10,13 @@ import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2 } from 'lucide-react';
+import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy } from 'lucide-react';
 import { toast } from 'sonner';
 import ProfileTabs from '@/components/profile/v1.3.0/ProfileTabs';
 import MedicalInfoSection from '@/components/medical-info-section';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
+import AthleteStatsSection from '@/components/profile/athlete-stats-section';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
@@ -290,10 +291,14 @@ export default function PerfilPage() {
           </div>
 
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-2 mb-6">
               <TabsTrigger value="profile">
                 <User className="h-4 w-4 mr-2" />
                 {t('tabs.profile')}
+              </TabsTrigger>
+              <TabsTrigger value="stats">
+                <Trophy className="h-4 w-4 mr-2" />
+                Estatísticas
               </TabsTrigger>
               <TabsTrigger value="medical">
                 <Heart className="h-4 w-4 mr-2" />
@@ -321,6 +326,10 @@ export default function PerfilPage() {
                   <ProfileTabs userData={profile} onUpdate={handleUpdateProfile} />
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="stats" className="space-y-6">
+              <AthleteStatsSection />
             </TabsContent>
 
             <TabsContent value="medical" className="space-y-6">
