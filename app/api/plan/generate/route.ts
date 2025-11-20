@@ -184,6 +184,49 @@ export async function POST(request: NextRequest) {
       take: 10
     });
 
+    // v2.1.0 - Buscar dados do Strava se conectado
+    let stravaData: any = null;
+    if (profile.stravaConnected) {
+      try {
+        const [stravaStats, stravaPRs, stravaZones] = await Promise.all([
+          prisma.stravaStats.findUnique({ where: { userId: user.id } }),
+          prisma.stravaPersonalRecord.findMany({ 
+            where: { userId: user.id },
+            orderBy: { distance: 'asc' }
+          }),
+          prisma.stravaTrainingZones.findUnique({ where: { userId: user.id } })
+        ]);
+
+        if (stravaStats || stravaPRs.length > 0 || stravaZones) {
+          stravaData = {
+            hasStravaData: true,
+            recentRunsTotals: stravaStats?.recentRunsTotals as any,
+            ytdRunsTotals: stravaStats?.ytdRunsTotals as any,
+            personalRecords: stravaPRs.map(pr => ({
+              type: pr.type,
+              distance: pr.distance,
+              time: pr.time,
+              pace: pr.pace,
+              date: pr.activityDate
+            })),
+            trainingZones: stravaZones ? {
+              maxHeartRate: stravaZones.maxHeartRate,
+              restingHeartRate: stravaZones.restingHeartRate,
+              zones: stravaZones.heartRateZones as any
+            } : null
+          };
+          
+          console.log('[AI PLAN] 📊 Dados do Strava carregados:', {
+            stats: !!stravaStats,
+            prs: stravaPRs.length,
+            zones: !!stravaZones
+          });
+        }
+      } catch (error) {
+        console.error('[AI PLAN] Erro ao carregar dados do Strava:', error);
+      }
+    }
+
     const aiProfile: AIUserProfile = {
       runningLevel: profile.runningLevel,
       goalDistance: profile.goalDistance,
@@ -231,6 +274,8 @@ export async function POST(request: NextRequest) {
         type: f.type as 'fatiga' | 'dor' | 'motivacao' | 'desempenho' | 'outro',
         message: f.message
       })) : undefined,
+      // v2.1.0 - Dados do Strava (Premium)
+      stravaData: stravaData || undefined,
     };
 
     console.log('[AI PLAN] Gerando plano com IA...');
