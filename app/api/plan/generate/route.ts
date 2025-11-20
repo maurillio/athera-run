@@ -188,16 +188,20 @@ export async function POST(request: NextRequest) {
     let stravaData: any = null;
     if (profile.stravaConnected) {
       try {
-        const [stravaStats, stravaPRs, stravaZones] = await Promise.all([
+        const [stravaStats, stravaPRs, stravaZones, stravaGear] = await Promise.all([
           prisma.stravaStats.findUnique({ where: { userId: user.id } }),
           prisma.stravaPersonalRecord.findMany({ 
             where: { userId: user.id },
             orderBy: { distance: 'asc' }
           }),
-          prisma.stravaTrainingZones.findUnique({ where: { userId: user.id } })
+          prisma.stravaTrainingZones.findUnique({ where: { userId: user.id } }),
+          prisma.stravaGear.findMany({
+            where: { userId: user.id, primary: true },
+            take: 1
+          })
         ]);
 
-        if (stravaStats || stravaPRs.length > 0 || stravaZones) {
+        if (stravaStats || stravaPRs.length > 0 || stravaZones || stravaGear.length > 0) {
           stravaData = {
             hasStravaData: true,
             recentRunsTotals: stravaStats?.recentRunsTotals as any,
@@ -213,13 +217,20 @@ export async function POST(request: NextRequest) {
               maxHeartRate: stravaZones.maxHeartRate,
               restingHeartRate: stravaZones.restingHeartRate,
               zones: stravaZones.heartRateZones as any
+            } : null,
+            primaryGear: stravaGear.length > 0 ? {
+              name: stravaGear[0].name,
+              distance: stravaGear[0].distance,
+              brand: stravaGear[0].brandName,
+              model: stravaGear[0].modelName
             } : null
           };
           
           console.log('[AI PLAN] 📊 Dados do Strava carregados:', {
             stats: !!stravaStats,
             prs: stravaPRs.length,
-            zones: !!stravaZones
+            zones: !!stravaZones,
+            gear: stravaGear.length
           });
         }
       } catch (error) {
