@@ -510,15 +510,6 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
       </div>
       </>
       )} {/* Fim do condicional healthDataConsent */}
-
-      <div className="flex gap-4 mt-8">
-        <button onClick={onBack} className="px-6 py-2 border rounded-lg hover:bg-gray-50">
-          {tCommon('back')}
-        </button>
-        <button onClick={handleNext} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          {tCommon('next')}
-        </button>
-      </div>
     </div>
   );
 }
