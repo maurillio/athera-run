@@ -7,6 +7,60 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.1.0] - 2024-11-20 🏃 Enhanced Strava Integration
+
+### ✨ New Features
+- **Integração Completa Strava**: Expansão massiva da integração com Strava
+  - ✅ Importação de estatísticas detalhadas
+  - ✅ Recordes pessoais (5k, 10k, meia, maratona)
+  - ✅ Gerenciamento de equipamentos (tênis, bikes)
+  - ✅ Zonas de frequência cardíaca e pace
+  - ✅ Sincronização unificada (sync-all)
+
+### 🗄️ Database
+- **Novos Models Prisma**:
+  - `StravaStats` - Estatísticas gerais
+  - `StravaPersonalRecord` - Recordes pessoais
+  - `StravaGear` - Equipamentos
+  - `StravaTrainingZones` - Zonas de treino
+  - `StravaActivity` - Histórico de atividades
+  - `StravaWebhook` - Eventos do Strava
+
+### 🚀 API Endpoints
+- `POST /api/strava/import-stats` - Importar estatísticas
+- `POST /api/strava/import-prs` - Importar recordes
+- `POST /api/strava/import-gear` - Importar equipamentos
+- `POST /api/strava/import-zones` - Importar zonas
+- `POST /api/strava/sync-all` - Sincronizar tudo
+- `GET /api/strava/*` - Leitura de dados
+
+### 🎨 Frontend
+- **Componentes Aprimorados**:
+  - `DashboardStravaWidget` - Widget compacto no dashboard
+  - `StravaDataSection` - Seção completa com tabs
+  - `StravaStats` - Estatísticas detalhadas
+  - Toast notifications para feedback
+  - Loading states otimizados
+  - Empty states informativos
+
+### 🔒 Segurança e Validação
+- Validação Premium em todos os endpoints
+- Verificação de conexão Strava
+- Refresh automático de tokens
+- Tratamento robusto de erros
+
+### 📚 Documentation
+- `docs/STRAVA_INTEGRATION.md` - Documentação técnica completa
+- `STRAVA_IMPLEMENTATION_LOG.md` - Log detalhado da implementação
+- Arquitetura e fluxo de dados documentados
+
+### 🎯 Premium Feature
+- Recurso disponível apenas para usuários Premium
+- Usuários free veem interface mas não podem sincronizar
+- Upgrade banner quando tentam usar
+
+---
+
 ## [v3.0.2] - 2025-11-14 🚨 HOTFIX - Beginner Plan Generation
 
 ### 🔥 Critical Bug Fixes

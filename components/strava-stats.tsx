@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { Trophy, TrendingUp, Calendar, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 interface StravaStats {
   allRunsTotals: {
@@ -61,15 +62,22 @@ export function StravaStatsCard() {
   };
 
   const syncStats = async () => {
+    const syncToast = toast.loading('Atualizando estatísticas...');
     setSyncing(true);
+    
     try {
       const res = await fetch('/api/strava/stats', { method: 'POST' });
+      
       if (res.ok) {
         const data = await res.json();
         setStats(data.stats);
+        toast.success('Estatísticas atualizadas!', { id: syncToast });
+      } else {
+        toast.error('Erro ao atualizar', { id: syncToast });
       }
     } catch (error) {
       console.error('Erro ao sincronizar stats:', error);
+      toast.error('Erro de conexão', { id: syncToast });
     } finally {
       setSyncing(false);
     }
