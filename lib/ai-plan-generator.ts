@@ -129,6 +129,35 @@ export interface AIUserProfile {
     motivation?: 'alta' | 'normal' | 'baixa';
     sleepQuality?: 'otimo' | 'bom' | 'regular' | 'ruim';
   };
+
+  // v2.1.0: Dados do Strava (Premium only)
+  stravaData?: {
+    hasStravaData: boolean;
+    recentRunsTotals?: {
+      count: number;
+      distance: number;
+      moving_time: number;
+      elevation_gain: number;
+    };
+    ytdRunsTotals?: {
+      count: number;
+      distance: number;
+      moving_time: number;
+      elevation_gain: number;
+    };
+    personalRecords?: Array<{
+      type: string;
+      distance: number;
+      time: number;
+      pace: string;
+      date: Date;
+    }>;
+    trainingZones?: {
+      maxHeartRate?: number;
+      restingHeartRate?: number;
+      zones: any;
+    };
+  };
 }
 
 export interface AIGeneratedPlan {
@@ -671,6 +700,75 @@ function prepareUserContext_LEGACY(profile: AIUserProfile): string {
     if (isOvertraining) {
       context += `\n⚠️ **ALERTA DE OVERTRAINING POTENCIAL**: Atleta mostra sinais de fadiga excessiva. Priorize recuperação!\n`;
     }
+  }
+
+  // v2.1.0 - Dados do Strava (Premium)
+  if (profile.stravaData?.hasStravaData) {
+    context += `\n## 📊 Dados Importados do Strava (Premium)\n`;
+    
+    // Estatísticas Recentes
+    if (profile.stravaData.recentRunsTotals) {
+      const stats = profile.stravaData.recentRunsTotals;
+      const avgKmPerRun = stats.count > 0 ? (stats.distance / 1000 / stats.count).toFixed(1) : 0;
+      const avgPaceMinKm = stats.count > 0 && stats.moving_time > 0 
+        ? (stats.moving_time / 60) / (stats.distance / 1000) 
+        : 0;
+      const paceFormatted = avgPaceMinKm > 0 
+        ? `${Math.floor(avgPaceMinKm)}:${String(Math.round((avgPaceMinKm % 1) * 60)).padStart(2, '0')}/km`
+        : 'N/A';
+
+      context += `\n### Últimas 4 Semanas (Dados Reais)\n`;
+      context += `- Total de corridas: ${stats.count}\n`;
+      context += `- Quilometragem total: ${(stats.distance / 1000).toFixed(1)}km\n`;
+      context += `- Média por corrida: ${avgKmPerRun}km\n`;
+      context += `- Pace médio: ${paceFormatted}\n`;
+      context += `- Elevação acumulada: ${Math.round(stats.elevation_gain)}m\n`;
+      context += `\n**IMPORTANTE**: Use esses dados REAIS para calibrar o volume e intensidade do plano!\n`;
+    }
+
+    // Records Pessoais
+    if (profile.stravaData.personalRecords && profile.stravaData.personalRecords.length > 0) {
+      context += `\n### Records Pessoais (PRs)\n`;
+      profile.stravaData.personalRecords.forEach(pr => {
+        const timeFormatted = pr.time >= 3600 
+          ? `${Math.floor(pr.time / 3600)}:${String(Math.floor((pr.time % 3600) / 60)).padStart(2, '0')}:${String(pr.time % 60).padStart(2, '0')}`
+          : `${Math.floor(pr.time / 60)}:${String(pr.time % 60).padStart(2, '0')}`;
+        context += `- **${pr.type}**: ${timeFormatted} (pace: ${pr.pace}/km) - ${new Date(pr.date).toLocaleDateString('pt-BR')}\n`;
+      });
+      context += `\n**CALIBRAÇÃO**: Use os PRs para estimar VDOT real e definir paces de treino precisos!\n`;
+    }
+
+    // Zonas de Treino
+    if (profile.stravaData.trainingZones) {
+      context += `\n### Zonas de Frequência Cardíaca\n`;
+      if (profile.stravaData.trainingZones.maxHeartRate) {
+        context += `- FC Máxima: ${profile.stravaData.trainingZones.maxHeartRate} bpm\n`;
+      }
+      if (profile.stravaData.trainingZones.restingHeartRate) {
+        context += `- FC Repouso: ${profile.stravaData.trainingZones.restingHeartRate} bpm\n`;
+      }
+      if (profile.stravaData.trainingZones.zones) {
+        context += `- Zonas configuradas no Strava: Disponíveis\n`;
+      }
+      context += `\n**TREINOS DE FC**: Referencie essas zonas em treinos de intensidade controlada!\n`;
+    }
+
+    // Total Anual (contexto)
+    if (profile.stravaData.ytdRunsTotals) {
+      const ytd = profile.stravaData.ytdRunsTotals;
+      context += `\n### Ano Atual (Contexto)\n`;
+      context += `- Total de corridas: ${ytd.count}\n`;
+      context += `- Quilometragem total: ${(ytd.distance / 1000).toFixed(1)}km\n`;
+      context += `- Média mensal: ${((ytd.distance / 1000) / (new Date().getMonth() + 1)).toFixed(1)}km\n`;
+    }
+
+    context += `\n---\n`;
+    context += `🎯 **INSTRUÇÕES PARA USO DOS DADOS STRAVA**:\n`;
+    context += `1. Use a quilometragem recente (últimas 4 semanas) como BASE REAL para o plano\n`;
+    context += `2. Calibre paces de treino usando os PRs reais do atleta\n`;
+    context += `3. Referencie FC máx/repouso em treinos de intensidade\n`;
+    context += `4. Considere o padrão real de treino (volume, elevação) ao definir progressão\n`;
+    context += `5. NÃO crie plano genérico - personalize baseado nesses DADOS REAIS!\n`;
   }
 
   return context;
