@@ -769,3 +769,4 @@ Proprietário - Athera Run © 2025
 ---
 
 **Mantido com ❤️ pela equipe Athera**
+# Strava Enhancement v2.6.0 - Thu Nov 20 16:17:36 UTC 2025
