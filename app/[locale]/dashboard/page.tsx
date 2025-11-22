@@ -282,7 +282,35 @@ export default function DashboardPage() {
   }
 
   const getDistanceLabel = (distance: string) => {
-    return tPlano(`goalLabels.${distance}`, distance);
+    // Normalize distance to match translation keys
+    const normalizeDistance = (dist: string) => {
+      const map: Record<string, string> = {
+        '5k': '5k',
+        '5km': '5k',
+        '10k': '10k',
+        '10km': '10k',
+        '15k': '15k',
+        '15km': '15k',
+        '21k': '21k',
+        '21km': '21k',
+        'half marathon': 'half_marathon',
+        'halfmarathon': 'half_marathon',
+        'meia maratona': 'half_marathon',
+        'meia-maratona': 'half_marathon',
+        '42k': '42k',
+        '42km': '42k',
+        'marathon': 'marathon',
+        'maratona': 'marathon'
+      };
+      return map[dist?.toLowerCase()] || dist?.toLowerCase();
+    };
+
+    const normalized = normalizeDistance(distance);
+    try {
+      return tPlano(`goalLabels.${normalized}`, { defaultValue: normalized });
+    } catch {
+      return normalized;
+    }
   };
 
   return (
