@@ -221,21 +221,30 @@ export default function PlanoPage() {
     const normalizeDistance = (dist: string) => {
       const map: Record<string, string> = {
         '5k': '5k',
+        '5km': '5k',
         '10k': '10k',
+        '10km': '10k',
         '15k': '15k',
+        '15km': '15k',
         '21k': '21k',
+        '21km': '21k',
         '42k': '42k',
-        'half_marathon': '21k',
-        'marathon': '42k',
-        'halfmarathon': '21k'
+        '42km': '42k',
+        'half_marathon': 'half_marathon',
+        'half marathon': 'half_marathon',
+        'halfmarathon': 'half_marathon',
+        'meia maratona': 'half_marathon',
+        'meia-maratona': 'half_marathon',
+        'marathon': 'marathon',
+        'maratona': 'marathon'
       };
-      return map[dist?.toLowerCase()] || dist;
+      return map[dist?.toLowerCase()] || dist?.toLowerCase();
     };
 
     const normalized = normalizeDistance(distance);
-    // Tentar traduzir, se não existir usa o valor normalizado
+    // t já está usando namespace 'plano', então não precisa do prefixo
     try {
-      return t(`plano.goalLabels.${normalized}`, { defaultValue: normalized });
+      return t(`goalLabels.${normalized}`, { defaultValue: normalized });
     } catch {
       return normalized;
     }
