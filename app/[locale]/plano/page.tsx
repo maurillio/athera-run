@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle, Trophy, Activity, Heart, Droplets, Mountain, Clock } from 'lucide-react';
 import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import { WorkoutDetails } from '@/components/workout-details';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -356,8 +357,15 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="h-4 w-4 text-brand-primary" />
-                  <CardTitle className="text-sm font-medium text-slate-600">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                     {t('summary.goal')}
+                    <AIFieldIcon
+                      label="Meta e Data"
+                      importance="critical"
+                      impact="Define todo o plano"
+                      howUsed="IA calcula semanas disponíveis e progressão necessária baseado na distância e data alvo"
+                      className="ml-1"
+                    />
                   </CardTitle>
                 </div>
               </CardHeader>
@@ -375,8 +383,15 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="h-4 w-4 text-blue-600" />
-                  <CardTitle className="text-sm font-medium text-slate-600">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                     {t('summary.currentWeek')}
+                    <AIFieldIcon
+                      label="Semana e Fase Atual"
+                      importance="high"
+                      impact="Periodização e objetivos específicos"
+                      howUsed="IA divide plano em fases (Base/Build/Peak/Taper). Cada fase tem volume e intensidade específicos"
+                      className="ml-1"
+                    />
                   </CardTitle>
                 </div>
               </CardHeader>
@@ -394,8 +409,15 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <CardTitle className="text-sm font-medium text-slate-600">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                     {t('summary.progress')}
+                    <AIFieldIcon
+                      label="Taxa de Conclusão"
+                      importance="high"
+                      impact="Aderência e necessidade de ajustes"
+                      howUsed="IA monitora conclusão. Baixa taxa (<70%) pode sugerir ajuste de volume ou intensidade"
+                      className="ml-1"
+                    />
                   </CardTitle>
                 </div>
               </CardHeader>
@@ -413,8 +435,15 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-4 w-4 text-slate-600" />
-                  <CardTitle className="text-sm font-medium text-slate-600">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                     {t('summary.totalDuration')}
+                    <AIFieldIcon
+                      label="Duração Total"
+                      importance="high"
+                      impact="Tempo de adaptação e progressão"
+                      howUsed="IA calcula semanas baseado na data da prova. Mínimo recomendado: 8 semanas para meia, 12 para maratona"
+                      className="ml-1"
+                    />
                   </CardTitle>
                 </div>
               </CardHeader>
