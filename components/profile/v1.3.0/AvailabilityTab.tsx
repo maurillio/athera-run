@@ -4,9 +4,12 @@ import { toast } from 'sonner';
 import { Loader2, Check, AlertCircle, Calendar } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 export default function AvailabilityTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
+  const { getFieldStatus } = useFieldAnalysis();
   
   // v1.6.7 - Usar trainingSchedule como fonte única da verdade
   const initializeFromSchedule = () => {
@@ -255,7 +258,7 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
 
         {/* Infraestrutura Disponível */}
         <div className="p-4 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center font-semibold mb-3">
+          <div className="flex items-center gap-1 font-semibold mb-3">
             Infraestrutura Disponível:
             <AIFieldIcon
               label="Infraestrutura de Treino"
@@ -263,6 +266,14 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
               impact="Variedade e qualidade dos treinos"
               howUsed="Academia = treinos de força, Piscina = cross-training, Pista = intervalados precisos"
             />
+            {getFieldStatus('hasGymAccess') && (
+              <AIFieldStatus
+                status={getFieldStatus('hasGymAccess')!.status}
+                importance={getFieldStatus('hasGymAccess')!.importance}
+                label="Infraestrutura"
+                variant="compact"
+              />
+            )}
           </div>
           <div className="grid grid-cols-3 gap-3">
             {/* Academia */}
@@ -326,7 +337,7 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
 
       {/* Dias de Corrida (Obrigatório) */}
       <div>
-        <label className="flex items-center font-semibold mb-2 text-lg">
+        <label className="flex items-center gap-1 font-semibold mb-2 text-lg">
           {t('availability.runningDaysLabel')}
           <AIFieldIcon
             label="Dias Disponíveis para Corrida"
@@ -334,6 +345,14 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
             impact="Distribuição semanal de treinos"
             howUsed="Aloca treinos nos dias disponíveis e define estrutura semanal. Mínimo 3 dias para progressão efetiva"
           />
+          {getFieldStatus('trainingSchedule') && (
+            <AIFieldStatus
+              status={getFieldStatus('trainingSchedule')!.status}
+              importance={getFieldStatus('trainingSchedule')!.importance}
+              label="Agenda"
+              variant="compact"
+            />
+          )}
         </label>
         <p className="text-sm text-gray-600 mb-3">{t('availability.runningDaysDesc')}</p>
         <div className="grid grid-cols-7 gap-2">
@@ -359,7 +378,7 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
           <div className="flex items-center gap-3 mb-4">
             <Calendar className="h-6 w-6 text-orange-600" />
             <div className="flex-1">
-              <div className="flex items-center">
+              <div className="flex items-center gap-1">
                 <h3 className="font-semibold text-lg">{t('availability.longRunDay')}</h3>
                 <AIFieldIcon
                   label="Dia do Longão"
@@ -367,6 +386,14 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
                   impact="Distribuição de carga semanal e recuperação"
                   howUsed="Fixa o longão no dia escolhido e organiza outros treinos para maximizar recuperação"
                 />
+                {getFieldStatus('longRunDay') && (
+                  <AIFieldStatus
+                    status={getFieldStatus('longRunDay')!.status}
+                    importance={getFieldStatus('longRunDay')!.importance}
+                    label="Longão"
+                    variant="compact"
+                  />
+                )}
               </div>
               <p className="text-sm text-gray-600">{t('availability.longRunDayDesc')}</p>
             </div>
