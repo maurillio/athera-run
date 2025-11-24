@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function GoalsTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
@@ -25,7 +26,15 @@ export default function GoalsTab({ userData, onUpdate }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block font-medium mb-3">{t('goals.primaryGoal')}</label>
+        <label className="flex items-center font-medium mb-3">
+          {t('goals.primaryGoal')}
+          <AIFieldIcon
+            label="Objetivo Principal"
+            importance="high"
+            impact="Foco e priorização do plano"
+            howUsed="Define tipo de treinos enfatizados. Ex: melhorar tempo = mais intervalados, saúde = mais fácil"
+          />
+        </label>
         <div className="grid gap-2">
           {goals.map(g => (
             <button key={g.value}
@@ -40,7 +49,15 @@ export default function GoalsTab({ userData, onUpdate }: any) {
       </div>
 
       <div>
-        <label className="block font-medium mb-2">{t('goals.motivation')}</label>
+        <label className="flex items-center font-medium mb-2">
+          {t('goals.motivation')}
+          <AIFieldIcon
+            label="Motivação"
+            importance="medium"
+            impact="Personalização e engajamento"
+            howUsed="Usa para contextualizar mensagens e mantém você motivado durante treinos difíceis"
+          />
+        </label>
         <textarea value={motivation} onChange={(e) => { setMotivation(e.target.value); setHasChanges(true); }}
           className="w-full px-4 py-3 border rounded-lg h-24 resize-none"
           placeholder={t('goals.motivationPlaceholder')}/>

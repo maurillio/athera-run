@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Loader2, Check, AlertCircle, Calendar } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function AvailabilityTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
@@ -254,7 +255,15 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
 
         {/* Infraestrutura Disponível */}
         <div className="p-4 bg-white rounded-lg shadow-sm">
-          <div className="font-semibold mb-3">Infraestrutura Disponível:</div>
+          <div className="flex items-center font-semibold mb-3">
+            Infraestrutura Disponível:
+            <AIFieldIcon
+              label="Infraestrutura de Treino"
+              importance="low"
+              impact="Variedade e qualidade dos treinos"
+              howUsed="Academia = treinos de força, Piscina = cross-training, Pista = intervalados precisos"
+            />
+          </div>
           <div className="grid grid-cols-3 gap-3">
             {/* Academia */}
             <div className={`p-4 rounded-lg text-center border-2 transition-all ${
@@ -317,7 +326,15 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
 
       {/* Dias de Corrida (Obrigatório) */}
       <div>
-        <label className="block font-semibold mb-2 text-lg">{t('availability.runningDaysLabel')}</label>
+        <label className="flex items-center font-semibold mb-2 text-lg">
+          {t('availability.runningDaysLabel')}
+          <AIFieldIcon
+            label="Dias Disponíveis para Corrida"
+            importance="critical"
+            impact="Distribuição semanal de treinos"
+            howUsed="Aloca treinos nos dias disponíveis e define estrutura semanal. Mínimo 3 dias para progressão efetiva"
+          />
+        </label>
         <p className="text-sm text-gray-600 mb-3">{t('availability.runningDaysDesc')}</p>
         <div className="grid grid-cols-7 gap-2">
           {days.map((day, idx) => (
@@ -341,8 +358,16 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
         <div className="border-t pt-6">
           <div className="flex items-center gap-3 mb-4">
             <Calendar className="h-6 w-6 text-orange-600" />
-            <div>
-              <h3 className="font-semibold text-lg">{t('availability.longRunDay')}</h3>
+            <div className="flex-1">
+              <div className="flex items-center">
+                <h3 className="font-semibold text-lg">{t('availability.longRunDay')}</h3>
+                <AIFieldIcon
+                  label="Dia do Longão"
+                  importance="high"
+                  impact="Distribuição de carga semanal e recuperação"
+                  howUsed="Fixa o longão no dia escolhido e organiza outros treinos para maximizar recuperação"
+                />
+              </div>
               <p className="text-sm text-gray-600">{t('availability.longRunDayDesc')}</p>
             </div>
           </div>
