@@ -2,9 +2,12 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step4');
+  const { getFieldStatus } = useFieldAnalysis();
   const tCommon = useTranslations('common');
   
   // Detectar se o usuário nunca correu para ajustar as perguntas

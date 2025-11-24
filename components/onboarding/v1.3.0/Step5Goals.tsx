@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 type GoalType = 'race' | 'start' | 'fitness';
 
@@ -43,6 +45,7 @@ const GOAL_CONFIGS = {
 
 export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step5');
+  const { getFieldStatus } = useFieldAnalysis();
   const tCommon = useTranslations('common');
   
   // Tipo de objetivo - NOVA LÓGICA (não vem nada pré-selecionado)

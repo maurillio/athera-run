@@ -2,9 +2,12 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 export default function Step2SportBackground({ data, onUpdate, onNext, onBack, onPrevious }: any) {
   const t = useTranslations('onboarding.step2');
+  const { getFieldStatus } = useFieldAnalysis();
   const tCommon = useTranslations('common');
   
   // Parse otherSportsExperience se for string separada por vírgula

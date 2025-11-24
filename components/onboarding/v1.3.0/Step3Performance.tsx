@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react';
 import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 import { useTranslations } from '@/lib/i18n/hooks';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 export default function Step3Performance({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step3');
+  const { getFieldStatus } = useFieldAnalysis();
   const tCommon = useTranslations('common');
   
   // Inicializar bestTimes (não personalBests!)

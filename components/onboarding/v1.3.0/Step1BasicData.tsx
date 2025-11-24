@@ -5,6 +5,8 @@ import { useTranslations } from '@/lib/i18n/hooks';
 import { validateStep1, OnboardingData } from '@/lib/onboarding-validator';
 import { calculateIMC, interpretIMC } from '@/lib/vdot-calculator';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 import { AI_FIELD_CONFIGS } from '@/types/ai-transparency';
 
 interface Step1Props {
@@ -17,6 +19,7 @@ interface Step1Props {
 
 export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevious }: Step1Props) {
   const t = useTranslations('onboarding.step1');
+  const { getFieldStatus } = useFieldAnalysis();
   const tCommon = useTranslations('common');
   
   const [formData, setFormData] = useState({

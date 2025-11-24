@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 interface DaySchedule {
   running: boolean;
@@ -10,6 +12,7 @@ interface DaySchedule {
 
 export default function Step6Availability({ data, onUpdate, onNext, onBack }: any) {
   const t = useTranslations('onboarding.step6');
+  const { getFieldStatus } = useFieldAnalysis();
   const tCommon = useTranslations('common');
   
   // Nova estrutura: schedule por dia com múltiplas atividades
