@@ -1,8 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
-import { refreshStravaToken, importStravaActivity } from '@/lib/strava';
-import { triggerAutoAdjustIfEnabled } from '@/lib/auto-adjust-service';
+import { processStravaWebhook } from '@/lib/strava-webhook-handler';
 
 export const dynamic = "force-dynamic";
 
@@ -25,77 +23,21 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 }
 
-// POST - Receber eventos do Strava
+// POST - Receber eventos do Strava (v3.2.0 - Sistema Completo)
 export async function POST(request: NextRequest) {
   try {
     const event = await request.json();
     
-    console.log('Webhook event received:', event);
+    console.log('🎣 Webhook event received:', event);
     
-    // Eventos possíveis: create, update, delete
-    // object_type: activity, athlete
+    // Processar evento usando o handler completo
+    const result = await processStravaWebhook(event);
     
-    if (event.object_type !== 'activity') {
-      return NextResponse.json({ success: true });
-    }
-
-    const { aspect_type, object_id, owner_id } = event;
-
-    // Buscar perfil do atleta
-    const profile = await prisma.athleteProfile.findFirst({
-      where: { stravaAthleteId: owner_id.toString() }
-    });
-
-    if (!profile) {
-      console.log('Perfil não encontrado para athlete_id:', owner_id);
-      return NextResponse.json({ success: true });
-    }
-
-    if (aspect_type === 'create') {
-      // Renovar token se necessário
-      const accessToken = await refreshStravaToken(profile.id);
-      
-      // Buscar detalhes da atividade do Strava
-      const activityResponse = await fetch(
-        `https://www.strava.com/api/v3/activities/${object_id}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        }
-      );
-
-      if (!activityResponse.ok) {
-        console.error('Erro ao buscar atividade do Strava');
-        return NextResponse.json({ success: true });
-      }
-
-      const activity = await activityResponse.json();
-
-      // Importar atividade usando a função helper
-      await importStravaActivity(activity, profile.id);
-
-      console.log('Atividade importada do Strava via webhook:', object_id);
-
-      // Disparar ajuste automático em background (não aguarda)
-      triggerAutoAdjustIfEnabled(profile.id).catch(err => 
-        console.error('Auto-adjust error:', err)
-      );
-    } else if (aspect_type === 'delete') {
-      // Deletar treino se existir
-      await prisma.completedWorkout.deleteMany({
-        where: {
-          athleteId: profile.id,
-          stravaActivityId: object_id.toString()
-        }
-      });
-
-      console.log('Atividade deletada via webhook:', object_id);
-    }
-
+    console.log('✅ Webhook processed:', result);
+    
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Erro ao processar webhook:', error);
+    console.error('❌ Erro ao processar webhook:', error);
     return NextResponse.json({ success: true }); // Sempre retornar 200 para o Strava
   }
 }
