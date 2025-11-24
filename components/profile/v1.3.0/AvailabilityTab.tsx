@@ -49,6 +49,24 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
   const [adjustmentStatus, setAdjustmentStatus] = useState<any>(null);
+  
+  // v3.1.0 - Estado para edição de atividades
+  const [editingDay, setEditingDay] = useState<number | null>(null);
+  const [newActivityInput, setNewActivityInput] = useState('');
+  
+  // v3.1.0 - Atividades predefinidas disponíveis
+  const predefinedActivities = [
+    'Musculação',
+    'Yoga',
+    'Pilates',
+    'Natação',
+    'Ciclismo',
+    'Luta',
+    'Crossfit',
+    'Funcional',
+    'Alongamento',
+    'Caminhada',
+  ];
 
   const days = [
     t('availability.days.0'),
@@ -59,6 +77,36 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
     t('availability.days.5'),
     t('availability.days.6')
   ];
+  
+  // v3.1.0 - Adicionar atividade a um dia
+  const addActivityToDay = (dayIdx: number, activity: string) => {
+    const currentActivities = activitiesByDay[dayIdx] || [];
+    if (!currentActivities.includes(activity)) {
+      setActivitiesByDay({
+        ...activitiesByDay,
+        [dayIdx]: [...currentActivities, activity]
+      });
+      setHasChanges(true);
+    }
+    setNewActivityInput('');
+  };
+  
+  // v3.1.0 - Remover atividade de um dia
+  const removeActivityFromDay = (dayIdx: number, activity: string) => {
+    const currentActivities = activitiesByDay[dayIdx] || [];
+    const newActivities = currentActivities.filter((a: string) => a !== activity);
+    
+    if (newActivities.length === 0) {
+      const { [dayIdx]: _, ...rest } = activitiesByDay;
+      setActivitiesByDay(rest);
+    } else {
+      setActivitiesByDay({
+        ...activitiesByDay,
+        [dayIdx]: newActivities
+      });
+    }
+    setHasChanges(true);
+  };
 
   const toggleDay = (dayIdx: number, currentDays: number[], setter: Function) => {
     const newDays = currentDays.includes(dayIdx)
@@ -197,21 +245,45 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
           </div>
         )}
 
-        {/* Outras Atividades - TODAS DO TRAINING SCHEDULE */}
-        {Object.keys(activitiesByDay).length > 0 && (
-          <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
-            <div className="font-semibold mb-3">✨ Outras Atividades:</div>
-            <div className="space-y-3">
-              {days.map((dayName, dayIdx) => {
-                const activities = activitiesByDay[dayIdx];
-                if (!activities || activities.length === 0) return null;
-                
-                return (
-                  <div key={dayIdx} className="flex items-start gap-2 ml-2">
-                    <span className="text-sm font-medium text-gray-700 min-w-[100px]">{dayName}:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {activities.map((activity, idx) => {
-                        // Mapear ícones por atividade
+        {/* v3.1.0 - Outras Atividades - AGORA TOTALMENTE EDITÁVEL */}
+        <div className="mb-4 p-4 bg-white rounded-lg shadow-sm border-2 border-purple-200">
+          <div className="flex items-center justify-between mb-4">
+            <div className="font-semibold flex items-center gap-2">
+              ✨ Outras Atividades por Dia
+              <AIFieldIcon
+                label="Atividades Complementares"
+                importance="medium"
+                impact="Condicionamento geral e recovery"
+                howUsed="IA considera atividades para balancear carga total semanal"
+              />
+            </div>
+            <span className="text-xs text-purple-700 bg-purple-50 px-2 py-1 rounded">
+              Editável ✏️
+            </span>
+          </div>
+
+          {/* Lista de dias da semana com atividades editáveis */}
+          <div className="space-y-3">
+            {days.map((dayName, dayIdx) => {
+              const dayActivities = activitiesByDay[dayIdx] || [];
+              const isEditing = editingDay === dayIdx;
+              
+              return (
+                <div key={dayIdx} className="p-3 bg-gray-50 rounded-lg border">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-gray-800">{dayName}</span>
+                    <button
+                      onClick={() => setEditingDay(isEditing ? null : dayIdx)}
+                      className="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition"
+                    >
+                      {isEditing ? '✓ Fechar' : '+ Adicionar Atividade'}
+                    </button>
+                  </div>
+
+                  {/* Atividades atuais do dia */}
+                  {dayActivities.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {dayActivities.map((activity, idx) => {
                         const activityIcons: {[key: string]: string} = {
                           'Musculação': '💪',
                           'musculacao': '💪',
@@ -226,6 +298,14 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
                           'bicicleta': '🚴',
                           'Luta': '🥋',
                           'luta': '🥋',
+                          'Crossfit': '🏋️',
+                          'crossfit': '🏋️',
+                          'Funcional': '🤾',
+                          'funcional': '🤾',
+                          'Alongamento': '🧘',
+                          'alongamento': '🧘',
+                          'Caminhada': '🚶',
+                          'caminhada': '🚶',
                         };
                         
                         const activityLower = activity.toLowerCase();
@@ -233,28 +313,90 @@ export default function AvailabilityTab({ userData, onUpdate }: any) {
                         const displayName = activity.charAt(0).toUpperCase() + activity.slice(1);
                         
                         return (
-                          <span key={idx} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-medium text-sm flex items-center gap-1">
+                          <span 
+                            key={idx} 
+                            className="group px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-medium text-sm flex items-center gap-2 hover:bg-purple-200 transition"
+                          >
                             <span>{icon}</span>
                             <span>{displayName}</span>
+                            <button
+                              onClick={() => removeActivityFromDay(dayIdx, activity)}
+                              className="opacity-0 group-hover:opacity-100 text-red-600 hover:text-red-800 font-bold transition"
+                              title="Remover atividade"
+                            >
+                              ×
+                            </button>
                           </span>
                         );
                       })}
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  )}
+
+                  {dayActivities.length === 0 && !isEditing && (
+                    <p className="text-xs text-gray-500 italic">Nenhuma atividade adicional neste dia</p>
+                  )}
+
+                  {/* Interface de edição (quando aberta) */}
+                  {isEditing && (
+                    <div className="mt-3 p-3 bg-white rounded border space-y-2">
+                      <p className="text-xs font-medium text-gray-700 mb-2">Selecione uma atividade:</p>
+                      
+                      {/* Atividades predefinidas */}
+                      <div className="flex flex-wrap gap-2">
+                        {predefinedActivities
+                          .filter(act => !dayActivities.includes(act))
+                          .map(activity => (
+                            <button
+                              key={activity}
+                              onClick={() => addActivityToDay(dayIdx, activity)}
+                              className="px-3 py-1 text-sm bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-700 rounded transition"
+                            >
+                              + {activity}
+                            </button>
+                          ))
+                        }
+                      </div>
+
+                      {/* Campo para atividade customizada */}
+                      <div className="flex gap-2 pt-2 border-t">
+                        <input
+                          type="text"
+                          value={newActivityInput}
+                          onChange={(e) => setNewActivityInput(e.target.value)}
+                          placeholder="Ou digite uma atividade customizada..."
+                          className="flex-1 px-3 py-2 text-sm border rounded focus:ring-2 focus:ring-purple-500"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter' && newActivityInput.trim()) {
+                              addActivityToDay(dayIdx, newActivityInput.trim());
+                            }
+                          }}
+                        />
+                        <button
+                          onClick={() => {
+                            if (newActivityInput.trim()) {
+                              addActivityToDay(dayIdx, newActivityInput.trim());
+                            }
+                          }}
+                          disabled={!newActivityInput.trim()}
+                          className="px-4 py-2 text-sm bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        >
+                          Adicionar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        )}
-        
-        {/* Nota sobre edição de atividades */}
-        {Object.keys(activitiesByDay).length > 0 && (
-          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-900">
-              ℹ️ Para editar as outras atividades, você pode criar um novo plano a partir do Dashboard.
+
+          {/* Dica de uso */}
+          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs text-blue-900">
+              💡 <strong>Dica:</strong> Adicione atividades complementares (musculação, yoga, etc) para que a IA considere sua carga total de treino semanal e ajuste a intensidade da corrida adequadamente.
             </p>
           </div>
-        )}
+        </div>
 
         {/* Infraestrutura Disponível */}
         <div className="p-4 bg-white rounded-lg shadow-sm">

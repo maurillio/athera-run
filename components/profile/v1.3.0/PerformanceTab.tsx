@@ -16,6 +16,11 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
   const [currentWeeklyKm, setCurrentWeeklyKm] = useState(userData.currentWeeklyKm || 0);
   const [longestRun, setLongestRun] = useState(userData.longestRun || 0);
   const [otherSportsExperience, setOtherSportsExperience] = useState(userData.otherSportsExperience || '');
+  const [otherSportsYears, setOtherSportsYears] = useState(userData.otherSportsYears || 0); // v3.1.0
+  
+  // v3.1.0 - Campos de experiência detalhados
+  const [experienceDescription, setExperienceDescription] = useState(userData.experienceDescription || '');
+  const [experienceAnalysis] = useState(userData.experienceAnalysis || ''); // read-only
   
   // Estados de performance (já existentes)
   const [bestTimes, setBestTimes] = useState(userData.bestTimes || {});
@@ -42,6 +47,8 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
       currentWeeklyKm: currentWeeklyKm ? parseFloat(currentWeeklyKm.toString()) : null,
       longestRun: longestRun ? parseFloat(longestRun.toString()) : null,
       otherSportsExperience: otherSportsExperience || null,
+      otherSportsYears: otherSportsYears ? parseInt(otherSportsYears.toString()) : null, // v3.1.0
+      experienceDescription: experienceDescription || null, // v3.1.0
       // Melhores tempos
       bestTimes: Object.keys(bestTimes).length > 0 ? bestTimes : null 
     });
@@ -290,10 +297,150 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
           />
           <p className="text-xs text-gray-600 mt-1">{t('otherSportsHelp')}</p>
         </div>
+
+        {/* v3.1.0 - Adicionar anos de outros esportes */}
+        <div>
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
+            Anos praticando outros esportes
+            <AIFieldIcon
+              label="Anos Outros Esportes"
+              importance="low"
+              impact="Condicionamento geral"
+              howUsed="Contexto sobre experiência atlética geral e transferência de habilidades"
+            />
+          </label>
+          <input
+            type="number"
+            value={otherSportsYears}
+            onChange={(e) => { setOtherSportsYears(e.target.value); setHasChanges(true); }}
+            placeholder="Ex: 5 anos"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            min="0"
+            max="50"
+          />
+          <p className="text-xs text-gray-600 mt-1">
+            Experiência total com atividades físicas ajuda na adaptação ao treino
+          </p>
+        </div>
       </div>
 
+      {/* v3.1.0 - SEÇÃO: SUA EXPERIÊNCIA DETALHADA */}
+      <div className="border-t pt-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          📝 Sua Experiência de Corrida Detalhada
+        </h3>
+        
+        <div>
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
+            Conte sobre sua experiência com corrida
+            <AIFieldIcon
+              label="Descrição de Experiência"
+              importance="medium"
+              impact="Contexto personalizado"
+              howUsed="IA analisa texto livre para entender melhor seu histórico e adaptar comunicação"
+            />
+          </label>
+          <textarea
+            value={experienceDescription}
+            onChange={(e) => { setExperienceDescription(e.target.value); setHasChanges(true); }}
+            placeholder="Ex: Comecei a correr há 2 anos, já fiz algumas provas de 5K e 10K. Gosto de correr pela manhã no parque. Meu objetivo é melhorar meu tempo e eventualmente fazer uma meia maratona..."
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            rows={5}
+          />
+          <p className="text-xs text-gray-600 mt-1">
+            Quanto mais detalhes você compartilhar, melhor a IA pode personalizar seu plano
+          </p>
+        </div>
+
+        {experienceAnalysis && (
+          <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg">
+            <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+              🤖 Análise da IA sobre sua Experiência
+            </h4>
+            <p className="text-sm text-gray-800 whitespace-pre-wrap">{experienceAnalysis}</p>
+          </div>
+        )}
+      </div>
+
+      {/* v3.1.0 - SEÇÃO: ANÁLISE DE PERFORMANCE */}
+      {(userData.currentVDOT || userData.usualPaces || userData.recentLongRunPace) && (
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            📊 Análise de Performance
+          </h3>
+
+          {userData.currentVDOT && (
+            <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+              <div className="text-center">
+                <p className="text-sm text-gray-700 mb-2">Seu VDOT Atual</p>
+                <p className="text-5xl font-bold text-blue-600 mb-2">{userData.currentVDOT}</p>
+                <p className="text-sm text-gray-700">{interpretVDOT(userData.currentVDOT)}</p>
+                {userData.lastVDOTUpdate && (
+                  <p className="text-xs text-gray-600 mt-2">
+                    Última atualização: {new Date(userData.lastVDOTUpdate).toLocaleDateString('pt-BR')}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {userData.usualPaces && Object.keys(userData.usualPaces).length > 0 && (
+            <div className="mb-4">
+              <h4 className="font-semibold mb-3 flex items-center gap-1">
+                🎯 Seus Ritmos de Treino Recomendados
+                <AIFieldIcon
+                  label="Ritmos de Treino"
+                  importance="high"
+                  impact="Zonas de treino personalizadas"
+                  howUsed="IA calcula ritmos ideais baseado no VDOT para cada tipo de treino"
+                />
+              </h4>
+              <div className="grid md:grid-cols-2 gap-3">
+                {userData.usualPaces.easy && (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">🟢 Easy (Fácil)</p>
+                    <p className="text-xl font-bold text-green-700">{userData.usualPaces.easy}</p>
+                  </div>
+                )}
+                {userData.usualPaces.marathon && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">🔵 Marathon (Maratona)</p>
+                    <p className="text-xl font-bold text-blue-700">{userData.usualPaces.marathon}</p>
+                  </div>
+                )}
+                {userData.usualPaces.threshold && (
+                  <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">🟠 Threshold (Limiar)</p>
+                    <p className="text-xl font-bold text-orange-700">{userData.usualPaces.threshold}</p>
+                  </div>
+                )}
+                {userData.usualPaces.interval && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">🔴 Interval (Intervalado)</p>
+                    <p className="text-xl font-bold text-red-700">{userData.usualPaces.interval}</p>
+                  </div>
+                )}
+                {userData.usualPaces.repetition && (
+                  <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">🟣 Repetition (Tiros)</p>
+                    <p className="text-xl font-bold text-purple-700">{userData.usualPaces.repetition}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {userData.recentLongRunPace && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-sm font-medium text-gray-700 mb-1">🏃 Pace do Último Longão</p>
+              <p className="text-2xl font-bold text-amber-700">{userData.recentLongRunPace}</p>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* SEÇÃO 2: MELHORES TEMPOS */}
-      <div>
+      <div className="border-t pt-6">
         <h3 className="flex items-center gap-1 text-lg font-semibold mb-4">
           🏆 {t('title')}
           <AIFieldIcon

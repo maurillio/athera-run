@@ -2,8 +2,9 @@
 
 > Planejamento de features, melhorias e evolução da plataforma
 
-**Última atualização:** 05 de Novembro de 2025  
-**Versão Atual:** 1.5.0
+**Última atualização:** 24 de Novembro de 2025  
+**Versão Atual:** 2.8.0  
+**Próxima Versão:** 3.1.0 (Convergência Total de Dados)
 
 ---
 
@@ -11,12 +12,13 @@
 
 1. [Visão Geral](#visão-geral)
 2. [Prioridades](#prioridades)
-3. [Q4 2024](#q4-2024-outubro---dezembro)
-4. [Q1 2025](#q1-2025-janeiro---março)
-5. [Q2 2025](#q2-2025-abril---junho)
-6. [Q3 2025](#q3-2025-julho---setembro)
-7. [Futuro (2026+)](#futuro-2026)
-8. [Ideias Explorando](#ideias-em-exploração)
+3. [🔥 URGENTE: Convergência de Dados v3.1.0](#-urgente-convergência-de-dados-v310)
+4. [Q4 2025](#q4-2025-outubro---dezembro)
+5. [Q1 2026](#q1-2026-janeiro---março)
+6. [Q2 2026](#q2-2026-abril---junho)
+7. [Q3 2026](#q3-2026-julho---setembro)
+8. [Futuro (2027+)](#futuro-2027)
+9. [Ideias em Exploração](#ideias-em-exploração)
 
 ---
 
@@ -38,25 +40,35 @@ Tornar-se a **#1 plataforma de treinamento de corrida com IA do Brasil**, oferec
 
 ## 🚦 Prioridades
 
-### P0 - Crítico (Fazer AGORA)
+### P0 - Crítico (Fazer IMEDIATAMENTE) 🔴
+- **CONVERGÊNCIA TOTAL DE DADOS** ← FOCO ATUAL
+  - Eliminar duplicações de campos
+  - Exibir todos os campos coletados
+  - Tornar perfil 100% editável
+  - Conectar AI tracking real
 - Estabilidade da plataforma
 - Correção de bugs críticos
-- Performance de geração de planos
 
-### P1 - Alta (Próximos 3 meses)
-- Ajustes inteligentes automáticos
+### P1 - Alta (Próximas 2 semanas)
+- Completar campos v3.0.0 no perfil
+- Expandir Performance/Health/Goals tabs
+- Unificar Medical Info
+- Deprecar campos antigos
+
+### P2 - Média (Próximo mês)
 - Notificações e lembretes
 - Analytics avançados
-- Melhorias UX
+- Melhorias UX adicionais
+- Tema dark/light
 
-### P2 - Média (6 meses)
+### P3 - Baixa (3-6 meses)
 - App mobile
 - Integrações adicionais (Garmin, Polar)
 - Social features
 - Marketplace de treinadores
 
-### P3 - Baixa (12+ meses)
-- Versões internacionais
+### P4 - Futuro (12+ meses)
+- Versões internacionais expandidas
 - Planos multi-esporte
 - Competições virtuais
 - Gamificação avançada

@@ -18,6 +18,7 @@ import type { WorkoutGenerationData } from './types/workout-structure';
 import { enhanceWorkout } from './workout-enhancer';
 import { buildEnhancedSystemPrompt } from './ai-system-prompt-v3';
 import { calculatePaces } from './planGenerator';
+import { mapProfileToTrackableFields, trackFieldUsage } from './ai-field-tracking'; // v3.1.0
 
 export interface AIUserProfile {
   // Dados básicos
@@ -1211,6 +1212,22 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
         isShortNotice: true,
         shortNoticeMessage: `⚠️ Aviso: ${totalWeeks} semanas é um tempo considerado curto para preparação de ${profile.goalDistance}. O recomendado seria ${recommendedWeeks} semanas. O plano foi otimizado para sua data, mas considere ajustar expectativas ou focar em completar a prova com segurança.`
       };
+    }
+
+    // v3.1.0 - Track AI field usage for transparency
+    try {
+      const trackableFields = mapProfileToTrackableFields(profile as any);
+      // Note: We don't have planId here yet (plan not saved), so pass null
+      // The tracking will be associated with userId only
+      if ((profile as any).userId) {
+        await trackFieldUsage((profile as any).userId, null, trackableFields);
+        console.log('[AI TRACKING] ✅ Field usage tracked successfully');
+      } else {
+        console.warn('[AI TRACKING] ⚠️ No userId in profile, skipping field tracking');
+      }
+    } catch (trackError) {
+      console.error('[AI TRACKING] ❌ Error tracking field usage:', trackError);
+      // Don't fail plan generation if tracking fails
     }
 
     return fullPlan;
