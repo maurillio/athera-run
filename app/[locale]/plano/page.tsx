@@ -14,6 +14,8 @@ import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dum
 import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import { WorkoutDetails } from '@/components/workout-details';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -93,6 +95,7 @@ export default function PlanoPage() {
   const locale = useLocale();
   const t = useTranslations('plano');
   const tCommon = useTranslations('common');
+  const { getFieldStatus } = useFieldAnalysis();
   
   const [loading, setLoading] = useState(true);
   const [plan, setPlan] = useState<CustomPlan | null>(null);
@@ -357,7 +360,7 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="h-4 w-4 text-brand-primary" />
-                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                     {t('summary.goal')}
                     <AIFieldIcon
                       label="Meta e Data"
@@ -366,6 +369,14 @@ export default function PlanoPage() {
                       howUsed="IA calcula semanas disponíveis e progressão necessária baseado na distância e data alvo"
                       className="ml-1"
                     />
+                    {getFieldStatus('goalDistance') && (
+                      <AIFieldStatus
+                        status={getFieldStatus('goalDistance')!.status}
+                        importance={getFieldStatus('goalDistance')!.importance}
+                        label="Meta"
+                        variant="compact"
+                      />
+                    )}
                   </CardTitle>
                 </div>
               </CardHeader>
@@ -383,7 +394,7 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="h-4 w-4 text-blue-600" />
-                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                     {t('summary.currentWeek')}
                     <AIFieldIcon
                       label="Semana e Fase Atual"
@@ -392,6 +403,14 @@ export default function PlanoPage() {
                       howUsed="IA divide plano em fases (Base/Build/Peak/Taper). Cada fase tem volume e intensidade específicos"
                       className="ml-1"
                     />
+                    {getFieldStatus('currentWeek') && (
+                      <AIFieldStatus
+                        status={getFieldStatus('currentWeek')!.status}
+                        importance={getFieldStatus('currentWeek')!.importance}
+                        label="Semana"
+                        variant="compact"
+                      />
+                    )}
                   </CardTitle>
                 </div>
               </CardHeader>
@@ -409,7 +428,7 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                     {t('summary.progress')}
                     <AIFieldIcon
                       label="Taxa de Conclusão"
@@ -418,6 +437,14 @@ export default function PlanoPage() {
                       howUsed="IA monitora conclusão. Baixa taxa (<70%) pode sugerir ajuste de volume ou intensidade"
                       className="ml-1"
                     />
+                    {getFieldStatus('completionRate') && (
+                      <AIFieldStatus
+                        status={getFieldStatus('completionRate')!.status}
+                        importance={getFieldStatus('completionRate')!.importance}
+                        label="Taxa"
+                        variant="compact"
+                      />
+                    )}
                   </CardTitle>
                 </div>
               </CardHeader>
@@ -435,7 +462,7 @@ export default function PlanoPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-4 w-4 text-slate-600" />
-                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                  <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                     {t('summary.totalDuration')}
                     <AIFieldIcon
                       label="Duração Total"
@@ -444,6 +471,14 @@ export default function PlanoPage() {
                       howUsed="IA calcula semanas baseado na data da prova. Mínimo recomendado: 8 semanas para meia, 12 para maratona"
                       className="ml-1"
                     />
+                    {getFieldStatus('totalWeeks') && (
+                      <AIFieldStatus
+                        status={getFieldStatus('totalWeeks')!.status}
+                        importance={getFieldStatus('totalWeeks')!.importance}
+                        label="Duração"
+                        variant="compact"
+                      />
+                    )}
                   </CardTitle>
                 </div>
               </CardHeader>
