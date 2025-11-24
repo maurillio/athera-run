@@ -3,9 +3,12 @@ import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { calculateIMC, interpretIMC, interpretRestingHR } from '@/lib/vdot-calculator';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 export default function BasicDataTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
+  const { getFieldStatus } = useFieldAnalysis();
   const [formData, setFormData] = useState({
     age: userData.age || '',
     gender: userData.gender || '',
@@ -44,7 +47,7 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('basic.age')}
             <AIFieldIcon
               label="Idade"
@@ -52,13 +55,21 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
               impact="FC máxima teórica e capacidade de recuperação"
               howUsed="Calcula FC máxima (220 - idade) e ajusta volume/intensidade por faixa etária"
             />
+            {getFieldStatus('age') && (
+              <AIFieldStatus
+                status={getFieldStatus('age')!.status}
+                importance={getFieldStatus('age')!.importance}
+                label="Idade"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.age} onChange={(e) => handleChange('age', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
         </div>
 
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('basic.gender')}
             <AIFieldIcon
               label="Gênero"
@@ -66,6 +77,14 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
               impact="Ajustes hormonais e biomecânicos"
               howUsed="Considera diferenças fisiológicas e pode ajustar treino por ciclo menstrual"
             />
+            {getFieldStatus('gender') && (
+              <AIFieldStatus
+                status={getFieldStatus('gender')!.status}
+                importance={getFieldStatus('gender')!.importance}
+                label="Gênero"
+                variant="compact"
+              />
+            )}
           </label>
           <select value={formData.gender} onChange={(e) => handleChange('gender', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg">
@@ -75,7 +94,7 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
         </div>
 
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('basic.weight')}
             <AIFieldIcon
               label="Peso"
@@ -83,13 +102,21 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
               impact="Cálculo de zonas de FC e ritmo recomendado"
               howUsed="Usado no cálculo do VDOT e ajuste de intensidade baseado em peso corporal"
             />
+            {getFieldStatus('weight') && (
+              <AIFieldStatus
+                status={getFieldStatus('weight')!.status}
+                importance={getFieldStatus('weight')!.importance}
+                label="Peso"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.weight} onChange={(e) => handleChange('weight', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" step="0.1" />
         </div>
 
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('basic.height')}
             <AIFieldIcon
               label="Altura"
@@ -97,6 +124,14 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
               impact="Análise biomecânica e estimativa de passada"
               howUsed="Usado para estimar comprimento de passada ideal e postura"
             />
+            {getFieldStatus('height') && (
+              <AIFieldStatus
+                status={getFieldStatus('height')!.status}
+                importance={getFieldStatus('height')!.importance}
+                label="Altura"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.height} onChange={(e) => handleChange('height', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
@@ -111,7 +146,7 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
 
       <div className="border-t pt-6 space-y-4">
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('basic.restingHR')}
             <AIFieldIcon
               label="FC em Repouso"
@@ -119,6 +154,14 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
               impact="Zonas de FC e condicionamento cardiovascular"
               howUsed="Calcula zonas de FC usando fórmula de Karvonen para personalizar intensidade"
             />
+            {getFieldStatus('restingHeartRate') && (
+              <AIFieldStatus
+                status={getFieldStatus('restingHeartRate')!.status}
+                importance={getFieldStatus('restingHeartRate')!.importance}
+                label="FC Repouso"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.restingHeartRate}
             onChange={(e) => handleChange('restingHeartRate', e.target.value)}
