@@ -8,6 +8,10 @@ import {
   validateAIPlan,
   type AIUserProfile,
 } from '@/lib/ai-plan-generator';
+import { 
+  mapProfileToTrackableFields, 
+  trackFieldUsage 
+} from '@/lib/ai-field-tracking';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -377,6 +381,18 @@ export async function POST(request: NextRequest) {
     });
 
     console.log('[AI PLAN] Plano criado no banco. ID:', customPlan.id);
+    
+    // v2.8.0 - Track field usage for AI transparency
+    console.log('[AI PLAN] 📊 Tracking field usage for AI transparency...');
+    try {
+      const trackableFields = mapProfileToTrackableFields(profile);
+      await trackFieldUsage(user.id, customPlan.id, trackableFields);
+      console.log('[AI PLAN] ✅ Field usage tracked successfully');
+    } catch (trackError) {
+      console.error('[AI PLAN] ⚠️ Error tracking fields (non-critical):', trackError);
+      // Don't fail plan generation if tracking fails
+    }
+    
     console.log('[AI PLAN] Criando', aiPlan.weeks.length, 'semanas...');
 
     // Criar semanas e treinos
