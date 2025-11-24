@@ -823,3 +823,23 @@ model StravaActivity {
   @@index([type])
   @@map("strava_activities")
 }
+
+// v2.8.0 - AI Transparency System
+model AIFieldUsage {
+  id         String   @id @default(cuid())
+  planId     Int?
+  userId     String
+  fieldName  String
+  fieldValue String?
+  wasUsed    Boolean  @default(false)
+  importance String?
+  howUsed    String?
+  impact     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([planId])
+  @@index([userId])
+  @@index([fieldName])
+  @@map("ai_field_usage")
+}
