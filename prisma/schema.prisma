@@ -233,8 +233,11 @@ model AthleteProfile {
   longestRun            Float?
   experienceDescription String?
   experienceAnalysis    String?
+  /// @deprecated Use RaceGoal table instead (v3.1.0)
   goalDistance          String?
+  /// @deprecated Use RaceGoal table instead (v3.1.0)
   targetRaceDate        DateTime?
+  /// @deprecated Use RaceGoal table instead (v3.1.0)
   targetTime            String?
   currentVDOT           Float?
   stravaConnected       Boolean             @default(false)
@@ -242,16 +245,20 @@ model AthleteProfile {
   stravaAccessToken     String?
   stravaRefreshToken    String?
   stravaTokenExpiry     DateTime?
+  /// @deprecated Use injuryDetails instead (v3.1.0)
   injuries              Json?
   medicalConditions     String?
   medications           String?
   physicalRestrictions  String?
+  /// @deprecated Use trainingSchedule instead (v3.1.0)
   weeklyAvailability    Int?                @default(5)
+  /// @deprecated Use trainingSchedule instead (v3.1.0)
   trainingActivities    Json?
   autoAdjustEnabled     Boolean             @default(false)
   lastAutoAdjustDate    DateTime?
   longRunDay            Int?
   usualPaces            Json?
+  /// @deprecated Use injuryDetails instead (v3.1.0)
   injuryHistory         String?
   hasCustomPlan         Boolean             @default(false)
   customPlanId          Int?                @unique
