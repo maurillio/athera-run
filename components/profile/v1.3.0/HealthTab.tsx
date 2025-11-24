@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function HealthTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile.health');
@@ -41,7 +42,15 @@ export default function HealthTab({ userData, onUpdate }: any) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block font-medium mb-2">{t('injuryHistory.label')}</label>
+        <label className="flex items-center font-medium mb-2">
+          {t('injuryHistory.label')}
+          <AIFieldIcon
+            label="Histórico de Lesões"
+            importance="high"
+            impact="Prevenção e ajuste de volume"
+            howUsed="Reduz ritmo de progressão e inclui treinos preventivos baseados no histórico"
+          />
+        </label>
         <div className="flex gap-4">
           <button onClick={() => { setHasInjuryHistory(false); setHasChanges(true); }}
             className={`px-6 py-2 rounded-lg ${!hasInjuryHistory ? 'bg-green-600 text-white' : 'border'}`}>
@@ -74,8 +83,14 @@ export default function HealthTab({ userData, onUpdate }: any) {
         <h3 className="font-semibold">{t('physiological.title')}</h3>
         
         <div>
-          <label className="block text-sm font-medium mb-2">
+          <label className="flex items-center text-sm font-medium mb-2">
             {t('physiological.restingHR.label')}
+            <AIFieldIcon
+              label="FC em Repouso"
+              importance="high"
+              impact="Zonas de FC e condicionamento cardiovascular"
+              howUsed="Calcula zonas de FC usando fórmula de Karvonen para personalizar intensidade dos treinos"
+            />
             <span className="text-gray-500 ml-2">{t('physiological.restingHR.help')}</span>
           </label>
           <input type="number" value={restingHeartRate} 
@@ -85,7 +100,7 @@ export default function HealthTab({ userData, onUpdate }: any) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">
+          <label className="flex items-center text-sm font-medium mb-2">
             {t('physiological.sleepQuality.label')}: {
               sleepQuality === 1 ? t('physiological.sleepQuality.level1') :
               sleepQuality === 2 ? t('physiological.sleepQuality.level2') :
@@ -93,6 +108,12 @@ export default function HealthTab({ userData, onUpdate }: any) {
               sleepQuality === 4 ? t('physiological.sleepQuality.level4') :
               t('physiological.sleepQuality.level5')
             }
+            <AIFieldIcon
+              label="Qualidade do Sono"
+              importance="medium"
+              impact="Capacidade de recuperação e adaptação"
+              howUsed="Ajusta volume e intensidade baseado na recuperação. Sono ruim = treino mais leve"
+            />
           </label>
           <input type="range" min="1" max="5" value={sleepQuality} 
             onChange={(e) => { setSleepQuality(parseInt(e.target.value)); setHasChanges(true); }}
@@ -100,7 +121,7 @@ export default function HealthTab({ userData, onUpdate }: any) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">
+          <label className="flex items-center text-sm font-medium mb-2">
             {t('physiological.stressLevel.label')}: {
               stressLevel === 1 ? t('physiological.stressLevel.level1') :
               stressLevel === 2 ? t('physiological.stressLevel.level2') :
@@ -108,6 +129,12 @@ export default function HealthTab({ userData, onUpdate }: any) {
               stressLevel === 4 ? t('physiological.stressLevel.level4') :
               t('physiological.stressLevel.level5')
             }
+            <AIFieldIcon
+              label="Nível de Estresse"
+              importance="medium"
+              impact="Carga de treino total e risco de overtraining"
+              howUsed="Alto estresse = redução de volume e intensidade para evitar sobrecarga"
+            />
           </label>
           <input type="range" min="1" max="5" value={stressLevel} 
             onChange={(e) => { setStressLevel(parseInt(e.target.value)); setHasChanges(true); }}
@@ -121,6 +148,12 @@ export default function HealthTab({ userData, onUpdate }: any) {
             onChange={(e) => { setMedicalClearance(e.target.checked); setHasChanges(true); }}
             className="w-5 h-5" />
           <span className="text-sm">{medicalClearance ? t('medicalClearance.yes') : t('medicalClearance.no')}</span>
+          <AIFieldIcon
+            label="Liberação Médica"
+            importance="critical"
+            impact="Segurança e responsabilidade legal"
+            howUsed="Garante que o atleta está apto para treinar e previne problemas de saúde"
+          />
         </label>
         {!medicalClearance && (
           <p className="text-sm text-orange-600 mt-2">{t('medicalClearance.warning')}</p>

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function PerformanceTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile.performance');
@@ -139,7 +140,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
         <div className="grid md:grid-cols-2 gap-4">
           {/* Nível */}
           <div>
-            <label className="block text-sm font-medium mb-2">{t('runningLevel')}</label>
+            <label className="flex items-center text-sm font-medium mb-2">
+              {t('runningLevel')}
+              <AIFieldIcon
+                label="Nível de Experiência"
+                importance="critical"
+                impact="Estrutura base do plano e progressão"
+                howUsed="Define complexidade dos treinos, volume inicial e taxa de progressão segura"
+              />
+            </label>
             <select 
               value={runningLevel}
               onChange={(e) => { setRunningLevel(e.target.value); setHasChanges(true); }}
@@ -153,7 +162,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
           
           {/* Anos */}
           <div>
-            <label className="block text-sm font-medium mb-2">{t('yearsRunning')}</label>
+            <label className="flex items-center text-sm font-medium mb-2">
+              {t('yearsRunning')}
+              <AIFieldIcon
+                label="Anos de Experiência"
+                importance="medium"
+                impact="Adaptação neuromuscular e resiliência"
+                howUsed="Influencia velocidade de progressão e complexidade de treinos. Mais anos = progressão mais rápida"
+              />
+            </label>
             <input
               type="number"
               value={runningYears}
@@ -167,7 +184,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
           
           {/* Volume Semanal */}
           <div>
-            <label className="block text-sm font-medium mb-2">{t('currentWeeklyKm')}</label>
+            <label className="flex items-center text-sm font-medium mb-2">
+              {t('currentWeeklyKm')}
+              <AIFieldIcon
+                label="Quilometragem Semanal Atual"
+                importance="critical"
+                impact="Volume inicial do plano e progressão"
+                howUsed="Ponto de partida para progressão segura (regra dos 10%). Evita sobrecarga e lesões"
+              />
+            </label>
             <input
               type="number"
               value={currentWeeklyKm}
@@ -181,7 +206,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
           
           {/* Longão */}
           <div>
-            <label className="block text-sm font-medium mb-2">{t('longestRun')}</label>
+            <label className="flex items-center text-sm font-medium mb-2">
+              {t('longestRun')}
+              <AIFieldIcon
+                label="Maior Corrida Recente"
+                importance="high"
+                impact="Distância do longão inicial no plano"
+                howUsed="Define o ponto de partida dos longões e progressão de distância. Evita saltos muito grandes"
+              />
+            </label>
             <input
               type="number"
               value={longestRun}
@@ -196,7 +229,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
         
         {/* Outros Esportes */}
         <div className="mt-4">
-          <label className="block text-sm font-medium mb-2">{t('otherSports')}</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('otherSports')}
+            <AIFieldIcon
+              label="Outros Esportes"
+              importance="low"
+              impact="Condicionamento geral e transferência de habilidades"
+              howUsed="Considera experiência atlética geral. Ex: natação ajuda cardio, ciclismo ajuda resistência"
+            />
+          </label>
           <textarea
             value={otherSportsExperience}
             onChange={(e) => { setOtherSportsExperience(e.target.value); setHasChanges(true); }}
@@ -210,8 +251,14 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
 
       {/* SEÇÃO 2: MELHORES TEMPOS */}
       <div>
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+        <h3 className="flex items-center text-lg font-semibold mb-4 gap-2">
           🏆 {t('title')}
+          <AIFieldIcon
+            label="Melhores Tempos"
+            importance="critical"
+            impact="Cálculo do VDOT e ritmos de treino"
+            howUsed="Calcula VDOT atual e define todas as zonas de treino personalizadas (fácil, moderado, limiar, intervalado)"
+          />
         </h3>
         <p className="text-sm text-gray-600 mb-4">{t('description')}</p>
       </div>

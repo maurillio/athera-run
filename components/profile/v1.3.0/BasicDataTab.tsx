@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import { calculateIMC, interpretIMC, interpretRestingHR } from '@/lib/vdot-calculator';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 export default function BasicDataTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile');
@@ -43,13 +44,29 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">{t('basic.age')}</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('basic.age')}
+            <AIFieldIcon
+              label="Idade"
+              importance="critical"
+              impact="FC máxima teórica e capacidade de recuperação"
+              howUsed="Calcula FC máxima (220 - idade) e ajusta volume/intensidade por faixa etária"
+            />
+          </label>
           <input type="number" value={formData.age} onChange={(e) => handleChange('age', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">{t('basic.gender')}</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('basic.gender')}
+            <AIFieldIcon
+              label="Gênero"
+              importance="high"
+              impact="Ajustes hormonais e biomecânicos"
+              howUsed="Considera diferenças fisiológicas e pode ajustar treino por ciclo menstrual"
+            />
+          </label>
           <select value={formData.gender} onChange={(e) => handleChange('gender', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg">
             <option value="male">{t('basic.genderOptions.male')}</option>
@@ -58,13 +75,29 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">{t('basic.weight')}</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('basic.weight')}
+            <AIFieldIcon
+              label="Peso"
+              importance="high"
+              impact="Cálculo de zonas de FC e ritmo recomendado"
+              howUsed="Usado no cálculo do VDOT e ajuste de intensidade baseado em peso corporal"
+            />
+          </label>
           <input type="number" value={formData.weight} onChange={(e) => handleChange('weight', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" step="0.1" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">{t('basic.height')}</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('basic.height')}
+            <AIFieldIcon
+              label="Altura"
+              importance="medium"
+              impact="Análise biomecânica e estimativa de passada"
+              howUsed="Usado para estimar comprimento de passada ideal e postura"
+            />
+          </label>
           <input type="number" value={formData.height} onChange={(e) => handleChange('height', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
         </div>
@@ -78,7 +111,15 @@ export default function BasicDataTab({ userData, onUpdate }: any) {
 
       <div className="border-t pt-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">{t('basic.restingHR')}</label>
+          <label className="flex items-center text-sm font-medium mb-2">
+            {t('basic.restingHR')}
+            <AIFieldIcon
+              label="FC em Repouso"
+              importance="high"
+              impact="Zonas de FC e condicionamento cardiovascular"
+              howUsed="Calcula zonas de FC usando fórmula de Karvonen para personalizar intensidade"
+            />
+          </label>
           <input type="number" value={formData.restingHeartRate}
             onChange={(e) => handleChange('restingHeartRate', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" />
