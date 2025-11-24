@@ -8,6 +8,34 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
+/**
+ * Detectar se atividade é uma prova baseado em nome, distância e descrição
+ */
+function detectRaceByName(name: string, distance: number, description: string): boolean {
+  const lowerName = name.toLowerCase();
+  const lowerDesc = description.toLowerCase();
+  const distanceKm = distance / 1000;
+  
+  // Palavras-chave de prova
+  const raceKeywords = [
+    'prova', 'corrida', 'maratona', 'meia', 'half', 'desafio',
+    'race', 'marathon', 'run', 'challenge', 'championship',
+    '5k', '10k', '15k', '21k', '42k', '42.195', '21.097'
+  ];
+  
+  const hasRaceKeyword = raceKeywords.some(keyword => 
+    lowerName.includes(keyword) || lowerDesc.includes(keyword)
+  );
+  
+  // Distâncias oficiais de prova (±500m)
+  const officialDistances = [5, 10, 15, 21.097, 42.195];
+  const isOfficialDistance = officialDistances.some(
+    d => Math.abs(distanceKm - d) <= 0.5
+  );
+  
+  return hasRaceKeyword || isOfficialDistance;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -51,7 +79,18 @@ export async function GET(request: NextRequest) {
     if (filter === 'runs') {
       where.type = 'Run';
     } else if (filter === 'races') {
-      where.name = { contains: 'prova', mode: 'insensitive' };
+      // Detectar provas por palavras-chave multilíngue
+      where.OR = [
+        { name: { contains: 'prova', mode: 'insensitive' } },
+        { name: { contains: 'corrida', mode: 'insensitive' } },
+        { name: { contains: 'maratona', mode: 'insensitive' } },
+        { name: { contains: 'race', mode: 'insensitive' } },
+        { name: { contains: 'marathon', mode: 'insensitive' } },
+        { name: { contains: '5k', mode: 'insensitive' } },
+        { name: { contains: '10k', mode: 'insensitive' } },
+        { name: { contains: '21k', mode: 'insensitive' } },
+        { name: { contains: '42k', mode: 'insensitive' } }
+      ];
     }
 
     // Buscar atividades
@@ -74,8 +113,18 @@ export async function GET(request: NextRequest) {
         kudosCount: true,
         locationCity: true,
         startDate: true,
-        manual: true
+        manual: true,
+        description: true
       }
+    });
+
+    // FASE 2: Detectar quais são provas usando lógica de detecção
+    const activitiesWithRaceDetection = activities.map(activity => {
+      const isRace = detectRaceByName(activity.name, activity.distance, activity.description || '');
+      return {
+        ...activity,
+        isRace
+      };
     });
 
     // Calcular estatísticas
@@ -106,7 +155,7 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json({
-      activities,
+      activities: activitiesWithRaceDetection,
       stats,
       pagination: {
         page,
