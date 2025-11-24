@@ -50,6 +50,8 @@ import WorkoutLogDialog from '@/components/dashboard/workout-log-dialog';
 import { WorkoutDetails } from '@/components/workout-details';
 import DashboardStravaWidget from '@/components/dashboard/strava-widget';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 interface CustomPlan {
   id: number;
@@ -108,6 +110,7 @@ export default function DashboardPage() {
   const t = useTranslations('dashboard');
   const tCommon = useTranslations('common');
   const tPlano = useTranslations('plano');
+  const { getFieldStatus } = useFieldAnalysis();
   
   const [plan, setPlan] = useState<CustomPlan | null>(null);
   const [currentWeek, setCurrentWeek] = useState<CustomWeek | null>(null);
@@ -382,7 +385,7 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="h-4 w-4 text-brand-primary" />
-                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                         {t('stats.nextWorkout')}
                         <AIFieldIcon
                           label="Próximo Treino"
@@ -391,6 +394,14 @@ export default function DashboardPage() {
                           howUsed="IA planeja sequência de treinos otimizada. Próximo treino baseado em recuperação e progressão"
                           className="ml-1"
                         />
+                        {getFieldStatus('nextWorkout') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('nextWorkout')!.status}
+                            importance={getFieldStatus('nextWorkout')!.importance}
+                            label="Próximo"
+                            variant="compact"
+                          />
+                        )}
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -414,7 +425,7 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="h-4 w-4 text-blue-600" />
-                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                         {t('stats.currentWeek')}
                         <AIFieldIcon
                           label="Semana Atual"
@@ -423,6 +434,14 @@ export default function DashboardPage() {
                           howUsed="IA divide plano em fases (Base/Build/Peak/Taper). Cada fase tem objetivos específicos"
                           className="ml-1"
                         />
+                        {getFieldStatus('currentWeek') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('currentWeek')!.status}
+                            importance={getFieldStatus('currentWeek')!.importance}
+                            label="Semana"
+                            variant="compact"
+                          />
+                        )}
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -438,7 +457,7 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Target className="h-4 w-4 text-brand-primary" />
-                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                         {t('stats.goal')}
                         <AIFieldIcon
                           label="Meta da Prova"
@@ -447,6 +466,14 @@ export default function DashboardPage() {
                           howUsed="IA usa distância e data para calcular semanas disponíveis e progressão necessária"
                           className="ml-1"
                         />
+                        {getFieldStatus('goalDistance') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('goalDistance')!.status}
+                            importance={getFieldStatus('goalDistance')!.importance}
+                            label="Meta"
+                            variant="compact"
+                          />
+                        )}
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -464,7 +491,7 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Award className="h-4 w-4 text-emerald-600" />
-                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-1">
                         {t('stats.progress')}
                         <AIFieldIcon
                           label="Progresso do Plano"
@@ -473,6 +500,14 @@ export default function DashboardPage() {
                           howUsed="IA monitora aderência. Baixa taxa de conclusão pode sugerir ajustes de volume ou intensidade"
                           className="ml-1"
                         />
+                        {getFieldStatus('completionRate') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('completionRate')!.status}
+                            importance={getFieldStatus('completionRate')!.importance}
+                            label="Progresso"
+                            variant="compact"
+                          />
+                        )}
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -505,6 +540,14 @@ export default function DashboardPage() {
                       howUsed="IA sequencia treinos para otimizar adaptação. Hoje e amanhã mostram foco imediato"
                       className="ml-auto"
                     />
+                    {getFieldStatus('upcomingWorkouts') && (
+                      <AIFieldStatus
+                        status={getFieldStatus('upcomingWorkouts')!.status}
+                        importance={getFieldStatus('upcomingWorkouts')!.importance}
+                        label="Próximos"
+                        variant="compact"
+                      />
+                    )}
                   </CardTitle>
                   <CardDescription className="text-slate-600">{t('upcomingWorkouts.description')}</CardDescription>
                 </CardHeader>
