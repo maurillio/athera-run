@@ -2,7 +2,7 @@
  * API ROUTE: Sync All Strava Data
  * POST /api/strava/sync-all - Importar todos os dados avançados do Strava
  * 
- * Importa: Stats, PRs, Gear
+ * Importa: Stats, PRs, Gear, Zones
  * PREMIUM ONLY
  */
 
@@ -12,6 +12,7 @@ import { authOptions } from '@/lib/auth';
 import { importStravaStats } from '@/lib/strava-stats';
 import { importStravaPRs } from '@/lib/strava-prs';
 import { importStravaGear } from '@/lib/strava-gear';
+import { importStravaZones } from '@/lib/strava-zones';
 import { prisma } from '@/lib/db';
 
 export async function POST() {
@@ -63,10 +64,11 @@ export async function POST() {
     const results = {
       stats: { success: false, error: null as string | null },
       prs: { success: false, error: null as string | null },
-      gear: { success: false, error: null as string | null }
+      gear: { success: false, error: null as string | null },
+      zones: { success: false, error: null as string | null }
     };
 
-    // Importar Stats
+    // Importar Stats (inclui agora perfil do atleta)
     try {
       await importStravaStats(user.id, user.athleteProfile.id);
       results.stats.success = true;
@@ -93,7 +95,16 @@ export async function POST() {
       results.gear.error = error.message;
     }
 
-    const allSuccess = results.stats.success && results.prs.success && results.gear.success;
+    // Importar Zonas
+    try {
+      await importStravaZones(user.id, user.athleteProfile.id);
+      results.zones.success = true;
+    } catch (error: any) {
+      console.error('Erro ao importar zonas:', error);
+      results.zones.error = error.message;
+    }
+
+    const allSuccess = results.stats.success && results.prs.success && results.gear.success && results.zones.success;
 
     return NextResponse.json({
       success: allSuccess,

@@ -110,20 +110,24 @@ export async function importStravaGear(
         name: shoe.name,
         brand: shoe.brand_name || null,
         model: shoe.model_name || null,
-        description: shoe.description || null,
+        description: details?.description || shoe.description || null,
         type: 'shoe',
         primary: shoe.primary,
         distance: shoe.distance / 1000, // converter para km
-        activityCount: details?.activity_count || 0
+        activityCount: details?.activity_count || 0,
+        convertedDistance: details?.converted_distance || null,
+        notificationDistance: details?.notification_distance || null
       },
       update: {
         name: shoe.name,
         brand: shoe.brand_name || null,
         model: shoe.model_name || null,
-        description: shoe.description || null,
+        description: details?.description || shoe.description || null,
         primary: shoe.primary,
         distance: shoe.distance / 1000,
         activityCount: details?.activity_count || 0,
+        convertedDistance: details?.converted_distance || null,
+        notificationDistance: details?.notification_distance || null,
         updatedAt: new Date()
       }
     });
@@ -142,20 +146,24 @@ export async function importStravaGear(
         name: bike.name,
         brand: bike.brand_name || null,
         model: bike.model_name || null,
-        description: bike.description || null,
+        description: details?.description || bike.description || null,
         type: 'bike',
         primary: bike.primary,
         distance: bike.distance / 1000,
-        activityCount: details?.activity_count || 0
+        activityCount: details?.activity_count || 0,
+        convertedDistance: details?.converted_distance || null,
+        notificationDistance: details?.notification_distance || null
       },
       update: {
         name: bike.name,
         brand: bike.brand_name || null,
         model: bike.model_name || null,
-        description: bike.description || null,
+        description: details?.description || bike.description || null,
         primary: bike.primary,
         distance: bike.distance / 1000,
         activityCount: details?.activity_count || 0,
+        convertedDistance: details?.converted_distance || null,
+        notificationDistance: details?.notification_distance || null,
         updatedAt: new Date()
       }
     });

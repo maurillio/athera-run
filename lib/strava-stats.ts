@@ -117,7 +117,7 @@ export async function importStravaStats(
     throw new Error('Athlete ID do Strava não encontrado');
   }
 
-  // Buscar stats do Strava (corrigir URL com athleteId real)
+  // Buscar dados completos do atleta (inclui perfil + equipamentos)
   const athleteResponse = await fetch('https://www.strava.com/api/v3/athlete', {
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
@@ -128,6 +128,29 @@ export async function importStravaStats(
 
   const athlete = await athleteResponse.json();
   const athleteId = athlete.id.toString();
+
+  // Salvar dados do perfil do atleta
+  const athleteProfileData = {
+    weight: athlete.weight || null,
+    sex: athlete.sex || null,
+    city: athlete.city || null,
+    state: athlete.state || null,
+    country: athlete.country || null,
+    profile: athlete.profile || null,
+    ftp: athlete.ftp || null,
+    follower_count: athlete.follower_count || null,
+    friend_count: athlete.friend_count || null,
+    premium: athlete.premium || false,
+    summit: athlete.summit || false,
+    badge_type_id: athlete.badge_type_id || null
+  };
+
+  await prisma.athleteProfile.update({
+    where: { id: profileId },
+    data: {
+      stravaProfileData: athleteProfileData
+    }
+  });
 
   // Buscar stats
   const statsResponse = await fetch(`https://www.strava.com/api/v3/athletes/${athleteId}/stats`, {
