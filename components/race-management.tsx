@@ -13,6 +13,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Calendar, Target, RefreshCw, Loader2, Info, Pencil, Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useTranslations } from '@/lib/i18n/hooks';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
+import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
+import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
 
 interface Race {
   id: number;
@@ -33,6 +36,7 @@ interface RaceManagementProps {
 
 export default function RaceManagement({ races, onRacesUpdated }: RaceManagementProps) {
   const t = useTranslations('raceManagement');
+  const { getFieldStatus } = useFieldAnalysis();
   const [isAddingRace, setIsAddingRace] = useState(false);
   const [isClassifying, setIsClassifying] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -235,7 +239,23 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
 
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="raceName">{t('raceName')}</Label>
+                    <Label htmlFor="raceName" className="flex items-center gap-1">
+                      {t('raceName')}
+                      <AIFieldIcon
+                        label="Nome da Corrida"
+                        importance="medium"
+                        impact="Identificação e motivação"
+                        howUsed="Personaliza mensagens e ajuda a manter foco no objetivo"
+                      />
+                      {getFieldStatus('raceName') && (
+                        <AIFieldStatus
+                          status={getFieldStatus('raceName')!.status}
+                          importance={getFieldStatus('raceName')!.importance}
+                          label="Nome"
+                          variant="compact"
+                        />
+                      )}
+                    </Label>
                     <Input
                       id="raceName"
                       value={formData.raceName}
@@ -246,7 +266,23 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="distance">{t('distance')}</Label>
+                      <Label htmlFor="distance" className="flex items-center gap-1">
+                        {t('distance')}
+                        <AIFieldIcon
+                          label="Distância da Prova"
+                          importance="critical"
+                          impact="Estrutura do plano"
+                          howUsed="Define duração e progressão do treinamento"
+                        />
+                        {getFieldStatus('raceDistance') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('raceDistance')!.status}
+                            importance={getFieldStatus('raceDistance')!.importance}
+                            label="Dist"
+                            variant="compact"
+                          />
+                        )}
+                      </Label>
                       <Select
                         value={formData.distance}
                         onValueChange={(value) => setFormData({...formData, distance: value})}
@@ -267,7 +303,23 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                     </div>
 
                     <div>
-                      <Label htmlFor="raceDate">{t('raceDate')}</Label>
+                      <Label htmlFor="raceDate" className="flex items-center gap-1">
+                        {t('raceDate')}
+                        <AIFieldIcon
+                          label="Data da Prova"
+                          importance="critical"
+                          impact="Cronograma e periodização"
+                          howUsed="Calcula semanas disponíveis e distribui treinos"
+                        />
+                        {getFieldStatus('raceDate') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('raceDate')!.status}
+                            importance={getFieldStatus('raceDate')!.importance}
+                            label="Data"
+                            variant="compact"
+                          />
+                        )}
+                      </Label>
                       <Input
                         id="raceDate"
                         type="date"
@@ -279,7 +331,23 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="targetTime">{t('targetTime')}</Label>
+                      <Label htmlFor="targetTime" className="flex items-center gap-1">
+                        {t('targetTime')}
+                        <AIFieldIcon
+                          label="Tempo Alvo"
+                          importance="high"
+                          impact="Ritmos de treino"
+                          howUsed="Define ritmos específicos para atingir objetivo"
+                        />
+                        {getFieldStatus('targetTime') && (
+                          <AIFieldStatus
+                            status={getFieldStatus('targetTime')!.status}
+                            importance={getFieldStatus('targetTime')!.importance}
+                            label="Tempo"
+                            variant="compact"
+                          />
+                        )}
+                      </Label>
                       <Input
                         id="targetTime"
                         value={formData.targetTime}
@@ -300,7 +368,23 @@ export default function RaceManagement({ races, onRacesUpdated }: RaceManagement
                   </div>
 
                   <div>
-                    <Label htmlFor="priority">{t('classification')}</Label>
+                    <Label htmlFor="priority" className="flex items-center gap-1">
+                      {t('classification')}
+                      <AIFieldIcon
+                        label="Prioridade da Prova"
+                        importance="high"
+                        impact="Foco e intensidade do treino"
+                        howUsed="Provas A recebem treinos mais específicos e tapering completo"
+                      />
+                      {getFieldStatus('racePriority') && (
+                        <AIFieldStatus
+                          status={getFieldStatus('racePriority')!.status}
+                          importance={getFieldStatus('racePriority')!.importance}
+                          label="Prioridade"
+                          variant="compact"
+                        />
+                      )}
+                    </Label>
                     <Select
                       value={formData.priority}
                       onValueChange={(value: 'A' | 'B' | 'C') => setFormData({...formData, priority: value})}
