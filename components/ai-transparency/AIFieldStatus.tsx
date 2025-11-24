@@ -1,7 +1,16 @@
 'use client';
 
-import { CheckCircle2, AlertCircle, XCircle, Circle } from 'lucide-react';
-import { FieldStatus, FieldImportance } from '@/types/ai-transparency';
+import { CheckCircle2, AlertTriangle, XCircle, HelpCircle } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+
+export type FieldStatus = 'used' | 'missing' | 'conflicting' | 'not-used';
+export type FieldImportance = 'critical' | 'high' | 'medium' | 'low';
 
 interface AIFieldStatusProps {
   status: FieldStatus;
@@ -12,6 +21,7 @@ interface AIFieldStatusProps {
   suggestion?: string;
   conflictsWith?: string;
   className?: string;
+  variant?: 'badge' | 'icon' | 'compact';
 }
 
 const statusConfig = {
@@ -21,32 +31,43 @@ const statusConfig = {
     bgColor: 'bg-green-50',
     borderColor: 'border-green-200',
     label: 'Usado pela IA',
-    emoji: '✓',
+    emoji: '🟢',
+    description: 'Este campo foi utilizado pela IA na geração do seu plano',
   },
   'not-used': {
-    icon: AlertCircle,
+    icon: AlertTriangle,
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50',
     borderColor: 'border-yellow-200',
     label: 'Não usado',
-    emoji: '⚠',
+    emoji: '🟡',
+    description: 'Campo disponível mas não utilizado nesta geração',
   },
   missing: {
     icon: XCircle,
     color: 'text-red-600',
     bgColor: 'bg-red-50',
     borderColor: 'border-red-200',
-    label: 'Não fornecido',
-    emoji: '✗',
+    label: 'Faltando',
+    emoji: '🔴',
+    description: 'Campo vazio. Preencha para melhor personalização',
   },
   conflicting: {
-    icon: AlertCircle,
+    icon: AlertTriangle,
     color: 'text-orange-600',
     bgColor: 'bg-orange-50',
     borderColor: 'border-orange-200',
-    label: 'Conflito detectado',
-    emoji: '⚠',
+    label: 'Atenção',
+    emoji: '🟡',
+    description: 'Possível conflito detectado. Revise este campo',
   },
+};
+
+const importanceLabels = {
+  critical: 'Crítico',
+  high: 'Importante',
+  medium: 'Útil',
+  low: 'Opcional',
 };
 
 export default function AIFieldStatus({
@@ -58,23 +79,81 @@ export default function AIFieldStatus({
   suggestion,
   conflictsWith,
   className = '',
+  variant = 'compact',
 }: AIFieldStatusProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
 
+  // Compact version - just emoji with tooltip
+  if (variant === 'compact') {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>
+            <span
+              className={`inline-flex items-center justify-center cursor-help transition-all hover:scale-125 ${className}`}
+              role="img"
+              aria-label={config.label}
+            >
+              {config.emoji}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs">
+            <div className="space-y-2">
+              <p className="font-semibold">{config.label}: {label}</p>
+              <p className="text-xs">{config.description}</p>
+              <p className="text-xs text-muted-foreground">
+                Importância: {importanceLabels[importance]}
+              </p>
+              {reason && (
+                <p className="text-xs text-muted-foreground italic">{reason}</p>
+              )}
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  // Icon version
+  if (variant === 'icon') {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              className={`inline-flex items-center justify-center rounded-full p-1 transition-all hover:scale-110 ${config.bgColor} ${className}`}
+              aria-label={config.label}
+            >
+              <Icon className={`h-3 w-3 ${config.color}`} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs">
+            <div className="space-y-2">
+              <p className="font-semibold">{config.label}: {label}</p>
+              <p className="text-xs">{config.description}</p>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  // Badge version - full display
   return (
     <div
       className={`rounded-lg border-2 ${config.borderColor} ${config.bgColor} p-4 ${className}`}
     >
       <div className="flex items-start gap-3">
-        <Icon className={`h-5 w-5 ${config.color} flex-shrink-0 mt-0.5`} />
+        <span className="text-2xl flex-shrink-0">{config.emoji}</span>
         
         <div className="flex-1 space-y-2">
           <div className="flex items-center justify-between">
             <h4 className="font-medium text-gray-900">{label}</h4>
-            <span className={`text-xs px-2 py-1 rounded-full ${config.bgColor} ${config.color} font-medium`}>
+            <Badge variant="outline" className={`${config.bgColor} ${config.color} border-0`}>
               {config.label}
-            </span>
+            </Badge>
           </div>
 
           {value !== undefined && value !== null && value !== '' && (
@@ -83,33 +162,18 @@ export default function AIFieldStatus({
             </p>
           )}
 
-          {status === 'used' && (
-            <p className="text-sm text-gray-600">
-              {config.emoji} Seus dados estão sendo usados para personalizar seu treino
-            </p>
-          )}
+          <p className="text-sm text-gray-600">{config.description}</p>
 
-          {status === 'not-used' && reason && (
+          {reason && (
             <div className="text-sm text-gray-700">
-              <p className="font-medium text-yellow-800">{config.emoji} Por que não foi usado:</p>
+              <p className="font-medium">Motivo:</p>
               <p className="mt-1">{reason}</p>
             </div>
           )}
 
-          {status === 'missing' && (
-            <div className="text-sm">
-              <p className="text-gray-700">{config.emoji} Este campo não foi preenchido</p>
-              {importance === 'critical' && (
-                <p className="text-red-700 font-medium mt-1">
-                  ⚠️ Campo crítico! Complete para melhor personalização
-                </p>
-              )}
-            </div>
-          )}
-
-          {status === 'conflicting' && conflictsWith && (
+          {conflictsWith && (
             <div className="text-sm text-gray-700">
-              <p className="font-medium text-orange-800">{config.emoji} Conflita com:</p>
+              <p className="font-medium text-orange-800">Conflita com:</p>
               <p className="mt-1">{conflictsWith}</p>
             </div>
           )}
