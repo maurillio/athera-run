@@ -307,7 +307,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center font-medium mb-2 text-gray-900">
+                <label className="flex items-center gap-1 font-medium mb-2 text-gray-900">
                   📏 Distância da Prova <span className="text-red-600">*</span>
                   <AIFieldIcon
                     label="Distância Meta"
@@ -315,6 +315,14 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
                     impact="Define estrutura e duração do plano"
                     howUsed="Determina semanas de preparação e progressão de volume"
                   />
+                  {getFieldStatus('goalDistance') && (
+                    <AIFieldStatus
+                      status={getFieldStatus('goalDistance')!.status}
+                      importance={getFieldStatus('goalDistance')!.importance}
+                      label="Distância"
+                      variant="compact"
+                    />
+                  )}
                 </label>
                 <select
                   value={goalDistance}
@@ -333,7 +341,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
               </div>
 
               <div>
-                <label className="flex items-center font-medium mb-2 text-gray-900">
+                <label className="flex items-center gap-1 font-medium mb-2 text-gray-900">
                   📅 Data da Prova <span className="text-red-600">*</span>
                   <AIFieldIcon
                     label="Data da Prova"
@@ -341,6 +349,14 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
                     impact="Cronograma e periodização"
                     howUsed="Calcula semanas disponíveis e distribui treinos em fases"
                   />
+                  {getFieldStatus('targetRaceDate') && (
+                    <AIFieldStatus
+                      status={getFieldStatus('targetRaceDate')!.status}
+                      importance={getFieldStatus('targetRaceDate')!.importance}
+                      label="Data"
+                      variant="compact"
+                    />
+                  )}
                 </label>
                 <input
                   type="date"
@@ -356,7 +372,7 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
             </div>
 
             <div>
-              <label className="flex items-center font-medium mb-2 text-gray-900">
+              <label className="flex items-center gap-1 font-medium mb-2 text-gray-900">
                 ⏱️ Tempo Alvo <span className="text-gray-500 text-sm">(Opcional)</span>
                 <AIFieldIcon
                   label="Tempo Alvo"
@@ -364,6 +380,14 @@ export default function Step5Goals({ data, onUpdate, onNext, onBack }: any) {
                   impact="Ritmos de treino"
                   howUsed="Define ritmos específicos para atingir o objetivo"
                 />
+                {getFieldStatus('targetTime') && (
+                  <AIFieldStatus
+                    status={getFieldStatus('targetTime')!.status}
+                    importance={getFieldStatus('targetTime')!.importance}
+                    label="Tempo"
+                    variant="compact"
+                  />
+                )}
               </label>
               <div className="flex items-center gap-3">
                 <div className="flex-1">

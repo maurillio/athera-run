@@ -297,7 +297,7 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         <h3 className="font-semibold text-lg">📊 Dados Fisiológicos</h3>
         
         <div>
-          <label className="flex items-center font-medium mb-2">
+          <label className="flex items-center gap-1 font-medium mb-2">
             {t('restingHR')} ({tCommon('optional')})
             <AIFieldIcon
               label="FC em Repouso"
@@ -305,6 +305,14 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
               impact="Zonas de treino e recuperação"
               howUsed="Calcula zonas de FC personalizadas e monitora recuperação"
             />
+            {getFieldStatus('restingHeartRate') && (
+              <AIFieldStatus
+                status={getFieldStatus('restingHeartRate')!.status}
+                importance={getFieldStatus('restingHeartRate')!.importance}
+                label="FC"
+                variant="compact"
+              />
+            )}
             <span className="text-sm text-gray-500 ml-2">40-80 bpm</span>
           </label>
           <input type="number" value={restingHeartRate} onChange={(e) => setRestingHeartRate(e.target.value)}
@@ -313,7 +321,7 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         </div>
 
         <div>
-          <label className="flex items-center font-medium mb-2">
+          <label className="flex items-center gap-1 font-medium mb-2">
             {t('sleepQuality')}
             <AIFieldIcon
               label="Qualidade do Sono"
@@ -321,6 +329,14 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
               impact="Capacidade de recuperação"
               howUsed="Ajusta intensidade e volume baseado na recuperação"
             />
+            {getFieldStatus('sleepQuality') && (
+              <AIFieldStatus
+                status={getFieldStatus('sleepQuality')!.status}
+                importance={getFieldStatus('sleepQuality')!.importance}
+                label="Sono"
+                variant="compact"
+              />
+            )}
             <span className="text-sm text-gray-500 ml-2">
               {sleepQuality === 1 ? t('qualityLevels.veryPoor') : 
                sleepQuality === 2 ? t('qualityLevels.poor') : 
@@ -338,7 +354,7 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
         </div>
 
         <div>
-          <label className="flex items-center font-medium mb-2">
+          <label className="flex items-center gap-1 font-medium mb-2">
             {t('stressLevel')}
             <AIFieldIcon
               label="Nível de Estresse"
@@ -346,6 +362,14 @@ export default function Step4Health({ data, onUpdate, onNext, onBack }: any) {
               impact="Risco de overtraining"
               howUsed="Ajusta carga de treino para prevenir sobrecarga"
             />
+            {getFieldStatus('stressLevel') && (
+              <AIFieldStatus
+                status={getFieldStatus('stressLevel')!.status}
+                importance={getFieldStatus('stressLevel')!.importance}
+                label="Stress"
+                variant="compact"
+              />
+            )}
             <span className="text-sm text-gray-500 ml-2">
               {stressLevel === 1 ? t('stressLevels.veryLow') : 
                stressLevel === 2 ? t('stressLevels.low') : 

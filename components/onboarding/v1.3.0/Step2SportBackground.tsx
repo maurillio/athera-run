@@ -101,7 +101,7 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
       {formData.hasRunBefore && (
         <>
           <div>
-            <label className="flex items-center font-medium mb-2">
+            <label className="flex items-center gap-1 font-medium mb-2">
               {t('yearsRunning')}
               <AIFieldIcon
                 label="Anos de Experiência"
@@ -109,6 +109,14 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
                 impact="Adaptação neuromuscular e resiliência"
                 howUsed="Influencia velocidade de progressão e complexidade de treinos"
               />
+              {getFieldStatus('runningYears') && (
+                <AIFieldStatus
+                  status={getFieldStatus('runningYears')!.status}
+                  importance={getFieldStatus('runningYears')!.importance}
+                  label="Anos"
+                  variant="compact"
+                />
+              )}
             </label>
             <input type="number" value={formData.runningYears}
               onChange={(e) => setFormData({...formData, runningYears: e.target.value})}
@@ -116,7 +124,7 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
           </div>
 
           <div>
-            <label className="flex items-center font-medium mb-2">
+            <label className="flex items-center gap-1 font-medium mb-2">
               {t('weeklyVolume')}
               <AIFieldIcon
                 label="Quilometragem Semanal Atual"
@@ -124,6 +132,14 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
                 impact="Volume inicial do plano"
                 howUsed="Ponto de partida para progressão segura (regra dos 10%)"
               />
+              {getFieldStatus('currentWeeklyKm') && (
+                <AIFieldStatus
+                  status={getFieldStatus('currentWeeklyKm')!.status}
+                  importance={getFieldStatus('currentWeeklyKm')!.importance}
+                  label="Volume"
+                  variant="compact"
+                />
+              )}
             </label>
             <input type="number" value={formData.currentWeeklyKm}
               onChange={(e) => setFormData({...formData, currentWeeklyKm: e.target.value})}
@@ -131,7 +147,7 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
           </div>
 
           <div>
-            <label className="flex items-center font-medium mb-2">
+            <label className="flex items-center gap-1 font-medium mb-2">
               {t('longestRun')}
               <AIFieldIcon
                 label="Maior Corrida Recente"
@@ -139,6 +155,14 @@ export default function Step2SportBackground({ data, onUpdate, onNext, onBack, o
                 impact="Distância do longão inicial"
                 howUsed="Define o ponto de partida dos longões e progressão de distância"
               />
+              {getFieldStatus('longestRun') && (
+                <AIFieldStatus
+                  status={getFieldStatus('longestRun')!.status}
+                  importance={getFieldStatus('longestRun')!.importance}
+                  label="Longão"
+                  variant="compact"
+                />
+              )}
             </label>
             <input type="number" value={formData.longestRun}
               onChange={(e) => setFormData({...formData, longestRun: e.target.value})}

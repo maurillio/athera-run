@@ -282,7 +282,7 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
               <div className="flex items-start gap-2 mb-3">
                 <span className="text-lg">💡</span>
                 <div className="flex-1">
-                  <p className="flex items-center text-sm font-medium text-gray-900 mb-1">
+                  <p className="flex items-center gap-1 text-sm font-medium text-gray-900 mb-1">
                     Qual dia será seu <strong>longão</strong>?
                     <AIFieldIcon
                       label="Dia do Longão"
@@ -290,6 +290,14 @@ export default function Step6Availability({ data, onUpdate, onNext, onBack }: an
                       impact="Distribuição de volume semanal"
                       howUsed="Organiza treinos para maximizar recuperação antes/depois"
                     />
+                    {getFieldStatus('longRunDay') && (
+                      <AIFieldStatus
+                        status={getFieldStatus('longRunDay')!.status}
+                        importance={getFieldStatus('longRunDay')!.importance}
+                        label="Longão"
+                        variant="compact"
+                      />
+                    )}
                   </p>
                   <p className="text-xs text-gray-600">
                     {isBeginnerOrNever 

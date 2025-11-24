@@ -130,6 +130,14 @@ export default function Step3Performance({ data, onUpdate, onNext, onBack }: any
             impact="Cálculo do VDOT e ritmos de treino"
             howUsed="Calcula VDOT atual e define zonas de treino personalizadas"
           />
+          {getFieldStatus('bestTimes') && (
+            <AIFieldStatus
+              status={getFieldStatus('bestTimes')!.status}
+              importance={getFieldStatus('bestTimes')!.importance}
+              label="Tempos"
+              variant="compact"
+            />
+          )}
         </h3>
         
         {/* Seleção de distância */}

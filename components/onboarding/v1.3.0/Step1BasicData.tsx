@@ -89,7 +89,7 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
 
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('age')} *
             <AIFieldIcon
               label="Idade"
@@ -97,13 +97,21 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
               impact="FC máxima teórica e capacidade de recuperação"
               howUsed="Calcula FC máxima (220 - idade) e ajusta volume/intensidade por faixa etária"
             />
+            {getFieldStatus('age') && (
+              <AIFieldStatus
+                status={getFieldStatus('age')!.status}
+                importance={getFieldStatus('age')!.importance}
+                label="Idade"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.age} onChange={(e) => handleChange('age', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" placeholder={t('agePlaceholder')} min="15" max="100" />
         </div>
 
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('gender')} *
             <AIFieldIcon
               label="Gênero"
@@ -111,6 +119,14 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
               impact="Ajustes hormonais e biomecânicos"
               howUsed="Considera diferenças fisiológicas e pode ajustar treino por ciclo menstrual"
             />
+            {getFieldStatus('gender') && (
+              <AIFieldStatus
+                status={getFieldStatus('gender')!.status}
+                importance={getFieldStatus('gender')!.importance}
+                label="Gênero"
+                variant="compact"
+              />
+            )}
           </label>
           <select value={formData.gender} onChange={(e) => handleChange('gender', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg">
@@ -121,7 +137,7 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
         </div>
 
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('weight')} *
             <AIFieldIcon
               label="Peso"
@@ -129,13 +145,21 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
               impact="Cálculo de zonas de FC e ritmo recomendado"
               howUsed="Usado no cálculo do VDOT e ajuste de intensidade baseado em peso corporal"
             />
+            {getFieldStatus('weight') && (
+              <AIFieldStatus
+                status={getFieldStatus('weight')!.status}
+                importance={getFieldStatus('weight')!.importance}
+                label="Peso"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.weight} onChange={(e) => handleChange('weight', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" placeholder={t('weightPlaceholder')} step="0.1" />
         </div>
 
         <div>
-          <label className="flex items-center text-sm font-medium mb-2">
+          <label className="flex items-center gap-1 text-sm font-medium mb-2">
             {t('height')} *
             <AIFieldIcon
               label="Altura"
@@ -143,6 +167,14 @@ export default function Step1BasicData({ data, onUpdate, onNext, onBack, onPrevi
               impact="Análise biomecânica e estimativa de passada"
               howUsed="Usado para estimar comprimento de passada ideal e postura"
             />
+            {getFieldStatus('height') && (
+              <AIFieldStatus
+                status={getFieldStatus('height')!.status}
+                importance={getFieldStatus('height')!.importance}
+                label="Altura"
+                variant="compact"
+              />
+            )}
           </label>
           <input type="number" value={formData.height} onChange={(e) => handleChange('height', e.target.value)}
             className="w-full px-4 py-2 border rounded-lg" placeholder={t('heightPlaceholder')} />
