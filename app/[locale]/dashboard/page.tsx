@@ -49,6 +49,7 @@ import ProgressAnalysisBanner from '@/components/progress-analysis-banner';
 import WorkoutLogDialog from '@/components/dashboard/workout-log-dialog';
 import { WorkoutDetails } from '@/components/workout-details';
 import DashboardStravaWidget from '@/components/dashboard/strava-widget';
+import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 
 interface CustomPlan {
   id: number;
@@ -381,8 +382,15 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="h-4 w-4 text-brand-primary" />
-                      <CardTitle className="text-sm font-medium text-slate-600">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                         {t('stats.nextWorkout')}
+                        <AIFieldIcon
+                          label="Próximo Treino"
+                          importance="high"
+                          impact="Organização e preparação mental"
+                          howUsed="IA planeja sequência de treinos otimizada. Próximo treino baseado em recuperação e progressão"
+                          className="ml-1"
+                        />
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -406,8 +414,15 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="h-4 w-4 text-blue-600" />
-                      <CardTitle className="text-sm font-medium text-slate-600">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                         {t('stats.currentWeek')}
+                        <AIFieldIcon
+                          label="Semana Atual"
+                          importance="high"
+                          impact="Fase de treinamento e periodização"
+                          howUsed="IA divide plano em fases (Base/Build/Peak/Taper). Cada fase tem objetivos específicos"
+                          className="ml-1"
+                        />
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -423,8 +438,15 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Target className="h-4 w-4 text-brand-primary" />
-                      <CardTitle className="text-sm font-medium text-slate-600">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                         {t('stats.goal')}
+                        <AIFieldIcon
+                          label="Meta da Prova"
+                          importance="critical"
+                          impact="Estrutura completa do plano"
+                          howUsed="IA usa distância e data para calcular semanas disponíveis e progressão necessária"
+                          className="ml-1"
+                        />
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -442,8 +464,15 @@ export default function DashboardPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Award className="h-4 w-4 text-emerald-600" />
-                      <CardTitle className="text-sm font-medium text-slate-600">
+                      <CardTitle className="text-sm font-medium text-slate-600 flex items-center">
                         {t('stats.progress')}
+                        <AIFieldIcon
+                          label="Progresso do Plano"
+                          importance="high"
+                          impact="Motivação e ajustes necessários"
+                          howUsed="IA monitora aderência. Baixa taxa de conclusão pode sugerir ajustes de volume ou intensidade"
+                          className="ml-1"
+                        />
                       </CardTitle>
                     </div>
                   </CardHeader>
@@ -469,6 +498,13 @@ export default function DashboardPage() {
                   <CardTitle className="flex items-center gap-2 text-slate-900">
                     <Zap className="h-5 w-5 text-brand-primary" />
                     {t('upcomingWorkouts.title')}
+                    <AIFieldIcon
+                      label="Treinos Próximos"
+                      importance="high"
+                      impact="Preparação e execução"
+                      howUsed="IA sequencia treinos para otimizar adaptação. Hoje e amanhã mostram foco imediato"
+                      className="ml-auto"
+                    />
                   </CardTitle>
                   <CardDescription className="text-slate-600">{t('upcomingWorkouts.description')}</CardDescription>
                 </CardHeader>
