@@ -60,8 +60,8 @@ export default function LocaleHome() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-elevation-1">
         <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex h-16 items-center justify-between">
-            <Logo size="md" />
+          <div className="flex h-20 items-center justify-between">
+            <Logo size="lg" variant="complete" />
             <div className="flex gap-3">
               <Link href={`/${locale}/login`}>
                 <Button variant="ghost" size="default">
@@ -202,12 +202,7 @@ export default function LocaleHome() {
       <footer className="border-t border-slate-200 py-12 bg-white">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-brand-primary to-blue-600 rounded-lg flex items-center justify-center">
-                <Activity className="h-4 w-4 text-white" strokeWidth={2.5} />
-              </div>
-              <span className="font-semibold text-slate-900">Athera Run</span>
-            </div>
+            <Logo size="md" variant="complete" />
             <p className="text-sm text-slate-500">
               &copy; 2025 Athera Run. Todos os direitos reservados.
             </p>
