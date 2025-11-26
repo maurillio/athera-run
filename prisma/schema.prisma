@@ -293,8 +293,9 @@ model AthleteProfile {
   lastPeriodDate        DateTime? // v3.0.0 - Data última menstruação
   workDemand            String? // v3.0.0 - sedentary/moderate/physical
   familyDemand          String? // v3.0.0 - low/moderate/high
-  stravaZones           Json? // v3.2.1 - Zonas de FC do Strava
-  stravaProfileData     Json? // v3.2.1 - Dados do perfil Strava (peso, sexo, cidade, FTP, etc)
+  stravaZones           Json?                @map("strava_zones") // v3.2.1 - Zonas de FC do Strava
+  stravaStats           Json?                @map("strava_stats") // v3.2.1 - Estatísticas Strava
+  stravaGear            Json?                @map("strava_gear") // v3.2.1 - Equipamentos Strava
   aiAnalyses            AIAnalysis[]
   customPlan            CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
   user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)

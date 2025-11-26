@@ -10,28 +10,28 @@ interface LogoProps {
 
 const sizeClasses = {
   sm: { 
-    icon: 'h-9 w-9',
-    name: 'h-9 w-auto',
-    complete: 'h-12 w-auto',
-    container: 'h-9'
+    icon: 'h-8 w-8',
+    name: 'h-8 w-auto',
+    complete: 'h-10 w-auto',
+    container: 'h-8'
   },
   md: { 
-    icon: 'h-15 w-15',
-    name: 'h-15 w-auto',
-    complete: 'h-18 w-auto',
-    container: 'h-15'
+    icon: 'h-12 w-12',
+    name: 'h-12 w-auto',
+    complete: 'h-14 w-auto',
+    container: 'h-12'
   },
   lg: { 
-    icon: 'h-24 w-24',
-    name: 'h-24 w-auto',
-    complete: 'h-30 w-auto',
-    container: 'h-24'
+    icon: 'h-16 w-16',
+    name: 'h-16 w-auto',
+    complete: 'h-20 w-auto',
+    container: 'h-16'
   },
   xl: { 
-    icon: 'h-36 w-36',
-    name: 'h-36 w-auto',
-    complete: 'h-48 w-auto',
-    container: 'h-36'
+    icon: 'h-24 w-24',
+    name: 'h-24 w-auto',
+    complete: 'h-32 w-auto',
+    container: 'h-24'
   },
 };
 

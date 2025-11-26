@@ -22,8 +22,8 @@ export default function LandingPage() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex h-16 items-center justify-between">
-            <Logo size="md" showText />
+          <div className="flex h-24 items-center justify-between">
+            <Logo size="lg" showText />
             <div className="flex items-center gap-4">
               <Link href="/login">
                 <Button variant="ghost">Entrar</Button>
@@ -309,7 +309,8 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t py-12">
         <div className="container mx-auto max-w-6xl px-4">
-          <div className="text-center text-muted-foreground">
+          <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
+            <Logo size="sm" showText />
             <p>&copy; 2025 Athera Run. Todos os direitos reservados.</p>
           </div>
         </div>

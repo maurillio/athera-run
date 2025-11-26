@@ -1,7 +1,16 @@
+# 🚀 MIGRATION v3.2.1 - APLICAR NO NEON
+
+## ⚠️ INSTRUÇÕES
+
+1. **Acesse o Neon Console**: https://console.neon.tech
+2. **Selecione o database**: atherarun
+3. **Abra o SQL Editor**
+4. **Cole e execute o SQL abaixo**:
+
+```sql
 -- ==========================================
 -- MIGRATION v3.2.1 - STRAVA INTEGRATION COMPLETE
 -- Data: 2025-11-26
--- Descrição: Adiciona campos faltantes para importação completa Strava
 -- ==========================================
 
 -- 1. ADICIONAR CAMPOS AO ATHLETE_PROFILES
@@ -25,7 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_athlete_strava_zones ON athlete_profiles USING GI
 CREATE INDEX IF NOT EXISTS idx_athlete_strava_stats ON athlete_profiles USING GIN (strava_stats);
 CREATE INDEX IF NOT EXISTS idx_athlete_strava_gear ON athlete_profiles USING GIN (strava_gear);
 
--- 5. VERIFICAÇÃO
+-- 5. VERIFICAÇÃO (execute depois)
 SELECT 
   'athlete_profiles' as tabela,
   column_name,
@@ -43,4 +52,22 @@ SELECT
 FROM information_schema.columns
 WHERE table_name = 'strava_gear' 
   AND column_name IN ('converted_distance', 'notification_distance');
+```
 
+## ✅ RESULTADO ESPERADO
+
+Deve retornar 5 linhas confirmando as colunas:
+
+```
+tabela             | column_name           | data_type | is_nullable
+-------------------|-----------------------|-----------|------------
+athlete_profiles   | strava_zones          | jsonb     | YES
+athlete_profiles   | strava_stats          | jsonb     | YES
+athlete_profiles   | strava_gear           | jsonb     | YES
+strava_gear        | converted_distance    | varchar   | YES
+strava_gear        | notification_distance | float8    | YES
+```
+
+## 🔄 DEPOIS DE APLICAR
+
+Faça deploy no Vercel para aplicar as mudanças em produção.
