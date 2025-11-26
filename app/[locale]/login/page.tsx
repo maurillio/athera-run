@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Mail, Lock, Chrome } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useLocale, useTranslations } from '@/lib/i18n/hooks';
+import Logo from '@/components/ui/logo';
 
 function LoginContent() {
   const router = useRouter();
@@ -111,9 +112,7 @@ function LoginContent() {
       <Card className="w-full max-w-md shadow-elevation-3 border-slate-200">
         <CardHeader className="space-y-3 text-center">
           <div className="flex justify-center mb-2">
-            <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-brand-primary to-blue-600 rounded-xl shadow-md">
-              <Mail className="text-white h-7 w-7" strokeWidth={2.5} />
-            </div>
+            <Logo size="lg" showText={false} />
           </div>
           <CardTitle className="text-2xl font-bold text-slate-900">
             {t('title')}

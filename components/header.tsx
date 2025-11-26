@@ -7,6 +7,7 @@ import { Calendar, Activity, Target } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import UserDropdown from './user-dropdown';
 import LanguageSwitcher from './i18n/LanguageSwitcher';
+import Logo from './ui/logo';
 
 export default function Header() {
   const pathname = usePathname();
@@ -25,19 +26,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-elevation-1">
       <div className="container mx-auto max-w-6xl">
         <div className="flex h-16 items-center justify-between px-4">
-          <Link href={`/${locale}/dashboard`} className="flex items-center space-x-3 group">
-            {/* Logo Icon - Gradient without emoji */}
-            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-brand-primary to-blue-600 rounded-lg shadow-md group-hover:shadow-lg transition-shadow">
-              <Activity className="h-5 w-5 text-white" strokeWidth={2.5} />
-            </div>
-            
-            {/* Brand Text */}
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-brand-primary via-orange-600 to-blue-600 bg-clip-text text-transparent">
-                {t('brand')}
-              </h1>
-              <p className="text-xs text-slate-500 -mt-1">{t('tagline')}</p>
-            </div>
+          <Link href={`/${locale}/dashboard`} className="group">
+            <Logo size="md" showText />
           </Link>
 
           {/* Desktop Navigation */}

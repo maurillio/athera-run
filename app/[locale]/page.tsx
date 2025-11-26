@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Activity, Target, TrendingUp, Award, Calendar, Zap, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import Logo from '@/components/ui/logo';
 
 export default function LocaleHome() {
   const router = useRouter();
@@ -60,14 +61,7 @@ export default function LocaleHome() {
       <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-elevation-1">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-primary to-blue-600 rounded-lg flex items-center justify-center shadow-md">
-                <Activity className="h-5 w-5 text-white" strokeWidth={2.5} />
-              </div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-brand-primary via-orange-600 to-blue-600 bg-clip-text text-transparent">
-                Athera Run
-              </h1>
-            </div>
+            <Logo size="md" />
             <div className="flex gap-3">
               <Link href={`/${locale}/login`}>
                 <Button variant="ghost" size="default">

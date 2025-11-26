@@ -7,6 +7,37 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [3.2.2] - 2025-11-26
+
+### ✨ Brand Identity Update
+
+#### Logo Implementation
+- **Nova identidade visual**: Logo oficial do Athera Run implementada em todo o sistema
+- **Componente reutilizável**: Criado `<Logo />` component com tamanhos configuráveis (sm, md, lg, xl)
+- **Aplicação consistente**: Logo atualizada em:
+  - Homepage e landing page (`/[locale]/page.tsx`)
+  - Header/Navbar principal (`components/header.tsx`)
+  - Páginas de autenticação (login/signup)
+  - Favicon SVG otimizado
+  - Open Graph image para redes sociais
+- **Assets organizados**: 
+  - Logo principal: `/public/logo.png` (1.4MB, alta qualidade)
+  - Favicon: `/public/favicon.svg` (vetorizado, gradiente marca)
+  - OG Image: `/public/og-image.png` (otimizado redes sociais)
+
+#### Melhorias Visuais
+- Favicon SVG com gradiente da marca (orange → blue)
+- Componente Logo com Next.js Image (otimização automática)
+- Gradiente consistente em toda aplicação: `#FF6B00` → `#2563EB`
+- Suporte a múltiplos tamanhos e com/sem texto
+
+#### Arquivos Criados
+- `components/ui/logo.tsx` - Componente reutilizável
+- `public/logo.png` - Logo oficial
+- `public/favicon.svg` - Favicon atualizado
+
+---
+
 ## [v2.8.0] - 2025-11-24 🎯 AI Transparency System Complete
 
 ### 🚀 Sistema Completo de Transparência de IA

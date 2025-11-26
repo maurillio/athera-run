@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Mail, Lock, User, Chrome } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useLocale, useTranslations } from '@/lib/i18n/hooks';
+import Logo from '@/components/ui/logo';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -128,9 +129,7 @@ export default function SignupPage() {
       <Card className="transition-all duration-200 hover:shadow-elevation-3 hover:-translate-y-0.5 w-full max-w-md border-slate-200 shadow-elevation-2">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-xl shadow-elevation-2">
-              <span className="text-white font-bold text-2xl">A</span>
-            </div>
+            <Logo size="lg" showText={false} />
           </div>
           <CardTitle className="text-2xl text-center font-bold text-slate-900">
             {t('title')}
