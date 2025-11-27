@@ -143,38 +143,49 @@ export async function POST() {
       });
 
       if (matchingActivity) {
-        // Criar registro de treino completo vinculado ao Strava
-        const completedWorkout = await prisma.completedWorkout.create({
-          data: {
-            athleteId: profile.id,
-            source: 'strava',
-            stravaActivityId: matchingActivity.id.toString(),
-            date: new Date(matchingActivity.start_date),
-            type: workout.type,
-            subtype: workout.subtype,
-            distance: matchingActivity.distance ? matchingActivity.distance / 1000 : null, // Strava em metros
-            duration: matchingActivity.moving_time,
-            pace: matchingActivity.average_speed ? 
-              Math.floor(1000 / (matchingActivity.average_speed * 60)).toString() : null,
-            elevation: matchingActivity.total_elevation_gain,
-            avgHeartRate: matchingActivity.average_heartrate,
-            maxHeartRate: matchingActivity.max_heartrate,
-            calories: matchingActivity.calories
-          }
+        // Verificar se já existe CompletedWorkout para esta atividade do Strava
+        let completedWorkout = await prisma.completedWorkout.findUnique({
+          where: { stravaActivityId: matchingActivity.id.toString() }
         });
 
-        // Marcar CustomWorkout como completo e vincular ao CompletedWorkout
-        await prisma.customWorkout.update({
-          where: { id: workout.id },
-          data: {
-            isCompleted: true,
-            completedWorkoutId: completedWorkout.id,
-            updatedAt: new Date()
-          }
-        });
+        // Se não existe, criar novo
+        if (!completedWorkout) {
+          completedWorkout = await prisma.completedWorkout.create({
+            data: {
+              athleteId: profile.id,
+              source: 'strava',
+              stravaActivityId: matchingActivity.id.toString(),
+              date: new Date(matchingActivity.start_date),
+              type: workout.type,
+              subtype: workout.subtype,
+              distance: matchingActivity.distance ? matchingActivity.distance / 1000 : null, // Strava em metros
+              duration: matchingActivity.moving_time,
+              pace: matchingActivity.average_speed ? 
+                Math.floor(1000 / (matchingActivity.average_speed * 60)).toString() : null,
+              elevation: matchingActivity.total_elevation_gain,
+              avgHeartRate: matchingActivity.average_heartrate,
+              maxHeartRate: matchingActivity.max_heartrate,
+              calories: matchingActivity.calories
+            }
+          });
+        }
 
-        syncedCount++;
-        console.log(`[SYNC] ✅ Workout ${workout.id} marcado como completo (Strava ID: ${matchingActivity.id})`);
+        // Marcar CustomWorkout como completo e vincular ao CompletedWorkout (se ainda não estiver)
+        if (!workout.isCompleted || workout.completedWorkoutId !== completedWorkout.id) {
+          await prisma.customWorkout.update({
+            where: { id: workout.id },
+            data: {
+              isCompleted: true,
+              completedWorkoutId: completedWorkout.id,
+              updatedAt: new Date()
+            }
+          });
+
+          syncedCount++;
+          console.log(`[SYNC] ✅ Workout ${workout.id} marcado como completo (Strava ID: ${matchingActivity.id})`);
+        } else {
+          console.log(`[SYNC] ⏭️ Workout ${workout.id} já estava sincronizado`);
+        }
       }
     }
 
