@@ -26,7 +26,7 @@ export async function POST() {
     const userId = session.user.id;
 
     // 1. Buscar perfil do usuário
-    const profile = await prisma.athleteProfile.findUnique({
+    const profile = await prisma.AthleteProfile.findUnique({
       where: { userId: userId },
       select: {
         id: true,
