@@ -19,20 +19,20 @@ export async function POST() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userEmail = session.user.email;
+    const userId = session.user.id;
 
     // 1. Buscar perfil do usuário
-    const profile = await prisma.userProfile.findUnique({
-      where: { email: userEmail },
-      include: {
-        accounts: {
-          where: { provider: 'strava' },
-          select: { access_token: true }
-        }
+    const profile = await prisma.athleteProfile.findUnique({
+      where: { userId: userId },
+      select: {
+        id: true,
+        userId: true,
+        stravaConnected: true,
+        stravaAccessToken: true
       }
     });
 
@@ -41,8 +41,7 @@ export async function POST() {
     }
 
     // 2. Verificar se tem Strava conectado
-    const stravaAccount = profile.accounts[0];
-    if (!stravaAccount?.access_token) {
+    if (!profile.stravaConnected || !profile.stravaAccessToken) {
       return NextResponse.json({ 
         error: 'Strava not connected',
         synced: 0 
@@ -55,7 +54,7 @@ export async function POST() {
 
     const plannedWorkouts = await prisma.workout.findMany({
       where: {
-        userId: profile.id,
+        userId: profile.userId,
         date: { gte: sevenDaysAgo },
         completed: false,
         // Apenas treinos que podem vir do Strava
@@ -78,7 +77,7 @@ export async function POST() {
       `https://www.strava.com/api/v3/athlete/activities?after=${Math.floor(sevenDaysAgo.getTime() / 1000)}`,
       {
         headers: {
-          'Authorization': `Bearer ${stravaAccount.access_token}`
+          'Authorization': `Bearer ${profile.stravaAccessToken}`
         }
       }
     );
