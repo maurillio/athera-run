@@ -960,20 +960,14 @@ function autoCorrectStrategy(
   const taperPhase = corrected.phases[corrected.phases.length - 1];
   if (taperPhase.weeks < 2) {
     console.log(`[AUTO-CORREÇÃO] Ajustando taper de ${taperPhase.weeks} para 2 semanas...`);
-    const diff = 2 - taperPhase.weeks;
     
-    // Pegar semanas de outra fase
-    if (corrected.phases.length > 1) {
-      const prevPhase = corrected.phases[corrected.phases.length - 2];
-      if (prevPhase.weeks > diff) {
-        prevPhase.weeks -= diff;
-        taperPhase.weeks = 2;
-      }
-    }
+    // ✅ SEMPRE garantir 2 semanas de taper, mesmo que tenha que adicionar ao total
+    taperPhase.weeks = 2;
     
     // ✅ BUGFIX: Recalcular totalWeeks após ajuste
     corrected.totalWeeks = corrected.phases.reduce((sum: number, p: any) => sum + p.weeks, 0);
     console.log(`[AUTO-CORREÇÃO] totalWeeks recalculado: ${corrected.totalWeeks}`);
+    console.log(`[AUTO-CORREÇÃO] Taper ajustado para 2 semanas (total agora: ${corrected.totalWeeks} semanas)`);
   }
   
   // CORREÇÃO 3: Garantir redução de volume no taper (60-70%)
@@ -1004,6 +998,7 @@ function autoCorrectStrategy(
   }
   
   console.log('[AUTO-CORREÇÃO] Estratégia corrigida!');
+  console.log(`[AUTO-CORREÇÃO] ✅ Valores finais: taperWeeks=${corrected.phases[corrected.phases.length - 1].weeks}, totalWeeks=${corrected.totalWeeks}, phases=${corrected.phases.length}`);
   
   return corrected;
 }
