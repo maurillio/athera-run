@@ -132,6 +132,9 @@ async function handleActivityCreate(profile: any, activityId: number) {
   // Importar atividade como CompletedWorkout
   const completedWorkout = await importActivityAsWorkout(activity, profile.id);
 
+  // ✅ VINCULAR ao CustomWorkout do plano (se houver)
+  await linkCompletedWorkoutToCustomWorkout(completedWorkout, profile.id);
+
   // Importar para histórico completo de atividades Strava
   await importStravaActivityFull(activity, profile.user.id, profile.stravaAthleteId);
 
@@ -437,4 +440,51 @@ function calculatePace(distanceMeters: number, durationSeconds: number): string 
   const paceSec = Math.round((paceMinutes - paceMin) * 60);
 
   return `${paceMin}:${paceSec.toString().padStart(2, '0')}/km`;
+}
+
+/**
+ * Vincular CompletedWorkout ao CustomWorkout correspondente do plano
+ */
+async function linkCompletedWorkoutToCustomWorkout(
+  completedWorkout: any,
+  athleteId: number
+) {
+  try {
+    const workoutDate = new Date(completedWorkout.date);
+    workoutDate.setHours(0, 0, 0, 0);
+
+    // Buscar CustomWorkout do mesmo dia e tipo
+    const customWorkout = await prisma.customWorkout.findFirst({
+      where: {
+        week: {
+          plan: {
+            athleteId
+          }
+        },
+        date: {
+          gte: workoutDate,
+          lt: new Date(workoutDate.getTime() + 24 * 60 * 60 * 1000)
+        },
+        type: completedWorkout.type,
+        isCompleted: false
+      }
+    });
+
+    if (customWorkout) {
+      console.log(`✅ Vinculando CompletedWorkout ${completedWorkout.id} ao CustomWorkout ${customWorkout.id}`);
+      
+      await prisma.customWorkout.update({
+        where: { id: customWorkout.id },
+        data: {
+          isCompleted: true,
+          completedWorkoutId: completedWorkout.id
+        }
+      });
+    } else {
+      console.log(`ℹ️ Nenhum CustomWorkout encontrado para vincular (tipo: ${completedWorkout.type}, data: ${workoutDate.toISOString()})`);
+    }
+  } catch (error) {
+    console.error('❌ Erro ao vincular CompletedWorkout ao CustomWorkout:', error);
+    // Não falhar a importação se o vínculo falhar
+  }
 }

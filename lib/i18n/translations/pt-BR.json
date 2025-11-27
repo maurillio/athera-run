@@ -1168,7 +1168,11 @@
       "tempo": "Tempo",
       "intervals": "Intervalado",
       "long": "Longão",
-      "recovery": "Recuperação"
+      "recovery": "Recuperação",
+      "Workout": "Musculação",
+      "WeightTraining": "Musculação",
+      "Crossfit": "Crossfit",
+      "Yoga": "Yoga"
     }
   },
   "raceManagement": {
