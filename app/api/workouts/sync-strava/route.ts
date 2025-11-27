@@ -31,31 +31,25 @@ export async function POST() {
 
     const userEmail = session.user.email;
 
-    // 1. Buscar usuário e perfil
-    const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-      include: {
-        AthleteProfile: {
-          select: {
-            id: true,
-            userId: true,
-            stravaConnected: true,
-            stravaAccessToken: true
-          }
+    // 1. Buscar perfil do atleta diretamente
+    const profile = await prisma.athleteProfile.findFirst({
+      where: { 
+        user: {
+          email: userEmail
         }
+      },
+      select: {
+        id: true,
+        userId: true,
+        stravaConnected: true,
+        stravaAccessToken: true
       }
     });
 
-    console.log('[SYNC] User found:', { 
-      hasUser: !!user,
-      hasProfile: !!user?.AthleteProfile 
+    console.log('[SYNC] Profile found:', { 
+      hasProfile: !!profile,
+      hasStrava: !!profile?.stravaConnected
     });
-
-    if (!user || !user.AthleteProfile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
-    }
-
-    const profile = user.AthleteProfile;
 
     if (!profile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
