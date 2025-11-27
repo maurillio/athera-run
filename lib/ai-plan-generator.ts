@@ -2392,19 +2392,13 @@ export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors:
   }
   
   plan.weeks?.forEach((week, index) => { 
+    // ✅ VALIDAÇÃO SIMPLES E FLEXÍVEL:
+    // - Primeira semana pode começar no meio (ex: começou quinta)
+    // - Última semana pode terminar no dia da prova (ex: termina domingo)
+    // - Atleta pode treinar apenas 1x por semana se quiser
+    // - Única regra: tem que ter pelo menos 1 treino
     if (!week.workouts || week.workouts.length === 0) {
-      errors.push(`Semana ${index + 1} não tem treinos`);
-      return;
-    }
-
-    // ✅ NOVA LÓGICA: Primeira semana pode ter menos dias (começa no meio da semana)
-    // Última semana também pode ter menos dias (termina no dia da prova)
-    // Apenas validar que há pelo menos 1 treino
-    const daysWithWorkouts = new Set(week.workouts.map((w: any) => w.dayOfWeek));
-    
-    // ✅ Validação flexível: apenas garantir que há treinos suficientes (mínimo 2 treinos por semana)
-    if (week.workouts.length < 2) {
-      errors.push(`Semana ${index + 1} tem apenas ${week.workouts.length} treino(s) - muito pouco`);
+      errors.push(`Semana ${index + 1} não tem nenhum treino`);
     }
   });
   
