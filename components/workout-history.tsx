@@ -96,9 +96,15 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
     return t(`types.${type}` as any) || type;
   };
 
-  const getSubtypeLabel = (subtype: string | null) => {
+  const getSubtypeLabel = (subtype: string | null, type: string) => {
     if (!subtype) return '';
-    return t(`subtypes.${subtype}` as any) || subtype;
+    const subtypeLabel = t(`subtypes.${subtype}` as any) || subtype;
+    const typeLabel = t(`types.${type}` as any) || type;
+    
+    // Evitar duplicação quando tipo e subtipo são iguais
+    if (subtypeLabel === typeLabel) return '';
+    
+    return subtypeLabel;
   };
 
   const getFeelingIcon = (feeling: string | null) => {
@@ -172,7 +178,7 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
                   <div>
                     <h4 className="font-semibold text-slate-900">
                       {getTypeLabel(workout.type)}
-                      {workout.subtype && ` - ${getSubtypeLabel(workout.subtype)}`}
+                      {workout.subtype && getSubtypeLabel(workout.subtype, workout.type) && ` - ${getSubtypeLabel(workout.subtype, workout.type)}`}
                     </h4>
                     <p className="text-sm text-slate-500">
                       {formatDate(workout.date)}
