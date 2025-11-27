@@ -58,14 +58,19 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    // 🎯 CORREÇÃO: Usar data de criação do plano como referência, não "30 dias atrás"
+    // Se o plano foi criado hoje, não faz sentido buscar treinos de 30 dias atrás
+    const planCreatedAt = user.athleteProfile.customPlan.createdAt;
+    const referenceDate = new Date(Math.max(
+      planCreatedAt.getTime(),
+      new Date().getTime() - 30 * 24 * 60 * 60 * 1000 // 30 dias atrás
+    ));
 
     const [workoutLogs, feedbacks] = await Promise.all([
       prisma.trainingLog.findMany({
         where: {
           athleteId: user.athleteProfile.id,
-          date: { gte: thirtyDaysAgo }
+          date: { gte: referenceDate }
         },
         orderBy: { date: 'desc' }
       }),
@@ -73,7 +78,7 @@ export async function POST(request: NextRequest) {
       prisma.athleteFeedback.findMany({
         where: {
           userId: user.id,
-          date: { gte: thirtyDaysAgo }
+          date: { gte: referenceDate }
         },
         orderBy: { date: 'desc' }
       })
@@ -86,15 +91,28 @@ export async function POST(request: NextRequest) {
       ? Math.round((totalWorkoutsCompleted / totalWorkoutsPlanned) * 100) 
       : 0;
 
+    // 🎯 CORREÇÃO: Se o plano foi criado há menos de 7 dias, não sugerir análise ainda
+    const daysSincePlanCreated = Math.floor(
+      (new Date().getTime() - planCreatedAt.getTime()) / (24 * 60 * 60 * 1000)
+    );
+    
     const hasLowCompletion = completionRate < 70;
     const hasNegativeFeedback = feedbacks.some(f => f.type === 'fatiga' || f.type === 'dor');
     const hasRecentFeedback = feedbacks.length > 0;
     const hasSufficientData = workoutLogs.length >= 3 || feedbacks.length >= 2;
 
-    const shouldSuggestAnalysis = hasSufficientData && (
-      hasLowCompletion || 
-      hasNegativeFeedback || 
-      hasRecentFeedback
+    // Só sugerir análise se:
+    // 1. Plano tem pelo menos 7 dias (tempo para gerar dados significativos)
+    // 2. OU tem dados suficientes E problemas detectados
+    const shouldSuggestAnalysis = (
+      daysSincePlanCreated >= 7 && hasSufficientData && (
+        hasLowCompletion || 
+        hasNegativeFeedback || 
+        hasRecentFeedback
+      )
+    ) || (
+      // OU se tem mais de 5 treinos completos e feedback negativo (independente do tempo)
+      workoutLogs.length >= 5 && hasNegativeFeedback
     );
 
     if (!isPremium && shouldSuggestAnalysis) {
