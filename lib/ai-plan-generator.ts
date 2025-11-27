@@ -2192,6 +2192,39 @@ function generateWeekWorkouts(params: {
           raceDescription = `🏁 CORRIDA C (Volume) - Use como treino longo intenso. Sem taper, esta corrida faz parte do volume semanal normal. Corra no ritmo confortável, aproveite a experiência e o ambiente de prova. Não force - o objetivo é acumular km.`;
         }
 
+        // Calcular pace correto baseado na distância e tempo objetivo
+        let racePace = null;
+        if (raceInfo.targetTime && raceInfo.distance) {
+          try {
+            // Parse do tempo objetivo (formato: "HH:MM:SS" ou "H:MM:SS")
+            const timeParts = raceInfo.targetTime.split(':');
+            const hours = parseInt(timeParts[0] || '0');
+            const minutes = parseInt(timeParts[1] || '0');
+            const seconds = parseInt(timeParts[2] || '0');
+            const totalMinutes = (hours * 60) + minutes + (seconds / 60);
+            
+            // Parse da distância (formato: "21k", "42k", "10k", etc)
+            const distanceKm = parseFloat(raceInfo.distance.replace(/[^0-9.]/g, ''));
+            
+            if (distanceKm > 0 && totalMinutes > 0) {
+              const paceMinPerKm = totalMinutes / distanceKm;
+              const paceMin = Math.floor(paceMinPerKm);
+              const paceSec = Math.round((paceMinPerKm - paceMin) * 60);
+              racePace = `${paceMin}:${paceSec.toString().padStart(2, '0')}`;
+              
+              console.log(`[WORKOUT GEN] ✅ Pace calculado para corrida:`, {
+                distance: raceInfo.distance,
+                distanceKm,
+                targetTime: raceInfo.targetTime,
+                totalMinutes,
+                racePace
+              });
+            }
+          } catch (error) {
+            console.error('[WORKOUT GEN] ❌ Erro ao calcular pace:', error);
+          }
+        }
+
         workout = {
           dayOfWeek: dayOfWeek,
           date,
@@ -2201,7 +2234,7 @@ function generateWeekWorkouts(params: {
           description: raceDescription,
           distance: null, // Distância vem da corrida cadastrada
           duration: null,
-          targetPace: raceInfo.targetTime || null,
+          targetPace: racePace,
           raceInfo: {
             name: raceInfo.name,
             distance: raceInfo.distance,
