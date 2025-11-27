@@ -850,9 +850,17 @@ function validateStrategyWithRaces(
     errors.push(`Última fase "${lastPhase.name}" NÃO é taper! Corrida A OBRIGATORIAMENTE precisa de taper.`);
   }
   
-  // 2. Taper deve ter 2-3 semanas (mínimo 2 para Corrida A)
-  if (isTaperPhase && lastPhase.weeks < 2) {
-    errors.push(`Taper com apenas ${lastPhase.weeks} semana(s) - INSUFICIENTE! Mínimo 2 semanas para Corrida A.`);
+  // 2. ✅ NOVA LÓGICA: Taper adaptativo baseado no tempo disponível
+  // - Data da corrida é SAGRADA (não pode ser alterada)
+  // - Taper se adapta ao tempo disponível:
+  //   * 4-8 semanas → taper de 1 semana é OK
+  //   * 8-12 semanas → taper de 2 semanas é recomendado
+  //   * 12+ semanas → taper de 2-3 semanas é ideal
+  if (isTaperPhase) {
+    const minTaperWeeks = totalWeeks <= 8 ? 1 : 2;
+    if (lastPhase.weeks < minTaperWeeks) {
+      warnings.push(`Taper com ${lastPhase.weeks} semana(s) para ${totalWeeks} semanas de treino. Recomendado: ${minTaperWeeks} semanas.`);
+    }
   }
   
   // 3. Volume deve REDUZIR no taper (pelo menos 40%)
@@ -956,18 +964,32 @@ function autoCorrectStrategy(
     }
   }
   
-  // CORREÇÃO 2: Ajustar duração do taper (mínimo 2 semanas)
+  // CORREÇÃO 2: ✅ NOVA LÓGICA - Ajustar taper baseado no tempo disponível
+  // NÃO ALTERAR totalWeeks pois data da corrida é SAGRADA!
   const taperPhase = corrected.phases[corrected.phases.length - 1];
-  if (taperPhase.weeks < 2) {
-    console.log(`[AUTO-CORREÇÃO] Ajustando taper de ${taperPhase.weeks} para 2 semanas...`);
+  const minTaperWeeks = totalWeeks <= 8 ? 1 : 2;
+  
+  if (taperPhase.weeks < minTaperWeeks) {
+    console.log(`[AUTO-CORREÇÃO] Ajustando taper de ${taperPhase.weeks} para ${minTaperWeeks} semanas (baseado em ${totalWeeks} semanas totais)...`);
     
-    // ✅ SEMPRE garantir 2 semanas de taper, mesmo que tenha que adicionar ao total
-    taperPhase.weeks = 2;
+    // Calcular diferença a ser adicionada ao taper
+    const weeksDiff = minTaperWeeks - taperPhase.weeks;
     
-    // ✅ BUGFIX: Recalcular totalWeeks após ajuste
-    corrected.totalWeeks = corrected.phases.reduce((sum: number, p: any) => sum + p.weeks, 0);
-    console.log(`[AUTO-CORREÇÃO] totalWeeks recalculado: ${corrected.totalWeeks}`);
-    console.log(`[AUTO-CORREÇÃO] Taper ajustado para 2 semanas (total agora: ${corrected.totalWeeks} semanas)`);
+    // Tentar roubar semanas das fases anteriores
+    if (corrected.phases.length > 1 && weeksDiff > 0) {
+      // Pegar da penúltima fase (geralmente a fase específica/peak)
+      const prevPhase = corrected.phases[corrected.phases.length - 2];
+      if (prevPhase.weeks > weeksDiff) {
+        prevPhase.weeks -= weeksDiff;
+        taperPhase.weeks = minTaperWeeks;
+        console.log(`[AUTO-CORREÇÃO] Reduziu fase "${prevPhase.name}" em ${weeksDiff} semana(s) para aumentar taper`);
+      } else {
+        // Se não pode roubar, mantém como está e apenas avisa
+        console.warn(`[AUTO-CORREÇÃO] ⚠️ Não foi possível ajustar taper sem alterar a data da corrida. Mantendo ${taperPhase.weeks} semana(s).`);
+      }
+    }
+    
+    console.log(`[AUTO-CORREÇÃO] Taper final: ${taperPhase.weeks} semana(s) (totalWeeks mantido em ${totalWeeks})`);
   }
   
   // CORREÇÃO 3: Garantir redução de volume no taper (60-70%)
@@ -1054,16 +1076,23 @@ export async function generateAIPlan(profile: AIUserProfile, maxRetries: number 
   if (totalWeeks < recommendedWeeks) {
     isShortNotice = true;
     console.warn(`[AI PLAN] ⚠️ AVISO: ${totalWeeks} semanas é um tempo curto para ${profile.goalDistance}. Recomendado: ${recommendedWeeks} semanas.`);
-    console.log(`[AI PLAN] Mas vamos gerar o plano mesmo assim respeitando a data escolhida pelo atleta!`);
+    console.log(`[AI PLAN] 📅 DATA DA CORRIDA É SAGRADA! Gerando plano respeitando a data escolhida pelo atleta.`);
+    console.log(`[AI PLAN] O atleta pode já estar se preparando há tempos e entrou agora no app, ou tem motivos pessoais para esta data.`);
   }
   
-  console.log(`[AI PLAN] Gerando plano de ${totalWeeks} semanas até ${raceDate.toLocaleDateString('pt-BR')}${isShortNotice ? ' (tempo curto)' : ''}`)
+  console.log(`[AI PLAN] Gerando plano de ${totalWeeks} semanas até ${raceDate.toLocaleDateString('pt-BR')}${isShortNotice ? ' (prazo curto mas RESPEITANDO data escolhida)' : ''}`)
   
   // v2.5.0: Use novo prompt integrado com todas as melhorias
   const systemPrompt = buildEnhancedSystemPrompt(profile);
 
   // User prompt: Tarefa específica
   const userPrompt = `Crie um plano de treino personalizado de ${totalWeeks} semanas para este atleta até a corrida em ${raceDate.toLocaleDateString('pt-BR')}.
+
+⚠️ REGRA ABSOLUTA: A data da corrida (${raceDate.toLocaleDateString('pt-BR')}) é SAGRADA e NÃO PODE SER ALTERADA!
+- O atleta pode já estar treinando há tempos e entrou agora no app
+- O atleta pode ter motivos pessoais importantes para esta data
+- ADAPTE o taper ao tempo disponível: ${totalWeeks} semanas totais
+- Para ${totalWeeks} semanas: ${totalWeeks <= 8 ? '1 semana de taper é adequado' : '2 semanas de taper é recomendado'}
 
 Analise TODOS os aspectos do perfil fornecido e crie uma estratégia ÚNICA que faça sentido especificamente para esta pessoa.
 
@@ -1213,7 +1242,7 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
     if (isShortNotice) {
       fullPlan.warnings = {
         isShortNotice: true,
-        shortNoticeMessage: `⚠️ Aviso: ${totalWeeks} semanas é um tempo considerado curto para preparação de ${profile.goalDistance}. O recomendado seria ${recommendedWeeks} semanas. O plano foi otimizado para sua data, mas considere ajustar expectativas ou focar em completar a prova com segurança.`
+        shortNoticeMessage: `ℹ️ Informação: Você tem ${totalWeeks} semanas até sua corrida. O tempo ideal recomendado seria ${recommendedWeeks} semanas, mas respeitamos 100% a data que você escolheu! O plano foi personalizado para otimizar sua preparação no tempo disponível. Se você já vem treinando, está perfeito! Caso contrário, considere focar em completar a prova com segurança.`
       };
     }
 
