@@ -1281,7 +1281,8 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   console.log(`[AI PLAN] Expandindo estratégia para ${totalWeeks} semanas...`);
   console.log('[AI PLAN] DEBUG - strategy.paces recebido:', JSON.stringify(strategy.paces));
   
-  // Usar data customizada se fornecida, caso contrário usar próxima segunda-feira
+  // ✅ NOVA LÓGICA: Sempre começar HOJE
+  // O plano inicia no dia atual, não espera pela próxima segunda
   let startDate: Date;
   
   if (customStartDate) {
@@ -1291,30 +1292,20 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   } else {
     startDate = new Date();
     startDate.setHours(0, 0, 0, 0);
-
-    // Começar na PRÓXIMA segunda-feira (ou hoje se for segunda)
-    const dayOfWeek = startDate.getDay();
-    // Se é segunda (1), começar hoje
-    // Se é terça-domingo (2-6, 0), ir para a PRÓXIMA segunda
-    let daysToMonday;
-    if (dayOfWeek === 1) {
-      daysToMonday = 0; // Segunda -> começar hoje
-    } else if (dayOfWeek === 0) {
-      daysToMonday = 1; // Domingo -> próxima segunda
-    } else {
-      daysToMonday = 8 - dayOfWeek; // Terça-Sábado -> próxima segunda
-    }
-
-    startDate.setDate(startDate.getDate() + daysToMonday);
-    console.log(`[AI PLAN] Data de início calculada (próxima segunda): ${startDate.toISOString()}`);
+    console.log(`[AI PLAN] Plano começa HOJE: ${startDate.toISOString()}`);
   }
 
-  console.log(`[AI PLAN] Data de início final: ${startDate.toISOString()} (dia da semana: ${startDate.getDay()})`);
+  const startDayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][startDate.getDay()];
+  console.log(`[AI PLAN] Data de início: ${startDate.toISOString()} (${startDayName})`);
   
-  // ✅ FIX v1.7.2: Garantir que semanas sempre comecem na Segunda-feira
-  // Mesmo que o usuário escolha iniciar em outro dia (ex: Quarta),
-  // as "semanas" do plano devem seguir a convenção Segunda→Domingo
-  // Isso torna o calendário intuitivo e compatível com padrões universais
+  // ✅ NOVA LÓGICA: Semanas estruturadas de Segunda→Domingo
+  // MAS primeira semana começa HOJE e última semana termina NO DIA DA PROVA
+  //
+  // Filosofia:
+  // - Visualização sempre seg→dom (estrutura universal)
+  // - Primeira semana pode ser "incompleta" (ex: começa quinta)
+  // - Dias anteriores ao início ficam ESCONDIDOS
+  // - Última semana termina exatamente no dia da prova
   
   /**
    * Calcula a segunda-feira da semana que contém a data fornecida
@@ -1329,7 +1320,6 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
     // Se é Domingo (0): -6 dias para voltar à segunda
     // Se é Segunda (1): 0 dias (já é segunda)
     // Se é Terça (2): -1 dia para voltar à segunda
-    // Se é Quarta (3): -2 dias para voltar à segunda
     // etc...
     const diff = day === 0 ? -6 : 1 - day;
     
@@ -1341,16 +1331,16 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
   const weeks: any[] = [];
   let weekNumber = 1;
   
-  // ✅ Começar na segunda-feira da semana que contém o startDate
-  // Exemplo: Se startDate = Quarta 12/Nov
-  //   → getMondayOfWeek retorna Segunda 10/Nov
-  //   → Semana 1: Segunda 10/Nov → Domingo 16/Nov
-  //   → Treinos começam apenas em 12/Nov (Quarta)
+  // ✅ Primeira semana: começa na segunda da semana atual
+  // Exemplo: Se hoje é Quinta 27/Nov
+  //   → getMondayOfWeek retorna Segunda 25/Nov
+  //   → Semana 1: Segunda 25/Nov → Domingo 01/Dez
+  //   → Treinos começam apenas em 27/Nov (Quinta)
+  //   → Segunda e Terça ficam ESCONDIDOS (marcados como beforePlanStart)
   let currentWeekStart = getMondayOfWeek(startDate);
   
-  console.log(`[AI PLAN] Primeira semana inicia em: ${currentWeekStart.toISOString()} (Segunda-feira)`);
-  console.log(`[AI PLAN] Primeiro treino será em: ${startDate.toISOString()} (${['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][startDate.getDay()]})`);
-  
+  console.log(`[AI PLAN] Primeira semana estruturada: ${currentWeekStart.toISOString()} (Segunda) → ${new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toISOString()} (Domingo)`);
+  console.log(`[AI PLAN] Primeiro treino: ${startDate.toISOString()} (${startDayName})`);  
   // Determinar dias disponíveis SEPARADOS POR TIPO DE ATIVIDADE
   const availability = getActivityAvailability(profile);
   
@@ -1434,6 +1424,9 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
       const longRunKm = Math.min(weeklyKm * 0.3, 32); // Max 32km para evitar excesso
 
       // Gerar treinos da semana
+      const isLastWeek = weekNumber === totalWeeks;
+      const raceDate = new Date(profile.targetRaceDate);
+      
       const workouts = generateWeekWorkouts({
         weekNumber,
         phase: phase.name,
@@ -1450,11 +1443,25 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         isCutbackWeek,
         currentWeekStart,
         planStartDate: startDate, // ✅ Passar data de início do plano para marcar dias anteriores
+        targetRaceDate: isLastWeek ? raceDate : undefined, // ✅ Passar data da prova na última semana
         raceThisWeek, // Passar corrida B/C se houver
       });
 
       const weekStartDate = new Date(currentWeekStart);
-      const weekEndDate = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+      // ✅ ÚLTIMA SEMANA: Terminar no DIA DA PROVA, não no domingo
+      const raceDate = new Date(profile.targetRaceDate);
+      const isLastWeek = weekNumber === totalWeeks;
+      
+      let weekEndDate: Date;
+      if (isLastWeek) {
+        // Última semana termina no dia da prova
+        weekEndDate = new Date(raceDate);
+        weekEndDate.setHours(23, 59, 59, 999);
+        console.log(`[AI PLAN] ✅ Última semana ${weekNumber}: termina no dia da prova ${weekEndDate.toISOString()}`);
+      } else {
+        // Semanas normais: seg→dom
+        weekEndDate = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+      }
 
       const week = {
         weekNumber,
@@ -1466,7 +1473,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         workouts,
       };
 
-      if (weekNumber <= 2) {
+      if (weekNumber <= 2 || isLastWeek) {
         console.log(`[AI PLAN] Semana ${weekNumber}: ${weekStartDate.toISOString()} (dia ${weekStartDate.getDay()}) até ${weekEndDate.toISOString()} (dia ${weekEndDate.getDay()})`);
         console.log(`[AI PLAN] Semana ${weekNumber} - Total de ${workouts.length} treinos. Primeiros 3:`,
           workouts.slice(0, 3).map(w => ({ date: w.date.toISOString().split('T')[0], dayOfWeek: w.dayOfWeek, type: w.type, title: w.title }))
@@ -1794,6 +1801,7 @@ function generateWeekWorkouts(params: {
   isCutbackWeek: boolean;
   currentWeekStart: Date;
   planStartDate: Date; // ✅ v1.7.2: Data de início real do plano (primeiro treino)
+  targetRaceDate?: Date; // ✅ v1.7.3: Data da prova (última semana) - não gerar treinos DEPOIS dela
   raceThisWeek?: { 
     id: number;
     name: string;
@@ -2330,6 +2338,37 @@ function generateWeekWorkouts(params: {
 
   // Ordenar workouts por data para garantir ordem Segunda → Domingo
   workouts.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  // ✅ v1.7.3: ÚLTIMA SEMANA - Remover treinos DEPOIS da data da prova
+  if (params.targetRaceDate) {
+    const raceDateOnly = new Date(params.targetRaceDate);
+    raceDateOnly.setHours(0, 0, 0, 0);
+    
+    const filteredWorkouts = workouts.filter(workout => {
+      const workoutDateOnly = new Date(workout.date);
+      workoutDateOnly.setHours(0, 0, 0, 0);
+      
+      const isAfterRace = workoutDateOnly.getTime() > raceDateOnly.getTime();
+      
+      if (isAfterRace) {
+        console.log(`[WORKOUT GEN] 🗑️ Removendo treino DEPOIS da prova: ${workout.title} (${workout.date.toISOString().split('T')[0]})`);
+      }
+      
+      return !isAfterRace;
+    });
+    
+    console.log(`[WORKOUT GEN] ✅ Última semana: ${workouts.length} treinos → ${filteredWorkouts.length} (removidos ${workouts.length - filteredWorkouts.length} após a prova)`);
+    
+    // Retornar apenas os treinos filtrados
+    console.log(`[WORKOUT GEN] DEBUG - Primeiro treino:`, { 
+      dayOfWeek: filteredWorkouts[0]?.dayOfWeek,
+      date: filteredWorkouts[0]?.date,
+      type: filteredWorkouts[0]?.type,
+      title: filteredWorkouts[0]?.title
+    });
+
+    return filteredWorkouts;
+  }
 
   console.log(`[WORKOUT GEN] DEBUG - Primeiro treino:`, { 
     dayOfWeek: workouts[0]?.dayOfWeek,
