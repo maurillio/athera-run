@@ -2397,18 +2397,14 @@ export function validateAIPlan(plan: AIGeneratedPlan): { valid: boolean; errors:
       return;
     }
 
-    // Validar que há treino para cada dia da semana (0-6)
-    // Com múltiplas atividades por dia, pode haver mais de 7 treinos total
+    // ✅ NOVA LÓGICA: Primeira semana pode ter menos dias (começa no meio da semana)
+    // Última semana também pode ter menos dias (termina no dia da prova)
+    // Apenas validar que há pelo menos 1 treino
     const daysWithWorkouts = new Set(week.workouts.map((w: any) => w.dayOfWeek));
-    if (daysWithWorkouts.size !== 7) {
-      const missingDays = [];
-      for (let day = 0; day < 7; day++) { 
-        if (!daysWithWorkouts.has(day)) {
-          const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-          missingDays.push(dayNames[day]);
-        }
-      }
-      errors.push(`Semana ${index + 1} não tem treinos para: ${missingDays.join(', ')}`);
+    
+    // ✅ Validação flexível: apenas garantir que há treinos suficientes (mínimo 2 treinos por semana)
+    if (week.workouts.length < 2) {
+      errors.push(`Semana ${index + 1} tem apenas ${week.workouts.length} treino(s) - muito pouco`);
     }
   });
   
