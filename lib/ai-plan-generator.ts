@@ -1194,8 +1194,12 @@ Responda APENAS com o JSON válido seguindo a estrutura especificada no sistema.
       const revalidation = validateStrategyWithRaces(correctedStrategy, profile, totalWeeks);
       if (revalidation.isValid) {
         console.log('[AI PLAN] ✅ Estratégia corrigida automaticamente!');
+        // ✅ COPIAR TODOS os campos corrigidos
         strategy.phases = correctedStrategy.phases;
-        // ✅ MANTER paces e taperWeeks do strategy original (que já têm fallbacks)
+        strategy.totalWeeks = correctedStrategy.totalWeeks;
+        strategy.taperWeeks = correctedStrategy.taperWeeks;
+        // MANTER paces do strategy original (que já têm fallbacks)
+        console.log(`[AI PLAN] ✅ Campos atualizados: totalWeeks=${strategy.totalWeeks}, taperWeeks=${strategy.taperWeeks}, phases=${strategy.phases.length}`);
       } else {
         console.error('[AI PLAN] ❌ Não foi possível corrigir automaticamente. Erros:', revalidation.errors);
         throw new Error('A estratégia gerada não atende aos requisitos mínimos de qualidade. Por favor, tente novamente.');
