@@ -1461,13 +1461,18 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         weekEndDate = new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
       }
 
+      // ✅ Calcular distância REAL baseada nos treinos de corrida desta semana
+      const actualDistance = workouts
+        .filter(w => w.type === 'running' || w.type === 'race')
+        .reduce((sum, w) => sum + (w.distance || 0), 0);
+
       const week = {
         weekNumber,
         startDate: weekStartDate,
         endDate: weekEndDate,
         phase: phase.name,
         focus: phase.focus,
-        totalDistance: Math.round(weeklyKm * 10) / 10,
+        totalDistance: Math.round(actualDistance * 10) / 10,
         workouts,
       };
 
