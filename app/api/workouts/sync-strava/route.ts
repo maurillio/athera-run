@@ -75,7 +75,7 @@ export async function POST() {
 
     const plannedWorkouts = await prisma.workout.findMany({
       where: {
-        userId: profile.userId,
+        userId: user.id,
         date: { gte: sevenDaysAgo },
         completed: false,
         // Apenas treinos que podem vir do Strava
