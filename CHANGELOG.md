@@ -7,6 +7,27 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [3.2.3] - 2025-11-27
+
+### 🐛 Bug Fixes
+
+#### Sincronização Automática Strava → Athera
+- **Corrigido erro crítico**: `Cannot read properties of undefined (reading 'athleteProfile')`
+- **Problema**: Query Prisma tentava buscar `Workout` com campo `userId` inexistente
+- **Solução**: 
+  - Alterado para usar `CustomWorkout` com relacionamento correto
+  - Navegação através de: `CustomWorkout → CustomWeek → CustomPlan → AthleteProfile`
+  - Criação de `CompletedWorkout` ao sincronizar com Strava
+  - Vinculação bidirecional entre `CustomWorkout` e `CompletedWorkout`
+- **Comportamento**: Treinos importados do Strava agora marcam automaticamente treinos do plano como completos
+- **Status**: ✅ Funcional e em produção
+
+#### Arquivos Modificados
+- `app/api/workouts/sync-strava/route.ts` - Query e lógica de sincronização corrigidas
+- Corrigido import do prisma (named export em vez de default)
+
+---
+
 ## [3.2.2] - 2025-11-26
 
 ### ✨ Brand Identity Update

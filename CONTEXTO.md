@@ -2,13 +2,51 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.2 - Brand Identity Update (26/Nov/2025)  
-**Versão Atual:** v3.2.2 ✅ Logo Implementada  
-**Status:** ✅ **PRONTO - BRANDING ATUALIZADO**  
-**Build:** ✅ Passou 31/31 testes | **Commit:** Pendente | **Branch:** main  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.3 - Strava Sync Fix (27/Nov/2025)  
+**Versão Atual:** v3.2.3 ✅ Sincronização Strava Corrigida  
+**Status:** ✅ **PRONTO - SINCRONIZAÇÃO OPERACIONAL**  
+**Build:** ✅ Passou sem erros | **Commit:** ba8099b6 | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia) - ✅ **OPERACIONAL**  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
+
+---
+
+## 🐛 v3.2.3 - STRAVA SYNC FIX (27/Nov/2025)
+
+### 🎯 Problema Crítico Resolvido
+
+**❌ Erro:** `Cannot read properties of undefined (reading 'athleteProfile')`  
+**📍 Local:** `/api/workouts/sync-strava` (POST endpoint)  
+**🔍 Causa Raiz:** Query Prisma tentando buscar modelo `Workout` antigo com campo `userId` inexistente
+
+### ✅ Solução Implementada
+
+**Mudanças Estruturais:**
+1. **Query corrigida** para usar `CustomWorkout` (modelo correto do plano personalizado)
+2. **Navegação de relacionamentos** adequada:
+   ```
+   CustomWorkout → CustomWeek → CustomPlan → AthleteProfile → User
+   ```
+3. **Criação de CompletedWorkout** ao sincronizar com Strava:
+   - Dados completos do Strava (distância, pace, FC, calorias)
+   - Conversão de unidades (metros → km)
+   - Cálculo de pace automático
+4. **Vinculação bidirecional** entre modelos:
+   - `CustomWorkout.completedWorkoutId → CompletedWorkout.id`
+   - `CompletedWorkout.customWorkout ← CustomWorkout`
+
+**Comportamento:**
+- ✅ Treino importado do Strava **automaticamente** marca workout do plano como completo
+- ✅ Sincronização roda ao carregar dashboard
+- ✅ Busca atividades dos últimos 7 dias
+- ✅ Match por: data (mesmo dia) + tipo (running, strength, etc)
+
+**Arquivos Modificados:**
+- `app/api/workouts/sync-strava/route.ts` (+50 linhas)
+- Correção do import: `import { prisma }` (named export)
+
+**Status:** 🟢 Deployado e operacional em produção
 
 ---
 

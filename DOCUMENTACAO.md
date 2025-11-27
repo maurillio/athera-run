@@ -2,14 +2,28 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Última atualização:** 10 de Novembro de 2025  
-**Versão:** 1.7.5 (Critical Race Day Fix)  
+**Última atualização:** 27 de Novembro de 2025  
+**Versão:** 3.2.3 (Strava Sync Fix)  
 **URL Produção:** https://atherarun.com
-**Status:** ✅ Sistema 100% funcional - Corridas alvo consideradas
+**Status:** ✅ Sistema 100% funcional - Sincronização Strava operacional
 
 ---
 
 ## 🎯 Atualizações Recentes
+
+### v3.2.3 - Correção Sincronização Strava (27/Nov/2025)
+- 🐛 **BUGFIX**: Corrigido erro `Cannot read properties of undefined (reading 'athleteProfile')`
+- ✅ Query Prisma agora usa `CustomWorkout` com relacionamentos corretos
+- ✅ Treinos do Strava marcam automaticamente workouts do plano como completos
+- ✅ Criação de `CompletedWorkout` com dados do Strava (distância, pace, FC, etc)
+- ✅ Vinculação bidirecional entre `CustomWorkout` ↔ `CompletedWorkout`
+- 📄 Ver: [SESSAO_27NOV2025_RESUMO.md](SESSAO_27NOV2025_RESUMO.md)
+
+### v3.2.2 - Logo e Brand Identity (26/Nov/2025)
+- ✨ Implementado logo oficial do Athera Run
+- ✅ Componente `<Logo />` reutilizável
+- ✅ Favicon SVG com gradiente da marca
+- ✅ Consistência visual em toda aplicação
 
 ### v1.7.5 - Correção Crítica Race Day (10/Nov/2025)
 - 🚨 **CRITICAL**: Corridas alvo agora são consideradas na geração do plano
