@@ -55,6 +55,29 @@ export async function POST(request: Request) {
     const profile = user.athleteProfile;
     const logs = profile.trainingLogs;
 
+    // VERIFICAÇÃO: Se o plano foi criado há menos de 7 dias, NÃO sugerir ajustes
+    // É NORMAL não ter muitos treinos completados logo após criar o plano!
+    if (profile.customPlan?.createdAt) {
+      const daysSincePlanCreated = (Date.now() - profile.customPlan.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+      
+      if (daysSincePlanCreated < 7) {
+        console.log(`[ANALYZE] Plano muito recente (${Math.floor(daysSincePlanCreated)} dias). Retornando análise positiva.`);
+        
+        return NextResponse.json({
+          analysis: {
+            id: Date.now(),
+            needsAdjustment: false,
+            adjustmentType: null,
+            reason: `Seu plano está perfeito! Foi criado há apenas ${Math.floor(daysSincePlanCreated)} dias. Continue seguindo as orientações do plano. 💪`,
+            severity: 'low',
+            summary: `✅ Plano em andamento - Continue firme! Você começou há poucos dias, é normal estar se adaptando à rotina.`
+          },
+          adjustmentApplied: false,
+          message: 'Plano recente - continue assim!'
+        });
+      }
+    }
+
     if (logs.length === 0) {
       return NextResponse.json({ 
         message: 'Sem dados suficientes para análise',

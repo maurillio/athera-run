@@ -77,20 +77,17 @@ export function formatShortDate(
   dateStr: string | Date,
   locale: SupportedLocale = 'pt-BR'
 ): string {
-  const date = new Date(dateStr);
+  // CORREÇÃO: usar dayjs com timezone para evitar problema de timezone
+  // Se passar "2025-12-21", o JavaScript converte para UTC 00:00
+  // e ao converter para America/Sao_Paulo (UTC-3), fica 21:00 do dia 20!
+  const date = dayjs(dateStr).tz(APP_TIMEZONE);
   
   if (locale === 'en') {
-    return date.toLocaleDateString('en-US', { 
-      month: '2-digit', 
-      day: '2-digit' 
-    });
+    return date.format('MM/DD');
   }
   
   // pt-BR and es use DD/MM
-  return date.toLocaleDateString(locale, { 
-    day: '2-digit', 
-    month: '2-digit' 
-  });
+  return date.format('DD/MM');
 }
 
 /**
