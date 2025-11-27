@@ -136,8 +136,31 @@ export default function DashboardPage() {
   useEffect(() => {
     if (session?.user) {
       fetchPlan();
+      // Sincronizar treinos do Strava automaticamente
+      syncStravaWorkouts();
     }
   }, [session]);
+
+  // Função para sincronizar treinos do Strava
+  const syncStravaWorkouts = async () => {
+    try {
+      const response = await fetch('/api/workouts/sync-strava', {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.synced > 0) {
+          console.log(`[SYNC] ✅ ${data.synced} treino(s) sincronizado(s) do Strava`);
+          // Recarregar plano para atualizar status
+          await fetchPlan();
+        }
+      }
+    } catch (error) {
+      console.error('[SYNC] Erro ao sincronizar treinos:', error);
+      // Não mostra erro para o usuário, é um processo silencioso
+    }
+  };
 
   const fetchPlan = async () => {
     try {
