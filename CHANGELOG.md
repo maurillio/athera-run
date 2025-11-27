@@ -7,6 +7,33 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [3.2.6] - 2025-11-27
+
+### 🐛 Bug Fixes
+
+#### Graceful Degradation para Endpoints Legados
+- **Corrigido**: `/api/athlete-stats` retornando 500 error
+- **Corrigido**: `/api/strava/gear` retornando 500 error
+- **Solução**: Retornar dados vazios/defaults em vez de erro
+- **Motivo**: Campos `pr5k`, `pr10k`, `convertedDistance` não existem no schema atual
+- **TODO**: Migrar schema ou remover endpoints não usados
+- **Status**: ✅ Página Perfil/Estatísticas carrega sem erros
+
+---
+
+## [3.2.5] - 2025-11-27
+
+### 🐛 Bug Fixes
+
+#### Correção Massiva de Imports do Prisma
+- **Corrigido**: 61 arquivos com imports incorretos
+- **Problema**: `import prisma from '@/lib/db'` (não existe)
+- **Solução**: `import { prisma } from '@/lib/prisma'` (named export)
+- **Impacto**: Prevenção de erros 500 em múltiplos endpoints
+- **Status**: ✅ Build e deploy bem-sucedidos
+
+---
+
 ## [3.2.4] - 2025-11-27
 
 ### 🐛 Bug Fixes
