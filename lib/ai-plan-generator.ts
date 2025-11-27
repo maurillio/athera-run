@@ -1440,7 +1440,11 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         focus: phase.focus,
         weeklyKm,
         longRunKm,
-        keyWorkouts: phase.keyWorkouts,
+        keyWorkouts: phase.keyWorkouts || {
+          easy: { frequency: 2 },
+          quality: { type: 'tempo', frequency: 1, description: 'Treino de qualidade' },
+          strength: { frequency: 2, description: 'Treino de força' }
+        },
         paces: strategy.paces,
         availability,
         isCutbackWeek,
