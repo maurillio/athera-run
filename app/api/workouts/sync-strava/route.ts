@@ -19,22 +19,43 @@ export async function POST() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.id) {
+    console.log('[SYNC] Session:', { 
+      hasSession: !!session, 
+      hasUser: !!session?.user,
+      email: session?.user?.email 
+    });
+    
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const userEmail = session.user.email;
 
-    // 1. Buscar perfil do usuário
-    const profile = await prisma.AthleteProfile.findUnique({
-      where: { userId: userId },
-      select: {
-        id: true,
-        userId: true,
-        stravaConnected: true,
-        stravaAccessToken: true
+    // 1. Buscar usuário e perfil
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
+      include: {
+        AthleteProfile: {
+          select: {
+            id: true,
+            userId: true,
+            stravaConnected: true,
+            stravaAccessToken: true
+          }
+        }
       }
     });
+
+    console.log('[SYNC] User found:', { 
+      hasUser: !!user,
+      hasProfile: !!user?.AthleteProfile 
+    });
+
+    if (!user || !user.AthleteProfile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    const profile = user.AthleteProfile;
 
     if (!profile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
