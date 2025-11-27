@@ -970,6 +970,10 @@ function autoCorrectStrategy(
         taperPhase.weeks = 2;
       }
     }
+    
+    // ✅ BUGFIX: Recalcular totalWeeks após ajuste
+    corrected.totalWeeks = corrected.phases.reduce((sum: number, p: any) => sum + p.weeks, 0);
+    console.log(`[AUTO-CORREÇÃO] totalWeeks recalculado: ${corrected.totalWeeks}`);
   }
   
   // CORREÇÃO 3: Garantir redução de volume no taper (60-70%)
