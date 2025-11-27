@@ -5,7 +5,7 @@
  * Tracks which profile fields are used by the AI during plan generation
  */
 
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 import { AI_FIELD_CONFIGS, type AIFieldConfig } from '@/types/ai-transparency';
 
 export interface FieldTrackingData {

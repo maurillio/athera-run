@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 import { callLLM } from '@/lib/llm-client';
 
 // POST - Analisar últimos logs e sugerir/aplicar ajustes automaticamente

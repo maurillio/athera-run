@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 // Stripe webhook handler for subscription events
 export async function POST(request: Request) {

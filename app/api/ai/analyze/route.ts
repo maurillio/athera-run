@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 import { callLLM } from '@/lib/llm-client';
 import { resilientAICall } from '@/lib/ai-resilience';
 

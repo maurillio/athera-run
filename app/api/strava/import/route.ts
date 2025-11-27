@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 import { refreshStravaToken, fetchStravaActivities, importStravaActivity } from '@/lib/strava';
 import { triggerAutoAdjustIfEnabled } from '@/lib/auto-adjust-service';
 

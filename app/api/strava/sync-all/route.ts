@@ -13,7 +13,7 @@ import { importStravaStats } from '@/lib/strava-stats';
 import { importStravaPRs } from '@/lib/strava-prs';
 import { importStravaGear } from '@/lib/strava-gear';
 import { importStravaZones } from '@/lib/strava-zones';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 export async function POST() {
   try {

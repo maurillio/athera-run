@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 import { locales } from '@/lib/i18n/config';
 import { ApiResponse, getLocaleFromRequest } from '@/lib/i18n/api-utils';
 

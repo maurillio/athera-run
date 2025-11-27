@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 import { triggerAutoAdjustIfEnabled } from '@/lib/auto-adjust-service';
 
 export const dynamic = "force-dynamic";
