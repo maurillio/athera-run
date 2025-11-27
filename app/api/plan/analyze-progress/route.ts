@@ -148,8 +148,10 @@ export async function POST(request: NextRequest) {
 - Distância objetivo: ${user.athleteProfile.goalDistance}
 - Data da prova: ${user.athleteProfile.targetRaceDate?.toLocaleDateString('pt-BR')}
 - VDOT atual: ${user.athleteProfile.currentVDOT || 'N/A'}
+- Plano criado em: ${planCreatedAt.toLocaleDateString('pt-BR')}
+- Dias desde a criação do plano: ${daysSincePlanCreated}
 
-### Treinos Completados (últimos 30 dias)
+### Treinos Completados (desde criação do plano ou últimos 30 dias)
 Total: ${totalWorkoutsCompleted} de ${totalWorkoutsPlanned} (${completionRate}%)
 
 ### Relatos/Feedbacks Recentes
@@ -162,6 +164,8 @@ ${workoutLogs.slice(0, 5).map(log => `
 
 ### Feedbacks do Atleta
 ${feedbacks.length > 0 ? feedbacks.map(f => `- ${f.type}: ${f.message}`).join('\n') : 'Nenhum'}
+
+IMPORTANTE: Considere que o plano foi criado há ${daysSincePlanCreated} dias. Se for muito recente (< 7 dias), seja cauteloso nas sugestões.
 
 Analise e responda em JSON:
 {
