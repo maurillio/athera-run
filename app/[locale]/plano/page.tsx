@@ -103,6 +103,7 @@ export default function PlanoPage() {
   const [currentWeekNum, setCurrentWeekNum] = useState(1);
   const [viewingWeek, setViewingWeek] = useState(1);
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
+  const [hasInitializedWeek, setHasInitializedWeek] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -135,7 +136,12 @@ export default function PlanoPage() {
         
         setPlan(data.plan);
         setCurrentWeekNum(data.plan.currentWeek);
-        setViewingWeek(data.plan.currentWeek);
+        
+        // ✅ Só reseta viewingWeek na primeira carga, não em re-fetches
+        if (!hasInitializedWeek) {
+          setViewingWeek(data.plan.currentWeek);
+          setHasInitializedWeek(true);
+        }
 
         const weeksResponse = await fetch(`/api/plan/${data.plan.id}/weeks`);
         if (weeksResponse.ok) {
