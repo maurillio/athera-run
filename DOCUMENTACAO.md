@@ -3,13 +3,20 @@
 > Plataforma inteligente de treinamento de corrida com IA
 
 **Última atualização:** 27 de Novembro de 2025  
-**Versão:** 3.2.3 (Strava Sync Fix)  
+**Versão:** 3.2.4 (Strava Sync Idempotent)  
 **URL Produção:** https://atherarun.com
-**Status:** ✅ Sistema 100% funcional - Sincronização Strava operacional
+**Status:** ✅ Sistema 100% funcional - Sincronização Strava idempotente
 
 ---
 
 ## 🎯 Atualizações Recentes
+
+### v3.2.4 - Sincronização Idempotente (27/Nov/2025)
+- 🐛 **BUGFIX**: Corrigido erro de constraint de unicidade em `stravaActivityId`
+- ✅ Verificação de existência antes de criar `CompletedWorkout`
+- ✅ Sincronização pode rodar múltiplas vezes sem erros
+- ✅ Logs diferenciados para novos syncs vs já sincronizados
+- 📄 Status: Operacional em produção
 
 ### v3.2.3 - Correção Sincronização Strava (27/Nov/2025)
 - 🐛 **BUGFIX**: Corrigido erro `Cannot read properties of undefined (reading 'athleteProfile')`

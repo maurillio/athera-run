@@ -7,6 +7,26 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [3.2.4] - 2025-11-27
+
+### 🐛 Bug Fixes
+
+#### Sincronização Strava - Constraint de Unicidade
+- **Corrigido erro**: `Unique constraint failed on stravaActivityId (P2002)`
+- **Problema**: Tentava criar `CompletedWorkout` duplicado para atividades já sincronizadas
+- **Solução**: 
+  - Verificar existência com `findUnique` antes de criar
+  - Reusar `CompletedWorkout` existente se já sincronizado
+  - Apenas atualizar `CustomWorkout` se necessário
+  - Log diferenciado: "✅ marcado" vs "⏭️ já sincronizado"
+- **Comportamento**: Sincronização idempotente - pode rodar múltiplas vezes sem erros
+- **Status**: ✅ Funcional e em produção
+
+#### Arquivos Modificados
+- `app/api/workouts/sync-strava/route.ts` - Lógica de verificação antes de criar
+
+---
+
 ## [3.2.3] - 2025-11-27
 
 ### 🐛 Bug Fixes

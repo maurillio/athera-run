@@ -2,13 +2,61 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.3 - Strava Sync Fix (27/Nov/2025)  
-**Versão Atual:** v3.2.3 ✅ Sincronização Strava Corrigida  
-**Status:** ✅ **PRONTO - SINCRONIZAÇÃO OPERACIONAL**  
-**Build:** ✅ Passou sem erros | **Commit:** ba8099b6 | **Branch:** main  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.4 - Strava Sync Idempotent (27/Nov/2025)  
+**Versão Atual:** v3.2.4 ✅ Sincronização Idempotente  
+**Status:** ✅ **PRONTO - SINCRONIZAÇÃO 100% OPERACIONAL**  
+**Build:** ✅ Passou sem erros | **Commit:** ac5216db | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia) - ✅ **OPERACIONAL**  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
+
+---
+
+## 🔄 v3.2.4 - SINCRONIZAÇÃO IDEMPOTENTE (27/Nov/2025)
+
+### 🎯 Problema Resolvido
+
+**❌ Erro:** `Unique constraint failed on the fields: (stravaActivityId)` (P2002)  
+**📍 Local:** `/api/workouts/sync-strava` ao criar `CompletedWorkout`  
+**🔍 Causa:** Tentava criar registro duplicado para atividade já sincronizada anteriormente
+
+### ✅ Solução Final
+
+**Sincronização Idempotente:**
+1. **Verificar existência** com `findUnique({ where: { stravaActivityId } })`
+2. **Reusar registro** se já existe no banco
+3. **Criar novo** apenas se não encontrado
+4. **Atualizar CustomWorkout** apenas se necessário
+5. **Logs informativos:**
+   - `✅ marcado como completo` - novo sync
+   - `⏭️ já estava sincronizado` - skip
+
+**Código:**
+```typescript
+// Verificar se já existe
+let completedWorkout = await prisma.completedWorkout.findUnique({
+  where: { stravaActivityId: matchingActivity.id.toString() }
+});
+
+// Criar apenas se não existe
+if (!completedWorkout) {
+  completedWorkout = await prisma.completedWorkout.create({ ... });
+}
+
+// Atualizar apenas se necessário
+if (!workout.isCompleted || workout.completedWorkoutId !== completedWorkout.id) {
+  await prisma.customWorkout.update({ ... });
+  syncedCount++;
+}
+```
+
+**Comportamento:**
+- ✅ Sincronização pode rodar **múltiplas vezes** sem erros
+- ✅ Não cria registros duplicados
+- ✅ Reutiliza dados existentes
+- ✅ Dashboard carrega sem erros 500
+
+**Status:** 🟢 Deployado e 100% operacional
 
 ---
 
