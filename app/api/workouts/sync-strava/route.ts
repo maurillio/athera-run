@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 /**
  * POST /api/workouts/sync-strava
@@ -68,11 +68,18 @@ export async function POST() {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const plannedWorkouts = await prisma.workout.findMany({
+    // Buscar treinos do plano customizado do usuário
+    const plannedWorkouts = await prisma.customWorkout.findMany({
       where: {
-        userId: profile.userId,
+        week: {
+          plan: {
+            athleteProfile: {
+              userId: session.user.id
+            }
+          }
+        },
         date: { gte: sevenDaysAgo },
-        completed: false,
+        isCompleted: false,
         // Apenas treinos que podem vir do Strava
         type: {
           in: ['running', 'strength', 'swimming', 'cycling', 'cross']
@@ -136,13 +143,33 @@ export async function POST() {
       });
 
       if (matchingActivity) {
-        // Marcar como completo
-        await prisma.workout.update({
+        // Criar registro de treino completo vinculado ao Strava
+        const completedWorkout = await prisma.completedWorkout.create({
+          data: {
+            athleteId: profile.id,
+            source: 'strava',
+            stravaActivityId: matchingActivity.id.toString(),
+            date: new Date(matchingActivity.start_date),
+            type: workout.type,
+            subtype: workout.subtype,
+            distance: matchingActivity.distance ? matchingActivity.distance / 1000 : null, // Strava em metros
+            duration: matchingActivity.moving_time,
+            pace: matchingActivity.average_speed ? 
+              Math.floor(1000 / (matchingActivity.average_speed * 60)).toString() : null,
+            elevation: matchingActivity.total_elevation_gain,
+            avgHeartRate: matchingActivity.average_heartrate,
+            maxHeartRate: matchingActivity.max_heartrate,
+            calories: matchingActivity.calories
+          }
+        });
+
+        // Marcar CustomWorkout como completo e vincular ao CompletedWorkout
+        await prisma.customWorkout.update({
           where: { id: workout.id },
           data: {
-            completed: true,
-            completedAt: new Date(matchingActivity.start_date),
-            stravaActivityId: matchingActivity.id.toString()
+            isCompleted: true,
+            completedWorkoutId: completedWorkout.id,
+            updatedAt: new Date()
           }
         });
 

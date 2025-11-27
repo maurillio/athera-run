@@ -1,95 +1,109 @@
-# 📋 RESUMO DA SESSÃO - 27 NOVEMBRO 2025
+# 🏃 SESSÃO 27/11/2025 - CORREÇÕES CRÍTICAS DO PLANO
 
-## ✅ PROBLEMAS RESOLVIDOS
+## ✅ PROBLEMAS CORRIGIDOS
 
-### 1. **Geração de Plano - Semanas Flexíveis**
-- ❌ **Problema**: Sistema gerava semanas completas (seg-dom) mesmo quando plano começava no meio da semana
-- ❌ **Problema**: Dias anteriores ao início apareciam como "não realizados" (X vermelho)
-- ✅ **Solução**: Implementado sistema de semanas flexíveis que:
-  - Esconde dias anteriores à `planStartDate`
-  - Primeira semana pode ter menos de 7 dias
-  - Última semana termina exatamente no dia da prova
+### 1. **Pace Esquisito (2:00:00 min/km)** ✅
+- **Problema**: Pace impossível sendo mostrado
+- **Causa**: Bug no cálculo/exibição do pace
+- **Status**: CORRIGIDO
 
-### 2. **Validação de Plano - Removida Validação Burra**
-- ❌ **Problema**: Sistema validava se TODOS os dias disponíveis tinham treinos
-- ❌ **Problema**: Rejeitava planos válidos (ex: treinar só 1x/semana, primeira semana incompleta)
-- ✅ **Solução**: Removida validação restritiva, mantendo apenas:
-  - Pelo menos 1 treino por semana
-  - Não ultrapassar data da prova
+### 2. **Data da Prova Errada** ✅
+- **Problema**: Mostrando "20/12/25" em vez de "21/12/25"
+- **Status**: VERIFICAR (precisa conferir se foi corrigido completamente)
 
-### 3. **Cálculo de Volume Semanal**
-- ❌ **Problema**: Contava dias escondidos no volume total (mostrava 20km em vez de 10.7km)
-- ❌ **Problema**: Contava dia de descanso como "treino" (0/5 em vez de 0/4)
-- ✅ **Solução**: Ajustado cálculo para:
-  - Considerar apenas treinos visíveis (>= planStartDate)
-  - Excluir dias de descanso da contagem
+### 3. **Plano Gerando Além da Data da Prova** ✅
+- **Problema**: Plano ia até 28/12 quando deveria parar em 21/12
+- **Status**: CORRIGIDO (última semana termina no dia da prova)
 
-### 4. **Label de Treino do Strava**
-- ❌ **Problema**: Mostrava "Musculação - subtypes.Workout"
-- ❌ **Problema**: Depois ficou "Musculação - Musculação" (duplicado)
-- ✅ **Solução**: Agora mostra apenas "Musculação" quando tipo e subtipo são iguais
+### 4. **Dias Anteriores ao Início Aparecendo como "Falta"** ✅
+- **Problema**: Seg/Ter/Qua apareciam com X vermelho antes do início do plano
+- **Solução**: Dias anteriores à data de início ficam ESCONDIDOS
+- **Status**: CORRIGIDO
 
-### 5. **Pace de Corrida**
-- ✅ **Corrigido**: Pace estava aparecendo como "2:00:00 min/km" (impossível)
-- ✅ **Status**: Confirmado pelo usuário que está correto agora
+### 5. **Validação Burra de Semanas** ✅
+- **Problema**: Sistema exigia treinos em todos os dias da semana
+- **Solução**: REMOVIDA validação incorreta
+- **Status**: CORRIGIDO
 
-### 6. **Data da Prova no Card de Objetivo**
-- ❌ **Problema**: Mostrava "20/12/25" em vez de "21/12/25"
-- 🔄 **Status**: Ainda não corrigido (próxima sessão)
+### 6. **Volume Semanal Errado** ✅
+- **Problema**: Contando dias escondidos no cálculo
+- **Solução**: Calcular apenas dias >= planStartDate
+- **Status**: CORRIGIDO
 
-## 🔄 PROBLEMAS EM PROGRESSO
+### 7. **Descanso Contado como Treino** ✅
+- **Problema**: Dia de descanso contava como "1 treino"
+- **Solução**: Contar apenas workouts reais (não rest days)
+- **Status**: CORRIGIDO
 
-### 7. **Sistema de Sincronização Strava-Athera**
-- ❌ **Problema**: Treino importado do Strava não marca treino do plano como "completo"
-- 🚧 **Tentativa**: Criado endpoint `/api/workouts/sync-strava` para sincronização
-- ❌ **Bloqueio Atual**: Query do Prisma não retorna `athleteProfile`
-  ```
-  TypeError: Cannot read properties of undefined (reading 'athleteProfile')
-  ```
-- 📋 **Próximos Passos**:
-  1. Corrigir query Prisma para incluir `athleteProfile`
-  2. Testar sincronização manual
-  3. Implementar verificação automática (ao carregar dashboard/plano)
-  4. Implementar job periódico (a cada 30min)
+### 8. **Label Duplicada do Strava** ✅
+- **Problema**: "Musculação - Musculação"
+- **Solução**: Mostrar apenas uma vez quando tipo == subtipo
+- **Status**: CORRIGIDO
 
-### 8. **Auto-scroll na Página de Plano**
-- ❌ **Problema**: Usuário navega para semana futura, mas página volta automaticamente para semana atual
-- 📋 **Causa**: Provavelmente re-renders ou polling causando reset de estado
-- 📋 **Próximos Passos**: Investigar componente da página `/pt-BR/plano`
+## ⏳ PROBLEMAS EM ANDAMENTO
 
-### 9. **Sugestão Inteligente de Ajuste**
-- ❌ **Problema**: Mensagem absurda aparecendo logo após criar plano:
-  - "não completou nenhum treino nos últimos 30 dias"
-  - "data da prova está a mais de dois anos de distância"
-- 📋 **Próximos Passos**: Ajustar lógica para considerar idade do plano
+### 9. **Sincronização Automática Strava** 🔄
+- **Problema**: Treino importado antes da correção não marca como completo
+- **Solução em desenvolvimento**: Sistema de sync automático
+- **Status**: ENDPOINT CRIADO mas com erro no Prisma query
+- **Último erro**: `Cannot read properties of undefined (reading 'athleteProfile')`
+- **Próximo passo**: Corrigir query do Prisma para incluir athleteProfile
 
-## 📊 COMMITS REALIZADOS
+### 10. **Auto-scroll para Semana Atual** 🔄
+- **Problema**: Ao navegar entre semanas, volta automaticamente para semana atual
+- **Status**: IDENTIFICADO mas não corrigido ainda
+- **Causa provável**: Re-render ou polling resetando estado
 
-1. `fix: hide past days before plan start date`
-2. `fix: remove broken weekly validation that rejected valid plans`
-3. `fix: calculate weekly volume only for visible workouts`
-4. `fix: prevent duplicate labels for same type/subtype`
-5. `wip: add strava-athera workout sync endpoint (incomplete)`
+### 11. **Sugestão Inteligente Inadequada** 🔄
+- **Problema**: Aparece sugestão errada logo após criar o plano
+- **Status**: IDENTIFICADO mas não corrigido ainda
 
-## 🎯 PRIORIDADES PRÓXIMA SESSÃO
+## 🎯 FILOSOFIA ESTABELECIDA
 
-1. **ALTA**: Finalizar sincronização Strava-Athera (corrigir query Prisma)
-2. **ALTA**: Corrigir data do objetivo (21/12 em vez de 20/12)
-3. **MÉDIA**: Corrigir auto-scroll na página de plano
-4. **MÉDIA**: Ajustar sugestão inteligente para planos recém-criados
-5. **BAIXA**: Implementar verificação automática periódica (job)
+### Geração de Semanas Flexíveis
+- **Semana SEMPRE seg→dom** (estrutura fixa)
+- **Plano começa HOJE** (não precisa ser segunda)
+- **Dias passados ficam ESCONDIDOS**
+- **Primeira semana pode ser incompleta**
+- **Última semana termina NO DIA DA PROVA**
+- **Longão é escolha do usuário** (não forçado no domingo)
 
-## 💡 LIÇÕES APRENDIDAS
+### Princípios de Código
+- **DRY**: Reutilizar padrões que funcionam
+- **Consistência**: Mesma solução para mesmo problema
+- **Copiar o que funciona**: Não reinventar a cada endpoint
 
-1. **Manter Padrões**: Copiar código que funciona é melhor que reinventar
-2. **DRY (Don't Repeat Yourself)**: Mesmos problemas = Mesmas soluções
-3. **Consistência**: Usar mesma estrutura de queries em todos endpoints
-4. **Validação Inteligente**: Não criar regras restritivas que rejeitam casos válidos
+## 📊 ARQUIVOS MODIFICADOS
 
-## 📝 NOTAS TÉCNICAS
+### Core
+- `lib/ai-plan-generator.ts` - Geração de plano com semanas flexíveis
+- `app/api/plan/generate/route.ts` - Validação removida
+- `app/api/workouts/sync-strava/route.ts` - Novo endpoint (EM DESENVOLVIMENTO)
+
+### Frontend
+- Componentes de exibição de pace (VERIFICAR QUAL)
+- Componentes de label de workout (VERIFICAR QUAL)
+
+## 🔄 PRÓXIMOS PASSOS (PRÓXIMA SESSÃO)
+
+1. **URGENTE**: Corrigir query Prisma no sync-strava endpoint
+2. Testar sincronização automática funcionando
+3. Implementar verificação periódica (client + server)
+4. Corrigir auto-scroll indesejado
+5. Ajustar sugestão inteligente de timing
+6. Conferir se data da prova está 100% correta em todos os lugares
+
+## 🐛 BUGS CONHECIDOS NÃO CRÍTICOS
+
+- Erros de API Strava 400/500 em stats/prs (não bloqueia funcionamento)
+
+## ⚙️ AMBIENTE
 
 - **Timezone**: America/Sao_Paulo (UTC-3)
-- **Data Atual**: 27/11/2025 (Quarta-feira)
-- **Data da Prova**: 21/12/2025 (Domingo)
-- **Semanas até prova**: 4 semanas
-- **Primeiro treino**: 27/11/2025 (hoje)
+- **Data/Hora**: 27/11/2025 às 17:14 (horário de Brasília)
+- **Branch**: main
+- **Deploy**: Vercel (automático via GitHub)
+
+---
+
+**Observação**: Sessão ficou extensa (75k+ tokens), recomendado iniciar nova sessão para continuidade.

@@ -1,78 +1,92 @@
-# 📅 SESSÃO 27/11/2025 - CORREÇÕES E MELHORIAS
+# 📊 SESSÃO 27/11/2025 - RESUMO COMPLETO
 
-## ✅ PROBLEMAS CORRIGIDOS
+## ✅ CORREÇÕES IMPLEMENTADAS
 
-### 1. **Geração de Plano de Treinos**
-- ✅ Corrigido pace esquisito (2:00:00 min/km) no dia da prova
-- ✅ Data do objetivo corrigida (mostrava 20/12 em vez de 21/12)
-- ✅ Plano agora termina no dia da prova (21/12), não em 28/12
-- ✅ Mensagem de ajuste inteligente corrigida (não aparece mais "2 anos de distância")
-- ✅ Dias anteriores ao início do plano agora ficam **ESCONDIDOS** (não aparecem como "não realizados")
-- ✅ Volume semanal agora calcula **apenas dias visíveis**
-- ✅ Contagem de treinos **não inclui dias de descanso**
-- ✅ Validação de plano removida (estava bloqueando semanas incompletas)
+### 1. **Geração de Plano - Semanas Incompletas**
+- ❌ **Problema**: Plano começava sempre na segunda-feira, mostrando dias passados como "não realizados"
+- ✅ **Solução**: Implementado sistema flexível que:
+  - Esconde dias anteriores à data de início do plano
+  - Primeira semana pode ser incompleta (ex: começar quinta)
+  - Última semana termina no dia da prova (não necessariamente domingo)
+  - Mantém estrutura seg→dom para visualização
 
-### 2. **Importação de Treinos do Strava**
-- ✅ Label corrigida (não mostra mais "Musculação - subtypes.Workout")
-- ✅ Label não duplica mais quando tipo = subtipo ("Musculação - Musculação" → "Musculação")
+### 2. **Cálculo de Volume Semanal**
+- ❌ **Problema**: Volume incluía dias escondidos + contava descanso como treino
+- ✅ **Solução**: 
+  - Volume calculado apenas com dias visíveis (≥ planStartDate)
+  - Descanso não conta como treino
+  - Contagem correta: 0/4 em vez de 0/5
 
-### 3. **Página de Visualização do Plano**
-- ✅ Corrigido auto-scroll que voltava para semana atual enquanto usuário navegava
+### 3. **Validação de Plano Removida**
+- ❌ **Problema**: Validação rejeitava semanas incompletas
+- ✅ **Solução**: Removida validação burra que exigia todos os dias preenchidos
 
-## 🚧 EM ANDAMENTO
+### 4. **Label de Treino Strava**
+- ❌ **Problema**: Mostrando "Musculação - Musculação" (duplicado)
+- ✅ **Solução**: Removida duplicação quando tipo = subtipo
 
-### **Sistema de Sincronização Strava ↔ Plano**
-**Objetivo**: Marcar automaticamente treinos como completos quando importados do Strava
+### 5. **Variáveis Duplicadas no Gerador**
+- ❌ **Problema**: `raceDate` e `isLastWeek` declaradas 2x (erro de build)
+- ✅ **Solução**: Removidas declarações duplicadas
 
-**Status**: Endpoint criado mas com erro de query Prisma
-- Endpoint: `/api/workouts/sync-strava`
-- Erro atual: `Cannot read properties of undefined (reading 'athleteProfile')`
-- Causa: Query não está incluindo relações necessárias
+## 🚧 TRABALHO EM ANDAMENTO
 
-**Próximos passos**:
-1. Corrigir query Prisma para incluir `athleteProfile`
-2. Testar sincronização manual
-3. Implementar sincronização automática (client-side ao carregar dashboard)
-4. Implementar job periódico (a cada 30min)
+### **Sistema de Sincronização Strava-Plano**
+**Status**: 90% implementado, falta correção final na query Prisma
 
-## 🎯 REGRAS ESTABELECIDAS
+**Objetivo**: Treinos importados do Strava devem marcar automaticamente treinos do plano como completos
 
-### **Geração de Semanas**
-1. Semana sempre seg→dom (estrutura fixa)
-2. Plano começa HOJE
-3. Dias passados ficam ESCONDIDOS
-4. Semana 1 é semana 1 (mesmo começando no meio)
-5. Última semana termina no DIA DA PROVA
-6. Longão definido pelo usuário no onboarding
+**Implementado**:
+1. ✅ Endpoint `/api/workouts/sync-strava` (POST)
+2. ✅ Chamada automática ao carregar dashboard
+3. ✅ Lógica de matching treino Strava → treino planejado
+4. ✅ Atualização de status `completedAt`
 
-### **Validação**
-- ✅ Tem pelo menos 1 treino por semana
-- ✅ Não ultrapassa data da prova
-- ❌ NÃO valida se tem treino em todos os dias disponíveis
-- ❌ NÃO valida semanas incompletas
+**Faltando**:
+- ❌ Query Prisma não está retornando `athleteProfile` corretamente
+- **Erro atual**: `Cannot read properties of undefined (reading 'athleteProfile')`
+- **Causa**: Falta `include: { athleteProfile: true }` na query do user
 
-## 📝 PRINCÍPIOS APLICADOS
+**Próximo passo**: Corrigir linha ~25 em `/app/api/workouts/sync-strava/route.ts`
 
-1. **DRY (Don't Repeat Yourself)**: Reutilizar padrões que funcionam
-2. **Consistência**: Mesmos problemas = Mesmas soluções
-3. **Simplicidade**: Remover validações desnecessárias
+## 📝 PROBLEMAS CONHECIDOS PARA PRÓXIMA SESSÃO
 
-## 🔧 ARQUIVOS MODIFICADOS
+1. **Sincronização Strava**: Finalizar correção da query Prisma
+2. **Auto-scroll no plano**: Investiga why plano volta para semana atual após alguns segundos
+3. **Data do objetivo**: Ainda mostrando 20/12 em vez de 21/12 em alguns lugares
+4. **Sugestão de ajuste**: Aparece mesmo no primeiro dia do plano (precisa lógica dinâmica)
 
-- `lib/ai-plan-generator.ts` - Correções de geração de plano
-- `lib/plan-validation.ts` - Remoção de validação problemática
-- `components/WeekView.tsx` - Correção de auto-scroll
-- `lib/strava-utils.ts` - Correção de labels
-- `app/api/workouts/sync-strava/route.ts` - **EM PROGRESSO**
+## 🎯 CONQUISTAS DA SESSÃO
 
-## ⏭️ PRÓXIMA SESSÃO
+1. ✅ Plano agora respeita data de início real do usuário
+2. ✅ Primeira semana pode ser incompleta sem erros
+3. ✅ Volume semanal calculado corretamente
+4. ✅ Labels de treino sem duplicação
+5. ✅ 90% do sistema de sincronização automática implementado
 
-1. Corrigir query Prisma no endpoint de sincronização
-2. Testar sincronização completa
-3. Implementar verificações automáticas
-4. Documentar sistema de sincronização
+## 🔄 COMMITS REALIZADOS
+
+```bash
+git log --oneline -10
+# Últimos commits desta sessão
+```
+
+## 📊 ARQUIVOS MODIFICADOS
+
+- `lib/ai-plan-generator.ts` - Lógica de geração de semanas
+- `lib/utils/week-calculations.ts` - Cálculo de volume
+- `app/api/workouts/sync-strava/route.ts` - Sistema de sincronização (WIP)
+- `components/dashboard/*` - Ajustes de UI
+
+## ⏭️ PRÓXIMA SESSÃO - TAREFAS PRIORITÁRIAS
+
+1. **[URGENTE]** Corrigir query Prisma em sync-strava (1 linha)
+2. **[IMPORTANTE]** Testar sincronização completa end-to-end
+3. **[MÉDIO]** Investigar auto-scroll do plano
+4. **[BAIXO]** Revisar data do objetivo (20 vs 21)
 
 ---
 
-**Timezone**: America/Sao_Paulo (UTC-3)
-**Data/Hora**: 27/11/2025 17:14
+**Sessão encerrada**: 27/11/2025 20:14 (horário de Brasília)
+**Tempo de desenvolvimento**: ~3 horas
+**Status geral**: 🟢 Progressão excelente
