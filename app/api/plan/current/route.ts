@@ -115,15 +115,19 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Calcular a porcentagem de conclusão baseado nos treinos completados
+    // ✅ Filtrar treinos >= planStartDate (ignorar treinos antes do início do plano)
+    const planStartDate = new Date(plan.startDate);
     const allWorkouts = plan.weeks?.flatMap((week: any) => week.workouts || []) || [];
-    const completedWorkouts = allWorkouts.filter((w: any) => w.isCompleted);
-    const completionRate = allWorkouts.length > 0 
-      ? (completedWorkouts.length / allWorkouts.length) * 100 
+    const validWorkouts = allWorkouts.filter((w: any) => new Date(w.date) >= planStartDate);
+    const completedWorkouts = validWorkouts.filter((w: any) => w.isCompleted);
+    const completionRate = validWorkouts.length > 0 
+      ? (completedWorkouts.length / validWorkouts.length) * 100 
       : 0;
 
     console.log('[PLAN CURRENT] Workouts stats:', {
-      totalWorkouts: allWorkouts.length,
+      planStartDate: planStartDate.toISOString(),
+      totalWorkoutsInDB: allWorkouts.length,
+      validWorkouts: validWorkouts.length,
       completedWorkouts: completedWorkouts.length,
       completionRate
     });
@@ -162,22 +166,38 @@ export async function GET(request: NextRequest) {
       throw serializationError;
     }
 
-    const serializedCurrentWeek = currentWeek ? {
-      ...currentWeek,
-      startDate: formatDateForAPI(currentWeek.startDate),
-      endDate: formatDateForAPI(currentWeek.endDate),
-      workouts: currentWeek.workouts?.map((workout: any) => ({
-        ...workout,
-        date: formatDateForAPI(workout.date),
-        createdAt: workout.createdAt?.toISOString(),
-        updatedAt: workout.updatedAt?.toISOString(),
-        completedWorkout: workout.completedWorkout ? {
-          ...workout.completedWorkout,
-          date: workout.completedWorkout.date?.toISOString(),
-          createdAt: workout.completedWorkout.createdAt?.toISOString(),
-        } : null,
-      })),
-    } : null;
+    // ✅ Recalcular estatísticas da semana atual considerando apenas treinos válidos
+    const serializedCurrentWeek = currentWeek ? (() => {
+      const validCurrentWeekWorkouts = currentWeek.workouts?.filter((w: any) => 
+        new Date(w.date) >= planStartDate
+      ) || [];
+      
+      const currentWeekDistance = validCurrentWeekWorkouts
+        .filter((w: any) => w.type === 'running' || w.type === 'race')
+        .reduce((sum: number, w: any) => sum + (w.distance || 0), 0);
+      
+      const currentWeekCompleted = validCurrentWeekWorkouts.filter((w: any) => w.isCompleted).length;
+      
+      return {
+        ...currentWeek,
+        startDate: formatDateForAPI(currentWeek.startDate),
+        endDate: formatDateForAPI(currentWeek.endDate),
+        totalDistance: Math.round(currentWeekDistance * 10) / 10, // ✅ Recalculado
+        totalWorkouts: validCurrentWeekWorkouts.length, // ✅ Recalculado (sem dias escondidos)
+        completedWorkouts: currentWeekCompleted, // ✅ Recalculado
+        workouts: currentWeek.workouts?.map((workout: any) => ({
+          ...workout,
+          date: formatDateForAPI(workout.date),
+          createdAt: workout.createdAt?.toISOString(),
+          updatedAt: workout.updatedAt?.toISOString(),
+          completedWorkout: workout.completedWorkout ? {
+            ...workout.completedWorkout,
+            date: workout.completedWorkout.date?.toISOString(),
+            createdAt: workout.completedWorkout.createdAt?.toISOString(),
+          } : null,
+        })),
+      };
+    })() : null;
 
     let serializedProfile;
     try {
