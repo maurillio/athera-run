@@ -1449,8 +1449,6 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
       const weekStartDate = new Date(currentWeekStart);
       // ✅ ÚLTIMA SEMANA: Terminar no DIA DA PROVA, não no domingo
-      const raceDate = new Date(profile.targetRaceDate);
-      const isLastWeek = weekNumber === totalWeeks;
       
       let weekEndDate: Date;
       if (isLastWeek) {
