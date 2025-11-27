@@ -115,7 +115,13 @@ export async function DELETE(request: NextRequest) {
       deletedFeedbackCount = deletedFeedback.count;
       console.log(`[DELETE PROFILE] ✅ Deletados ${deletedFeedback.count} feedbacks`);
 
-      // 7. Por último, deletar o AthleteProfile
+      // 7. Deletar AIAnalysis (análises de IA)
+      const deletedAIAnalyses = await tx.aIAnalysis.deleteMany({
+        where: { athleteId }
+      });
+      console.log(`[DELETE PROFILE] ✅ Deletadas ${deletedAIAnalyses.count} análises de IA`);
+
+      // 8. Por último, deletar o AthleteProfile
       await tx.athleteProfile.delete({
         where: { id: athleteId }
       });

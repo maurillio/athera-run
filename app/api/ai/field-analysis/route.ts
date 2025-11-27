@@ -26,11 +26,7 @@ export async function GET(request: NextRequest) {
       include: { 
         athleteProfile: {
           include: {
-            customPlan: {
-              where: { isActive: true },
-              orderBy: { createdAt: 'desc' },
-              take: 1
-            }
+            customPlan: true
           }
         }
       },
@@ -41,7 +37,10 @@ export async function GET(request: NextRequest) {
     }
 
     const profile = user.athleteProfile;
-    const activePlan = profile.customPlan?.[0];
+    const activePlans = profile.customPlan?.filter(p => p.isActive).sort((a, b) => 
+      b.createdAt.getTime() - a.createdAt.getTime()
+    );
+    const activePlan = activePlans?.[0];
 
     if (!activePlan) {
       return NextResponse.json({
