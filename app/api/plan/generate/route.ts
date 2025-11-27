@@ -397,8 +397,8 @@ export async function POST(request: NextRequest) {
 
     // Criar semanas e treinos
     for (const weekData of aiPlan.weeks) {
-      // ✅ Calcular totalWorkouts baseado nos treinos REAIS gerados (não fixo em 7)
-      const totalWorkouts = weekData.workouts.length;
+      // ✅ Calcular totalWorkouts baseado nos treinos REAIS (excluindo rest days)
+      const totalWorkouts = weekData.workouts.filter(w => w.type !== 'rest').length;
       
       const week = await prisma.customWeek.create({
         data: {
