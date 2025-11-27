@@ -2024,28 +2024,17 @@ function generateWeekWorkouts(params: {
 
     const activitiesForDay = dayActivities.get(dayOfWeek) || [];
 
-    // ✅ v1.7.2: Se esta data é ANTES do início do plano, marcar como "Preparação"
-    // Exemplo: Plano começa Quarta 12/Nov, mas semana começa Segunda 10/Nov
-    //   → Segunda e Terça são "Preparação" (antes do início)
-    //   → Quarta em diante são treinos normais
-    if (date < params.planStartDate) {
-      workouts.push({
-        dayOfWeek: dayOfWeek,
-        date,
-        type: 'preparation',
-        title: 'Preparação',
-        description: 'Seu plano de treino começa em ' + 
-          params.planStartDate.toLocaleDateString('pt-BR', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
-          }) + 
-          '. Use este tempo para se preparar: revise seu equipamento, planeje sua rotina e descanse bem.',
-        distance: null,
-        duration: null,
-        targetPace: null,
-      });
-      continue; // Pular para próximo dia
+    // ✅ v1.7.4: Se esta data é ANTES do início do plano, ESCONDER (não criar treino)
+    // Exemplo: Plano começa Quinta 27/Nov, mas semana começa Segunda 24/Nov
+    //   → Segunda, Terça, Quarta ficam ESCONDIDOS (não aparecem)
+    //   → Quinta em diante aparecem normalmente
+    // Normalizar datas para meia-noite UTC para comparação precisa
+    const dateNorm = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const planStartNorm = new Date(params.planStartDate.getFullYear(), params.planStartDate.getMonth(), params.planStartDate.getDate());
+    
+    if (dateNorm < planStartNorm) {
+      console.log(`[WORKOUT GEN] ⏭️ Pulando dia ${dateNorm.toISOString().split('T')[0]} (antes do início do plano ${planStartNorm.toISOString().split('T')[0]})`);
+      continue; // Pular completamente - dia não aparece no calendário
     }
 
     // Se não há atividades configuradas para este dia, adicionar descanso com sugestão inteligente
