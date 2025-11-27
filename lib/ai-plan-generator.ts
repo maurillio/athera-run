@@ -2230,7 +2230,7 @@ function generateWeekWorkouts(params: {
           date,
           type: 'strength',
           title: `Musculação${timeInfoShort}`,
-          description: params.keyWorkouts.strength.description || `Treino de força para corrida. Foque em membros inferiores e core.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
+          description: params.keyWorkouts.strength?.description || `Treino de força para corrida. Foque em membros inferiores e core.${timeInfo ? ` Horário preferido: ${timeInfo}.` : ''}`,
           distance: null,
           duration: 45,
           targetPace: null,
