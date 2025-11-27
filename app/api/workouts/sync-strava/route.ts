@@ -22,43 +22,44 @@ export async function POST() {
     console.log('[SYNC] Session:', { 
       hasSession: !!session, 
       hasUser: !!session?.user,
-      email: session?.user?.email 
+      email: session?.user?.email,
+      userId: session?.user?.id
     });
     
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    const userEmail = session.user.email;
-
-    // 1. Buscar perfil do atleta diretamente
-    const profile = await prisma.athleteProfile.findFirst({
-      where: { 
-        user: {
-          email: userEmail
+    // Buscar perfil usando userId (padrão correto)
+    const profile = await prisma.athleteProfile.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        customPlan: {
+          include: {
+            weeks: {
+              include: {
+                workouts: true
+              }
+            }
+          }
         }
-      },
-      select: {
-        id: true,
-        userId: true,
-        stravaConnected: true,
-        stravaAccessToken: true
       }
     });
 
     console.log('[SYNC] Profile found:', { 
       hasProfile: !!profile,
-      hasStrava: !!profile?.stravaConnected
+      hasStrava: !!profile?.stravaConnected,
+      hasPlan: !!profile?.customPlan
     });
 
     if (!profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Perfil não encontrado' }, { status: 404 });
     }
 
     // 2. Verificar se tem Strava conectado
     if (!profile.stravaConnected || !profile.stravaAccessToken) {
       return NextResponse.json({ 
-        error: 'Strava not connected',
+        error: 'Strava não conectado',
         synced: 0 
       }, { status: 200 });
     }
@@ -69,7 +70,7 @@ export async function POST() {
 
     const plannedWorkouts = await prisma.workout.findMany({
       where: {
-        userId: user.id,
+        userId: profile.userId,
         date: { gte: sevenDaysAgo },
         completed: false,
         // Apenas treinos que podem vir do Strava
