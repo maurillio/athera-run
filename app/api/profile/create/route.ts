@@ -217,7 +217,8 @@ export async function POST(req: NextRequest) {
       experienceDescription: cleanString(experienceDescription),
       // v1.5.4 - Critical fields (REQUIRED)
       goalDistance: cleanString(goalDistance) || 'unknown',
-      targetRaceDate: new Date(targetRaceDate),
+      // CORREÇÃO: Criar Date em São Paulo timezone (UTC-3) para evitar bug de -1 dia
+      targetRaceDate: new Date(`${targetRaceDate}T12:00:00-03:00`),
       targetTime: cleanString(targetTime),
       // Sistema flexível de atividades de treino (v1.6.7 - Manter compatibilidade)
       // ⚠️ trainingActivities mantido apenas para compatibilidade com código legado
@@ -298,11 +299,16 @@ export async function POST(req: NextRequest) {
     // Criar race goal automaticamente se goalDistance e targetRaceDate foram fornecidos
     if (goalDistance && targetRaceDate) {
       try {
+        // CORREÇÃO: Criar Date em São Paulo timezone para evitar bug de -1 dia
+        // Se passar "2025-12-21" para new Date(), JS interpreta como UTC 00:00
+        // Ao converter para America/Sao_Paulo (UTC-3), vira 21:00 do dia 20!
+        const raceDateInSP = new Date(`${targetRaceDate}T12:00:00-03:00`); // Meio-dia SP
+        
         // Verificar se já existe uma race goal para essa data
         const existingRaceGoal = await prisma.raceGoal.findFirst({
           where: {
             athleteId: profile.id,
-            raceDate: new Date(targetRaceDate)
+            raceDate: raceDateInSP
           }
         });
 
@@ -320,7 +326,7 @@ export async function POST(req: NextRequest) {
               athleteId: profile.id,
               raceName: distanceNames[goalDistance] || `Corrida ${goalDistance}`,
               distance: goalDistance,
-              raceDate: new Date(targetRaceDate),
+              raceDate: raceDateInSP,
               targetTime: targetTime || null,
               priority: 'A', // Corrida principal é sempre A
               status: 'upcoming',
