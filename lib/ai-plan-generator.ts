@@ -1425,7 +1425,6 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
       // Gerar treinos da semana
       const isLastWeek = weekNumber === totalWeeks;
-      const raceDate = new Date(profile.targetRaceDate);
       
       const workouts = generateWeekWorkouts({
         weekNumber,
