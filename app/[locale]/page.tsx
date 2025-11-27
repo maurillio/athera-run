@@ -202,7 +202,7 @@ export default function LocaleHome() {
       <footer className="border-t border-slate-200 py-12 bg-white">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <Logo size="md" variant="complete" />
+            <Logo size="sm" variant="icon" />
             <p className="text-sm text-slate-500">
               &copy; 2025 Athera Run. Todos os direitos reservados.
             </p>
