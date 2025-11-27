@@ -1425,6 +1425,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
 
       // Gerar treinos da semana
       const isLastWeek = weekNumber === totalWeeks;
+      const raceDateObj = new Date(profile.targetRaceDate);
       
       const workouts = generateWeekWorkouts({
         weekNumber,
@@ -1442,7 +1443,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
         isCutbackWeek,
         currentWeekStart,
         planStartDate: startDate, // ✅ Passar data de início do plano para marcar dias anteriores
-        targetRaceDate: isLastWeek ? raceDate : undefined, // ✅ Passar data da prova na última semana
+        targetRaceDate: isLastWeek ? raceDateObj : undefined, // ✅ Passar data da prova na última semana
         raceThisWeek, // Passar corrida B/C se houver
       });
 
@@ -1452,7 +1453,7 @@ function expandStrategyToPlan(strategy: any, profile: AIUserProfile, totalWeeks:
       let weekEndDate: Date;
       if (isLastWeek) {
         // Última semana termina no dia da prova
-        weekEndDate = new Date(raceDate);
+        weekEndDate = new Date(raceDateObj);
         weekEndDate.setHours(23, 59, 59, 999);
         console.log(`[AI PLAN] ✅ Última semana ${weekNumber}: termina no dia da prova ${weekEndDate.toISOString()}`);
       } else {
