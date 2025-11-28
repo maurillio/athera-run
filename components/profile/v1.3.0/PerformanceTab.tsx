@@ -5,7 +5,21 @@ import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
-import { Link2 } from 'lucide-react';
+import { Link2, Trash2 } from 'lucide-react';
+
+// Helper function to format seconds to HH:MM:SS or MM:SS
+function formatTimeFromSeconds(seconds: number): string {
+  if (!seconds || isNaN(seconds)) return '0:00';
+  
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
 
 export default function PerformanceTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile.performance');
@@ -480,9 +494,15 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
                   <p className="text-sm text-gray-600">VDOT: {Math.round(data.vdot || 0)}</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <p className="font-mono font-semibold">{data.time}</p>
-                  <button onClick={() => removeTime(dist)} className="text-red-600 hover:text-red-800">
-                    🗑️
+                  <p className="font-mono font-semibold">
+                    {typeof data.time === 'number' ? formatTimeFromSeconds(data.time) : data.time}
+                  </p>
+                  <button 
+                    onClick={() => removeTime(dist)} 
+                    className="text-red-600 hover:text-red-800 transition-colors"
+                    title="Remover tempo"
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>

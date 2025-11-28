@@ -216,8 +216,10 @@ export async function importStravaPRs(
     });
 
     // Sincronizar com bestTimes (Performance Tab)
-    // Só atualiza se não existir ou se for melhor tempo
-    const prKey = pr.type; // '5k', '10k', 'half_marathon', 'marathon'
+    // Mapear chaves do Strava para formato do PerformanceTab
+    let bestTimesKey = pr.type;
+    if (pr.type === 'half_marathon') bestTimesKey = '21k';
+    if (pr.type === 'marathon') bestTimesKey = '42k';
     
     // Calcular VDOT baseado no tipo de PR
     let vdot = 0;
@@ -236,8 +238,9 @@ export async function importStravaPRs(
       console.log('Erro ao calcular VDOT:', error);
     }
     
-    if (!updatedBestTimes[prKey] || pr.time < updatedBestTimes[prKey].time) {
-      updatedBestTimes[prKey] = {
+    // Só atualiza se não existir ou se for melhor tempo
+    if (!updatedBestTimes[bestTimesKey] || pr.time < updatedBestTimes[bestTimesKey].time) {
+      updatedBestTimes[bestTimesKey] = {
         time: pr.time,
         date: pr.activityDate,
         vdot: vdot,
