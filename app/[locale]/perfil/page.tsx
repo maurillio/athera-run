@@ -10,7 +10,7 @@ import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy } from 'lucide-react';
+import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy, Activity } from 'lucide-react';
 import { toast } from 'sonner';
 import ProfileTabs from '@/components/profile/v1.3.0/ProfileTabs';
 import RaceManagement from '@/components/race-management';
@@ -290,32 +290,33 @@ export default function PerfilPage() {
             <SubscriptionStatusCard />
           </div>
 
-          <Tabs defaultValue="profile" className="w-full">
+          <Tabs defaultValue="personal" className="w-full">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 mb-6">
-              <TabsTrigger value="profile">
+              <TabsTrigger value="personal">
                 <User className="h-4 w-4 mr-2" />
-                {t('tabs.profile')}
+                📋 Dados Pessoais
               </TabsTrigger>
-              <TabsTrigger value="stats">
-                <Trophy className="h-4 w-4 mr-2" />
-                Estatísticas
+              <TabsTrigger value="performance">
+                <Activity className="h-4 w-4 mr-2" />
+                🏃 Desempenho
               </TabsTrigger>
-              <TabsTrigger value="races">
+              <TabsTrigger value="goals">
                 <Target className="h-4 w-4 mr-2" />
-                {t('tabs.races')}
+                🎯 Objetivos & Provas
               </TabsTrigger>
-              <TabsTrigger value="actions">
+              <TabsTrigger value="settings">
                 <Settings className="h-4 w-4 mr-2" />
-                {t('tabs.actions')}
+                ⚙️ Configurações
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="profile" className="space-y-6">
+            {/* 1️⃣ DADOS PESSOAIS: Básicos + Saúde + Preferências */}
+            <TabsContent value="personal" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t('profileTab.title')}</CardTitle>
+                  <CardTitle>📋 Dados Pessoais</CardTitle>
                   <CardDescription>
-                    {t('profileTab.description')}
+                    Informações básicas, saúde e preferências de treino
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -324,16 +325,19 @@ export default function PerfilPage() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="stats" className="space-y-6">
+            {/* 2️⃣ DESEMPENHO: Experiência + PRs + Estatísticas + Strava */}
+            <TabsContent value="performance" className="space-y-6">
               <AthleteStatsSection />
               <StravaDataSection />
             </TabsContent>
 
-            <TabsContent value="races" className="space-y-6">
+            {/* 3️⃣ OBJETIVOS & PROVAS: Meta + Corridas + Disponibilidade */}
+            <TabsContent value="goals" className="space-y-6">
               <RaceManagement races={races} onRacesUpdated={fetchRaces} />
             </TabsContent>
 
-            <TabsContent value="actions" className="space-y-6">
+            {/* 4️⃣ CONFIGURAÇÕES: Assinatura + Plano + Conta */}
+            <TabsContent value="settings" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
