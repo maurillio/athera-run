@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.10 - Status Amarelo Parcial (28/Nov/2025 17:20 UTC)  
-**Versão Atual:** v3.2.10 ✅ SISTEMA PT-BR + UX MELHORADA  
-**Status:** ✅ **100% OPERACIONAL - CONCLUSÃO PARCIAL VISUAL**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.16 - Mesclagem Estatísticas (28/Nov/2025 19:50 UTC)  
+**Versão Atual:** v3.2.16 ✅ SISTEMA CONSOLIDADO + SYNC AUTOMÁTICA  
+**Status:** ✅ **100% OPERACIONAL - INTERFACE UNIFICADA**  
 **Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
@@ -12,6 +12,52 @@
 **Idioma:** 🇧🇷 **pt-BR ONLY** - Sistema métrico fixo (km, kg, °C)  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
 **URL Development:** 🚧 **Pronto para configurar** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
+
+---
+
+## 📋 Sessão 28/Nov/2025 - Melhorias de Interface e UX
+
+### ✅ Implementações da Sessão (v3.2.11 → v3.2.16)
+
+#### 1. **Ícones Profissionais (v3.2.11)**
+- ✅ Removidos TODOS emojis da interface
+- ✅ Substituídos por ícones lucide-react
+- ✅ Abas, botões, badges 100% profissionais
+- Commit: `cd6f1ed8`
+
+#### 2. **Correção VDOT e Badge Strava (v3.2.12)**
+- ✅ Badge "🔗 Strava" → `<Link2>` ícone
+- ✅ VDOT: 7988 → 45 (mapeamento correto)
+- ✅ Chaves: `'half_marathon'` → `'21k'`
+- Commit: `6d896d45`
+
+#### 3. **Formatação de Tempo (v3.2.13)**
+- ✅ Tempo: 7988s → 2:13:08 formatado
+- ✅ Função `formatTimeFromSeconds()`
+- ✅ Botão deletar: emoji → `<Trash2>`
+- Commit: `fe43006b`
+
+#### 4. **API Athlete Stats (v3.2.14)**
+- ✅ Busca dados reais do `athleteProfile`
+- ✅ `stravaConnected` correto
+- ✅ Botão sincronizar ativa quando conectado
+- Commit: `5f59f4a5`
+
+#### 5. **Sincronização Automática (v3.2.15)** 🔥
+- ✅ **Removidos botões manuais** de sync
+- ✅ Badge "Sincronização Automática Ativa"
+- ✅ Ponto verde pulsante
+- ✅ UX: Conectou = Sincroniza automático
+- ✅ -79 linhas de código
+- Commit: `b4d00478`
+
+#### 6. **Mesclagem Estatísticas (v3.2.16)** 🏆
+- ✅ 2 seções → 1 seção unificada
+- ✅ Cards grandes de resumo (Corridas/Distância/Elevação)
+- ✅ Remove duplicação de PRs
+- ✅ Interface mais limpa
+- ✅ Título: "Estatísticas e Dados Strava"
+- Commit: `458f3eea`
 
 ---
 

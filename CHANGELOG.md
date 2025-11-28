@@ -7,6 +7,329 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.16] - 28/NOV/2025 19:50 UTC ✅ **IMPLEMENTADO**
+
+### 🔄 Refactor: Mesclagem Estatísticas do Atleta + Dados Strava
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+- Seção "Estatísticas do Atleta" duplicava dados
+- Campos vazios (totalRuns, totalDistance)
+- PRs duplicados com PerformanceTab
+- Confusão do usuário (2 lugares para ver mesma coisa)
+
+#### Solução Implementada
+
+**Mesclagem em 1 seção unificada:**
+- Removido: `AthleteStatsSection` component
+- Melhorado: `StravaDataSection` com resumo visual
+
+**Nova estrutura:**
+```
+Estatísticas e Dados Strava
+├─ Status: ● Sincronização Ativa
+├─ RESUMO GERAL (cards grandes)
+│  ├─ Total de Corridas (azul)
+│  ├─ Distância Total (verde)
+│  └─ Elevação Total (laranja)
+├─ Abas:
+│  ├─ Detalhes (Recent/YTD/All Time)
+│  ├─ Records (PRs)
+│  ├─ Equipamentos
+│  └─ Zonas de Treino
+```
+
+#### Arquivos Modificados
+- `app/[locale]/perfil/page.tsx` (remove AthleteStatsSection)
+- `components/profile/strava-data-section.tsx` (adiciona resumo)
+
+#### Benefícios
+- ✅ Tudo em um lugar
+- ✅ Resumo visual destacado (cards 3xl)
+- ✅ Remove duplicação
+- ✅ Interface mais limpa
+
+#### Commit
+- Hash: `458f3eea`
+- Data: 28/11/2025 19:45 UTC
+
+---
+
+## [v3.2.15] - 28/NOV/2025 19:30 UTC ✅ **IMPLEMENTADO**
+
+### ✨ Feature: Sincronização Automática do Strava
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Filosofia
+**"Conectou ao Strava = Sincroniza automaticamente"**
+
+#### Problema
+- Botões manuais de sincronização confusos
+- Usuário não entendia que precisava clicar
+- 2 lugares diferentes com botões (AthleteStats + StravaData)
+- UX não intuitiva
+
+#### Solução Implementada
+
+**Removido:**
+- ❌ Botão "Sincronizar" (AthleteStatsSection)
+- ❌ Botão "Sincronizar agora" (StravaDataSection)
+- ❌ Função `handleSyncStrava()`
+- ❌ Função `handleSyncAll()`
+- ❌ State `syncing`
+
+**Adicionado:**
+- ✅ Badge "Sincronização Automática Ativa"
+- ✅ Ponto verde pulsante (animate-pulse)
+- ✅ Indicador de última sincronização
+- ✅ Mensagem: "Dados sincronizados automaticamente"
+- ✅ Botão "Conectar Strava" (se não conectado)
+
+#### Arquivos Modificados
+- `components/profile/athlete-stats-section.tsx`
+- `components/profile/strava-data-section.tsx`
+
+#### Benefícios
+- ✅ UX mais intuitiva (sem botões)
+- ✅ Menos confusão
+- ✅ Status visual claro
+- ✅ -79 linhas de código
+- ✅ Interface mais limpa
+
+#### Commit
+- Hash: `b4d00478`
+- Data: 28/11/2025 19:25 UTC
+
+---
+
+## [v3.2.14] - 28/NOV/2025 19:10 UTC ✅ **IMPLEMENTADO**
+
+### 🐛 Fix: API athlete-stats retornando dados vazios
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+- Estatísticas do Atleta não aparecia nada
+- Botão sincronizar sempre opaco (disabled)
+- API retornava `stravaConnected: false` (hardcoded)
+- Todos dados zerados
+
+#### Causa Raiz
+API `/api/athlete-stats` retornava valores HARDCODED ao invés de buscar do banco.
+
+#### Solução Implementada
+
+**Query do banco:**
+```typescript
+const user = await prisma.user.findUnique({
+  where: { id: session.user.id },
+  include: {
+    athleteProfile: {
+      select: {
+        stravaConnected: true,
+        stravaLastSync: true,
+        longestRun: true,
+      }
+    }
+  }
+});
+
+const stats = {
+  stravaConnected: user.athleteProfile?.stravaConnected || false,
+  stravaLastSync: user.athleteProfile?.stravaLastSync || null,
+  longestRun: user.athleteProfile?.longestRun || 0,
+  // ...
+};
+```
+
+#### Arquivos Modificados
+- `app/api/athlete-stats/route.ts`
+
+#### Resultado
+- ✅ Se Strava conectado → botão ativo
+- ✅ Se não conectado → botão opaco (correto)
+- ✅ Dados reais aparecem
+
+#### Commit
+- Hash: `5f59f4a5`
+- Data: 28/11/2025 19:05 UTC
+
+---
+
+## [v3.2.13] - 28/NOV/2025 18:50 UTC ✅ **IMPLEMENTADO**
+
+### 🐛 Fix: Formatação de Tempo e Mapeamento de Chaves PRs
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+1. Tempo mostrando segundos crus: `7988`
+2. VDOT: 0 no PR do Strava
+3. Botão deletar com emoji 🗑️
+
+#### Causa Raiz
+1. `data.time` em segundos não formatado
+2. Chave `'half_marathon'` não mapeada para `'21k'`
+3. Emoji esquecido no botão
+
+#### Solução Implementada
+
+**1. Formatação de tempo:**
+```typescript
+function formatTimeFromSeconds(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+// 7988 → "2:13:08"
+```
+
+**2. Mapeamento de chaves:**
+```typescript
+let bestTimesKey = pr.type;
+if (pr.type === 'half_marathon') bestTimesKey = '21k';
+if (pr.type === 'marathon') bestTimesKey = '42k';
+
+updatedBestTimes[bestTimesKey] = { ... }
+```
+
+**3. Botão deletar:**
+```tsx
+<button>
+  <Trash2 className="h-4 w-4" />
+</button>
+```
+
+#### Arquivos Modificados
+- `components/profile/v1.3.0/PerformanceTab.tsx`
+- `lib/strava-prs.ts`
+
+#### Resultado
+- ✅ Tempo formatado: 2:13:08
+- ✅ VDOT correto: ~31-45
+- ✅ Ícone profissional no deletar
+
+#### Commit
+- Hash: `fe43006b`
+- Data: 28/11/2025 18:45 UTC
+
+---
+
+## [v3.2.12] - 28/NOV/2025 18:30 UTC ✅ **IMPLEMENTADO**
+
+### 🐛 Fix: Badge Strava e VDOT Incorreto
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+1. Badge Strava com emoji: `🔗 Strava`
+2. VDOT mostrando 7988 (segundos ao invés de VDOT)
+
+#### Causa Raiz
+- Badge: Emoji ao invés de ícone profissional
+- VDOT: `calculateVDOTFromTime` recebia METROS ao invés de CHAVE
+  - Enviava: `calculateVDOTFromTime(5000, 1500)` ❌
+  - Esperava: `calculateVDOTFromTime('5k', 1500)` ✅
+
+#### Solução Implementada
+
+**1. Badge profissional:**
+```tsx
+<span className="...">
+  <Link2 className="h-3 w-3" />
+  Strava
+</span>
+```
+
+**2. Mapeamento VDOT correto:**
+```typescript
+if (pr.type === '5k') {
+  vdot = calculateVDOTFromTime('5k', pr.time);
+} else if (pr.type === '10k') {
+  vdot = calculateVDOTFromTime('10k', pr.time);
+} else if (pr.type === 'half_marathon') {
+  vdot = calculateVDOTFromTime('21k', pr.time);
+} else if (pr.type === 'marathon') {
+  vdot = calculateVDOTFromTime('42k', pr.time);
+}
+```
+
+**3. Display VDOT arredondado:**
+```tsx
+VDOT: {Math.round(data.vdot || 0)}
+```
+
+#### Arquivos Modificados
+- `components/profile/v1.3.0/PerformanceTab.tsx`
+- `lib/strava-prs.ts`
+
+#### Resultado
+- ✅ Badge com ícone Link2 profissional
+- ✅ VDOT correto (~30-85)
+- ✅ Re-sincronização necessária para usuários existentes
+
+#### Commit
+- Hash: `6d896d45`
+- Data: 28/11/2025 18:25 UTC
+
+---
+
+## [v3.2.11] - 28/NOV/2025 18:00 UTC ✅ **IMPLEMENTADO**
+
+### 🎨 UX: Remover Emojis - Ícones Profissionais
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+- Emojis usados em abas, botões e badges
+- Interface não profissional
+- Inconsistência visual
+
+#### Solução Implementada
+
+**Substituição completa:**
+
+| Local | Antes | Agora |
+|-------|-------|-------|
+| Dados Pessoais | 📋 | `<User>` |
+| Desempenho | 🏃 | `<Activity>` |
+| Objetivos | 🎯 | `<Target>` |
+| Configurações | ⚙️ | `<Settings>` |
+| Saúde | 🏥 | `<Heart>` |
+| Preferências | ⚙️ | `<Sliders>` |
+| Experiência | 🏃 | `<Activity>` |
+| Meta Principal | 🎯 | `<Target>` |
+| Disponibilidade | 📅 | `<Calendar>` |
+| Deletar | 🗑️ | `<Trash2>` |
+
+**Ícones adicionados:**
+- `User`, `Activity`, `Target`, `Settings`
+- `Heart`, `Sliders`, `Calendar`
+- `ClipboardList`, `Stethoscope`, `Medal`
+
+#### Arquivos Modificados
+- `app/[locale]/perfil/page.tsx`
+
+#### Resultado
+- ✅ 100% ícones SVG profissionais
+- ✅ Tamanho padronizado (h-5 w-5)
+- ✅ Cor consistente com tema
+- ✅ Escaláveis e acessíveis
+
+#### Commit
+- Hash: `cd6f1ed8`
+- Data: 28/11/2025 17:55 UTC
+
+---
+
 ## [v3.2.10] - 28/NOV/2025 17:20 UTC ✅ **IMPLEMENTADO**
 
 ### 🎨 UX: Status Amarelo para Conclusão Parcial
