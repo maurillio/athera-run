@@ -13,6 +13,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 **Status:** ✅ **CONCLUÍDO - PORTUGUÊS BRASILEIRO ÚNICO IDIOMA**
 
+#### Atualização 15:00 UTC - Removido Seletor de Idioma/Unidades do Perfil
+- ✅ Removido seção "Idioma e Unidades" da aba Preferências
+- ✅ Sistema força `preferredUnits: 'metric'` (km, kg, °C)
+- ✅ Sistema força `locale: 'pt-BR'` sempre
+- ✅ UI mais limpa e focada no essencial
+
+**Arquivo modificado:**
+- `components/profile/v1.3.0/PreferencesTab.tsx` - Remove seletor idioma/unidades
+
 #### Contexto
 - Sistema tinha 3 idiomas: pt-BR (padrão), en (inglês), es (espanhol)
 - Foco no mercado brasileiro justifica simplificação
@@ -60,6 +69,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `lib/i18n/config.ts` - Desabilita en/es
 - `components/header.tsx` - Remove LanguageSwitcher da UI
 - `app/[locale]/layout.tsx` - Força lang pt-BR
+- `components/profile/v1.3.0/PreferencesTab.tsx` - Remove seletor idioma/unidades
 - `package.json` - Versão 3.2.9
 
 #### Como Reativar Idiomas

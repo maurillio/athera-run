@@ -1,16 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/hooks';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export default function PreferencesTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile.preferences');
-  const router = useRouter();
   
-  // v1.6.0 - Idioma e Unidades
-  const [locale, setLocale] = useState(userData.locale || 'pt-BR');
-  const [units, setUnits] = useState(userData.preferredUnits || 'metric');
+  // v3.2.9 - Removido: idioma e unidades (sistema pt-BR only, metric fixo)
   
   // v1.3.0 - Preferências de treino
   const trainingPrefs = userData.trainingPreferences || {};
@@ -27,7 +23,7 @@ export default function PreferencesTab({ userData, onUpdate }: any) {
 
   const handleSave = async () => {
     try {
-      // Atualizar preferências de perfil
+      // v3.2.9 - Sistema pt-BR only, metric fixo
       await onUpdate({
         trainingPreferences: {
           location,
@@ -39,30 +35,11 @@ export default function PreferencesTab({ userData, onUpdate }: any) {
           primary: primaryMotivation,
           goals
         },
-        preferredUnits: units
+        preferredUnits: 'metric', // Sempre métrico
+        locale: 'pt-BR' // Sempre pt-BR
       });
       
-      // Se mudou idioma, atualizar via API
-      if (locale !== userData.locale) {
-        const response = await fetch('/api/user/preferences', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ locale })
-        });
-        
-        if (response.ok) {
-          toast.success(t('languageChanged'));
-          // Redirecionar para novo locale
-          const newPath = window.location.pathname.replace(/^\/(pt-BR|en|es)/, `/${locale}`);
-          router.push(newPath);
-          router.refresh();
-        } else {
-          toast.error(t('languageChangeError'));
-        }
-      } else {
-        toast.success(t('preferencesSaved'));
-      }
-      
+      toast.success(t('preferencesSaved'));
       setHasChanges(false);
     } catch (error) {
       console.error('Error saving preferences:', error);
@@ -90,57 +67,8 @@ export default function PreferencesTab({ userData, onUpdate }: any) {
 
   return (
     <div className="space-y-6">
-      {/* IDIOMA E UNIDADES */}
-      <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
-        <h4 className="font-semibold mb-4 text-lg">🌍 {t('language.title')}</h4>
-        
-        <div className="space-y-4">
-          {/* Idioma */}
-          <div>
-            <label className="block font-medium mb-2">{t('language.label')}</label>
-            <select 
-              value={locale}
-              onChange={(e) => { setLocale(e.target.value); setHasChanges(true); }}
-              className="w-full px-4 py-2 border-2 rounded-lg bg-white focus:border-blue-500"
-            >
-              <option value="pt-BR">🇧🇷 Português (Brasil)</option>
-              <option value="en">🇺🇸 English</option>
-              <option value="es">🇪🇸 Español</option>
-            </select>
-            <p className="text-xs text-gray-600 mt-1">{t('language.description')}</p>
-          </div>
-          
-          {/* Unidades */}
-          <div>
-            <label className="block font-medium mb-2">{t('units.label')}</label>
-            <div className="flex gap-4">
-              <button 
-                onClick={() => { setUnits('metric'); setHasChanges(true); }}
-                className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
-                  units === 'metric' 
-                    ? 'bg-blue-600 text-white shadow-md' 
-                    : 'border-2 border-gray-300 hover:border-blue-400'
-                }`}
-              >
-                <div className="text-sm">{t('units.metric')}</div>
-                <div className="text-xs opacity-80">km, kg, °C</div>
-              </button>
-              <button 
-                onClick={() => { setUnits('imperial'); setHasChanges(true); }}
-                className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
-                  units === 'imperial' 
-                    ? 'bg-blue-600 text-white shadow-md' 
-                    : 'border-2 border-gray-300 hover:border-blue-400'
-                }`}
-              >
-                <div className="text-sm">{t('units.imperial')}</div>
-                <div className="text-xs opacity-80">miles, lbs, °F</div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* v3.2.9 - Removido: seção Idioma e Unidades (pt-BR e métrico fixos) */}
+      
       {/* Preferências de Local */}
       <div>
         <label className="block font-medium mb-2">{t('location.label')}</label>
