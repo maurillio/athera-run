@@ -2,17 +2,87 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.4 - Strava Sync Idempotent (27/Nov/2025)  
-**Versão Atual:** v3.2.4 ✅ Sincronização Idempotente  
-**Status:** ✅ **PRONTO - SINCRONIZAÇÃO 100% OPERACIONAL**  
-**Build:** ✅ Passou sem erros | **Commit:** ac5216db | **Branch:** main  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.7 - CHECKPOINT ESTÁVEL (28/Nov/2025 12:46 UTC)  
+**Versão Atual:** v3.2.7 ✅ SISTEMA RESTAURADO E ESTÁVEL  
+**Status:** ✅ **100% OPERACIONAL - TODAS FEATURES FUNCIONANDO**  
+**Build:** ✅ Passou sem erros | **Commit:** 1521bab1 | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia) - ✅ **OPERACIONAL**  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
 
 ---
 
-## 🔄 v3.2.4 - SINCRONIZAÇÃO IDEMPOTENTE (27/Nov/2025)
+## 🎯 v3.2.7 - CHECKPOINT ESTÁVEL (28/Nov/2025)
+
+### 🚨 ESTE É O PONTO DE REFERÊNCIA ESTÁVEL
+
+**Data:** 28/NOV/2025 12:46 UTC  
+**Commit:** `1521bab1`  
+**Status:** ✅ SISTEMA 100% FUNCIONAL E VALIDADO
+
+### 📋 Resumo da Sessão 28/Nov
+
+**Situação Inicial:**
+- Sistema FORA DO AR desde 27/Nov (3h40min de downtime)
+- Erro: `TypeError: Cannot read properties of undefined (reading 'findUnique')`
+- Múltiplos endpoints retornando 500
+
+**Solução Aplicada:**
+1. **Rollback** para commit funcional `d8eaa3bf` (v3.2.6)
+2. **Correção cirúrgica** do Strava sync (token refresh automático)
+3. **Zero mudanças** em build scripts ou estrutura Prisma
+
+**Resultado:**
+- ✅ Sistema 100% operacional
+- ✅ Strava sync com refresh automático de token
+- ✅ Todas features validadas em produção
+
+### 🔧 Correção v3.2.7: Strava Token Refresh
+
+**Endpoint:** `/api/workouts/sync-strava`
+
+**Problema:** 
+- Token Strava expira após 6 horas
+- API retornava 500 quando token expirado
+
+**Solução Implementada:**
+```typescript
+// Detecta token expirado (401)
+if (stravaResponse.status === 401 && profile.stravaRefreshToken) {
+  // Faz refresh automático
+  const tokens = await refreshStravaToken(profile.stravaRefreshToken);
+  
+  // Atualiza no banco
+  await prisma.athleteProfile.update({
+    where: { userId },
+    data: {
+      stravaAccessToken: tokens.access_token,
+      stravaRefreshToken: tokens.refresh_token,
+      stravaTokenExpiresAt: new Date(tokens.expires_at * 1000)
+    }
+  });
+  
+  // Retenta com novo token
+  stravaResponse = await fetchStravaActivities(tokens.access_token);
+}
+```
+
+**Benefícios:**
+- ✅ Sync funciona indefinidamente sem intervenção manual
+- ✅ Não quebra dashboard (retorna 200 em caso de erro)
+- ✅ Mensagem amigável ao usuário
+
+### ⚠️ Lições Aprendidas (28/Nov)
+
+1. **Rollback é válido** quando correções geram mais problemas
+2. **Simplicidade > Complexidade** - código simples funciona melhor
+3. **Testar localmente** antes de push em produção
+4. **Postinstall scripts** podem falhar se dependências não instaladas primeiro
+5. **Baseline funcional** é crucial para recovery rápido
+
+---
+
+## 🐛 v3.2.6 - GRACEFUL DEGRADATION (27/Nov/2025)
 
 ### 🎯 Problema Resolvido
 

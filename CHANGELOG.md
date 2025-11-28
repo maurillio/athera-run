@@ -7,6 +7,66 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.7] - 28/NOV/2025 12:46 UTC ✅ **CHECKPOINT ESTÁVEL**
+
+### 🔧 Correções Críticas
+
+**Sistema Restaurado após Incidente 28/Nov**
+- **Status**: ✅ 100% FUNCIONAL E ESTÁVEL
+- **Problema**: Sistema fora do ar desde 27/Nov com erros 500 generalizados
+- **Solução**: Rollback para commit estável `d8eaa3bf` + correção Strava sync
+
+#### 1. Restauração do Sistema
+- **Ação**: Rollback para commit funcional (v3.2.6)
+- **Motivo**: Tentativas de correção geraram mais problemas
+- **Resultado**: Sistema voltou 100% operacional
+- **Commit**: `d8eaa3bf` → `fc2e5e8a` → `65525017`
+
+#### 2. Strava Token Refresh Automático
+- **Endpoint**: `/api/workouts/sync-strava`
+- **Problema**: Erro 500 quando token Strava expirava (6h lifetime)
+- **Solução Implementada**:
+  - Detecta status 401 (token expirado)
+  - Refresh automático usando `refresh_token`
+  - Atualiza tokens no banco (`stravaAccessToken`, `stravaRefreshToken`, `stravaTokenExpiresAt`)
+  - Retenta requisição com token novo
+  - Se falhar completamente, retorna erro 200 com mensagem amigável
+- **Impacto**: Sync funciona indefinidamente sem intervenção manual
+- **Status**: ✅ TESTADO E FUNCIONANDO
+
+### 📦 Arquivos Modificados
+- `app/api/workouts/sync-strava/route.ts` - Token refresh automático
+- `package.json` - Versão atualizada para 3.2.7
+- `CHANGELOG.md` - Este arquivo
+- `CONTEXTO.md` - Atualizado com estado atual
+- `RESUMO_SESSAO_28NOV2025_FINAL.md` - Documentação completa da sessão
+
+### ✅ Sistema Atual
+- **URL Produção**: https://atherarun.com
+- **Vercel**: Deploy automático funcionando
+- **Database**: Neon PostgreSQL (pool connection otimizado)
+- **Build**: Estável (2-3 minutos)
+- **Runtime**: Zero erros 500
+
+### 🚀 Features Funcionais
+- ✅ Autenticação (NextAuth + Email + Google)
+- ✅ Geração de planos com IA (GPT-4o)
+- ✅ Strava sync automático (com token refresh)
+- ✅ Training logs
+- ✅ Race goals
+- ✅ Subscription management (Stripe)
+- ✅ Multi-idioma (pt-BR, en, es)
+- ✅ Admin panel
+- ✅ Privacy controls (LGPD compliant)
+
+### ⚠️ Notas Importantes
+- **v3.2.7** é a versão estável de referência
+- Qualquer novo desenvolvimento deve partir desta versão
+- Rollbacks futuros devem usar commit `1521bab1` como base
+- Sistema testado e validado em produção
+
+---
+
 ## [3.2.6] - 2025-11-27
 
 ### 🐛 Bug Fixes
