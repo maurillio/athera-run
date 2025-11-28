@@ -2,14 +2,15 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.7 - CHECKPOINT ESTÁVEL (28/Nov/2025 13:15 UTC)  
-**Versão Atual:** v3.2.7 ✅ SISTEMA RESTAURADO E ESTÁVEL  
-**Status:** ✅ **100% OPERACIONAL - TODAS FEATURES FUNCIONANDO**  
-**Build:** ✅ Passou sem erros | **Commit:** 1521bab1 | **Branch:** main  
-**Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia) - ✅ **OPERACIONAL** | 🔗 **Integração nativa preparada**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.8 - POOLING ATIVO (28/Nov/2025 13:38 UTC)  
+**Versão Atual:** v3.2.8 ✅ CONNECTION POOLING IMPLEMENTADO  
+**Status:** ✅ **100% OPERACIONAL - PERFORMANCE OTIMIZADA**  
+**Build:** ✅ Passou sem erros | **Commit:** 3751f0e8 | **Branch:** main  
+**Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
+**Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
-**URL Development:** 🚧 **Em configuração** - Ver `GUIA_INTEGRACAO_VERCEL_NEON_NATIVA.md`
+**URL Development:** 🚧 **Pronto para configurar** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
 
 ---
 

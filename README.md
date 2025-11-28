@@ -3,12 +3,12 @@
 
 > Plataforma inteligente de treinamento de corrida com IA
 
-**Versão:** 3.2.7 (Sistema Restaurado e Estável) ✅  
-**Última atualização:** 28 de Novembro de 2025 - 13:15 UTC  
+**Versão:** 3.2.8 (Connection Pooling Ativo) ✅  
+**Última atualização:** 28 de Novembro de 2025 - 13:38 UTC  
 **Website:** https://atherarun.com  
-**Status:** ✅ 100% FUNCIONAL - Sistema Estável  
-**Database:** 🌩️ Neon PostgreSQL 16.9 (US East)  
-**Próximo:** 🔗 Integração nativa Vercel-Neon (v3.2.8 planejado)
+**Status:** ✅ 100% FUNCIONAL - Pooling Otimizado  
+**Database:** 🌩️ Neon PostgreSQL 16.9 (US East) + pgBouncer  
+**Próximo:** 🌿 Ambiente dev separado (branches Neon)
 
 ---
 
