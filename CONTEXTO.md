@@ -2,14 +2,14 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.9 - PT-BR ONLY (28/Nov/2025 14:50 UTC)  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.9 - PT-BR ONLY (28/Nov/2025 15:00 UTC)  
 **Versão Atual:** v3.2.9 ✅ SISTEMA PT-BR ÚNICO IDIOMA  
 **Status:** ✅ **100% OPERACIONAL - IDIOMA SIMPLIFICADO**  
-**Build:** ⏳ Aguardando deploy | **Branch:** main  
+**Build:** ✅ Passou sem erros | **Commit:** f175ae5a | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
-**Idioma:** 🇧🇷 **pt-BR ONLY** (en/es desabilitados - reversível)  
+**Idioma:** 🇧🇷 **pt-BR ONLY** - Sistema métrico fixo (km, kg, °C)  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
 **URL Development:** 🚧 **Pronto para configurar** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
 
@@ -20,7 +20,11 @@
 ### 🎯 Mudança Estratégica de Idioma
 
 **Data:** 28/NOV/2025 14:50 UTC  
-**Status:** ✅ IMPLEMENTADO - AGUARDANDO DEPLOY
+**Status:** ✅ IMPLEMENTADO E VALIDADO (2 commits)
+
+**Commits:**
+1. `e73f433c` - Sistema pt-BR only (middleware, config, header)
+2. `f175ae5a` - Remove seletor idioma/unidades do perfil
 
 ### Motivação
 - Sistema tinha 3 idiomas (pt-BR, en, es)
@@ -31,8 +35,10 @@
 
 **Sistema Agora:**
 - ✅ **pt-BR único idioma disponível**
+- ✅ **Sistema métrico fixo** (km, kg, °C)
 - ✅ URLs `/en/*` e `/es/*` redirecionam para `/pt-BR/*`
 - ✅ Seletor de idioma removido do header
+- ✅ Seletor de idioma/unidades removido da aba Preferências
 - ✅ Middleware força pt-BR sempre
 
 **Estrutura Mantida (Reversível):**
@@ -60,11 +66,12 @@ import LanguageSwitcher from './i18n/LanguageSwitcher';
 
 **Tempo para reativar:** ~15 minutos
 
-### Arquivos Modificados (5)
+### Arquivos Modificados (6)
 - `middleware.ts` - Força pt-BR, redireciona en/es
 - `lib/i18n/config.ts` - Locales = ['pt-BR']
 - `components/header.tsx` - Remove LanguageSwitcher UI
 - `app/[locale]/layout.tsx` - Força lang="pt-BR"
+- `components/profile/v1.3.0/PreferencesTab.tsx` - Remove seletor idioma/unidades
 - `package.json` - v3.2.9
 
 ---
