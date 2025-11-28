@@ -693,7 +693,10 @@ export default function PlanoPage() {
                                   <div className="text-sm text-gray-700">
                                     {dayWorkouts.length === 1 ? (
                                       <div className="flex items-center justify-between">
-                                        <span className="font-medium">{firstWorkout.title}</span>
+                                        <span className="font-medium inline-flex items-center gap-2">
+                                          {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
+                                          {firstWorkout.title}
+                                        </span>
                                         {firstWorkout.distance && (
                                           <Badge variant="secondary" className="text-xs">
                                             {firstWorkout.distance} km
