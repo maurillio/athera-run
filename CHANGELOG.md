@@ -7,6 +7,23 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.8] - 28/NOV/2025 (EM PLANEJAMENTO)
+
+### 📋 Planejamento - Separação de Ambientes
+
+**Objetivo:** Criar ambientes separados para desenvolvimento e produção
+
+#### Estrutura Planejada
+- **Production**: `main` branch → `atherarun.com` → Neon Production DB
+- **Development**: `develop` branch → `athera-run.vercel.app` → Neon Development DB
+
+#### Documentação Criada
+- `PLANO_AMBIENTES_DEV_PROD.md` - Plano completo de implementação
+
+**Status:** 📋 Aguardando aprovação para executar
+
+---
+
 ## [v3.2.7] - 28/NOV/2025 12:46 UTC ✅ **CHECKPOINT ESTÁVEL**
 
 ### 🔧 Correções Críticas

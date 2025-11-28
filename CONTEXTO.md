@@ -8,7 +8,8 @@
 **Build:** ✅ Passou sem erros | **Commit:** 1521bab1 | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9)** - US East (Virginia) - ✅ **OPERACIONAL**  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
-**URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)
+**URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
+**URL Development:** 🚧 **Em configuração** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
 
 ---
 
