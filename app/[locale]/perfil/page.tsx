@@ -12,7 +12,12 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy, Activity } from 'lucide-react';
 import { toast } from 'sonner';
-import ProfileTabs from '@/components/profile/v1.3.0/ProfileTabs';
+import BasicDataTab from '@/components/profile/v1.3.0/BasicDataTab';
+import PerformanceTab from '@/components/profile/v1.3.0/PerformanceTab';
+import HealthTab from '@/components/profile/v1.3.0/HealthTab';
+import GoalsTab from '@/components/profile/v1.3.0/GoalsTab';
+import AvailabilityTab from '@/components/profile/v1.3.0/AvailabilityTab';
+import PreferencesTab from '@/components/profile/v1.3.0/PreferencesTab';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
 import AthleteStatsSection from '@/components/profile/athlete-stats-section';
@@ -312,28 +317,86 @@ export default function PerfilPage() {
 
             {/* 1️⃣ DADOS PESSOAIS: Básicos + Saúde + Preferências */}
             <TabsContent value="personal" className="space-y-6">
+              {/* Informações Básicas */}
               <Card>
                 <CardHeader>
-                  <CardTitle>📋 Dados Pessoais</CardTitle>
-                  <CardDescription>
-                    Informações básicas, saúde e preferências de treino
-                  </CardDescription>
+                  <CardTitle>👤 Informações Básicas</CardTitle>
+                  <CardDescription>Dados pessoais e biométricos</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ProfileTabs userData={profile} onUpdate={handleUpdateProfile} />
+                  <BasicDataTab userData={profile} onUpdate={handleUpdateProfile} />
+                </CardContent>
+              </Card>
+
+              {/* Saúde e Condicionamento */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>🏥 Saúde e Condicionamento</CardTitle>
+                  <CardDescription>Histórico médico, lesões e qualidade de vida</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <HealthTab userData={profile} onUpdate={handleUpdateProfile} />
+                </CardContent>
+              </Card>
+
+              {/* Preferências de Treino */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>⚙️ Preferências de Treino</CardTitle>
+                  <CardDescription>Como você prefere treinar</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <PreferencesTab userData={profile} onUpdate={handleUpdateProfile} />
                 </CardContent>
               </Card>
             </TabsContent>
 
             {/* 2️⃣ DESEMPENHO: Experiência + PRs + Estatísticas + Strava */}
             <TabsContent value="performance" className="space-y-6">
+              {/* Experiência de Corrida */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>🏃 Experiência e Performance</CardTitle>
+                  <CardDescription>Seu histórico como corredor e melhores tempos</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <PerformanceTab userData={profile} onUpdate={handleUpdateProfile} />
+                </CardContent>
+              </Card>
+
+              {/* Estatísticas Gerais */}
               <AthleteStatsSection />
+              
+              {/* Dados Strava (Premium) */}
               <StravaDataSection />
             </TabsContent>
 
             {/* 3️⃣ OBJETIVOS & PROVAS: Meta + Corridas + Disponibilidade */}
             <TabsContent value="goals" className="space-y-6">
+              {/* Meta Principal */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>🎯 Meta Principal</CardTitle>
+                  <CardDescription>Seu objetivo de corrida</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <GoalsTab userData={profile} onUpdate={handleUpdateProfile} />
+                </CardContent>
+              </Card>
+
+              {/* Minhas Corridas */}
               <RaceManagement races={races} onRacesUpdated={fetchRaces} />
+
+              {/* Disponibilidade */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>📅 Disponibilidade para Treinar</CardTitle>
+                  <CardDescription>Quando você pode treinar</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <AvailabilityTab userData={profile} onUpdate={handleUpdateProfile} />
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* 4️⃣ CONFIGURAÇÕES: Assinatura + Plano + Conta */}
