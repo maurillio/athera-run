@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Trophy, Activity, Zap, Heart, Shirt, RefreshCcw, Lock, Crown, TrendingUp, Calendar } from 'lucide-react';
+import { Loader2, Trophy, Activity, Zap, Heart, Shirt, Lock, Crown, TrendingUp, Calendar, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
 
@@ -19,7 +19,6 @@ interface StravaData {
 
 export default function StravaDataSection() {
   const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [stravaConnected, setStravaConnected] = useState(false);
   const [data, setData] = useState<StravaData | null>(null);
@@ -76,43 +75,6 @@ export default function StravaDataSection() {
     }
   };
 
-  const handleSyncAll = async () => {
-    if (!isPremium) {
-      toast.error('Recurso Premium', {
-        description: 'Faça upgrade para sincronizar com o Strava',
-      });
-      return;
-    }
-
-    if (!stravaConnected) {
-      toast.error('Strava não conectado', {
-        description: 'Conecte sua conta Strava primeiro',
-      });
-      return;
-    }
-
-    setSyncing(true);
-    const syncToast = toast.loading('Sincronizando dados do Strava...');
-    
-    try {
-      const response = await fetch('/api/strava/sync-all', { method: 'POST' });
-      
-      if (response.ok) {
-        const result = await response.json();
-        toast.success('Dados sincronizados com sucesso!', { id: syncToast });
-        await loadData();
-      } else {
-        const error = await response.json();
-        toast.error(error.error || 'Erro ao sincronizar', { id: syncToast });
-      }
-    } catch (error) {
-      toast.error('Erro ao conectar com Strava', { id: syncToast });
-      console.error('Sync error:', error);
-    } finally {
-      setSyncing(false);
-    }
-  };
-
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -147,14 +109,15 @@ export default function StravaDataSection() {
             Dados do Strava
           </CardTitle>
           <CardDescription>
-            Conecte sua conta Strava para importar seus dados
+            Conecte sua conta Strava para sincronizar automaticamente seus dados
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
             <Activity className="h-16 w-16 text-slate-300 mx-auto mb-4" />
             <p className="text-slate-600 mb-4">Strava não conectado</p>
-            <Button>
+            <Button onClick={() => window.location.href = '/api/auth/strava/connect'} className="gap-2">
+              <Link2 className="h-4 w-4" />
               Conectar Strava
             </Button>
           </div>
@@ -166,52 +129,34 @@ export default function StravaDataSection() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-brand-primary" />
-              Dados do Strava
-            </CardTitle>
-            <CardDescription>
-              Estatísticas, recordes, equipamentos e zonas de treino
-            </CardDescription>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-brand-primary" />
+                Dados do Strava
+              </CardTitle>
+              <CardDescription>
+                Estatísticas, recordes, equipamentos e zonas de treino
+              </CardDescription>
+            </div>
+            {stravaConnected && (
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                <Badge variant="outline" className="gap-1 bg-green-50 text-green-700 border-green-200">
+                  <Activity className="h-3 w-3" />
+                  Sincronização Ativa
+                </Badge>
+              </div>
+            )}
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="gap-1">
-              <Activity className="h-3 w-3" />
-              Conectado
-            </Badge>
-            <Button
-              onClick={handleSyncAll}
-              disabled={syncing || !isPremium}
-              size="sm"
-              className="gap-2"
-            >
-              {!isPremium ? (
-                <>
-                  <Lock className="h-4 w-4" />
-                  Premium
-                </>
-              ) : syncing ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Sincronizando...
-                </>
-              ) : (
-                <>
-                  <RefreshCcw className="h-4 w-4" />
-                  Sincronizar
-                </>
-              )}
-            </Button>
-          </div>
+          {data?.lastSync && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Calendar className="h-3 w-3" />
+              Última sincronização: {new Date(data.lastSync).toLocaleString('pt-BR')}
+            </div>
+          )}
         </div>
-        {data?.lastSync && (
-          <p className="text-xs text-muted-foreground mt-2">
-            <Calendar className="h-3 w-3 inline mr-1" />
-            Última sincronização: {new Date(data.lastSync).toLocaleString('pt-BR')}
-          </p>
-        )}
       </CardHeader>
       <CardContent>
         {!isPremium && (

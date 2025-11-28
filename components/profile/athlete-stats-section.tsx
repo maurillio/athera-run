@@ -35,7 +35,6 @@ export default function AthleteStatsSection() {
   const t = useTranslations('perfil');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [syncing, setSyncing] = useState(false);
   const [stats, setStats] = useState<AthleteStats | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
@@ -105,35 +104,6 @@ export default function AthleteStatsSection() {
       toast.error('Erro ao salvar estatísticas');
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleSyncStrava = async () => {
-    if (!isPremium) {
-      toast.error('Recurso Premium', {
-        description: 'Atualize para Premium para sincronizar com o Strava',
-      });
-      return;
-    }
-
-    setSyncing(true);
-    try {
-      const response = await fetch('/api/strava/sync-stats', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data.stats);
-        toast.success('Estatísticas sincronizadas com sucesso!');
-      } else {
-        const error = await response.json();
-        toast.error(error.error || 'Erro ao sincronizar com Strava');
-      }
-    } catch (error) {
-      toast.error('Erro ao sincronizar estatísticas');
-    } finally {
-      setSyncing(false);
     }
   };
 
@@ -286,41 +256,47 @@ export default function AthleteStatsSection() {
           </div>
         )}
 
-        {/* Strava Sync */}
+        {/* Strava Sync Status */}
         <div className="border-t pt-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h3 className="text-sm font-medium">Sincronizar com Strava</h3>
+          {stats?.stravaConnected ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <h3 className="text-sm font-medium">Sincronização Automática Ativa</h3>
+                </div>
+                <Badge variant="outline" className="gap-1 bg-green-50 text-green-700 border-green-200">
+                  <Link2 className="h-3 w-3" />
+                  Conectado
+                </Badge>
+              </div>
               <p className="text-sm text-muted-foreground">
-                {stats?.stravaConnected
-                  ? 'Importe automaticamente suas estatísticas do Strava'
-                  : 'Conecte sua conta Strava para importar dados automaticamente'}
+                Seus dados do Strava são sincronizados automaticamente ao conectar e mantidos atualizados.
               </p>
               {stats?.stravaLastSync && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" />
                   Última sincronização: {new Date(stats.stravaLastSync).toLocaleString('pt-BR')}
                 </p>
               )}
             </div>
-            <Button
-              onClick={handleSyncStrava}
-              disabled={!stats?.stravaConnected || syncing}
-              className="gap-2"
-            >
-              {!isPremium && <Lock className="h-4 w-4" />}
-              {syncing ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Sincronizando...
-                </>
-              ) : (
-                <>
-                  <TrendingUp className="h-4 w-4" />
-                  {isPremium ? 'Sincronizar' : 'Premium'}
-                </>
-              )}
-            </Button>
-          </div>
+          ) : (
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium">Conectar ao Strava</h3>
+              <p className="text-sm text-muted-foreground">
+                Conecte sua conta Strava para sincronizar automaticamente suas estatísticas e PRs.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/api/auth/strava/connect'}
+                variant="outline"
+                className="gap-2"
+              >
+                <Link2 className="h-4 w-4" />
+                Conectar Strava
+              </Button>
+            </div>
+          )}
+          
           {!isPremium && (
             <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
               <div className="flex items-start gap-2">
