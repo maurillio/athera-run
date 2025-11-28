@@ -425,7 +425,7 @@ export default function PlanoPage() {
                   {currentWeekNum}/{plan.totalWeeks}
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  {currentWeek && t(`plano.phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase)}
+                  {currentWeek && t(`phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase)}
                 </p>
               </CardContent>
             </Card>
@@ -511,7 +511,7 @@ export default function PlanoPage() {
                     <CardDescription className="text-slate-600">
                       {formatShortDate(currentWeek.startDate, locale)} - {formatShortDate(currentWeek.endDate, locale)}
                       <Badge className={`${getPhaseColor(currentWeek.phase)} text-white ml-2`}>
-                        {t(`plano.phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase).toUpperCase()}
+                        {t(`phases.${normalizePhaseKey(currentWeek.phase)}`, currentWeek.phase).toUpperCase()}
                       </Badge>
                     </CardDescription>
                   )}
