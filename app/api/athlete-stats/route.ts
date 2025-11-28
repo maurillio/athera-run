@@ -29,6 +29,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Debug: verificar se athleteProfile existe
+    console.log('User athleteProfile:', {
+      exists: !!user.athleteProfile,
+      stravaConnected: user.athleteProfile?.stravaConnected,
+      stravaLastSync: user.athleteProfile?.stravaLastSync,
+    });
+
     const stats = {
       pr5k: null, // PRs estão em bestTimes agora
       pr10k: null,

@@ -133,11 +133,11 @@ export default function StravaDataSection() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-brand-primary" />
-                Dados do Strava
+                <Trophy className="h-5 w-5 text-brand-primary" />
+                Estatísticas e Dados Strava
               </CardTitle>
               <CardDescription>
-                Estatísticas, recordes, equipamentos e zonas de treino
+                Resumo geral, estatísticas detalhadas, equipamentos e zonas de treino
               </CardDescription>
             </div>
             {stravaConnected && (
@@ -173,11 +173,39 @@ export default function StravaDataSection() {
           </div>
         )}
 
+        {/* Resumo Geral (All Time) */}
+        {data?.stats?.allRunsTotals && (
+          <div className="mb-6">
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Resumo Geral (Todos os Tempos)
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+                <p className="text-xs font-medium text-blue-700 mb-1">Total de Corridas</p>
+                <p className="text-3xl font-bold text-blue-900">{data.stats.allRunsTotals.count || 0}</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+                <p className="text-xs font-medium text-green-700 mb-1">Distância Total</p>
+                <p className="text-3xl font-bold text-green-900">
+                  {formatDistance(data.stats.allRunsTotals.distance || 0)}
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
+                <p className="text-xs font-medium text-orange-700 mb-1">Elevação Total</p>
+                <p className="text-3xl font-bold text-orange-900">
+                  {Math.round(data.stats.allRunsTotals.elevation_gain || 0).toLocaleString('pt-BR')}m
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <Tabs defaultValue="stats" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="stats">
               <TrendingUp className="h-4 w-4 mr-2" />
-              Estatísticas
+              Detalhes
             </TabsTrigger>
             <TabsTrigger value="prs">
               <Trophy className="h-4 w-4 mr-2" />
@@ -197,7 +225,7 @@ export default function StravaDataSection() {
           <TabsContent value="stats" className="space-y-6 mt-6">
             {data?.stats ? (
               <>
-                <StatsSection title="Estatísticas de Corrida - Total" data={data.stats.allRunsTotals} />
+                <StatsSection title="Últimos 4 Semanas" data={data.stats.recentRunsTotals} />
                 <StatsSection title="Estatísticas Recentes (4 semanas)" data={data.stats.recentRunsTotals} />
                 <StatsSection title="Estatísticas do Ano" data={data.stats.ytdRunsTotals} />
               </>

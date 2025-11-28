@@ -20,7 +20,6 @@ import AvailabilityTab from '@/components/profile/v1.3.0/AvailabilityTab';
 import PreferencesTab from '@/components/profile/v1.3.0/PreferencesTab';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
-import AthleteStatsSection from '@/components/profile/athlete-stats-section';
 import StravaDataSection from '@/components/profile/strava-data-section';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
@@ -376,10 +375,7 @@ export default function PerfilPage() {
                 </CardContent>
               </Card>
 
-              {/* Estatísticas Gerais */}
-              <AthleteStatsSection />
-              
-              {/* Dados Strava (Premium) */}
+              {/* Estatísticas e Dados Strava (Mesclado) */}
               <StravaDataSection />
             </TabsContent>
 
