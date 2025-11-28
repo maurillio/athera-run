@@ -10,7 +10,7 @@ import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy, Activity } from 'lucide-react';
+import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy, Activity, ClipboardList, Stethoscope, Sliders, Medal } from 'lucide-react';
 import { toast } from 'sonner';
 import BasicDataTab from '@/components/profile/v1.3.0/BasicDataTab';
 import PerformanceTab from '@/components/profile/v1.3.0/PerformanceTab';
@@ -299,28 +299,31 @@ export default function PerfilPage() {
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 mb-6">
               <TabsTrigger value="personal">
                 <User className="h-4 w-4 mr-2" />
-                📋 Dados Pessoais
+                Dados Pessoais
               </TabsTrigger>
               <TabsTrigger value="performance">
                 <Activity className="h-4 w-4 mr-2" />
-                🏃 Desempenho
+                Desempenho
               </TabsTrigger>
               <TabsTrigger value="goals">
                 <Target className="h-4 w-4 mr-2" />
-                🎯 Objetivos & Provas
+                Objetivos & Provas
               </TabsTrigger>
               <TabsTrigger value="settings">
                 <Settings className="h-4 w-4 mr-2" />
-                ⚙️ Configurações
+                Configurações
               </TabsTrigger>
             </TabsList>
 
-            {/* 1️⃣ DADOS PESSOAIS: Básicos + Saúde + Preferências */}
+            {/* DADOS PESSOAIS: Básicos + Saúde + Preferências */}
             <TabsContent value="personal" className="space-y-6">
               {/* Informações Básicas */}
               <Card>
                 <CardHeader>
-                  <CardTitle>👤 Informações Básicas</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Informações Básicas
+                  </CardTitle>
                   <CardDescription>Dados pessoais e biométricos</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -331,7 +334,10 @@ export default function PerfilPage() {
               {/* Saúde e Condicionamento */}
               <Card>
                 <CardHeader>
-                  <CardTitle>🏥 Saúde e Condicionamento</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="h-5 w-5" />
+                    Saúde e Condicionamento
+                  </CardTitle>
                   <CardDescription>Histórico médico, lesões e qualidade de vida</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -342,7 +348,10 @@ export default function PerfilPage() {
               {/* Preferências de Treino */}
               <Card>
                 <CardHeader>
-                  <CardTitle>⚙️ Preferências de Treino</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sliders className="h-5 w-5" />
+                    Preferências de Treino
+                  </CardTitle>
                   <CardDescription>Como você prefere treinar</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -351,12 +360,15 @@ export default function PerfilPage() {
               </Card>
             </TabsContent>
 
-            {/* 2️⃣ DESEMPENHO: Experiência + PRs + Estatísticas + Strava */}
+            {/* DESEMPENHO: Experiência + PRs + Estatísticas + Strava */}
             <TabsContent value="performance" className="space-y-6">
               {/* Experiência de Corrida */}
               <Card>
                 <CardHeader>
-                  <CardTitle>🏃 Experiência e Performance</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="h-5 w-5" />
+                    Experiência e Performance
+                  </CardTitle>
                   <CardDescription>Seu histórico como corredor e melhores tempos</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -371,12 +383,15 @@ export default function PerfilPage() {
               <StravaDataSection />
             </TabsContent>
 
-            {/* 3️⃣ OBJETIVOS & PROVAS: Meta + Corridas + Disponibilidade */}
+            {/* OBJETIVOS & PROVAS: Meta + Corridas + Disponibilidade */}
             <TabsContent value="goals" className="space-y-6">
               {/* Meta Principal */}
               <Card>
                 <CardHeader>
-                  <CardTitle>🎯 Meta Principal</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="h-5 w-5" />
+                    Meta Principal
+                  </CardTitle>
                   <CardDescription>Seu objetivo de corrida</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -390,7 +405,10 @@ export default function PerfilPage() {
               {/* Disponibilidade */}
               <Card>
                 <CardHeader>
-                  <CardTitle>📅 Disponibilidade para Treinar</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Disponibilidade para Treinar
+                  </CardTitle>
                   <CardDescription>Quando você pode treinar</CardDescription>
                 </CardHeader>
                 <CardContent>
