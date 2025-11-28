@@ -7,6 +7,7 @@
 import { prisma } from './db';
 import { refreshStravaToken } from './strava';
 import { calculatePace } from './strava';
+import { calculateVDOTFromTime } from './vdot-calculator';
 
 interface StravaEffort {
   distance: number;
@@ -176,7 +177,7 @@ export async function importStravaPRs(
   // Buscar profile para pegar athleteId
   const profile = await prisma.athleteProfile.findUnique({
     where: { id: profileId },
-    select: { stravaAthleteId: true }
+    select: { stravaAthleteId: true, bestTimes: true }
   });
 
   if (!profile?.stravaAthleteId) {
@@ -187,6 +188,10 @@ export async function importStravaPRs(
 
   // Extrair PRs das atividades
   const prs = await extractPRsFromActivities(accessToken, athleteId);
+
+  // Preparar bestTimes para sincronização
+  const currentBestTimes = (profile.bestTimes as any) || {};
+  const updatedBestTimes: any = { ...currentBestTimes };
 
   // Salvar PRs no banco
   for (const pr of prs) {
@@ -209,7 +214,44 @@ export async function importStravaPRs(
         activityDate: pr.activityDate
       }
     });
+
+    // Sincronizar com bestTimes (Performance Tab)
+    // Só atualiza se não existir ou se for melhor tempo
+    const prKey = pr.type; // '5k', '10k', 'half_marathon', 'marathon'
+    
+    // Calcular VDOT baseado no tipo de PR
+    let vdot = 0;
+    try {
+      if (pr.type === '5k') {
+        vdot = calculateVDOTFromTime(5000, pr.time);
+      } else if (pr.type === '10k') {
+        vdot = calculateVDOTFromTime(10000, pr.time);
+      } else if (pr.type === 'half_marathon') {
+        vdot = calculateVDOTFromTime(21097, pr.time);
+      } else if (pr.type === 'marathon') {
+        vdot = calculateVDOTFromTime(42195, pr.time);
+      }
+    } catch (error) {
+      console.log('Erro ao calcular VDOT:', error);
+    }
+    
+    if (!updatedBestTimes[prKey] || pr.time < updatedBestTimes[prKey].time) {
+      updatedBestTimes[prKey] = {
+        time: pr.time,
+        date: pr.activityDate,
+        vdot: vdot,
+        source: 'strava' // Marca que veio do Strava
+      };
+    }
   }
+
+  // Atualizar athleteProfile com bestTimes sincronizados
+  await prisma.athleteProfile.update({
+    where: { id: profileId },
+    data: {
+      bestTimes: updatedBestTimes
+    }
+  });
 }
 
 /**

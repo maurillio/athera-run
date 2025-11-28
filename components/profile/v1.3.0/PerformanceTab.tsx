@@ -467,7 +467,14 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
             {Object.entries(bestTimes).map(([dist, data]: any) => (
               <div key={dist} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <p className="font-medium">{distances.find(d => d.value === dist)?.label}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">{distances.find(d => d.value === dist)?.label}</p>
+                    {data.source === 'strava' && (
+                      <span className="text-xs px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full flex items-center gap-1">
+                        🔗 Strava
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-600">VDOT: {data.vdot}</p>
                 </div>
                 <div className="flex items-center gap-4">
