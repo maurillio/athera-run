@@ -5,6 +5,7 @@ import { calculateVDOTFromTime, interpretVDOT } from '@/lib/vdot-calculator';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
+import { Link2 } from 'lucide-react';
 
 export default function PerformanceTab({ userData, onUpdate }: any) {
   const t = useTranslations('profile.performance');
@@ -471,11 +472,12 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
                     <p className="font-medium">{distances.find(d => d.value === dist)?.label}</p>
                     {data.source === 'strava' && (
                       <span className="text-xs px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full flex items-center gap-1">
-                        🔗 Strava
+                        <Link2 className="h-3 w-3" />
+                        Strava
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600">VDOT: {data.vdot}</p>
+                  <p className="text-sm text-gray-600">VDOT: {Math.round(data.vdot || 0)}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <p className="font-mono font-semibold">{data.time}</p>

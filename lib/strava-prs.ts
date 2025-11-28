@@ -222,14 +222,15 @@ export async function importStravaPRs(
     // Calcular VDOT baseado no tipo de PR
     let vdot = 0;
     try {
+      // Mapear tipo do Strava para formato do VDOT calculator
       if (pr.type === '5k') {
-        vdot = calculateVDOTFromTime(5000, pr.time);
+        vdot = calculateVDOTFromTime('5k', pr.time);
       } else if (pr.type === '10k') {
-        vdot = calculateVDOTFromTime(10000, pr.time);
+        vdot = calculateVDOTFromTime('10k', pr.time);
       } else if (pr.type === 'half_marathon') {
-        vdot = calculateVDOTFromTime(21097, pr.time);
+        vdot = calculateVDOTFromTime('21k', pr.time);
       } else if (pr.type === 'marathon') {
-        vdot = calculateVDOTFromTime(42195, pr.time);
+        vdot = calculateVDOTFromTime('42k', pr.time);
       }
     } catch (error) {
       console.log('Erro ao calcular VDOT:', error);
