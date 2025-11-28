@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { Calendar, Activity, Target } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/hooks';
 import UserDropdown from './user-dropdown';
-import LanguageSwitcher from './i18n/LanguageSwitcher';
+// import LanguageSwitcher from './i18n/LanguageSwitcher'; // v3.2.9: Removido (pt-BR only)
 import Logo from './ui/logo';
 
 export default function Header() {
@@ -72,7 +72,8 @@ export default function Header() {
               </select>
             </div>
             
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
+            {/* v3.2.9: Seletor de idioma removido (pt-BR only) */}
             <UserDropdown />
           </div>
         </div>

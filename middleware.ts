@@ -4,20 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 const locales = ['pt-BR', 'en', 'es'];
 const defaultLocale = 'pt-BR';
 
+// v3.2.9: Sistema agora é pt-BR only (mantém estrutura para reversibilidade)
 function getLocale(request: NextRequest): string {
-  const cookieLocale = request.cookies.get('atherarun_locale')?.value;
-  if (cookieLocale && locales.includes(cookieLocale)) {
-    return cookieLocale;
-  }
-
-  const acceptLanguage = request.headers.get('accept-language');
-  if (acceptLanguage) {
-    const browserLocale = acceptLanguage.split(',')[0].split(';')[0].trim();
-    if (browserLocale.startsWith('pt')) return 'pt-BR';
-    if (browserLocale.startsWith('es')) return 'es';
-    if (browserLocale.startsWith('en')) return 'en';
-  }
-
+  // SEMPRE retorna pt-BR (desabilita detecção de idioma)
   return defaultLocale;
 }
 
@@ -39,10 +28,16 @@ export default function middleware(req: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  // If no locale, redirect to locale-prefixed route
+  // If no locale, redirect to pt-BR only
   if (!pathnameHasLocale) {
     const locale = getLocale(req);
     return NextResponse.redirect(new URL(`/${locale}${pathname}`, req.url));
+  }
+
+  // Redirect en/es to pt-BR (força idioma único)
+  if (pathname.startsWith('/en/') || pathname.startsWith('/es/')) {
+    const pathWithoutLocale = pathname.replace(/^\/[^\/]+/, '');
+    return NextResponse.redirect(new URL(`/pt-BR${pathWithoutLocale}`, req.url));
   }
 
   return NextResponse.next();

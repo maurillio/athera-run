@@ -5,6 +5,7 @@ import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// v3.2.9: Gera apenas pt-BR (mantém estrutura para reversibilidade)
 export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -16,8 +17,11 @@ export default function LocaleLayout({
   children: React.ReactNode;
   params: { locale: Locale };
 }) {
+  // v3.2.9: Força pt-BR sempre (ignora params.locale se for en/es)
+  const lang = params.locale === 'pt-BR' ? 'pt-BR' : 'pt-BR';
+  
   return (
-    <html lang={params.locale}>
+    <html lang={lang}>
       <body className={inter.className}>{children}</body>
     </html>
   );

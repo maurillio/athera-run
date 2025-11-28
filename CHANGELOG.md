@@ -7,6 +7,79 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.9] - 28/NOV/2025 14:50 UTC ✅ **IMPLEMENTADO**
+
+### 🌐 Sistema pt-BR Only (i18n Desabilitado)
+
+**Status:** ✅ **CONCLUÍDO - PORTUGUÊS BRASILEIRO ÚNICO IDIOMA**
+
+#### Contexto
+- Sistema tinha 3 idiomas: pt-BR (padrão), en (inglês), es (espanhol)
+- Foco no mercado brasileiro justifica simplificação
+- Estrutura i18n mantida para reversibilidade futura
+
+#### Mudanças Implementadas
+
+**1. Middleware (`middleware.ts`)**
+- ✅ Força pt-BR sempre (remove detecção de idioma)
+- ✅ Redireciona `/en/*` e `/es/*` para `/pt-BR/*`
+- ✅ Remove lógica de cookie e accept-language
+- 📝 Código comentado para fácil reativação
+
+**2. Configuração i18n (`lib/i18n/config.ts`)**
+- ✅ `locales = ['pt-BR']` (era `['pt-BR', 'en', 'es']`)
+- ✅ Comentou definições de en/es
+- 📝 Instruções claras para descomentariar
+
+**3. Header (`components/header.tsx`)**
+- ✅ Removeu `<LanguageSwitcher />` da UI
+- ✅ Import comentado (não deletado)
+- ✅ Espaço visual recuperado no header
+
+**4. Layout Locale (`app/[locale]/layout.tsx`)**
+- ✅ Força lang="pt-BR" sempre no HTML
+- ✅ `generateStaticParams()` gera apenas pt-BR
+- 📝 Estrutura [locale] mantida
+
+#### Estrutura Mantida (Reversível)
+- ✅ Pasta `lib/i18n/` completa
+- ✅ Arquivos de tradução (en.json, es.json)
+- ✅ Componente `LanguageSwitcher.tsx`
+- ✅ Rotas `app/[locale]/*`
+- ✅ Hooks e utilities i18n
+
+#### Benefícios
+- ⚡ Performance levemente melhor (remove lógica de detecção)
+- 🎯 Foco claro no público brasileiro
+- 📦 Manutenção simplificada (não precisa traduzir features novas)
+- 🧹 UI mais limpa (sem seletor de idioma)
+- 🔄 Totalmente reversível (descomentariar linhas)
+
+#### Arquivos Modificados
+- `middleware.ts` - Força pt-BR, redireciona en/es
+- `lib/i18n/config.ts` - Desabilita en/es
+- `components/header.tsx` - Remove LanguageSwitcher da UI
+- `app/[locale]/layout.tsx` - Força lang pt-BR
+- `package.json` - Versão 3.2.9
+
+#### Como Reativar Idiomas
+```typescript
+// 1. lib/i18n/config.ts - Descomentariar:
+export const locales = ['pt-BR', 'en', 'es'] as const;
+
+// 2. components/header.tsx - Descomentariar:
+import LanguageSwitcher from './i18n/LanguageSwitcher';
+<LanguageSwitcher />
+
+// 3. middleware.ts - Restaurar função getLocale original
+```
+
+**Tempo total:** 15 minutos  
+**Downtime:** Zero  
+**Método:** Mescla opções B (desabilitar) + C (remover UI)
+
+---
+
 ## [v3.2.8] - 28/NOV/2025 13:38 UTC ✅ **IMPLEMENTADO**
 
 ### 🔗 Integração Neon com Connection Pooling
