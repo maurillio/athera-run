@@ -482,7 +482,7 @@ export default function PerformanceTab({ userData, onUpdate }: any) {
 
           {bestVDOT > 0 && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="font-semibold text-lg">{t('performance.bestVdot')}: {bestVDOT}</p>
+              <p className="font-semibold text-lg">{t('bestVdot')}: {bestVDOT}</p>
               <p className="text-sm text-gray-700">{interpretVDOT(bestVDOT)}</p>
             </div>
           )}

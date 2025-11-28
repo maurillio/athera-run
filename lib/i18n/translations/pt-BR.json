@@ -843,6 +843,8 @@
       "of": "de",
       "currentWeek": "Semana Atual",
       "weekFocus": "Foco da Semana",
+      "volume": "Volume",
+      "completed": "concluído",
       "noWorkouts": "Nenhum treino disponível para esta semana",
       "loadingWeek": "Carregando dados da semana..."
     },
