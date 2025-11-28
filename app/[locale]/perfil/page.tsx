@@ -13,7 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, User, Heart, Target, Calendar, Settings, AlertTriangle, RefreshCcw, Trash2, Trophy } from 'lucide-react';
 import { toast } from 'sonner';
 import ProfileTabs from '@/components/profile/v1.3.0/ProfileTabs';
-import MedicalInfoSection from '@/components/medical-info-section';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
 import AthleteStatsSection from '@/components/profile/athlete-stats-section';
@@ -292,7 +291,7 @@ export default function PerfilPage() {
           </div>
 
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-2 mb-6">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 mb-6">
               <TabsTrigger value="profile">
                 <User className="h-4 w-4 mr-2" />
                 {t('tabs.profile')}
@@ -300,10 +299,6 @@ export default function PerfilPage() {
               <TabsTrigger value="stats">
                 <Trophy className="h-4 w-4 mr-2" />
                 Estatísticas
-              </TabsTrigger>
-              <TabsTrigger value="medical">
-                <Heart className="h-4 w-4 mr-2" />
-                {t('tabs.medical')}
               </TabsTrigger>
               <TabsTrigger value="races">
                 <Target className="h-4 w-4 mr-2" />
@@ -332,10 +327,6 @@ export default function PerfilPage() {
             <TabsContent value="stats" className="space-y-6">
               <AthleteStatsSection />
               <StravaDataSection />
-            </TabsContent>
-
-            <TabsContent value="medical" className="space-y-6">
-              <MedicalInfoSection />
             </TabsContent>
 
             <TabsContent value="races" className="space-y-6">
