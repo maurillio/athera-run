@@ -7,6 +7,58 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.10] - 28/NOV/2025 17:20 UTC ✅ **IMPLEMENTADO**
+
+### 🎨 UX: Status Amarelo para Conclusão Parcial
+
+**Status:** ✅ **CONCLUÍDO E TESTADO**
+
+#### Contexto do Problema
+- Usuário com múltiplas atividades no dia (ex: Corrida + Musculação)
+- Completou apenas 1 de 2 atividades (Musculação ✅, Corrida ❌)
+- Sistema mostrava dia todo VERMELHO 🔴 (transmitia "não fez nada")
+- **Problema UX:** Não reconhecia o esforço parcial do usuário
+
+#### Solução Implementada
+
+**Nova lógica de status visual:**
+```
+✅ VERDE    - Completou 100% das atividades (mantido)
+⚠️ AMARELO  - Completou parcialmente (NOVO)
+🔴 VERMELHO - Não fez nada, 0% (corrigido)
+🟠 LARANJA  - Dia atual (mantido)
+```
+
+**Mudanças no código:**
+1. **Lógica de detecção** (`app/[locale]/plano/page.tsx` linhas 598-608):
+   - `noneCompleted` - Nenhuma atividade feita
+   - `partialCompleted` - Algumas atividades feitas (não todas)
+   - `isPastPartial` - Dia passado com conclusão parcial
+   - `isPastUncompleted` - Dia passado sem nenhuma conclusão
+
+2. **Background do card** (linhas 620-633):
+   - Amarelo: `from-yellow-50 to-yellow-100 border-yellow-300`
+   - Vermelho apenas quando `noneCompleted` (0%)
+
+3. **Ícone de status** (linhas 668-685):
+   - ⚠️ `AlertTriangle` amarelo para conclusão parcial
+   - 🔴 `XCircle` vermelho apenas para 0% de conclusão
+
+#### Benefícios
+- ✅ **Reconhece esforço parcial** do atleta
+- ✅ **Visual mais justo** e motivador
+- ✅ **Diferenciação clara** entre "fez algo" vs "não fez nada"
+- ✅ **UX alinhada** com expectativa do usuário
+
+#### Arquivos Modificados
+- `app/[locale]/plano/page.tsx` (+8 linhas, import AlertTriangle)
+
+**Build:** ✅ Passou sem erros  
+**Downtime:** Zero  
+**Tempo total:** 15 minutos
+
+---
+
 ## [v3.2.9] - 28/NOV/2025 14:50 UTC ✅ **IMPLEMENTADO**
 
 ### 🌐 Sistema pt-BR Only (i18n Desabilitado)

@@ -2,16 +2,59 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.9 - PT-BR ONLY (28/Nov/2025 15:00 UTC)  
-**Versão Atual:** v3.2.9 ✅ SISTEMA PT-BR ÚNICO IDIOMA  
-**Status:** ✅ **100% OPERACIONAL - IDIOMA SIMPLIFICADO**  
-**Build:** ✅ Passou sem erros | **Commit:** f175ae5a | **Branch:** main  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.10 - Status Amarelo Parcial (28/Nov/2025 17:20 UTC)  
+**Versão Atual:** v3.2.10 ✅ SISTEMA PT-BR + UX MELHORADA  
+**Status:** ✅ **100% OPERACIONAL - CONCLUSÃO PARCIAL VISUAL**  
+**Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
 **Idioma:** 🇧🇷 **pt-BR ONLY** - Sistema métrico fixo (km, kg, °C)  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
 **URL Development:** 🚧 **Pronto para configurar** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
+
+---
+
+## 🎨 v3.2.10 - Status Amarelo para Conclusão Parcial (28/Nov/2025)
+
+### 🎯 Melhoria de UX Crítica
+
+**Data:** 28/NOV/2025 17:20 UTC  
+**Status:** ✅ IMPLEMENTADO E TESTADO
+
+### Problema Resolvido
+- Usuário fez **Musculação ✅** mas **não** fez **Corrida ❌**
+- Sistema mostrava dia todo 🔴 **VERMELHO** (transmitia "não fez nada")
+- **Problema:** Não reconhecia esforço parcial
+
+### Nova Lógica Visual
+
+```
+✅ VERDE    - Completou 100% (todas atividades)
+⚠️ AMARELO  - Completou parcial (algumas atividades) ← NOVO
+🔴 VERMELHO - Não fez nada (0%)
+🟠 LARANJA  - Dia atual (mantido)
+```
+
+### Implementação
+
+**Lógica de detecção:**
+- `noneCompleted` - 0% feito → 🔴 Vermelho
+- `partialCompleted` - 50%+ feito → ⚠️ Amarelo
+- `allCompleted` - 100% feito → ✅ Verde
+
+**Visual:**
+- Background amarelo: `from-yellow-50 to-yellow-100`
+- Ícone: `AlertTriangle` amarelo
+- Border: `border-yellow-300`
+
+### Benefícios
+- ✅ Reconhece esforço do atleta
+- ✅ Visual mais justo e motivador
+- ✅ Diferencia "fez algo" vs "não fez nada"
+
+**Arquivo modificado:**
+- `app/[locale]/plano/page.tsx` (+8 linhas)
 
 ---
 

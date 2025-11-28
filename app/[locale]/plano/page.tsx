@@ -10,7 +10,7 @@ import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle, Trophy, Activity, Heart, Droplets, Mountain, Clock } from 'lucide-react';
+import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle, Trophy, Activity, Heart, Droplets, Mountain, Clock, AlertTriangle } from 'lucide-react';
 import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import { WorkoutDetails } from '@/components/workout-details';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
@@ -598,12 +598,15 @@ export default function PlanoPage() {
                           
                           const allCompleted = dayWorkouts.every(w => w.isCompleted);
                           const someCompleted = dayWorkouts.some(w => w.isCompleted);
+                          const noneCompleted = !someCompleted;
+                          const partialCompleted = someCompleted && !allCompleted;
                           const isRestDay = dayWorkouts.every(w => 
                             w.type === 'rest' || 
                             w.title.toLowerCase().includes('descanso') || 
                             w.title.toLowerCase().includes('rest')
                           );
-                          const isPastUncompleted = workoutDate.isBefore(today, 'day') && !allCompleted && !isRestDay;
+                          const isPastPartial = workoutDate.isBefore(today, 'day') && partialCompleted && !isRestDay;
+                          const isPastUncompleted = workoutDate.isBefore(today, 'day') && noneCompleted && !isRestDay;
                           const hasRaceDay = dayWorkouts.some(w => 
                             w.title.toLowerCase().includes('corrida alvo') || 
                             w.title.toLowerCase().includes('race day') ||
@@ -620,11 +623,13 @@ export default function PlanoPage() {
                                   ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
                                   : isRestDay
                                     ? 'bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300 hover:border-gray-400 hover:shadow-md'
-                                    : isPastUncompleted
-                                      ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
-                                      : isToday
-                                        ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
-                                      : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
+                                    : isPastPartial
+                                      ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300 hover:border-yellow-400 hover:shadow-md'
+                                      : isPastUncompleted
+                                        ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
+                                        : isToday
+                                          ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
+                                        : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
                                 }
                               `}
                             >
@@ -665,6 +670,10 @@ export default function PlanoPage() {
                                     {allCompleted ? (
                                       <div className="bg-green-500 rounded-full p-1.5">
                                         <CheckCircle2 className="h-5 w-5 text-white" />
+                                      </div>
+                                    ) : isPastPartial ? (
+                                      <div className="bg-yellow-500 rounded-full p-1.5">
+                                        <AlertTriangle className="h-5 w-5 text-white" />
                                       </div>
                                     ) : isPastUncompleted ? (
                                       <div className="bg-red-500 rounded-full p-1.5">
