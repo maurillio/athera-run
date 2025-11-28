@@ -9,18 +9,28 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [v3.2.8] - 28/NOV/2025 (EM PLANEJAMENTO)
 
-### 📋 Planejamento - Separação de Ambientes
+### 📋 Planejamento - Integração Nativa Vercel-Neon
 
-**Objetivo:** Criar ambientes separados para desenvolvimento e produção
+**Objetivo:** Implementar integração nativa para melhor performance e gestão de ambientes
 
-#### Estrutura Planejada
-- **Production**: `main` branch → `atherarun.com` → Neon Production DB
-- **Development**: `develop` branch → `athera-run.vercel.app` → Neon Development DB
+#### Benefícios
+- ✅ Connection pooling automático otimizado
+- ✅ Database branches por ambiente (prod/preview/dev)
+- ✅ Variáveis injetadas automaticamente pelo Vercel
+- ✅ Preparação para separação de ambientes dev/prod
 
 #### Documentação Criada
-- `PLANO_AMBIENTES_DEV_PROD.md` - Plano completo de implementação
+- `GUIA_INTEGRACAO_VERCEL_NEON_NATIVA.md` - Guia completo passo a passo
+- `PLANO_AMBIENTES_DEV_PROD.md` - Plano de separação de ambientes (próxima etapa)
 
-**Status:** 📋 Aguardando aprovação para executar
+#### Mudanças Planejadas
+- `prisma/schema.prisma` - Adicionar `directUrl` para migrations
+- `lib/db.ts` - Otimizar datasources (opcional)
+- Variáveis: `POSTGRES_PRISMA_URL` e `POSTGRES_URL_NON_POOLING`
+
+**Status:** 📋 Aguardando aprovação para executar  
+**Tempo estimado:** 30 minutos  
+**Risco:** Baixo (rollback preparado)
 
 ---
 
