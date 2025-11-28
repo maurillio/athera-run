@@ -96,7 +96,7 @@ export async function POST() {
     }
 
     // 4. Buscar atividades do Strava dos últimos 7 dias
-    const stravaResponse = await fetch(
+    let stravaResponse = await fetch(
       `https://www.strava.com/api/v3/athlete/activities?after=${Math.floor(sevenDaysAgo.getTime() / 1000)}`,
       {
         headers: {
@@ -105,8 +105,50 @@ export async function POST() {
       }
     );
 
+    // Se token expirou (401), tentar refresh
+    if (stravaResponse.status === 401 && profile.stravaRefreshToken) {
+      const refreshResponse = await fetch('https://www.strava.com/oauth/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_id: process.env.STRAVA_CLIENT_ID,
+          client_secret: process.env.STRAVA_CLIENT_SECRET,
+          refresh_token: profile.stravaRefreshToken,
+          grant_type: 'refresh_token'
+        })
+      });
+
+      if (refreshResponse.ok) {
+        const tokens = await refreshResponse.json();
+        
+        // Atualizar tokens no perfil
+        await prisma.athleteProfile.update({
+          where: { userId: session.user.id },
+          data: {
+            stravaAccessToken: tokens.access_token,
+            stravaRefreshToken: tokens.refresh_token,
+            stravaTokenExpiresAt: new Date(tokens.expires_at * 1000)
+          }
+        });
+
+        // Tentar novamente com novo token
+        stravaResponse = await fetch(
+          `https://www.strava.com/api/v3/athlete/activities?after=${Math.floor(sevenDaysAgo.getTime() / 1000)}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${tokens.access_token}`
+            }
+          }
+        );
+      }
+    }
+
     if (!stravaResponse.ok) {
-      throw new Error('Failed to fetch Strava activities');
+      console.error('[SYNC] Strava API error:', stravaResponse.status, await stravaResponse.text());
+      return NextResponse.json({ 
+        error: 'Erro ao buscar atividades do Strava. Tente reconectar sua conta.',
+        synced: 0 
+      }, { status: 200 });
     }
 
     const stravaActivities = await stravaResponse.json();
