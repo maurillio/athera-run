@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.4.0-WIP - ATHERA FLEX FASE 4 INICIADA (02/Dez/2025 18:33 UTC)  
-**Versão Atual:** v3.4.0-WIP 🚧 CONTEXT AWARENESS + PROACTIVE MODE (50% Completo)  
-**Status:** 🚧 **EM DESENVOLVIMENTO - FASE 4 ATHERA FLEX PARCIAL**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.4.0-WIP - ATHERA FLEX FASE 4 SESSÃO 2 (02/Dez/2025 19:00 UTC)  
+**Versão Atual:** v3.4.0-WIP 🚧 CONTEXT AWARENESS BACKEND 80% COMPLETO  
+**Status:** 🚧 **EM DESENVOLVIMENTO - FASE 4 BACKEND QUASE COMPLETO**  
 **Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
@@ -60,44 +60,104 @@ CRON_SECRET=xxxxx
 
 ---
 
-### 🚧 Fase 4 - EM PROGRESSO (50% Completa)
+### 🚧 Fase 4 - EM PROGRESSO (80% Backend Completo)
 
 **Objetivo:** Context Awareness + Proactive Mode + Premium Features  
 **Data Início:** 02/Dez/2025 18:18 UTC  
+**Sessão 2:** 02/Dez/2025 19:00 UTC - Services Completos  
 **ETA Final:** 3-4 semanas  
 **Roadmap:** `ATHERA_FLEX_FASE4_ROADMAP.md`
 
-#### **Implementado Hoje (Sessão 1)**
+#### **Implementado - Sessão 2 (02/Dez 19:00)**
 
-**1. Context Awareness Engine (✅ 5/5 Services)**
-- ✅ **WeatherService:** Clima em tempo real (OpenWeather API)
-  - Cache 6h para economizar calls
-  - Sugestões: outdoor vs indoor
-  - Scores: 0-100 (ideal, ok, not_recommended)
+**1. Context Awareness Services (✅ 4/4 Services Completos)**
+
+- ✅ **WeatherService** (220 linhas)
+  - OpenWeather API integration
+  - Cache de 6 horas para economizar calls
+  - Análise: temperatura, chuva, vento, condição
+  - Decisão: isOutdoorSafe (true/false)
+  - Razões em português
+  - Thresholds: <5°C ou >35°C = unsafe, chuva >5mm/h = unsafe, vento >40km/h = unsafe
   
-- ✅ **CalendarService:** Eventos importantes (Google Calendar API)
-  - Detecta eventos 4h antes/depois treino
-  - Filtra por tipo (work, personal, travel)
-  - Previne conflitos de agenda
+- ✅ **CalendarService** (200 linhas)
+  - Detecta eventos importantes (4h antes/depois do treino)
+  - Busca eventos no banco (calendar_events table)
+  - Calcula slots disponíveis no dia (6h-22h)
+  - Filtra por tipo: work, personal, travel, other
+  - Mock preparado para Google Calendar API sync
   
-- ✅ **EnergyService:** Análise de fadiga
-  - TSS acumulado (7 dias)
-  - HRV quando disponível
-  - Score 0-100 (fresh, moderate, tired, exhausted)
+- ✅ **EnergyService** (270 linhas)
+  - Análise de fadiga via TSS acumulado (últimos 7 dias)
+  - HRV quando disponível (energy_logs table)
+  - Score 0-100: fresh (>85), moderate (70-85), tired (50-70), exhausted (<50)
+  - Tendência: increasing/stable/decreasing
+  - Recomendações: full, modified, skip, rest
+  - Ajustes por sono, stress, dor muscular
   
-- ✅ **RecoveryService:** Score de recuperação
-  - Sono quando disponível
-  - Intensidade treinos recentes
-  - Dias desde último treino intenso
-  - Score ML-based 0-100
-  
-- ✅ **ContextAwarenessEngine:** Orquestrador
-  - Análise completa de contexto
-  - Decisão: allow, warning, block
+- ✅ **RecoveryService** (280 linhas)
+  - Recovery score ML-based (0-100)
+  - Fatores: tempo desde último treino, intensidade recente, dias consecutivos
+  - Análise de treinos intensos (últimos 7 dias)
+  - Integração com wearables (recovery_scores table)
+  - Decisões: canDoHard, needsRest, isFatigued
   - Razões detalhadas em português
 
-**2. Proactive Mode (✅ 2/2 Services)**
-- ✅ **WeekPlannerService:** Otimização semanal
+- ✅ **ContextAwarenessEngine** (já existia, agora integrado)
+  - Orquestrador central que chama os 4 services
+  - Analisa contexto completo: weather + calendar + energy + recovery
+  - Decisão final: allow, warning, block
+  - Confidence score (0-100)
+  - Razões agregadas
+
+**2. Proactive Mode (✅ 3/3 Services já existiam)**
+- ✅ WeekOptimizer - Otimização semanal de treinos
+- ✅ BestDaySuggester - Melhor dia para cada tipo de treino
+- ✅ ProactiveOrchestrator - Orquestrador de sugestões proativas
+
+**3. Premium Features (⏳ 0% - Próximas sessões)**
+- ⏳ Coach Virtual Conversacional
+- ⏳ Sistema de Explicação IA
+- ⏳ Comparação de Cenários
+- ⏳ Export PDF Relatórios
+
+#### **Arquivos Criados - Fase 4 Total**
+
+**Context Awareness (5 arquivos):**
+- `lib/athera-flex/context/WeatherService.ts`
+- `lib/athera-flex/context/CalendarService.ts`
+- `lib/athera-flex/context/EnergyService.ts`
+- `lib/athera-flex/context/RecoveryService.ts`
+- `lib/athera-flex/context/index.ts`
+
+**Proactive Mode (3 arquivos - já existiam):**
+- `lib/athera-flex/proactive/WeekOptimizer.ts`
+- `lib/athera-flex/proactive/BestDaySuggester.ts`
+- `lib/athera-flex/proactive/ProactiveOrchestrator.ts`
+
+**Total:** +970 linhas de código TypeScript
+
+#### **Database Tables (Fase 4)**
+Migration já aplicada: `MIGRATION_ATHERA_FLEX_v4_0_0_CONTEXT_AWARENESS.sql`
+
+- `weather_cache` - Cache de clima (6h)
+- `calendar_events` - Eventos importantes do usuário
+- `energy_logs` - Histórico de energia/fadiga/sono
+- `recovery_scores` - Scores de recuperação (manual ou wearable)
+- `proactive_suggestions` - Sugestões proativas geradas
+
+#### **Progresso Fase 4**
+- ✅ **Backend Services:** 100% (7/7)
+- ✅ **Orquestradores:** 100% (2/2)
+- ⏳ **APIs REST:** 0% (0/10)
+- ⏳ **UI Components:** 0% (4)
+- ⏳ **Premium Features:** 0% (4)
+
+**Total Geral Fase 4:** 80% Backend | 0% Frontend
+
+#### **Próximos Passos - Sessão 3**
+
+**Prioridade 1: APIs REST (10 endpoints)**
   - Analisa semana completa
   - Redistribui treinos automaticamente
   - Respeita volume total semanal
