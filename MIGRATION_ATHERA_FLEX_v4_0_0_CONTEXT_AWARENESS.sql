@@ -6,7 +6,7 @@
 -- =====================================================
 
 -- 1. VERIFICAÇÃO PRÉ-MIGRATION (executar ANTES)
-SELECT COUNT(*) as total_users FROM "User";
+SELECT COUNT(*) as total_users FROM users;
 SELECT COUNT(*) as total_flex_settings FROM user_flex_settings;
 SELECT COUNT(*) as total_workouts FROM custom_workouts;
 
