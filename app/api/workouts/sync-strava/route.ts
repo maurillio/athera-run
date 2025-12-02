@@ -170,7 +170,7 @@ export async function POST() {
             data: {
               stravaAccessToken: tokens.access_token,
               stravaRefreshToken: tokens.refresh_token,
-              stravaTokenExpiresAt: new Date(tokens.expires_at * 1000)
+              stravaTokenExpiry: new Date(tokens.expires_at * 1000) // CORRETO: stravaTokenExpiry
             }
           });
 
