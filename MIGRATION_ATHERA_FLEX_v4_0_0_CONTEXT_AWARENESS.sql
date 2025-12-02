@@ -15,7 +15,7 @@ SELECT COUNT(*) as total_workouts FROM custom_workouts;
 -- Tabela: Contextos de Usuário
 CREATE TABLE IF NOT EXISTS user_contexts (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  user_id VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   
   -- Weather Awareness
   weather_api_enabled BOOLEAN DEFAULT false,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS user_contexts (
 -- Tabela: Registros de Energia/Fadiga
 CREATE TABLE IF NOT EXISTS energy_logs (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  user_id VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
   
   energy_level INTEGER CHECK (energy_level >= 0 AND energy_level <= 100),
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS energy_logs (
 -- Tabela: Eventos Importantes do Calendário
 CREATE TABLE IF NOT EXISTS calendar_events (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  user_id VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   
   external_id VARCHAR(255),
   title VARCHAR(255) NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS weather_history (
 -- Tabela: Decisões Contextuais (Audit Log)
 CREATE TABLE IF NOT EXISTS context_decisions (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  user_id VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   workout_id INTEGER REFERENCES custom_workouts(id) ON DELETE SET NULL,
   
   decision_type VARCHAR(50) NOT NULL, -- 'weather_skip', 'calendar_conflict', 'fatigue_defer', 'recovery_protect'
