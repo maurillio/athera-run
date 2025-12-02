@@ -59,6 +59,8 @@ model User {
   sessions             Session[]
   subscription         Subscription?
   consents             UserConsent[]
+  flexSettings         UserFlexSettings?
+  matchDecisions       WorkoutMatchDecision[]
 
   @@index([locale])
   @@map("users")
@@ -443,9 +445,24 @@ model CustomWorkout {
   intervals        Json? // Estrutura de intervalos se aplicável
   expectedDuration Int? // Duração total esperada (minutos)
 
-  athleteFeedback  AthleteFeedback[]
-  completedWorkout CompletedWorkout? @relation(fields: [completedWorkoutId], references: [id])
-  week             CustomWeek        @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  // v3.3.0 - ATHERA FLEX: Sistema de Flexibilidade
+  isFlexible         Boolean   @default(true)  @map("is_flexible")
+  flexibilityWindow  Int       @default(3)     @map("flexibility_window")
+  canSubstitute      Boolean   @default(false) @map("can_substitute")
+  minVolumePercent   Int       @default(70)    @map("min_volume_percent")
+  maxVolumePercent   Int       @default(150)   @map("max_volume_percent")
+  wasRescheduled     Boolean   @default(false) @map("was_rescheduled")
+  originalDate       DateTime? @map("original_date")
+  rescheduledBy      String?   @map("rescheduled_by")
+  rescheduledReason  String?   @map("rescheduled_reason")
+  executedWorkoutId  Int?      @unique @map("executed_workout_id")
+
+  athleteFeedback     AthleteFeedback[]
+  completedWorkout    CompletedWorkout?    @relation("PlannedWorkout", fields: [completedWorkoutId], references: [id])
+  executedWorkout     CompletedWorkout?    @relation("ExecutedFor", fields: [executedWorkoutId], references: [id])
+  week                CustomWeek           @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  workoutAdjustments  WorkoutAdjustment[]
+  matchDecisions      WorkoutMatchDecision[]
 
   @@map("custom_workouts")
 }
@@ -473,9 +490,19 @@ model CompletedWorkout {
   injuryNotes      String?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
-  athlete          AthleteProfile @relation(fields: [athleteId], references: [id])
-  plannedWorkout   Workout?       @relation(fields: [plannedWorkoutId], references: [id])
-  customWorkout    CustomWorkout?
+
+  // v3.3.0 - ATHERA FLEX: Contexto de Execução
+  wasPlanned            Boolean   @default(true)  @map("was_planned")
+  plannedDate           DateTime? @map("planned_date")
+  wasSubstitution       Boolean   @default(false) @map("was_substitution")
+  substitutedWorkoutId  Int?      @map("substituted_workout_id")
+  volumeVariance        Float?    @map("volume_variance")
+
+  athlete              AthleteProfile        @relation(fields: [athleteId], references: [id])
+  plannedWorkout       Workout?              @relation(fields: [plannedWorkoutId], references: [id])
+  customWorkout        CustomWorkout?        @relation("PlannedWorkout")
+  wasExecutionFor      CustomWorkout?        @relation("ExecutedFor")
+  matchDecisions       WorkoutMatchDecision[]
 
   @@index([athleteId, date])
   @@index([stravaActivityId])
@@ -855,4 +882,101 @@ model AIFieldUsage {
   @@index([userId])
   @@index([fieldName])
   @@map("ai_field_usage")
+}
+
+// v3.3.0 - ATHERA FLEX: Sistema de Flexibilidade de Treinos
+model WorkoutAdjustment {
+  id               Int       @id @default(autoincrement())
+  workoutId        Int       @map("workout_id")
+  adjustmentType   String    @map("adjustment_type") // 'reschedule' | 'substitute' | 'modify' | 'mark_done'
+  originalDate     DateTime  @map("original_date")
+  newDate          DateTime? @map("new_date")
+  originalDistance Float?    @map("original_distance")
+  newDistance      Float?    @map("new_distance")
+  triggeredBy      String    @map("triggered_by") // 'athlete_manual' | 'ai_suggestion' | 'ai_auto' | 'coach'
+  reason           String?
+  confidence       Float?    // Score 0-100 do match
+  autoApplied      Boolean   @default(false) @map("auto_applied")
+  approved         Boolean   @default(false)
+  approvedAt       DateTime? @map("approved_at")
+  rejectedAt       DateTime? @map("rejected_at")
+  undoneAt         DateTime? @map("undone_at")
+  undoReason       String?   @map("undo_reason")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  workout CustomWorkout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@index([workoutId])
+  @@index([createdAt])
+  @@index([adjustmentType])
+  @@map("workout_adjustments")
+}
+
+model UserFlexSettings {
+  id                      Int      @id @default(autoincrement())
+  userId                  String   @unique @map("user_id")
+  
+  // Configurações de automação
+  autoAdjustEnabled       Boolean  @default(false) @map("auto_adjust_enabled")
+  autoAdjustThreshold     Int      @default(90)    @map("auto_adjust_threshold")
+  notifyBeforeAdjust      Boolean  @default(true)  @map("notify_before_adjust")
+  
+  // Notificações
+  emailOnAutoAdjust       Boolean  @default(true)  @map("email_on_auto_adjust")
+  emailOnSuggestion       Boolean  @default(true)  @map("email_on_suggestion")
+  inAppNotifications      Boolean  @default(true)  @map("in_app_notifications")
+  
+  // Preferências de flexibilidade
+  flexibilityWindow       Int      @default(3)     @map("flexibility_window")
+  allowVolumeIncrease     Boolean  @default(true)  @map("allow_volume_increase")
+  allowVolumeDecrease     Boolean  @default(true)  @map("allow_volume_decrease")
+  maxVolumeVariance       Int      @default(50)    @map("max_volume_variance")
+  
+  // Configurações avançadas
+  preferSameDay           Boolean  @default(false) @map("prefer_same_day")
+  autoAcceptHighConf      Boolean  @default(false) @map("auto_accept_high_confidence")
+  learningMode            Boolean  @default(true)  @map("learning_mode")
+  
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_flex_settings")
+}
+
+model WorkoutMatchDecision {
+  id                  Int      @id @default(autoincrement())
+  userId              String   @map("user_id")
+  completedWorkoutId  Int      @map("completed_workout_id")
+  suggestedWorkoutId  Int      @map("suggested_workout_id")
+  confidence          Float
+  
+  // Score details
+  dateScore           Float?   @map("date_score")
+  typeScore           Float?   @map("type_score")
+  volumeScore         Float?   @map("volume_score")
+  intensityScore      Float?   @map("intensity_score")
+  
+  // Decisão do usuário
+  action              String   // 'accepted' | 'rejected' | 'modified' | 'ignored'
+  actionTakenAt       DateTime @default(now()) @map("action_taken_at")
+  
+  // Contexto da decisão
+  dayOfWeek           Int?     @map("day_of_week")
+  weekOfPlan          Int?     @map("week_of_plan")
+  userEnergyLevel     Int?     @map("user_energy_level")
+  
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  completedWorkout CompletedWorkout @relation(fields: [completedWorkoutId], references: [id], onDelete: Cascade)
+  suggestedWorkout CustomWorkout    @relation(fields: [suggestedWorkoutId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
+  @@index([confidence])
+  @@map("workout_match_decisions")
 }
