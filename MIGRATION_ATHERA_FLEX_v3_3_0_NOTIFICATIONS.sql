@@ -204,7 +204,7 @@ ORDER BY tablename, indexname;
 -- 9. POPULAR PREFERÊNCIAS PADRÃO
 -- ====================
 
--- Criar preferências padrão para usuários existentes que tem flex habilitado
+-- Criar preferências padrão para todos os usuários que tem flex settings
 INSERT INTO notification_preferences (
   user_id,
   email_enabled,
@@ -223,7 +223,6 @@ SELECT
   true,
   true
 FROM user_flex_settings
-WHERE enabled = true
 ON CONFLICT (user_id) DO NOTHING;
 
 SELECT 'Migration completed successfully!' as status;

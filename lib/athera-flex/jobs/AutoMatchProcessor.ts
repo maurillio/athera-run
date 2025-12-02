@@ -6,6 +6,7 @@
 
 import { db } from '@/lib/db';
 import { MLOrchestrator } from '../ml/MLOrchestrator';
+import { notificationService } from '@/lib/notifications/NotificationService';
 
 export class AutoMatchProcessor {
   private orchestrator: MLOrchestrator;
@@ -178,6 +179,14 @@ export class AutoMatchProcessor {
 
           console.log(`[AutoMatch] ✅ Match automático: Activity ${activity.activity_id} → Workout ${workout.id} (score: ${matchScore}%)`);
 
+          // Envia notificação de auto-aceite
+          await this.sendAutoMatchNotification({
+            userId,
+            workoutName: workout.name || workout.workout_type,
+            activityDate: activityDate,
+            matchScore
+          });
+
           return { matched: true };
         }
 
@@ -198,6 +207,13 @@ export class AutoMatchProcessor {
 
           console.log(`[AutoMatch] ⏳ Match pendente: Activity ${activity.activity_id} → Workout ${workout.id} (score: ${matchScore}%)`);
 
+          // Envia notificação de match encontrado (precisa revisar)
+          await this.sendPendingMatchNotification({
+            userId,
+            workoutName: workout.name || workout.workout_type,
+            activityDate: activityDate,
+            matchScore
+          });
           return { matched: false, reason: 'pending_review' };
         }
       }
@@ -306,5 +322,67 @@ export class AutoMatchProcessor {
     }
 
     // TODO: Usar feedback para melhorar ML (aprendizado)
+  }
+
+  /**
+   * Envia notificação quando match é aceito automaticamente
+   */
+  private async sendAutoMatchNotification(params: {
+    userId: string;
+    workoutName: string;
+    activityDate: Date;
+    matchScore: number;
+  }): Promise<void> {
+    try {
+      const { userId, workoutName, activityDate, matchScore } = params;
+      
+      const dateFormatted = activityDate.toLocaleDateString('pt-BR');
+      
+      await notificationService.send({
+        userId,
+        type: 'auto_accepted',
+        title: '✅ Treino Sincronizado Automaticamente',
+        message: `O treino "${workoutName}" foi sincronizado com sua atividade do Strava de ${dateFormatted}. Confiança: ${Math.round(matchScore)}%`,
+        data: {
+          workoutName,
+          date: activityDate.toISOString(),
+          matchScore
+        },
+        actionUrl: `/calendar?date=${activityDate.toISOString().split('T')[0]}`
+      });
+    } catch (error) {
+      console.error('[AutoMatch] Failed to send auto-match notification:', error);
+    }
+  }
+
+  /**
+   * Envia notificação quando match precisa de revisão
+   */
+  private async sendPendingMatchNotification(params: {
+    userId: string;
+    workoutName: string;
+    activityDate: Date;
+    matchScore: number;
+  }): Promise<void> {
+    try {
+      const { userId, workoutName, activityDate, matchScore } = params;
+      
+      const dateFormatted = activityDate.toLocaleDateString('pt-BR');
+      
+      await notificationService.send({
+        userId,
+        type: 'match_found',
+        title: '🔔 Possível Match Encontrado',
+        message: `Encontramos uma atividade do Strava (${dateFormatted}) que pode corresponder ao treino "${workoutName}". Revise e confirme. Confiança: ${Math.round(matchScore)}%`,
+        data: {
+          workoutName,
+          date: activityDate.toISOString(),
+          matchScore
+        },
+        actionUrl: `/flex/pending`
+      });
+    } catch (error) {
+      console.error('[AutoMatch] Failed to send pending-match notification:', error);
+    }
   }
 }

@@ -5,6 +5,7 @@
 
 import { prisma } from '@/lib/db';
 import dayjs from 'dayjs';
+import { notificationService } from '@/lib/notifications/NotificationService';
 
 // ============================================================================
 // TYPES
@@ -160,6 +161,15 @@ export class AdjustmentEngine {
         }
 
         return { adjustment, updatedWorkout };
+      });
+
+      // 5. Enviar notificação
+      await this.sendAdjustmentNotification({
+        userId,
+        type: autoApplied ? 'auto_accepted' : 'manual_accepted',
+        completed,
+        planned,
+        confidence
       });
 
       return {
@@ -425,6 +435,49 @@ export class AdjustmentEngine {
       return workout?.week?.weekNumber || null;
     } catch {
       return null;
+    }
+  }
+
+  /**
+   * Envia notificação sobre ajuste aplicado
+   */
+  private async sendAdjustmentNotification(params: {
+    userId: string;
+    type: 'auto_accepted' | 'manual_accepted';
+    completed: any;
+    planned: any;
+    confidence: number;
+  }): Promise<void> {
+    try {
+      const { userId, type, completed, planned, confidence } = params;
+      
+      const isAuto = type === 'auto_accepted';
+      const dateFormatted = dayjs(completed.date).format('DD/MM/YYYY');
+      
+      const title = isAuto 
+        ? '✅ Ajuste Aplicado Automaticamente'
+        : '✅ Treino Marcado Como Completo';
+      
+      const message = isAuto
+        ? `O treino "${planned.name}" foi automaticamente marcado como completo usando a atividade de ${dateFormatted}. Confiança: ${Math.round(confidence * 100)}%`
+        : `Treino "${planned.name}" marcado como completo usando atividade de ${dateFormatted}.`;
+
+      await notificationService.send({
+        userId,
+        type,
+        title,
+        message,
+        data: {
+          workoutId: planned.id,
+          completedWorkoutId: completed.id,
+          confidence,
+          date: completed.date,
+        },
+        actionUrl: `/calendar?date=${dayjs(completed.date).format('YYYY-MM-DD')}`
+      });
+    } catch (error) {
+      console.error('[AdjustmentEngine] Failed to send notification:', error);
+      // Não falhar operação se notificação falhar
     }
   }
 }
