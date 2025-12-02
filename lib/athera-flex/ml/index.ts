@@ -8,6 +8,7 @@ export { VolumeAdjuster } from './models/VolumeAdjuster';
 export { WorkoutMatcher } from './models/WorkoutMatcher';
 export { UserPatternLearner } from './models/UserPatternLearner';
 export { MLOrchestrator } from './MLOrchestrator';
+export { MLService, mlService } from './ml-service';
 
 // Types
 export type {
