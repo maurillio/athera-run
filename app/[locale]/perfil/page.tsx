@@ -21,6 +21,7 @@ import PreferencesTab from '@/components/profile/v1.3.0/PreferencesTab';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
 import StravaDataSection from '@/components/profile/strava-data-section';
+import { FlexSettingsPanel, AdjustmentHistoryPanel } from '@/components/athera-flex';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
@@ -295,7 +296,7 @@ export default function PerfilPage() {
           </div>
 
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-2 mb-6">
               <TabsTrigger value="personal">
                 <User className="h-4 w-4 mr-2" />
                 Dados Pessoais
@@ -307,6 +308,10 @@ export default function PerfilPage() {
               <TabsTrigger value="goals">
                 <Target className="h-4 w-4 mr-2" />
                 Objetivos & Provas
+              </TabsTrigger>
+              <TabsTrigger value="flex">
+                <Sliders className="h-4 w-4 mr-2" />
+                Athera Flex
               </TabsTrigger>
               <TabsTrigger value="settings">
                 <Settings className="h-4 w-4 mr-2" />
@@ -411,6 +416,15 @@ export default function PerfilPage() {
                   <AvailabilityTab userData={profile} onUpdate={handleUpdateProfile} />
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* ATHERA FLEX: Configurações e Histórico */}
+            <TabsContent value="flex" className="space-y-6">
+              {/* Settings */}
+              <FlexSettingsPanel />
+
+              {/* Histórico */}
+              <AdjustmentHistoryPanel limit={20} showFilters />
             </TabsContent>
 
             {/* 4️⃣ CONFIGURAÇÕES: Assinatura + Plano + Conta */}

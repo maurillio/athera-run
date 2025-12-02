@@ -15,5 +15,8 @@ export { FlexSettingsPanel } from './FlexSettingsPanel';
 // Notifications
 export { flexNotifications } from './FlexNotifications';
 
+// Integration
+export { CalendarFlexIntegration, WorkoutFlexBadge } from './CalendarFlexIntegration';
+
 // Types
 export type { MatchSuggestion } from '@/hooks/useWorkoutMatcher';

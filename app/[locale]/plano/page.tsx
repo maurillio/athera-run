@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dumbbell, XCircle, Trophy, Activity, Heart, Droplets, Mountain, Clock, AlertTriangle } from 'lucide-react';
 import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import { WorkoutDetails } from '@/components/workout-details';
+import { CalendarFlexIntegration } from '@/components/athera-flex';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
@@ -805,6 +806,9 @@ export default function PlanoPage() {
           </Card>
         </div>
       </div>
+
+      {/* Athera Flex Integration */}
+      <CalendarFlexIntegration workouts={currentWeek?.workouts || []} />
     </>
   );
 }
