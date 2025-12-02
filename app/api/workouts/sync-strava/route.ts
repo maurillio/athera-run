@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { fetchFromStrava } from '@/lib/strava-token';
 
 /**
  * POST /api/workouts/sync-strava
@@ -122,75 +123,23 @@ export async function POST() {
       });
     }
 
-    // 4. Buscar atividades do Strava dos últimos 7 dias
+    // 4. Buscar atividades do Strava dos últimos 7 dias usando helper centralizado
     console.log('[SYNC] Fetching Strava activities...');
     
-    let stravaResponse;
-    try {
-      stravaResponse = await fetch(
-        `https://www.strava.com/api/v3/athlete/activities?after=${Math.floor(sevenDaysAgo.getTime() / 1000)}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${profile.stravaAccessToken}`
-          }
-        }
-      );
-    } catch (fetchError) {
-      console.error('[SYNC] Error fetching from Strava API:', fetchError);
+    const stravaResponse = await fetchFromStrava(
+      session.user.id,
+      `https://www.strava.com/api/v3/athlete/activities?after=${Math.floor(sevenDaysAgo.getTime() / 1000)}`
+    );
+
+    if (!stravaResponse) {
+      console.error('[SYNC] Failed to get Strava response');
       return NextResponse.json({ 
-        error: 'Erro ao conectar com Strava API',
-        details: fetchError instanceof Error ? fetchError.message : 'Unknown error'
-      }, { status: 500 });
+        error: 'Erro ao buscar atividades do Strava. Tente reconectar sua conta.',
+        synced: 0 
+      }, { status: 200 });
     }
 
     console.log('[SYNC] Strava API response status:', stravaResponse.status);
-
-    // Se token expirou (401), tentar refresh
-    if (stravaResponse.status === 401 && profile.stravaRefreshToken) {
-      console.log('[SYNC] Token expired, refreshing...');
-      try {
-        const refreshResponse = await fetch('https://www.strava.com/oauth/token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            client_id: process.env.STRAVA_CLIENT_ID,
-            client_secret: process.env.STRAVA_CLIENT_SECRET,
-            refresh_token: profile.stravaRefreshToken,
-            grant_type: 'refresh_token'
-          })
-        });
-
-        if (refreshResponse.ok) {
-          const tokens = await refreshResponse.json();
-          console.log('[SYNC] Token refreshed successfully');
-          
-          // Atualizar tokens no perfil
-          await prisma.athleteProfile.update({
-            where: { userId: session.user.id },
-            data: {
-              stravaAccessToken: tokens.access_token,
-              stravaRefreshToken: tokens.refresh_token,
-              stravaTokenExpiry: new Date(tokens.expires_at * 1000) // CORRETO: stravaTokenExpiry
-            }
-          });
-
-          // Tentar novamente com novo token
-          stravaResponse = await fetch(
-            `https://www.strava.com/api/v3/athlete/activities?after=${Math.floor(sevenDaysAgo.getTime() / 1000)}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${tokens.access_token}`
-              }
-            }
-          );
-          console.log('[SYNC] Retry with new token, status:', stravaResponse.status);
-        } else {
-          console.error('[SYNC] Token refresh failed:', refreshResponse.status);
-        }
-      } catch (refreshError) {
-        console.error('[SYNC] Error refreshing token:', refreshError);
-      }
-    }
 
     if (!stravaResponse.ok) {
       const errorText = await stravaResponse.text();
