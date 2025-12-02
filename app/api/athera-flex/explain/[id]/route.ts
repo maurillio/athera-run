@@ -8,10 +8,6 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/db';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -21,6 +17,11 @@ export async function GET(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Initialize OpenAI inside the request handler
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const adjustmentId = params.id;
 
