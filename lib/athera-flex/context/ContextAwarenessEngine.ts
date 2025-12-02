@@ -1,5 +1,9 @@
 // lib/athera-flex/context/ContextAwarenessEngine.ts
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
+import { weatherService } from './WeatherService';
+import { calendarService } from './CalendarService';
+import { energyService } from './EnergyService';
+import { recoveryService } from './RecoveryService';
 
 export interface WorkoutContext {
   weather: WeatherContext | null;
@@ -112,41 +116,14 @@ export class ContextAwarenessEngine {
     isOutdoor: boolean,
     userContext: any
   ): Promise<WeatherContext | null> {
-    if (!userContext.weather_api_enabled || !isOutdoor) {
+    if (!isOutdoor) {
       return null;
     }
 
-    // TODO: Integração real com API de clima
-    // Por ora, retorna contexto mock
-    const mockWeather: WeatherContext = {
-      temperature: 22,
-      condition: 'sunny',
-      precipitation: 10,
-      windSpeed: 15,
-      isOutdoorSafe: true,
-    };
-
-    // Verifica thresholds
-    if (
-      userContext.avoid_outdoor_extreme_heat &&
-      mockWeather.temperature > userContext.temperature_threshold_hot
-    ) {
-      return {
-        ...mockWeather,
-        isOutdoorSafe: false,
-        reason: 'Temperatura muito alta para treino outdoor',
-      };
-    }
-
-    if (
-      mockWeather.temperature < userContext.temperature_threshold_cold
-    ) {
-      return {
-        ...mockWeather,
-        isOutdoorSafe: false,
-        reason: 'Temperatura muito baixa',
-      };
-    }
+    // Usar location do usuário (default: São Paulo, BR)
+    const location = userContext.location || 'São Paulo,BR';
+    
+    return await weatherService.getWeatherContext(location, date, isOutdoor);
 
     if (
       userContext.avoid_outdoor_rain &&
@@ -170,40 +147,8 @@ export class ContextAwarenessEngine {
     date: Date,
     userContext: any
   ): Promise<CalendarContext | null> {
-    if (!userContext.calendar_api_enabled) {
-      return null;
-    }
-
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    const events = await prisma.calendar_events.findMany({
-      where: {
-        user_id: userId,
-        start_time: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
-      },
-      orderBy: { start_time: 'asc' },
-    });
-
-    const conflicts = events
-      .filter((e) => userContext.respect_important_events && e.is_important)
-      .map((e) => ({
-        title: e.title,
-        start: e.start_time,
-        end: e.end_time,
-        isImportant: e.is_important,
-      }));
-
-    return {
-      hasConflicts: conflicts.length > 0,
-      conflicts,
-      availableSlots: this.calculateAvailableSlots(events, date),
-    };
+    // Duração padrão: 60 minutos
+    return await calendarService.getCalendarContext(userId, date, 60);
   }
 
   /**
@@ -214,46 +159,7 @@ export class ContextAwarenessEngine {
     date: Date,
     userContext: any
   ): Promise<EnergyContext | null> {
-    if (!userContext.track_energy_levels) {
-      return null;
-    }
-
-    const dateStr = date.toISOString().split('T')[0];
-    const energyLog = await prisma.energy_logs.findUnique({
-      where: {
-        user_id_date: {
-          user_id: userId,
-          date: new Date(dateStr),
-        },
-      },
-    });
-
-    if (!energyLog) {
-      return {
-        currentLevel: 75,
-        trend: 'stable',
-        sleepQuality: 'good',
-        stressLevel: 30,
-        sorenessLevel: 20,
-        recommendation: 'full',
-      };
-    }
-
-    const trend = await this.calculateEnergyTrend(userId, date);
-    const recommendation = this.getEnergyRecommendation(
-      energyLog,
-      userContext.fatigue_threshold
-    );
-
-    return {
-      currentLevel: energyLog.energy_level || 75,
-      trend,
-      sleepQuality: energyLog.sleep_quality || 'good',
-      stressLevel: energyLog.stress_level || 30,
-      sorenessLevel: energyLog.soreness_level || 20,
-      recommendation: recommendation.type,
-      reason: recommendation.reason,
-    };
+    return await energyService.getEnergyContext(userId, date);
   }
 
   /**
@@ -264,34 +170,7 @@ export class ContextAwarenessEngine {
     date: Date,
     workoutType: string
   ): Promise<RecoveryContext> {
-    const recentWorkouts = await prisma.executed_workouts.findMany({
-      where: {
-        user_id: userId,
-        executed_at: {
-          gte: new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000),
-          lt: date,
-        },
-      },
-      orderBy: { executed_at: 'desc' },
-      take: 5,
-    });
-
-    const lastHard = recentWorkouts.find(
-      (w) => w.workout_type && ['long_run', 'tempo', 'interval'].includes(w.workout_type)
-    );
-
-    const lastWorkout = recentWorkouts[0];
-    const hoursSince = lastWorkout
-      ? (date.getTime() - lastWorkout.executed_at.getTime()) / (1000 * 60 * 60)
-      : 1000;
-
-    const userContext = await prisma.user_contexts.findUnique({
-      where: { user_id: userId },
-    });
-
-    const needsRest = userContext?.mandatory_rest_locked && hoursSince < (userContext?.min_recovery_hours || 24);
-    const isFatigued = recentWorkouts.length >= 5;
-    const canDoHard = !lastHard || hoursSince > 48;
+    return await recoveryService.getRecoveryContext(userId, date, workoutType);
 
     return {
       lastHardWorkout: lastHard?.executed_at || null,

@@ -8,7 +8,7 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import { WorkoutMatcher } from '../core/WorkoutMatcher';
+import { SmartWorkoutMatcher } from '../smart-workout-matcher';
 import { adjustmentEngine } from '../adjustment-engine';
 import { mlOrchestrator } from '../ml/MLOrchestrator';
 import { notificationService } from '@/lib/notifications/NotificationService';
@@ -86,7 +86,7 @@ export class ScheduledTasks {
           // Tenta match para cada treino
           for (const workout of recentWorkouts) {
             try {
-              const matcher = new WorkoutMatcher();
+              const matcher = new SmartWorkoutMatcher();
               const matches = await matcher.findMatches({
                 userId,
                 executedWorkout: workout,
