@@ -7,6 +7,126 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.3.0] - 02/DEZ/2025 17:40 UTC ✅ **IMPLEMENTADO - ATHERA FLEX FASE 3**
+
+### 🤖 Feature: Machine Learning + Sistema de Notificações Completo
+
+**Status:** ✅ **FASE 3 100% CONCLUÍDA**
+
+#### Resumo Executivo
+Sistema de Machine Learning completo com 4 modelos inteligentes + Sistema de notificações multicanal (email/push/in-app) + Auto-matching inteligente + Cron jobs.
+
+#### Implementações
+
+**1. ML System (4 Modelos)**
+- **UserPatternLearner:** Aprende padrões do usuário (dias preferidos, horários, volume típico)
+- **WorkoutMatcher:** Score de matching (data, tipo, volume, intensidade)
+- **ReschedulePredictor:** Prevê probabilidade de reagendamento
+- **VolumeAdjuster:** Sugere ajustes de volume baseado em histórico
+- **MLOrchestrator:** Ponto único de entrada para todas decisões ML
+
+**2. Notification System (Multicanal)**
+- Email service (Resend)
+- Push service (OneSignal)
+- In-app notifications (banco de dados)
+- Preferências granulares por usuário
+- Templates HTML profissionais
+- 6 APIs REST completas
+
+**3. Integration**
+- Adjustment Engine com notificações automáticas
+- AutoMatchProcessor com auto-aceite inteligente (≥85% confiança)
+- Notificações para matches pendentes (60-84% confiança)
+- Cron job para limpeza de notificações antigas
+
+#### Arquivos Criados - Fase 3
+
+**ML Models:**
+- `lib/athera-flex/ml/types.ts`
+- `lib/athera-flex/ml/utils.ts`
+- `lib/athera-flex/ml/models/UserPatternLearner.ts`
+- `lib/athera-flex/ml/models/WorkoutMatcher.ts`
+- `lib/athera-flex/ml/models/ReschedulePredictor.ts`
+- `lib/athera-flex/ml/models/VolumeAdjuster.ts`
+- `lib/athera-flex/ml/MLOrchestrator.ts`
+
+**Notification System:**
+- `lib/notifications/NotificationService.ts`
+- `lib/email.ts`
+- `lib/push.ts`
+- `app/api/notifications/route.ts`
+- `app/api/notifications/[id]/read/route.ts`
+- `app/api/notifications/read-all/route.ts`
+- `app/api/notifications/preferences/route.ts`
+
+**Integration & Cron:**
+- `lib/athera-flex/adjustment-engine.ts` (updated)
+- `lib/athera-flex/jobs/AutoMatchProcessor.ts` (updated)
+- `lib/cron/notification-cleanup.ts`
+- `app/api/cron/cleanup-notifications/route.ts`
+
+**Documentation:**
+- `ATHERA_FLEX_FASE3_COMPLETE.md`
+
+#### Database Changes
+
+**Migration:** `MIGRATION_ATHERA_FLEX_v3_3_0_NOTIFICATIONS.sql`
+
+**Tabelas Criadas:**
+- `notification_preferences` (preferências de notificação)
+- `in_app_notifications` (notificações in-app)
+
+#### APIs REST Novas
+
+1. `GET /api/notifications` - Lista notificações
+2. `POST /api/notifications/:id/read` - Marca como lida
+3. `POST /api/notifications/read-all` - Marca todas como lidas
+4. `GET /api/notifications/preferences` - Busca preferências
+5. `PUT /api/notifications/preferences` - Atualiza preferências
+6. `GET /api/cron/cleanup-notifications` - Limpeza automática
+
+#### Configuração Necessária
+
+**Variáveis de Ambiente:**
+```bash
+RESEND_API_KEY=re_xxxxx
+ONESIGNAL_API_KEY=xxxxx
+ONESIGNAL_APP_ID=xxxxx
+CRON_SECRET=xxxxx
+```
+
+**Vercel Cron:**
+```json
+{
+  "crons": [{
+    "path": "/api/cron/cleanup-notifications",
+    "schedule": "0 3 * * *"
+  }]
+}
+```
+
+#### Fluxo Completo (Exemplo)
+
+1. **Atleta:** Faz longão 16km no sábado (Strava)
+2. **System:** Detecta treino planejado 15km domingo
+3. **ML:** Calcula match score 95.5% (≥85%)
+4. **Action:** Auto-aceita + marca como completo
+5. **Notification:** Envia email/push/in-app
+6. **Result:** Atleta vê notificação e confirma
+
+#### Métricas de Performance
+
+- ML execution: <200ms por decisão
+- Notificações: Async (não bloqueia operação principal)
+- Cache: 1h para analytics
+- Cleanup: Diário às 3h AM
+
+#### Próximos Passos
+
+**Fase 4:** Dashboard Analytics + Premium Paywall (3-4 semanas)
+
+---
+
 ## [v3.2.21] - 02/DEZ/2025 13:15 UTC ✅ **IMPLEMENTADO**
 
 ### 🚀 Feature: Gerenciador Centralizado de Tokens Strava

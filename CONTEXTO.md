@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.21 - Token Manager Centralizado (02/Dez/2025 13:15 UTC)  
-**Versão Atual:** v3.2.21 ✅ TOKEN AUTO-RENOVÁVEL IMPLEMENTADO  
-**Status:** ✅ **100% OPERACIONAL - DEPLOY PODE SER ESPAÇADO**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.3.0 - ATHERA FLEX FASE 3 COMPLETA (02/Dez/2025 17:40 UTC)  
+**Versão Atual:** v3.3.0 ✅ ML + NOTIFICAÇÕES IMPLEMENTADAS  
+**Status:** ✅ **100% OPERACIONAL - FASE 3 ATHERA FLEX COMPLETA**  
 **Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
@@ -15,7 +15,64 @@
 
 ---
 
-## 📋 Sessão 02/Dez/2025 - Hotfix Strava Sync
+## 🚀 ATHERA FLEX - Feature Completa (v3.3.0)
+
+### ✅ Fase 3 Implementada (02/Dez/2025)
+
+**Status:** 100% COMPLETA  
+**Documentação:** `ATHERA_FLEX_FASE3_COMPLETE.md`
+
+#### **1. Machine Learning System (4 Modelos)**
+- **UserPatternLearner:** Aprende padrões do usuário (90 dias)
+- **WorkoutMatcher:** Score inteligente (data/tipo/volume/intensidade)
+- **ReschedulePredictor:** Prevê reagendamentos
+- **VolumeAdjuster:** Sugere ajustes de volume
+- **MLOrchestrator:** Decisões centralizadas
+
+#### **2. Notification System (Multicanal)**
+- Email (Resend) - Templates profissionais
+- Push (OneSignal) - Notificações instantâneas
+- In-App - Badge + histórico 30 dias
+- Preferências granulares por usuário
+- 6 APIs REST completas
+
+#### **3. Auto-Matching Inteligente**
+- ≥85% confiança: Auto-aceita + notifica
+- 60-84% confiança: Pendente revisão + notifica
+- <60% confiança: Ignora
+- Integrado com Strava webhook
+
+#### **4. Cron Jobs**
+- Limpeza de notificações antigas (diário às 3h AM)
+- Endpoint: `/api/cron/cleanup-notifications`
+
+#### **Database Tables (Fase 3)**
+- `notification_preferences`
+- `in_app_notifications`
+
+#### **Variáveis Necessárias (Vercel)**
+```bash
+RESEND_API_KEY=re_xxxxx
+ONESIGNAL_API_KEY=xxxxx
+ONESIGNAL_APP_ID=xxxxx
+CRON_SECRET=xxxxx
+```
+
+### 🚧 Fase 4 - Em Planejamento
+
+**Objetivo:** Dashboard Analytics + Premium Paywall  
+**ETA:** 3-4 semanas  
+**Roadmap:** `ATHERA_FLEX_FASE4_ROADMAP.md`
+
+**Features:**
+1. Dashboard de Insights (KPIs, gráficos, padrões)
+2. Sistema Premium (Stripe integration)
+3. Onboarding Tutorial (primeiro acesso)
+4. Polish Final (email templates, testes E2E)
+
+---
+
+## 📋 Sessão 02/Dez/2025 - Athera Flex Fase 3
 
 ### 🐛 Problema Reportado
 - **Erro:** POST `/api/workouts/sync-strava` - 500 Internal Server Error
