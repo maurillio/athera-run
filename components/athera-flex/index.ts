@@ -24,5 +24,9 @@ export { EnergyDashboard } from './EnergyDashboard';
 export { RecoveryScore } from './RecoveryScore';
 export { ProactiveSuggestions } from './ProactiveSuggestions';
 
+// Premium Features (v3.4.0)
+export { AdjustmentExplanationModal } from './AdjustmentExplanationModal';
+export { ScenarioComparison } from './ScenarioComparison';
+
 // Types
 export type { MatchSuggestion } from '@/hooks/useWorkoutMatcher';
