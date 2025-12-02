@@ -7,6 +7,53 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.19] - 02/DEZ/2025 13:01 UTC ✅ **IMPLEMENTADO**
+
+### 🐛 Fix Crítico: Nome do Campo Token Strava
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+```
+Unknown argument `stravaTokenExpiresAt`. Available options are marked with ?.
+```
+
+- Código usava: `stravaTokenExpiresAt` ❌
+- Schema esperava: `stravaTokenExpiry` ✅
+- **Impacto:** Token refresh falhava → Strava 401 → Sincronização parava
+
+#### Solução
+Correção de **1 caractere** na linha 173:
+```typescript
+// ANTES
+stravaTokenExpiresAt: new Date(tokens.expires_at * 1000)
+
+// DEPOIS
+stravaTokenExpiry: new Date(tokens.expires_at * 1000)
+```
+
+#### Arquivo Modificado
+- `app/api/workouts/sync-strava/route.ts` (linha 173)
+
+#### Resultado
+- ✅ Token refresh funcionando
+- ✅ Strava API retorna 200
+- ✅ Sincronização automática operacional
+
+---
+
+## [v3.2.18] - 02/DEZ/2025 12:56 UTC ✅ **IMPLEMENTADO**
+
+### 🐛 Debug: Logs Detalhados de Matching
+
+**Status:** ✅ **CONCLUÍDO** (auxiliou identificação do v3.2.19)
+
+- Logs em cada etapa do matching
+- Comparação detalhada de datas e tipos
+- Identificação de atividades não encontradas
+
+---
+
 ## [v3.2.17] - 02/DEZ/2025 12:45 UTC ✅ **IMPLEMENTADO**
 
 ### 🐛 Hotfix: Correção Sincronização Strava (500 Error)

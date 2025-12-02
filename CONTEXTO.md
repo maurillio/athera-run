@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.17 - Hotfix Strava Sync (02/Dez/2025 12:45 UTC)  
-**Versão Atual:** v3.2.17 ✅ STRAVA SYNC COM LOGS DETALHADOS  
-**Status:** 🟡 **DEBUGGING EM PROGRESSO - AGUARDANDO LOGS**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.19 - Fix Token Refresh (02/Dez/2025 13:01 UTC)  
+**Versão Atual:** v3.2.19 ✅ TOKEN REFRESH CORRIGIDO  
+**Status:** ✅ **SINCRONIZAÇÃO STRAVA FUNCIONANDO**  
 **Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
