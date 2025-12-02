@@ -2,23 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "framework": "nextjs",
-  "installCommand": "npm install --force",
-  "crons": [
-    {
-      "path": "/api/athera-flex/cron/daily-matches",
-      "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/athera-flex/cron/train-models",
-      "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/athera-flex/cron/adjust-thresholds",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/athera-flex/cron/cleanup",
-      "schedule": "0 2 * * 0"
-    }
-  ]
+  "installCommand": "npm install --force"
 }
