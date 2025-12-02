@@ -126,7 +126,7 @@ export default function Step5Lifestyle({ data, onUpdate, onNext, onBack }: any) 
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
             <p className="text-sm text-amber-800">
               💡 <strong>Dica:</strong> Vamos ajustar o volume de treino para considerar 
-              o desgaste físico do seu trabalho. Qualidade > Quantidade!
+              o desgaste físico do seu trabalho. Qualidade &gt; Quantidade!
             </p>
           </div>
         )}
@@ -177,7 +177,7 @@ export default function Step5Lifestyle({ data, onUpdate, onNext, onBack }: any) 
           <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
             <p className="text-sm text-purple-800">
               💡 <strong>Dica:</strong> Vamos priorizar treinos mais curtos e eficientes, 
-              com flexibilidade para ajustes no dia a dia. Consistência > Perfeição!
+              com flexibilidade para ajustes no dia a dia. Consistência &gt; Perfeição!
             </p>
           </div>
         )}
