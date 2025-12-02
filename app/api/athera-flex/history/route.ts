@@ -1,58 +1,79 @@
 /**
- * ATHERA FLEX v3.3.0 - History API
- * GET - Busca histórico de ajustes do usuário
+ * API: Athera Flex History
+ * Retorna histórico de ajustes do usuário
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { adjustmentEngine } from '@/lib/athera-flex/adjustment-engine';
+import { prisma } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
-
-// ============================================================================
-// GET - Buscar histórico
-// ============================================================================
-
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
+    const session = await getServerSession();
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const limit = parseInt(searchParams.get('limit') || '50');
-
-    // Buscar user
+    // Buscar usuário
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      select: { id: true },
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Buscar histórico usando o engine
-    const adjustments = await adjustmentEngine.getAdjustmentHistory(user.id, limit);
+    // Buscar histórico de ajustes
+    const adjustments = await prisma.workoutAdjustment.findMany({
+      where: {
+        userId: user.id,
+      },
+      include: {
+        plannedWorkout: true,
+        completedWorkout: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 50, // Limitar a 50 últimos ajustes
+    });
+
+    // Formatar resposta
+    const history = adjustments.map((adj) => ({
+      id: adj.id,
+      type: adj.type,
+      status: adj.status,
+      confidence: adj.confidence,
+      reason: adj.reason,
+      createdAt: adj.createdAt,
+      plannedWorkout: adj.plannedWorkout
+        ? {
+            id: adj.plannedWorkout.id,
+            date: adj.plannedWorkout.date,
+            type: adj.plannedWorkout.type,
+            distance: adj.plannedWorkout.distance,
+          }
+        : null,
+      completedWorkout: adj.completedWorkout
+        ? {
+            id: adj.completedWorkout.id,
+            date: adj.completedWorkout.date,
+            type: adj.completedWorkout.type,
+            distance: adj.completedWorkout.distance,
+            duration: adj.completedWorkout.duration,
+          }
+        : null,
+    }));
 
     return NextResponse.json({
       success: true,
-      adjustments,
-      count: adjustments.length,
+      count: history.length,
+      adjustments: history,
     });
-  } catch (error: any) {
-    console.error('[History API] Error:', error);
+  } catch (error) {
+    console.error('[API] /api/athera-flex/history error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
