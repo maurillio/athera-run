@@ -229,22 +229,44 @@ export async function POST() {
       const workoutDate = new Date(workout.date);
       const workoutDateStr = workoutDate.toISOString().split('T')[0]; // YYYY-MM-DD
 
+      console.log(`[SYNC] Checking workout ${workout.id}:`, {
+        date: workoutDateStr,
+        type: workout.type,
+        subtype: workout.subtype,
+        isCompleted: workout.isCompleted
+      });
+
       // Tipos aceitos para este treino
       const acceptedTypes = typeMap[workout.type] || [];
+      console.log(`[SYNC] Accepted Strava types for ${workout.type}:`, acceptedTypes);
 
       // Buscar atividade do Strava no mesmo dia e tipo
       const matchingActivity = stravaActivities.find((activity: any) => {
         const activityDate = new Date(activity.start_date);
         const activityDateStr = activityDate.toISOString().split('T')[0];
 
+        console.log(`[SYNC] Comparing with Strava activity:`, {
+          id: activity.id,
+          date: activityDateStr,
+          type: activity.type,
+          sport_type: activity.sport_type,
+          name: activity.name
+        });
+
         // Mesmo dia?
-        if (activityDateStr !== workoutDateStr) return false;
+        if (activityDateStr !== workoutDateStr) {
+          console.log(`[SYNC] ❌ Date mismatch: ${activityDateStr} !== ${workoutDateStr}`);
+          return false;
+        }
 
         // Mesmo tipo?
-        return acceptedTypes.includes(activity.type || activity.sport_type);
+        const typeMatch = acceptedTypes.includes(activity.type || activity.sport_type);
+        console.log(`[SYNC] Type match: ${typeMatch} (${activity.type || activity.sport_type} in [${acceptedTypes.join(', ')}])`);
+        return typeMatch;
       });
 
       if (matchingActivity) {
+        console.log(`[SYNC] ✅ Found matching activity ${matchingActivity.id} for workout ${workout.id}`);
         try {
           // Verificar se já existe CompletedWorkout para esta atividade do Strava
           let completedWorkout = await prisma.completedWorkout.findUnique({
@@ -262,7 +284,7 @@ export async function POST() {
                 date: new Date(matchingActivity.start_date),
                 type: workout.type,
                 subtype: workout.subtype,
-                distance: matchingActivity.distance ? matchingActivity.distance / 1000 : null, // Strava em metros
+                distance: matchingActivity.distance ? matchingActivity.distance / 1000 : null,
                 duration: matchingActivity.moving_time,
                 pace: matchingActivity.average_speed ? 
                   Math.floor(1000 / (matchingActivity.average_speed * 60)).toString() : null,
@@ -272,6 +294,8 @@ export async function POST() {
                 calories: matchingActivity.calories
               }
             });
+          } else {
+            console.log(`[SYNC] CompletedWorkout already exists for Strava activity ${matchingActivity.id}`);
           }
 
           // Marcar CustomWorkout como completo e vincular ao CompletedWorkout (se ainda não estiver)
@@ -295,6 +319,8 @@ export async function POST() {
           console.error(`[SYNC] Error syncing workout ${workout.id}:`, syncError);
           // Continuar com próximo workout ao invés de parar tudo
         }
+      } else {
+        console.log(`[SYNC] ❌ No matching Strava activity found for workout ${workout.id}`);
       }
     }
 
