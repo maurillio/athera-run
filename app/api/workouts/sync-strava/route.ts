@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { fetchFromStrava } from '@/lib/strava-token';
+import { stravaSyncHook } from '@/lib/athera-flex/hooks/StravaSyncHook';
 
 /**
  * POST /api/workouts/sync-strava
@@ -274,6 +275,14 @@ export async function POST() {
     }
 
     console.log(`[SYNC] Sync complete: ${syncedCount}/${plannedWorkouts.length} workouts synced`);
+
+    // 🚀 ATHERA FLEX: Processa matches automaticamente após sync
+    try {
+      await stravaSyncHook.onSyncComplete(session.user.id);
+    } catch (flexError) {
+      console.error('[SYNC] Athera Flex error (non-blocking):', flexError);
+      // Não falha o sync se Athera Flex falhar
+    }
 
     return NextResponse.json({
       success: true,
