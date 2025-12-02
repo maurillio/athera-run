@@ -1,7 +1,7 @@
 // ATHERA FLEX - Pattern Analyzer
 // Analisa padrões de comportamento do usuário
 
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export interface UserPattern {
   userId: string;
@@ -24,7 +24,7 @@ export class PatternAnalyzer {
   static async analyzeReschedulePatterns(
     userId: string
   ): Promise<BehaviorInsight[]> {
-    const adjustments = await db.workoutAdjustment.findMany({
+    const adjustments = await prisma.workoutAdjustment.findMany({
       where: {
         userId,
         adjustmentType: 'reschedule',
@@ -133,7 +133,7 @@ export class PatternAnalyzer {
    * Analisa padrões de volume
    */
   static async analyzeVolumePatterns(userId: string): Promise<BehaviorInsight[]> {
-    const adjustments = await db.workoutAdjustment.findMany({
+    const adjustments = await prisma.workoutAdjustment.findMany({
       where: {
         userId,
         adjustmentType: 'volume_adjust',
@@ -175,7 +175,7 @@ export class PatternAnalyzer {
     patternData: any,
     confidence: number
   ): Promise<void> {
-    await db.userDecisionPattern.upsert({
+    await prisma.userDecisionPattern.upsert({
       where: {
         userId_patternType: {
           userId,
@@ -201,7 +201,7 @@ export class PatternAnalyzer {
    * Recupera todos os padrões do usuário
    */
   static async getUserPatterns(userId: string): Promise<UserPattern[]> {
-    const patterns = await db.userDecisionPattern.findMany({
+    const patterns = await prisma.userDecisionPattern.findMany({
       where: { userId },
       orderBy: { confidence: 'desc' },
     });
@@ -224,7 +224,7 @@ export class PatternAnalyzer {
   ): Promise<void> {
     const adjustment = feedback === 'positive' ? 0.1 : -0.1;
 
-    await db.userDecisionPattern.update({
+    await prisma.userDecisionPattern.update({
       where: {
         userId_patternType: {
           userId,

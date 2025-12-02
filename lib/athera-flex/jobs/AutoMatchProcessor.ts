@@ -4,7 +4,7 @@
  * Fase 3 - Sessão 4
  */
 
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 import { MLOrchestrator } from '../ml/MLOrchestrator';
 import { notificationService } from '@/lib/notifications/NotificationService';
 
@@ -31,7 +31,7 @@ export class AutoMatchProcessor {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-      const recentActivities = await db.stravaActivity.findMany({
+      const recentActivities = await prisma.stravaActivity.findMany({
         where: {
           userId,
           start_date: {
@@ -94,7 +94,7 @@ export class AutoMatchProcessor {
       const searchEnd = new Date(activityDate);
       searchEnd.setDate(searchEnd.getDate() + 3); // 3 dias depois
 
-      const candidateWorkouts = await db.customWorkout.findMany({
+      const candidateWorkouts = await prisma.customWorkout.findMany({
         where: {
           training_plan: {
             user_id: userId
@@ -155,7 +155,7 @@ export class AutoMatchProcessor {
         
         if (matchScore >= 85) {
           // Registra decisão
-          await db.workoutMatchDecision.create({
+          await prisma.workoutMatchDecision.create({
             data: {
               user_id: userId,
               planned_workout_id: workout.id,
@@ -169,7 +169,7 @@ export class AutoMatchProcessor {
           });
 
           // Atualiza workout
-          await db.customWorkout.update({
+          await prisma.customWorkout.update({
             where: { id: workout.id },
             data: {
               executed_workout_id: Number(activity.activity_id),
@@ -192,7 +192,7 @@ export class AutoMatchProcessor {
 
         // 4. Se match score entre 60-84%, registra como pendente revisão
         if (matchScore >= 60) {
-          await db.workoutMatchDecision.create({
+          await prisma.workoutMatchDecision.create({
             data: {
               user_id: userId,
               planned_workout_id: workout.id,
@@ -231,7 +231,7 @@ export class AutoMatchProcessor {
    * Processa matches pendentes que precisam de revisão do usuário
    */
   async getPendingMatches(userId: string): Promise<any[]> {
-    const pending = await db.workoutMatchDecision.findMany({
+    const pending = await prisma.workoutMatchDecision.findMany({
       where: {
         user_id: userId,
         was_accepted: false,
@@ -258,7 +258,7 @@ export class AutoMatchProcessor {
     // Busca dados da atividade Strava para cada match pendente
     const pendingWithActivity = await Promise.all(
       pending.map(async (match) => {
-        const activity = await db.stravaActivity.findUnique({
+        const activity = await prisma.stravaActivity.findUnique({
           where: {
             userId_activity_id: {
               userId: userId,
@@ -286,7 +286,7 @@ export class AutoMatchProcessor {
     accept: boolean,
     userReason?: string
   ): Promise<void> {
-    const decision = await db.workoutMatchDecision.findUnique({
+    const decision = await prisma.workoutMatchDecision.findUnique({
       where: { id: decisionId },
       include: { custom_workout: true }
     });
@@ -296,7 +296,7 @@ export class AutoMatchProcessor {
     }
 
     // Atualiza decisão
-    await db.workoutMatchDecision.update({
+    await prisma.workoutMatchDecision.update({
       where: { id: decisionId },
       data: {
         was_accepted: accept,
@@ -308,7 +308,7 @@ export class AutoMatchProcessor {
 
     // Se aceito, atualiza workout
     if (accept) {
-      await db.customWorkout.update({
+      await prisma.customWorkout.update({
         where: { id: decision.planned_workout_id },
         data: {
           executed_workout_id: Number(decision.strava_activity_id),

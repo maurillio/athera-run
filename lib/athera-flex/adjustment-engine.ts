@@ -1,7 +1,7 @@
 // ATHERA FLEX - Adjustment Engine
 // Centraliza toda lógica de ajustes de treinos
 
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export interface WorkoutAdjustment {
   id: number;
@@ -43,7 +43,7 @@ export class AdjustmentEngine {
       reason: string;
     }
   ): Promise<WorkoutAdjustment> {
-    const adjustment = await db.workoutAdjustment.create({
+    const adjustment = await prisma.workoutAdjustment.create({
       data: {
         userId,
         ...adjustmentData,
@@ -53,7 +53,7 @@ export class AdjustmentEngine {
     });
 
     // Atualiza custom_workouts com flags de flexibilidade
-    await db.customWorkout.update({
+    await prisma.customWorkout.update({
       where: { id: adjustmentData.originalWorkoutId },
       data: {
         was_rescheduled: true,
@@ -74,7 +74,7 @@ export class AdjustmentEngine {
     userId: string,
     adjustmentId: number
   ): Promise<void> {
-    const adjustment = await db.workoutAdjustment.findUnique({
+    const adjustment = await prisma.workoutAdjustment.findUnique({
       where: { id: adjustmentId },
     });
 
@@ -83,7 +83,7 @@ export class AdjustmentEngine {
     }
 
     // Reverte flags no custom_workouts
-    await db.customWorkout.update({
+    await prisma.customWorkout.update({
       where: { id: adjustment.originalWorkoutId },
       data: {
         was_rescheduled: false,
@@ -95,7 +95,7 @@ export class AdjustmentEngine {
     });
 
     // Remove o ajuste
-    await db.workoutAdjustment.delete({
+    await prisma.workoutAdjustment.delete({
       where: { id: adjustmentId },
     });
   }
@@ -107,7 +107,7 @@ export class AdjustmentEngine {
     userId: string,
     limit = 50
   ): Promise<WorkoutAdjustment[]> {
-    const adjustments = await db.workoutAdjustment.findMany({
+    const adjustments = await prisma.workoutAdjustment.findMany({
       where: { userId },
       orderBy: { appliedAt: 'desc' },
       take: limit,
@@ -125,7 +125,7 @@ export class AdjustmentEngine {
     reason: string
   ): Promise<void> {
     // Registra decisão do usuário
-    await db.workoutMatchDecision.create({
+    await prisma.workoutMatchDecision.create({
       data: {
         userId,
         originalWorkoutId,
@@ -151,7 +151,7 @@ export class AdjustmentEngine {
     reason: string
   ): Promise<void> {
     // Registra padrão de rejeição
-    await db.userDecisionPattern.upsert({
+    await prisma.userDecisionPattern.upsert({
       where: {
         userId_patternType: {
           userId,
@@ -182,11 +182,11 @@ export class AdjustmentEngine {
     userId: string,
     workoutId: number
   ): Promise<boolean> {
-    const workout = await db.customWorkout.findFirst({
+    const workout = await prisma.customWorkout.findFirst({
       where: {
         id: workoutId,
         planId: {
-          in: await db.userPlan
+          in: await prisma.userPlan
             .findMany({
               where: { userId },
               select: { id: true },
@@ -199,7 +199,7 @@ export class AdjustmentEngine {
     if (!workout) return false;
 
     // Verifica se está dentro da janela de flexibilidade
-    const settings = await db.userFlexSettings.findUnique({
+    const settings = await prisma.userFlexSettings.findUnique({
       where: { userId },
     });
 
@@ -213,3 +213,6 @@ export class AdjustmentEngine {
     return daysDiff <= (settings.flexibilityWindow || 3);
   }
 }
+
+// Singleton export for easy import
+export const adjustmentEngine = AdjustmentEngine;

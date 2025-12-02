@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { notificationService } from '@/lib/notifications/NotificationService';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 /**
  * POST /api/notifications/[id]/read
@@ -24,7 +24,7 @@ export async function POST(
     const notificationId = parseInt(params.id);
 
     // Verificar se a notificação pertence ao usuário
-    const notification = await db.in_app_notifications.findUnique({
+    const notification = await prisma.in_app_notifications.findUnique({
       where: { id: notificationId },
       select: { user_id: true }
     });

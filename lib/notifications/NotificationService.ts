@@ -2,7 +2,7 @@
 // ATHERA FLEX v3.3.0 - Sistema de Notificações Completo
 // Envia email, push e in-app notifications
 
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
 import { sendPushNotification } from '@/lib/push';
 
@@ -23,7 +23,7 @@ export class NotificationService {
     const { userId, type, title, message, data, actionUrl } = payload;
 
     // 1. Buscar preferências do usuário
-    const prefs = await db.notification_preferences.findUnique({
+    const prefs = await prisma.notification_preferences.findUnique({
       where: { user_id: userId }
     });
 
@@ -94,7 +94,7 @@ export class NotificationService {
     actionUrl?: string
   ): Promise<void> {
     try {
-      const user = await db.users.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
         select: { email: true, name: true }
       });
@@ -153,7 +153,7 @@ export class NotificationService {
     actionUrl?: string
   ): Promise<void> {
     try {
-      await db.in_app_notifications.create({
+      await prisma.in_app_notifications.create({
         data: {
           user_id: userId,
           type,
@@ -258,7 +258,7 @@ export class NotificationService {
    * Marca notificação in-app como lida
    */
   async markAsRead(notificationId: number): Promise<void> {
-    await db.in_app_notifications.update({
+    await prisma.in_app_notifications.update({
       where: { id: notificationId },
       data: { 
         is_read: true,
@@ -271,7 +271,7 @@ export class NotificationService {
    * Marca todas as notificações do usuário como lidas
    */
   async markAllAsRead(userId: string): Promise<void> {
-    await db.in_app_notifications.updateMany({
+    await prisma.in_app_notifications.updateMany({
       where: { 
         user_id: userId,
         is_read: false
@@ -287,7 +287,7 @@ export class NotificationService {
    * Busca notificações in-app do usuário
    */
   async getInAppNotifications(userId: string, limit: number = 20): Promise<any[]> {
-    return await db.in_app_notifications.findMany({
+    return await prisma.in_app_notifications.findMany({
       where: { user_id: userId },
       orderBy: { created_at: 'desc' },
       take: limit
@@ -298,7 +298,7 @@ export class NotificationService {
    * Conta notificações não lidas
    */
   async getUnreadCount(userId: string): Promise<number> {
-    return await db.in_app_notifications.count({
+    return await prisma.in_app_notifications.count({
       where: { 
         user_id: userId,
         is_read: false
@@ -313,7 +313,7 @@ export class NotificationService {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const result = await db.in_app_notifications.deleteMany({
+    const result = await prisma.in_app_notifications.deleteMany({
       where: {
         created_at: { lt: thirtyDaysAgo },
         is_read: true

@@ -7,9 +7,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { MLOrchestrator } from '@/lib/athera-flex/ml/MLOrchestrator';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {
@@ -102,7 +102,7 @@ export async function GET(req: NextRequest) {
 
     // Estatísticas gerais de matches
     if (scenario === 'check_match' || !scenario) {
-      const matchStats = await db.workoutMatchDecision.aggregate({
+      const matchStats = await prisma.workoutMatchDecision.aggregate({
         where: { user_id: session.user.id },
         _avg: {
           match_score: true,
@@ -113,7 +113,7 @@ export async function GET(req: NextRequest) {
         }
       });
 
-      const acceptanceRate = await db.workoutMatchDecision.count({
+      const acceptanceRate = await prisma.workoutMatchDecision.count({
         where: {
           user_id: session.user.id,
           was_accepted: true
@@ -135,7 +135,7 @@ export async function GET(req: NextRequest) {
 
     // Padrões aprendidos do usuário
     if (scenario === 'learn_pattern') {
-      const patterns = await db.userDecisionPatterns.findUnique({
+      const patterns = await prisma.userDecisionPatterns.findUnique({
         where: { user_id: session.user.id }
       });
 

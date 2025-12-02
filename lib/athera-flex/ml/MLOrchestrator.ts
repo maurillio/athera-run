@@ -8,7 +8,7 @@ import { ReschedulePredictor } from './models/ReschedulePredictor';
 import { VolumeAdjuster } from './models/VolumeAdjuster';
 import { WorkoutMatcher } from './models/WorkoutMatcher';
 import { UserPatternLearner } from './models/UserPatternLearner';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 interface OrchestratorInput {
   userId: string;
@@ -33,16 +33,24 @@ interface OrchestratorOutput {
 }
 
 export class MLOrchestrator {
+  private static instance: MLOrchestrator;
   private reschedulePredictor: ReschedulePredictor;
   private volumeAdjuster: VolumeAdjuster;
   private workoutMatcher: WorkoutMatcher;
   private patternLearner: UserPatternLearner;
 
-  constructor() {
+  private constructor() {
     this.reschedulePredictor = new ReschedulePredictor();
     this.volumeAdjuster = new VolumeAdjuster();
     this.workoutMatcher = new WorkoutMatcher();
     this.patternLearner = new UserPatternLearner();
+  }
+
+  public static getInstance(): MLOrchestrator {
+    if (!MLOrchestrator.instance) {
+      MLOrchestrator.instance = new MLOrchestrator();
+    }
+    return MLOrchestrator.instance;
   }
 
   /**
@@ -335,7 +343,7 @@ export class MLOrchestrator {
    * Helpers - Busca dados do banco
    */
   private async getRecentWorkouts(userId: string) {
-    const activities = await db.stravaActivity.findMany({
+    const activities = await prisma.stravaActivity.findMany({
       where: { userId },
       orderBy: { start_date: 'desc' },
       take: 30,
@@ -358,7 +366,7 @@ export class MLOrchestrator {
   }
 
   private async getUserPatterns(userId: string) {
-    const patterns = await db.userDecisionPatterns.findUnique({
+    const patterns = await prisma.userDecisionPatterns.findUnique({
       where: { user_id: userId }
     });
 
@@ -376,7 +384,7 @@ export class MLOrchestrator {
   }
 
   private async saveUserPatterns(userId: string, patterns: any) {
-    await db.userDecisionPatterns.upsert({
+    await prisma.userDecisionPatterns.upsert({
       where: { user_id: userId },
       create: {
         user_id: userId,

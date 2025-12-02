@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/db';
 import { MLService } from '@/lib/athera-flex/ml/ml-service';
 
 // Webhook chamado após sincronização Strava

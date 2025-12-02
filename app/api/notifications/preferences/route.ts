@@ -4,7 +4,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 /**
  * GET /api/notifications/preferences
@@ -17,13 +17,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    let prefs = await db.notification_preferences.findUnique({
+    let prefs = await prisma.notification_preferences.findUnique({
       where: { user_id: session.user.id }
     });
 
     // Se não existe, criar com defaults
     if (!prefs) {
-      prefs = await db.notification_preferences.create({
+      prefs = await prisma.notification_preferences.create({
         data: {
           user_id: session.user.id,
           email_enabled: true,
@@ -59,7 +59,7 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
 
-    const prefs = await db.notification_preferences.upsert({
+    const prefs = await prisma.notification_preferences.upsert({
       where: { user_id: session.user.id },
       update: {
         email_enabled: body.email_enabled,

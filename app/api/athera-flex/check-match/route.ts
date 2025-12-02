@@ -7,9 +7,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { MLOrchestrator } from '@/lib/athera-flex/ml/MLOrchestrator';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 interface CheckMatchRequest {
   plannedWorkoutId: number;
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Busca treino planejado
-    const plannedWorkout = await db.customWorkout.findUnique({
+    const plannedWorkout = await prisma.customWorkout.findUnique({
       where: { id: plannedWorkoutId },
       include: {
         training_plan: {
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Busca atividade Strava
-    const stravaActivity = await db.stravaActivity.findUnique({
+    const stravaActivity = await prisma.stravaActivity.findUnique({
       where: { 
         userId_activity_id: {
           userId: session.user.id,
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     // 7. Se match aceito, registra decisão
     if (result.action === 'accept') {
-      await db.workoutMatchDecision.create({
+      await prisma.workoutMatchDecision.create({
         data: {
           user_id: session.user.id,
           planned_workout_id: plannedWorkoutId,
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       });
 
       // Atualiza custom_workout
-      await db.customWorkout.update({
+      await prisma.customWorkout.update({
         where: { id: plannedWorkoutId },
         data: {
           executed_workout_id: parseInt(stravaActivityId),
@@ -166,7 +166,7 @@ export async function GET(req: NextRequest) {
       }, { status: 400 });
     }
 
-    const decisions = await db.workoutMatchDecision.findMany({
+    const decisions = await prisma.workoutMatchDecision.findMany({
       where: {
         user_id: session.user.id,
         planned_workout_id: parseInt(workoutId)
