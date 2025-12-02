@@ -6,7 +6,7 @@
   "crons": [
     {
       "path": "/api/athera-flex/cron/daily-matches",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 3 * * *"
     },
     {
       "path": "/api/athera-flex/cron/train-models",
