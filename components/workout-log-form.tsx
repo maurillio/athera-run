@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { toISODate } from '@/lib/utils/date-helpers';
 
 interface Workout { // Define Workout interface here for reusability
   id: number;
@@ -39,9 +40,20 @@ interface WorkoutLogFormProps {
 
 export default function WorkoutLogForm({ athleteId, initialWorkout, onWorkoutSaved }: WorkoutLogFormProps) {
   const [loading, setLoading] = useState(false);
-  const isStravaWorkout = initialWorkout?.source === 'strava'; // Determine if it's a Strava workout
+  const [clientDate, setClientDate] = useState('');
+  const isStravaWorkout = initialWorkout?.source === 'strava';
+  
+  // Set date only on client to avoid hydration mismatch
+  useEffect(() => {
+    if (!initialWorkout?.date) {
+      const today = new Date().toISOString().split('T')[0];
+      setClientDate(today);
+      setFormData(prev => ({ ...prev, date: today }));
+    }
+  }, [initialWorkout?.date]);
+  
   const [formData, setFormData] = useState({
-    date: initialWorkout?.date ? new Date(initialWorkout.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    date: initialWorkout?.date ? toISODate(initialWorkout.date) : '',
     type: initialWorkout?.type || 'running',
     subtype: initialWorkout?.subtype || 'easy',
     distance: initialWorkout?.distance?.toString() || '',
