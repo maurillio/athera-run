@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       select: {
         stravaAccessToken: true,
         stravaRefreshToken: true,
-        stravaTokenExpiresAt: true,
+        stravaTokenExpiry: true, // CORRETO: stravaTokenExpiry
         stravaAthleteId: true,
       },
     });
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     // Check if token needs refresh
     let accessToken = profile.stravaAccessToken;
     const now = Date.now();
-    const expiresAt = profile.stravaTokenExpiresAt ? new Date(profile.stravaTokenExpiresAt).getTime() : 0;
+    const expiresAt = profile.stravaTokenExpiry ? new Date(profile.stravaTokenExpiry).getTime() : 0; // CORRETO: stravaTokenExpiry
 
     if (expiresAt < now) {
       // Refresh token
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         data: {
           stravaAccessToken: tokens.access_token,
           stravaRefreshToken: tokens.refresh_token,
-          stravaTokenExpiresAt: new Date(tokens.expires_at * 1000),
+          stravaTokenExpiry: new Date(tokens.expires_at * 1000), // CORRETO: stravaTokenExpiry
         },
       });
     }
