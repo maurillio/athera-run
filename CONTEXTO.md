@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.16 - Mesclagem Estatísticas (28/Nov/2025 19:50 UTC)  
-**Versão Atual:** v3.2.16 ✅ SISTEMA CONSOLIDADO + SYNC AUTOMÁTICA  
-**Status:** ✅ **100% OPERACIONAL - INTERFACE UNIFICADA**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.17 - Hotfix Strava Sync (02/Dez/2025 12:45 UTC)  
+**Versão Atual:** v3.2.17 ✅ STRAVA SYNC COM LOGS DETALHADOS  
+**Status:** 🟡 **DEBUGGING EM PROGRESSO - AGUARDANDO LOGS**  
 **Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
@@ -12,6 +12,41 @@
 **Idioma:** 🇧🇷 **pt-BR ONLY** - Sistema métrico fixo (km, kg, °C)  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
 **URL Development:** 🚧 **Pronto para configurar** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
+
+---
+
+## 📋 Sessão 02/Dez/2025 - Hotfix Strava Sync
+
+### 🐛 Problema Reportado
+- **Erro:** POST `/api/workouts/sync-strava` - 500 Internal Server Error
+- **Impacto:** Treinos do Strava apareciam como "não feito"
+- **Usuário:** mmaurillio2@gmail.com (premium ativo)
+
+### ✅ Correções Aplicadas (v3.2.17)
+
+#### 1. **Logs Detalhados em Todo Fluxo**
+- Log de sessão, profile, workouts found
+- Log de chamadas Strava API
+- Log de cada workout sincronizado
+- Stack trace completo em erros fatais
+
+#### 2. **Tratamento de Erros Robusto**
+- Try-catch em operações de banco
+- Try-catch em fetch Strava API  
+- Try-catch em parse JSON
+- Erros individuais não param o processo
+
+#### 3. **Mensagens de Erro Detalhadas**
+- Retorna tipo do erro
+- Retorna mensagem específica
+- Retorna stack trace (em dev)
+
+### 🔍 Próximos Passos
+1. ✅ Deploy completado
+2. ⏳ Aguardar usuário testar
+3. ⏳ Verificar logs no Vercel Console
+4. ⏳ Identificar causa raiz do 500
+5. ⏳ Aplicar correção definitiva
 
 ---
 

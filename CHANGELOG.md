@@ -7,6 +7,58 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.17] - 02/DEZ/2025 12:45 UTC ✅ **IMPLEMENTADO**
+
+### 🐛 Hotfix: Correção Sincronização Strava (500 Error)
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema
+- Endpoint `/api/workouts/sync-strava` retornando 500 Internal Server Error
+- Treinos importados do Strava apareciam como "não feito"
+- Falta de logs detalhados para debug
+- Erros em qualquer etapa travavam todo processo
+
+#### Solução Implementada
+
+**1. Tratamento de Erros Robusto:**
+- Try-catch em TODAS operações de banco de dados
+- Try-catch em fetch para Strava API
+- Try-catch ao processar JSON
+- Erros individuais não travam processo completo
+
+**2. Logs Detalhados em Cada Etapa:**
+```typescript
+[SYNC] Session: { hasSession, userId, email }
+[SYNC] Profile found: { hasProfile, hasStrava, hasPlan }
+[SYNC] Searching for workouts after: <date>
+[SYNC] Found planned workouts: <count>
+[SYNC] Fetching Strava activities...
+[SYNC] Strava API response status: <status>
+[SYNC] Token refreshed successfully
+[SYNC] Fetched Strava activities: <count>
+[SYNC] Creating CompletedWorkout for Strava activity <id>
+[SYNC] Marking workout <id> as completed
+[SYNC] ✅ Workout <id> marcado como completo
+[SYNC] Sync complete: X/Y workouts synced
+```
+
+**3. Resiliência:**
+- Se um workout falhar, continua processando os outros
+- Retorna detalhes específicos do erro (message, type, stack)
+- Melhor handling de token refresh
+
+#### Arquivo Modificado
+- `app/api/workouts/sync-strava/route.ts` (logs + error handling)
+
+#### Próximos Passos
+1. Testar em produção (aguardar 2-3min deploy)
+2. Verificar logs no Vercel Console
+3. Identificar causa exata do erro 500
+4. Aplicar correção específica se necessário
+
+---
+
 ## [v3.2.16] - 28/NOV/2025 19:50 UTC ✅ **IMPLEMENTADO**
 
 ### 🔄 Refactor: Mesclagem Estatísticas do Atleta + Dados Strava
