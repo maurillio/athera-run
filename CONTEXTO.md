@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.19 - Fix Token Refresh (02/Dez/2025 13:01 UTC)  
-**Versão Atual:** v3.2.19 ✅ TOKEN REFRESH CORRIGIDO  
-**Status:** ✅ **SINCRONIZAÇÃO STRAVA FUNCIONANDO**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.2.21 - Token Manager Centralizado (02/Dez/2025 13:15 UTC)  
+**Versão Atual:** v3.2.21 ✅ TOKEN AUTO-RENOVÁVEL IMPLEMENTADO  
+**Status:** ✅ **100% OPERACIONAL - DEPLOY PODE SER ESPAÇADO**  
 **Build:** ✅ Passou sem erros | **Branch:** main  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  

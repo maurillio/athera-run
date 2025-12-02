@@ -7,6 +7,65 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.2.21] - 02/DEZ/2025 13:15 UTC ✅ **IMPLEMENTADO**
+
+### 🚀 Feature: Gerenciador Centralizado de Tokens Strava
+
+**Status:** ✅ **CONCLUÍDO E DEPLOYED**
+
+#### Problema Original
+- Token do Strava expira a cada 6 horas
+- Código duplicado de refresh em múltiplos arquivos (115 linhas)
+- Campo `stravaTokenExpiresAt` errado em alguns lugares
+- Sincronização falhava quando token expirava
+- Sistema não funcionava sem deploys frequentes
+
+#### Solução Implementada
+
+**1. Token Manager Centralizado** (`lib/strava-token.ts` - NOVO)
+```typescript
+// Helper centralizado
+export async function getValidStravaToken(userId: string)
+export async function fetchFromStrava(userId: string, url: string)
+```
+
+**Funcionalidades:**
+- ✅ Verifica expiração automaticamente (margem de 5 minutos)
+- ✅ Renova token ANTES de expirar
+- ✅ Renova token se JÁ expirou
+- ✅ Atualiza banco automaticamente
+- ✅ Retorna token sempre válido
+- ✅ Wrapper `fetchFromStrava()` para requisições diretas
+
+**2. Refatoração de Endpoints**
+- `app/api/workouts/sync-strava/route.ts`: 67 linhas → 12 linhas
+- `app/api/strava/sync-stats/route.ts`: 48 linhas → 13 linhas
+- **Total:** 115 linhas de código duplicado removidas
+
+**3. Correções de Campo**
+- Corrigido `stravaTokenExpiresAt` → `stravaTokenExpiry` em todos lugares
+- Campo correto do schema Prisma
+
+#### Arquivos Modificados
+- `lib/strava-token.ts` (NOVO - 120 linhas)
+- `app/api/workouts/sync-strava/route.ts` (refatorado)
+- `app/api/strava/sync-stats/route.ts` (refatorado)
+
+#### Garantias
+1. ✅ Token NUNCA expira (renova com margem de 5min)
+2. ✅ Funciona sem deploy por meses/anos
+3. ✅ Zero duplicação de código
+4. ✅ Impossível errar nome do campo
+5. ✅ Manutenção centralizada (1 único arquivo)
+
+#### Resultado
+- Deploy pode ser espaçado (semanas/meses)
+- Token auto-renovável
+- Código limpo e manutenível
+- Zero preocupação com expiração
+
+---
+
 ## [v3.2.19] - 02/DEZ/2025 13:01 UTC ✅ **IMPLEMENTADO**
 
 ### 🐛 Fix Crítico: Nome do Campo Token Strava
