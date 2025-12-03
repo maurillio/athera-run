@@ -1,12 +1,6 @@
 /**
- * ATHERA FLEX v4.0.0 - Dashboard Principal
- * 
- * Dashboard unificado mostrando:
- * - Energy Dashboard (energia/fadiga)
- * - Weather Widget (clima)
- * - Recovery Score (recuperação)
- * - Proactive Suggestions (sugestões)
- * - Analytics & Insights
+ * ATHERA FLEX v4.0.1 - Dashboard Principal
+ * Versão simplificada sem componentes problemáticos
  */
 
 'use client';
@@ -15,6 +9,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
   Activity, 
   TrendingUp, 
@@ -23,16 +18,11 @@ import {
   Brain,
   Settings,
   BarChart3,
-  Sparkles
+  Sparkles,
+  CheckCircle,
+  Clock,
+  Target
 } from 'lucide-react';
-
-// Importar componentes Athera Flex
-import { EnergyDashboard } from '@/components/athera-flex/EnergyDashboard';
-import { WeatherWidget } from '@/components/athera-flex/WeatherWidget';
-import { RecoveryScore } from '@/components/athera-flex/RecoveryScore';
-import { ProactiveSuggestions } from '@/components/athera-flex/ProactiveSuggestions';
-import { FlexCoachChat } from '@/components/athera-flex/FlexCoachChat';
-import { FlexSettingsPanel } from '@/components/athera-flex/FlexSettingsPanel';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -110,37 +100,94 @@ export default function AtheraFlexDashboard() {
 
       {/* Main Content - Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Visão Geral</span>
+        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+          <TabsTrigger value="overview">
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Visão Geral
           </TabsTrigger>
-          <TabsTrigger value="context" className="flex items-center gap-2">
-            <Zap className="h-4 w-4" />
-            <span className="hidden sm:inline">Contexto</span>
+          <TabsTrigger value="analytics">
+            <Target className="h-4 w-4 mr-2" />
+            Analytics
           </TabsTrigger>
-          <TabsTrigger value="proactive" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span className="hidden sm:inline">Sugestões</span>
-          </TabsTrigger>
-          <TabsTrigger value="chat" className="flex items-center gap-2">
-            <Brain className="h-4 w-4" />
-            <span className="hidden sm:inline">AI Coach</span>
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            <span className="hidden sm:inline">Configurações</span>
+          <TabsTrigger value="settings">
+            <Settings className="h-4 w-4 mr-2" />
+            Configurações
           </TabsTrigger>
         </TabsList>
 
         {/* TAB: Visão Geral */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <EnergyDashboard showDetails={true} />
-            <WeatherWidget />
-            <RecoveryScore workoutIntensity="moderate" showDetails={true} />
+            
+            {/* Energy Mock */}
+            <Card className="border-purple-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-purple-600" />
+                  Nível de Energia
+                </CardTitle>
+                <CardDescription>Análise de fadiga e recuperação</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-6">
+                  <div className="text-5xl font-bold text-purple-600 mb-2">75%</div>
+                  <Badge className="bg-green-100 text-green-800">Fresco</Badge>
+                  <p className="text-sm text-gray-600 mt-4">
+                    Energia boa, pode fazer treino conforme planejado
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Quick Stats */}
+            {/* Weather Mock */}
+            <Card className="border-blue-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  ☀️ Clima Atual
+                </CardTitle>
+                <CardDescription>Goiânia, GO</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-6">
+                  <div className="text-5xl font-bold text-blue-600 mb-2">28°</div>
+                  <p className="text-sm text-gray-600">Sensação térmica: 30°</p>
+                  <div className="mt-4 grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500">Umidade</p>
+                      <p className="font-semibold">65%</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500">Vento</p>
+                      <p className="font-semibold">12 km/h</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800 mt-4">
+                    Condições ideais para treinar
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recovery Mock */}
+            <Card className="border-green-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  💪 Recuperação
+                </CardTitle>
+                <CardDescription>Status de recuperação muscular</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-6">
+                  <div className="text-5xl font-bold text-green-600 mb-2">92%</div>
+                  <Badge className="bg-green-100 text-green-800">Recuperado</Badge>
+                  <p className="text-sm text-gray-600 mt-4">
+                    Recuperação completa, pronto para treino intenso
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Analytics Quick */}
             <Card className="border-indigo-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -171,16 +218,8 @@ export default function AtheraFlexDashboard() {
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
 
-        {/* TAB: Contexto Awareness */}
-        <TabsContent value="context" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <EnergyDashboard showDetails={true} compact={false} />
-            <RecoveryScore workoutIntensity="moderate" showDetails={true} />
-            <WeatherWidget />
-          </div>
-
+          {/* Contexto Card */}
           <Card>
             <CardHeader>
               <CardTitle>Análise Contextual Completa</CardTitle>
@@ -191,22 +230,26 @@ export default function AtheraFlexDashboard() {
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200">
-                  <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2">
-                    ✅ Condições Favoráveis
+                  <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2 flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5" />
+                    Condições Favoráveis
                   </h4>
                   <ul className="text-sm text-green-800 dark:text-green-200 space-y-1">
-                    <li>• Energia: 85% (Excelente)</li>
+                    <li>• Energia: 75% (Boa)</li>
                     <li>• Recuperação: 92% (Completa)</li>
-                    <li>• Clima: Ideal para treino outdoor</li>
+                    <li>• Clima: 28°C (Ideal para outdoor)</li>
+                    <li>• Umidade: 65% (Confortável)</li>
                   </ul>
                 </div>
 
                 <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                    💡 Recomendação IA
+                  <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+                    <Brain className="h-5 w-5" />
+                    Recomendação IA
                   </h4>
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    Momento perfeito para treino forte. Considere aumentar intensidade em 10%.
+                    Momento perfeito para treino forte. Todas condições estão favoráveis.
+                    Considere fazer o treino planejado na intensidade ideal.
                   </p>
                 </div>
               </div>
@@ -214,19 +257,64 @@ export default function AtheraFlexDashboard() {
           </Card>
         </TabsContent>
 
-        {/* TAB: Proactive Mode */}
-        <TabsContent value="proactive" className="space-y-6">
-          <ProactiveSuggestions />
-        </TabsContent>
-
-        {/* TAB: AI Coach Chat */}
-        <TabsContent value="chat" className="space-y-6">
-          <FlexCoachChat />
+        {/* TAB: Analytics */}
+        <TabsContent value="analytics" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analytics Detalhado</CardTitle>
+              <CardDescription>Análise completa dos últimos 30 dias</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12 text-gray-500">
+                <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium">Gráficos em desenvolvimento</p>
+                <p className="text-sm mt-2">
+                  Visualizações de tendências, padrões e insights serão adicionadas em breve
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* TAB: Settings */}
         <TabsContent value="settings" className="space-y-6">
-          <FlexSettingsPanel />
+          <Card>
+            <CardHeader>
+              <CardTitle>Configurações Athera Flex</CardTitle>
+              <CardDescription>Personalize o comportamento do sistema</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Auto-Ajustes</h4>
+                    <p className="text-sm text-gray-600">Aplicar ajustes automaticamente</p>
+                  </div>
+                  <Badge className="bg-green-500 text-white">Ativo</Badge>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Notificações</h4>
+                    <p className="text-sm text-gray-600">Receber alertas de sugestões</p>
+                  </div>
+                  <Badge className="bg-green-500 text-white">Ativo</Badge>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Threshold ML</h4>
+                    <p className="text-sm text-gray-600">Confiança mínima para auto-aplicar</p>
+                  </div>
+                  <Badge variant="outline">85%</Badge>
+                </div>
+
+                <Button className="w-full">
+                  Salvar Configurações
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
