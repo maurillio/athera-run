@@ -21,7 +21,7 @@ import PreferencesTab from '@/components/profile/v1.3.0/PreferencesTab';
 import RaceManagement from '@/components/race-management';
 import SubscriptionStatusCard from '@/components/subscription/subscription-status-card';
 import StravaDataSection from '@/components/profile/strava-data-section';
-import { FlexSettingsPanel, AdjustmentHistoryPanel } from '@/components/athera-flex';
+// import { FlexSettingsPanel, AdjustmentHistoryPanel } from '@/components/athera-flex';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
@@ -420,11 +420,19 @@ export default function PerfilPage() {
 
             {/* ATHERA FLEX: Configurações e Histórico */}
             <TabsContent value="flex" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>🚧 Athera Flex - Em Desenvolvimento</CardTitle>
+                  <CardDescription>
+                    Esta funcionalidade está sendo finalizada e estará disponível em breve.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
               {/* Settings */}
-              <FlexSettingsPanel />
+              {/* <FlexSettingsPanel /> */}
 
               {/* Histórico */}
-              <AdjustmentHistoryPanel limit={20} showFilters />
+              {/* <AdjustmentHistoryPanel limit={20} showFilters /> */}
             </TabsContent>
 
             {/* 4️⃣ CONFIGURAÇÕES: Assinatura + Plano + Conta */}
