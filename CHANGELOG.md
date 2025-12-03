@@ -7,6 +7,141 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.6] - 03/DEZ/2025 14:30 UTC 📅 **PROACTIVE WEEK VIEW - COMPLETE**
+
+### ✨ Nova Feature - Visualização Semanal Proativa
+
+**Implementado:**
+
+1. **Componente ProactiveWeekView** 📅
+   - Arquivo: `components/athera-flex/ProactiveWeekView.tsx` (450+ linhas)
+   - Grid semanal com 7 dias visualizados
+   - Navegação entre semanas (atual, próxima, +4 semanas)
+   - Forecast de energia por dia (0-100%)
+   - Indicadores de risco climático
+
+2. **Sistema de Sugestões Inteligentes:**
+   - Sugestões de reschedule com confiança ML
+   - Ajustes de intensidade baseados em contexto
+   - Swap de treinos entre dias
+   - Razão detalhada para cada sugestão
+   - Estimativa de melhoria esperada
+
+3. **Interatividade Completa:**
+   - Botões Accept/Reject por sugestão
+   - Loading states durante processamento
+   - Integração com `/api/athera-flex/proactive/*`
+   - Callbacks personalizáveis
+   - Auto-refresh após ações
+
+4. **UX Profissional:**
+   - Estado vazio otimizado
+   - Badge de contagem de sugestões por dia
+   - Cores por tipo de treino
+   - Responsive design (mobile-first)
+   - Fallback mock para desenvolvimento
+
+### 📊 Integração
+- ✅ Adicionado à tab "Visão Geral" do dashboard
+- ✅ API `/api/athera-flex/proactive/suggestions`
+- ✅ API `/api/athera-flex/proactive/apply-optimization`
+- ✅ Suporte a `weekOffset` query param
+
+### 🎯 Benefícios
+- ✅ Visão holística da semana
+- ✅ Decisões informadas sobre ajustes
+- ✅ Prevenção proativa de overtraining
+- ✅ Otimização automática de carga
+
+---
+
+## [v4.0.5] - 03/DEZ/2025 14:20 UTC 📈 **ENERGY DASHBOARD - GRÁFICOS**
+
+### ✨ Melhoria - Gráfico de Tendência
+
+**Implementado:**
+
+1. **Biblioteca Recharts Integrada** 📊
+   - Instalada via npm (com legacy-peer-deps)
+   - LineChart, XAxis, YAxis, Tooltip, CartesianGrid
+
+2. **Gráfico de Histórico (7 dias):**
+   - Linha de tendência de energia
+   - Eixos customizados (0-100%)
+   - Grid cartesiano para leitura
+   - Tooltip interativo com detalhes
+   - Cores purple theme (#9333ea)
+
+3. **Geração Inteligente de Histórico:**
+   - Função `generateMockHistory()`
+   - Baseada em nível e tendência atuais
+   - Simula improving/stable/declining
+   - 7 dias de dados gerados
+
+4. **UI Aprimorada:**
+   - Seção "Tendência (7 dias)"
+   - Ícone LineChart no header
+   - Altura responsiva (180px)
+   - Legenda explicativa
+
+### 📊 Dados Visualizados
+- ✅ Nível de energia (linha roxa)
+- ✅ Datas formatadas (DD MMM)
+- ✅ TSS acumulado por dia (futuro)
+
+---
+
+## [v4.0.4] - 03/DEZ/2025 14:10 UTC 🔌 **API ANALYTICS - DADOS REAIS**
+
+### ✨ Nova Feature - Backend Analytics Real
+
+**Implementado:**
+
+1. **API Analytics com Prisma** 🗄️
+   - Arquivo: `app/api/athera-flex/analytics/route.ts`
+   - Substituída implementação mockada
+   - Queries reais no PostgreSQL/Neon
+
+2. **Métricas Calculadas:**
+   - **Ajustes Hoje:** Count de `workout_adjustments` (createdAt >= hoje)
+   - **Ajustes Período:** Total no período (7d/30d/90d)
+   - **Taxa Aceitação:** `(approved / total) * 100`
+   - **Confiança ML:** Média de `confidence` dos ajustes
+   - **Sugestões Ativas:** Ajustes não aprovados/rejeitados
+   - **Tempo Economizado:** `matchDecisions.count * 5 min`
+   - **Padrões Detectados:** Matches com confidence ≥85%
+   - **Status:** Baseado em `user_flex_settings.autoAdjustEnabled`
+
+3. **Suporte a Períodos:**
+   - Query param `?period=7d|30d|90d`
+   - Data de início calculada dinamicamente
+   - Filtro por userId da sessão
+
+4. **Segurança:**
+   - Autenticação via NextAuth
+   - Validação de sessão (401)
+   - Filtro automático por usuário
+
+### 📊 Resposta API
+```typescript
+{
+  success: true,
+  analytics: {
+    adjustmentsToday: number,
+    adjustmentsWeek: number,
+    acceptanceRate: number,
+    mlConfidence: number,
+    activeSuggestions: number,
+    timeSaved: number,
+    patternsDetected: number,
+    status: 'active' | 'paused',
+    period: '7d' | '30d' | '90d'
+  }
+}
+```
+
+---
+
 ## [v4.0.3] - 03/DEZ/2025 13:40 UTC 📊 **DADOS REAIS - INTEGRAÇÃO COMPLETA**
 
 ### ✨ Nova Feature - Integração com APIs Reais
