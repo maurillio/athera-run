@@ -12,7 +12,7 @@ interface WorkoutDetailsProps {
   workout: EnhancedWorkout;
   isExpanded?: boolean;
   onToggle?: () => void;
-  onManualMatch?: (completedWorkoutId: number) => Promise<void>;
+  onManualMatch?: (completedWorkoutId: number, workoutId: number) => Promise<void>;
 }
 
 const intensityColors = {
@@ -46,7 +46,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
 
   const handleManualMatch = async (completedWorkoutId: number) => {
     if (onManualMatch) {
-      await onManualMatch(completedWorkoutId);
+      await onManualMatch(completedWorkoutId, workout.id);
     }
   };
 
@@ -261,14 +261,14 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
   );
 }
 
-function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (id: number) => Promise<void> }) {
+function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (completedId: number, workoutId: number) => Promise<void> }) {
   const [showManualMatch, setShowManualMatch] = useState(false);
 
   const handleManualMatch = async (completedWorkoutId: number) => {
     console.log('[SimpleWorkoutView] handleManualMatch called with:', { completedWorkoutId, workoutId: workout.id });
     if (onManualMatch) {
       console.log('[SimpleWorkoutView] Calling parent onManualMatch...');
-      await onManualMatch(completedWorkoutId);
+      await onManualMatch(completedWorkoutId, workout.id);
       console.log('[SimpleWorkoutView] Parent onManualMatch completed');
     } else {
       console.warn('[SimpleWorkoutView] No onManualMatch callback provided!');

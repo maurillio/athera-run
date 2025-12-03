@@ -158,10 +158,30 @@ export default function PlanoPage() {
     }
   };
 
-  const handleManualMatch = async (completedWorkoutId: number) => {
-    console.log('[PlanoPage] handleManualMatch called with completedWorkoutId:', completedWorkoutId);
-    // Recarrega o plano para refletir as mudanças
-    await fetchPlan();
+  const handleManualMatch = async (completedWorkoutId: number, workoutId: number) => {
+    console.log('[PlanoPage] handleManualMatch called with:', { completedWorkoutId, workoutId });
+    
+    try {
+      const res = await fetch('/api/workouts/manual-match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completedWorkoutId, workoutId })
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error('[PlanoPage] Match failed:', error);
+        return;
+      }
+
+      const result = await res.json();
+      console.log('[PlanoPage] Match successful:', result);
+      
+      // Recarrega o plano
+      await fetchPlan();
+    } catch (error) {
+      console.error('[PlanoPage] Error in handleManualMatch:', error);
+    }
   };
 
   if (status === 'loading' || loading) {
