@@ -5,10 +5,28 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import { useWorkoutMatcher } from '@/hooks/useWorkoutMatcher';
 import { WorkoutAdjustmentModal, SuggestionBadge, flexNotifications } from '@/components/athera-flex';
 import { useSession } from 'next-auth/react';
+
+// ============================================================================
+// CONTEXT para compartilhar estado entre componentes
+// ============================================================================
+
+interface FlexContextType {
+  suggestions: any[];
+  loading: boolean;
+  openSuggestionModal: (workoutId: number) => void;
+}
+
+const FlexContext = createContext<FlexContextType>({
+  suggestions: [],
+  loading: false,
+  openSuggestionModal: () => {},
+});
+
+export const useFlexContext = () => useContext(FlexContext);
 
 // ============================================================================
 // TYPES
@@ -94,15 +112,25 @@ export function CalendarFlexIntegration({ workouts }: CalendarFlexIntegrationPro
     }
   };
 
-  // Encontrar suggestion para um workout específico
-  const getSuggestionForWorkout = (workoutId: number) => {
-    return suggestions.find(
+  // Função para abrir modal de um workout específico
+  const openSuggestionModal = (workoutId: number) => {
+    const index = suggestions.findIndex(
       s => s.plannedWorkout?.id === workoutId || s.completedWorkoutId === workoutId
     );
+    if (index >= 0) {
+      setSelectedSuggestionIndex(index);
+    }
+  };
+
+  // Context value
+  const contextValue: FlexContextType = {
+    suggestions,
+    loading,
+    openSuggestionModal,
   };
 
   return (
-    <>
+    <FlexContext.Provider value={contextValue}>
       {/* Modal de Sugestões */}
       <WorkoutAdjustmentModal
         open={selectedSuggestionIndex !== null}
@@ -112,7 +140,7 @@ export function CalendarFlexIntegration({ workouts }: CalendarFlexIntegrationPro
         onReject={handleReject}
         isPremium={session?.user?.isPremium || false}
       />
-    </>
+    </FlexContext.Provider>
   );
 }
 
@@ -122,14 +150,10 @@ export function CalendarFlexIntegration({ workouts }: CalendarFlexIntegrationPro
 
 interface WorkoutFlexBadgeProps {
   workoutId: number;
-  onOpenModal?: () => void;
 }
 
-export function WorkoutFlexBadge({ workoutId, onOpenModal }: WorkoutFlexBadgeProps) {
-  const { suggestions } = useWorkoutMatcher({
-    enabled: true,
-    autoDetect: false, // Não auto-detectar, só mostrar existentes
-  });
+export function WorkoutFlexBadge({ workoutId }: WorkoutFlexBadgeProps) {
+  const { suggestions, openSuggestionModal } = useFlexContext();
 
   const suggestion = suggestions.find(
     s => s.plannedWorkout?.id === workoutId || s.completedWorkoutId === workoutId
@@ -138,15 +162,11 @@ export function WorkoutFlexBadge({ workoutId, onOpenModal }: WorkoutFlexBadgePro
   if (!suggestion) return null;
 
   return (
-    <div className="absolute -top-2 -left-2 z-10">
+    <div className="absolute -top-2 -right-2 z-10">
       <SuggestionBadge
         count={1}
         confidence={suggestion.bestMatch.confidence}
-        onClick={() => {
-          if (onOpenModal) {
-            onOpenModal();
-          }
-        }}
+        onClick={() => openSuggestionModal(workoutId)}
         animated
       />
     </div>
