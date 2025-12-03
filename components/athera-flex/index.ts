@@ -17,6 +17,7 @@ export { flexNotifications } from './FlexNotifications';
 
 // Integration
 export { CalendarFlexIntegration, WorkoutFlexBadge } from './CalendarFlexIntegration';
+export { ManualMatchModal } from './ManualMatchModal';
 
 // Context Awareness Components (v3.4.0)
 export { WeatherWidget } from './WeatherWidget';

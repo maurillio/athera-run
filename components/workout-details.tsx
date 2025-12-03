@@ -1,14 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Activity, Heart, Clock, Target, Zap, Wind, TrendingUp, AlertCircle, CheckCircle2, Flame, Brain, Award } from 'lucide-react';
 import type { EnhancedWorkout, WorkoutPhase, IntervalStructure } from '@/lib/types/workout-structure';
 import { isIntervalWorkout } from '@/lib/types/workout-structure';
+import { ManualMatchModal } from '@/components/athera-flex';
 
 interface WorkoutDetailsProps {
   workout: EnhancedWorkout;
   isExpanded?: boolean;
   onToggle?: () => void;
+  onManualMatch?: (completedWorkoutId: number) => Promise<void>;
 }
 
 const intensityColors = {
@@ -27,34 +31,52 @@ const intensityIcons = {
   'very-hard': Flame,
 };
 
-export function WorkoutDetails({ workout, isExpanded = false, onToggle }: WorkoutDetailsProps) {
+export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManualMatch }: WorkoutDetailsProps) {
+  const [showManualMatch, setShowManualMatch] = useState(false);
   const hasStructuredData = !!(workout.warmUpStructure || workout.mainWorkoutStruct || workout.coolDownStructure);
   
   // Se não tem estrutura detalhada, mostrar visualização simples
   if (!hasStructuredData) {
-    return <SimpleWorkoutView workout={workout} />;
+    return <SimpleWorkoutView workout={workout} onManualMatch={onManualMatch} />;
   }
 
   const intensityStyle = workout.intensityLevel 
     ? intensityColors[workout.intensityLevel] 
     : { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300', label: 'Normal' };
 
+  const handleManualMatch = async (completedWorkoutId: number) => {
+    if (onManualMatch) {
+      await onManualMatch(completedWorkoutId);
+    }
+  };
+
   return (
-    <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-4">
-      {/* Header do Treino */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-base font-semibold text-gray-900">
-              {workout.title}
-            </h3>
-            {workout.isCompleted && (
-              <Badge className="bg-green-500 text-white text-xs">
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Concluído
-              </Badge>
-            )}
-          </div>
+    <>
+      <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-4">
+        {/* Header do Treino */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <h3 className="text-base font-semibold text-gray-900">
+                {workout.title}
+              </h3>
+              {workout.isCompleted ? (
+                <Badge className="bg-green-500 text-white text-xs">
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Concluído
+                </Badge>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowManualMatch(true)}
+                  className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
+                >
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Marcar como Concluído
+                </Button>
+              )}
+            </div>
           
           {workout.objective && (
             <div className="flex items-start gap-2 mt-2 p-2 bg-blue-50 rounded border border-blue-200">
@@ -217,24 +239,58 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle }: Workou
         </details>
       )}
     </div>
+
+    {/* Manual Match Modal */}
+    <ManualMatchModal
+      open={showManualMatch}
+      onOpenChange={setShowManualMatch}
+      plannedWorkout={{
+        id: workout.id,
+        date: workout.date,
+        title: workout.title,
+        type: workout.type,
+        distance: workout.distance,
+      }}
+      onMatch={handleManualMatch}
+    />
+  </>
   );
 }
 
 // Componente auxiliar para visualização simples (sem estrutura detalhada)
-function SimpleWorkoutView({ workout }: { workout: EnhancedWorkout }) {
+function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (id: number) => Promise<void> }) {
+  const [showManualMatch, setShowManualMatch] = useState(false);
+
+  const handleManualMatch = async (completedWorkoutId: number) => {
+    if (onManualMatch) {
+      await onManualMatch(completedWorkoutId);
+    }
+  };
+
   return (
-    <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-3">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
+    <>
+      <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             <h3 className="text-base font-semibold text-gray-900">
               {workout.title}
             </h3>
-            {workout.isCompleted && (
+            {workout.isCompleted ? (
               <Badge className="bg-green-500 text-white text-xs">
                 <CheckCircle2 className="h-3 w-3 mr-1" />
                 Concluído
               </Badge>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowManualMatch(true)}
+                className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
+              >
+                <CheckCircle2 className="h-3 w-3 mr-1" />
+                Marcar como Concluído
+              </Button>
             )}
           </div>
           
@@ -264,7 +320,22 @@ function SimpleWorkoutView({ workout }: { workout: EnhancedWorkout }) {
         )}
       </div>
     </div>
-  );
+
+    {/* Manual Match Modal */}
+    <ManualMatchModal
+      open={showManualMatch}
+      onOpenChange={setShowManualMatch}
+      plannedWorkout={{
+        id: workout.id,
+        date: workout.date,
+        title: workout.title,
+        type: workout.type,
+        distance: workout.distance,
+      }}
+      onMatch={handleManualMatch}
+    />
+  </>
+);
 }
 
 // Componente para mostrar uma fase do treino
