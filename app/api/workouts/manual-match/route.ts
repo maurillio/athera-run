@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     console.log('[MANUAL MATCH] Fetching planned workout...');
     // Verificar se o treino planejado existe
-    const plannedWorkout = await prisma.workout.findUnique({
+    const plannedWorkout = await prisma.trainingPlanWorkout.findUnique({
       where: { id: plannedWorkoutId }
     });
 
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
 
     console.log('[MANUAL MATCH] Updating planned workout...');
     // Atualizar o treino planejado como concluído
-    await prisma.workout.update({
+    await prisma.trainingPlanWorkout.update({
       where: { id: plannedWorkoutId },
       data: {
         status: 'COMPLETED',
