@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.11 - Hotfix Manual Match API (03/Dez/2025 20:42 UTC)  
-**Versão Atual:** v4.0.11 ✅ ATHERA FLEX MANUAL MATCH CORRIGIDO  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.13 - Hotfix FK Constraint (03/Dez/2025 20:53 UTC)  
+**Versão Atual:** v4.0.13 ✅ ATHERA FLEX MANUAL MATCH CORRIGIDO (FK Fixed)  
 **Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  

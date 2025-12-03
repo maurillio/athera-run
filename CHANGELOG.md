@@ -7,6 +7,91 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.13] - 03/DEZ/2025 20:53 UTC 🚨 **HOTFIX: Foreign Key Constraint**
+
+### 🐛 Bug Corrigido - CRÍTICO
+
+**Problema:**  
+Foreign key constraint violation ao tentar atualizar `CompletedWorkout`:
+```
+Foreign key constraint violated on the constraint: `completed_workouts_plannedWorkoutId_fkey`
+```
+
+**Causa Raiz:**
+O campo `plannedWorkoutId` em `CompletedWorkout` tem foreign key para `Workout` (tabela antiga do sistema de planos gerados por IA), **NÃO** para `CustomWorkout` (tabela de planos customizados).
+
+**Schema Real:**
+```prisma
+model CompletedWorkout {
+  plannedWorkoutId Int?
+  plannedWorkout   Workout? @relation(fields: [plannedWorkoutId], references: [id])
+  // ☝️ Aponta para Workout, não CustomWorkout!
+}
+```
+
+**Correção Implementada:**
+
+1. **✅ Removido `plannedWorkoutId` do update de CompletedWorkout**
+   ```typescript
+   // ❌ ANTES (causava FK violation)
+   await prisma.completedWorkout.update({
+     where: { id: completedWorkoutId },
+     data: {
+       plannedWorkoutId: plannedWorkoutId,  // ← FK aponta pra Workout!
+       wasPlanned: true,
+       plannedDate: plannedWorkout.date,
+       wasSubstitution: true
+     }
+   });
+   
+   // ✅ DEPOIS (apenas metadados)
+   await prisma.completedWorkout.update({
+     where: { id: completedWorkoutId },
+     data: {
+       // plannedWorkoutId removido!
+       wasPlanned: true,
+       plannedDate: plannedWorkout.date,
+       wasSubstitution: true
+     }
+   });
+   ```
+
+2. **✅ Relação correta mantida via CustomWorkout**
+   ```typescript
+   // A relação é feita através de CustomWorkout
+   await prisma.customWorkout.update({
+     where: { id: plannedWorkoutId },
+     data: {
+       isCompleted: true,
+       completedWorkoutId: completedWorkoutId  // ✅ Relação correta!
+     }
+   });
+   ```
+
+**Relação no Schema:**
+```
+CustomWorkout.completedWorkoutId → CompletedWorkout.id ✅
+  (Esta é a relação usada para manual match)
+
+CompletedWorkout.plannedWorkoutId → Workout.id
+  (Esta é para planos gerados por IA, não usada aqui)
+```
+
+### 📊 Arquivos Modificados
+- `app/api/workouts/manual-match/route.ts` (reordenado e corrigido)
+
+### ✅ Validação
+- ✅ Build passou sem erros
+- ✅ Deploy em produção concluído
+- ⏳ Aguardando teste funcional
+
+### 🎯 Impacto
+- ✅ Foreign key constraint resolvida
+- ✅ Manual match agora funciona sem erros de banco
+- ✅ Relação CustomWorkout ↔ CompletedWorkout preservada
+
+---
+
 ## [v4.0.12] - 03/DEZ/2025 20:42 UTC 🚨 **HOTFIX: Manual Match API**
 
 ### 🐛 Bug Corrigido - CRÍTICO
