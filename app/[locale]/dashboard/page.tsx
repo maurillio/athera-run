@@ -52,8 +52,6 @@ import DashboardStravaWidget from '@/components/dashboard/strava-widget';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
-import { WeatherWidget } from '@/components/athera-flex/WeatherWidget';
-import { EnergyDashboard } from '@/components/athera-flex/EnergyDashboard';
 
 interface CustomPlan {
   id: number;
@@ -550,12 +548,6 @@ export default function DashboardPage() {
               {/* Strava Widget - Compact */}
               <div className="mb-8">
                 <DashboardStravaWidget compact={true} />
-              </div>
-
-              {/* Athera Flex - Smart Training Intelligence */}
-              <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <WeatherWidget />
-                <EnergyDashboard />
               </div>
 
               {/* Próximo Treino */}

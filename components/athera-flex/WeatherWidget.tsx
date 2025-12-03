@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import { useLocation } from '@/hooks/useLocation';
 import { Wind, Droplets, MapPin, Loader2, AlertCircle } from 'lucide-react';
 
@@ -14,19 +13,14 @@ interface WeatherData {
   icon: string;
 }
 
-function WeatherWidgetInner() {
+export function WeatherWidget() {
   const { location, loading: locationLoading } = useLocation();
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!location || !mounted) return;
+    if (!location) return;
 
     const fetchWeather = async () => {
       setWeatherLoading(true);
@@ -55,16 +49,7 @@ function WeatherWidgetInner() {
     };
 
     fetchWeather();
-  }, [location, mounted]);
-
-  // Evita hidratação no servidor
-  if (!mounted) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
-        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-      </div>
-    );
-  }
+  }, [location]);
 
   if (locationLoading || weatherLoading) {
     return (
@@ -74,21 +59,13 @@ function WeatherWidgetInner() {
     );
   }
 
-  if (error) {
+  if (error || !weather) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
         <div className="text-center text-gray-500">
           <AlertCircle className="h-6 w-6 mx-auto mb-2" />
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error || 'Clima indisponível'}</p>
         </div>
-      </div>
-    );
-  }
-
-  if (!weather) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
-        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -189,13 +166,3 @@ function WeatherWidgetInner() {
     </div>
   );
 }
-
-// Export como cliente-somente (sem SSR)
-export const WeatherWidget = dynamic(() => Promise.resolve(WeatherWidgetInner), {
-  ssr: false,
-  loading: () => (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
-      <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-    </div>
-  ),
-});

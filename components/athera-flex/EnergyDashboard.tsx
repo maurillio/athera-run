@@ -6,7 +6,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -59,7 +58,7 @@ interface EnergyDashboardProps {
 // COMPONENT
 // ============================================================================
 
-function EnergyDashboardInner({
+export function EnergyDashboard({
   date: propDate,
   showDetails = true,
   compact = false,
@@ -70,11 +69,6 @@ function EnergyDashboardInner({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [date, setDate] = useState<Date>(propDate || new Date());
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     setDate(propDate || new Date());
@@ -108,21 +102,8 @@ function EnergyDashboardInner({
   };
 
   useEffect(() => {
-    if (mounted) {
-      fetchEnergy();
-    }
-  }, [date, mounted]);
-
-  // Evita hidratação no servidor
-  if (!mounted) {
-    return (
-      <Card className={cn('border-purple-200', className)}>
-        <CardContent className="flex items-center justify-center py-6">
-          <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
-        </CardContent>
-      </Card>
-    );
-  }
+    fetchEnergy();
+  }, [date]);
 
   // Loading state
   if (loading) {
@@ -326,15 +307,3 @@ function EnergyDashboardInner({
     </Card>
   );
 }
-
-// Export como cliente-somente (sem SSR)
-export const EnergyDashboard = dynamic(() => Promise.resolve(EnergyDashboardInner), {
-  ssr: false,
-  loading: () => (
-    <Card className="border-purple-200">
-      <CardContent className="flex items-center justify-center py-6">
-        <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
-      </CardContent>
-    </Card>
-  ),
-});

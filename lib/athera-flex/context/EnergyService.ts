@@ -1,6 +1,6 @@
 // lib/athera-flex/context/EnergyService.ts
 import { EnergyContext } from './ContextAwarenessEngine';
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 interface WorkoutLoad {
   date: Date;
