@@ -67,8 +67,8 @@ interface ProactiveSuggestionsProps {
 // ============================================================================
 
 export function ProactiveSuggestions({
-  weekStart = new Date(),
-  weekEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  weekStart,
+  weekEnd,
   maxSuggestions = 5,
   showImpact = true,
   autoRefresh = false,
@@ -79,6 +79,17 @@ export function ProactiveSuggestions({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [applying, setApplying] = useState<string | null>(null);
+  const [dates, setDates] = useState({
+    start: weekStart || new Date(),
+    end: weekEnd || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  });
+
+  useEffect(() => {
+    setDates({
+      start: weekStart || new Date(),
+      end: weekEnd || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    });
+  }, [weekStart, weekEnd]);
 
   const fetchSuggestions = async () => {
     setLoading(true);
@@ -86,7 +97,7 @@ export function ProactiveSuggestions({
 
     try {
       const response = await fetch(
-        `/api/athera-flex/proactive/suggestions?start=${weekStart.toISOString()}&end=${weekEnd.toISOString()}`
+        `/api/athera-flex/proactive/suggestions?start=${dates.start.toISOString()}&end=${dates.end.toISOString()}`
       );
 
       if (!response.ok) {

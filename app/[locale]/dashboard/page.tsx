@@ -178,9 +178,9 @@ export default function DashboardPage() {
         setHasCustomPlan(true);
 
         if (data.currentWeek?.workouts) {
-          const now = new Date();
+          const now = Date.now();
           const upcoming = data.currentWeek.workouts
-            .filter((w: Workout) => !w.isCompleted && new Date(w.date) >= now)
+            .filter((w: Workout) => !w.isCompleted && new Date(w.date).getTime() >= now)
             .sort((a: Workout, b: Workout) => 
               new Date(a.date).getTime() - new Date(b.date).getTime()
             )[0];

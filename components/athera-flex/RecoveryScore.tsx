@@ -61,7 +61,7 @@ interface RecoveryScoreProps {
 // ============================================================================
 
 export function RecoveryScore({
-  date = new Date(),
+  date: propDate,
   workoutIntensity = 'moderate',
   showFactors = true,
   compact = false,
@@ -71,6 +71,11 @@ export function RecoveryScore({
   const [recovery, setRecovery] = useState<RecoveryData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<Date>(propDate || new Date());
+
+  useEffect(() => {
+    setDate(propDate || new Date());
+  }, [propDate]);
 
   const fetchRecovery = async () => {
     setLoading(true);

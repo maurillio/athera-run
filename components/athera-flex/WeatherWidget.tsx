@@ -53,7 +53,7 @@ interface WeatherWidgetProps {
 
 export function WeatherWidget({
   location = 'São Paulo',
-  workoutDate = new Date(),
+  workoutDate,
   isOutdoor = true,
   compact = false,
   className,
@@ -61,6 +61,15 @@ export function WeatherWidget({
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<Date>(workoutDate || new Date());
+
+  useEffect(() => {
+    if (workoutDate) {
+      setDate(workoutDate);
+    } else {
+      setDate(new Date());
+    }
+  }, [workoutDate]);
 
   const fetchWeather = async () => {
     if (!isOutdoor) return;
@@ -74,7 +83,7 @@ export function WeatherWidget({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           location,
-          workoutDate: workoutDate.toISOString(),
+          workoutDate: date.toISOString(),
           isOutdoor,
         }),
       });

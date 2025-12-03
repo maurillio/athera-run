@@ -119,8 +119,8 @@ export function AdjustmentHistoryPanel({
 
   // Calcular dias desde o ajuste
   const getDaysSince = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - new Date(date).getTime();
+    const now = Date.now();
+    const diff = now - new Date(date).getTime();
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   };
 

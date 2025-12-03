@@ -59,7 +59,7 @@ interface EnergyDashboardProps {
 // ============================================================================
 
 export function EnergyDashboard({
-  date = new Date(),
+  date: propDate,
   showDetails = true,
   compact = false,
   className,
@@ -68,6 +68,11 @@ export function EnergyDashboard({
   const [energy, setEnergy] = useState<EnergyData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<Date>(propDate || new Date());
+
+  useEffect(() => {
+    setDate(propDate || new Date());
+  }, [propDate]);
 
   const fetchEnergy = async () => {
     setLoading(true);
