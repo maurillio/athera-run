@@ -7,6 +7,66 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.10] - 03/DEZ/2025 17:25 UTC 💎 **PREMIUM SYSTEM - FASE 5 INICIADA**
+
+### ✨ Nova Feature - Sistema Premium Athera Flex
+
+**Implementado:**
+
+1. **AtheraFlexPaywall Component** 🔒
+   - Modal dedicado para features premium
+   - 6 features configuradas (auto-match, analytics, proactive, notifications, coach-chat, export)
+   - Grid de benefícios com ícones
+   - Pricing info (R$ 9,90/mês ou R$ 99/ano)
+   - CTA integrado com Stripe
+   - Design gradient purple-pink-orange
+   - Totalmente responsivo
+
+2. **useAtheraFlexPremium Hook** 🎣
+   - Gerencia estado premium do usuário
+   - Verifica permissões por feature
+   - Control de modal (show/hide)
+   - Status: FREE, TRIAL, ACTIVE, CANCELLED, PAST_DUE
+   - Auto-refresh ao montar
+   - Type-safe com TypeScript
+
+3. **Dashboard Integration** 🎯
+   - Badge dinâmico (FREE/TRIAL/PREMIUM)
+   - Tab Analytics com lock para FREE users
+   - Click handler para mostrar paywall
+   - Loading state durante verificação
+   - Button "Fazer Upgrade" para FREE users
+   - Premium badge para usuários pagos
+
+4. **Premium Features Matrix:**
+   - ✅ Auto-Match Inteligente (ML ≥85%)
+   - ✅ Analytics Completo (5+ gráficos)
+   - ✅ Modo Proativo (context-aware)
+   - ✅ Notificações Multicanal
+   - ✅ AI Coach Ilimitado
+   - ✅ Exportação PDF
+
+### 📊 Arquivos Criados
+- `components/athera-flex/AtheraFlexPaywall.tsx` (231 linhas)
+- `hooks/useAtheraFlexPremium.ts` (128 linhas)
+
+### 📝 Arquivos Modificados
+- `app/[locale]/athera-flex/page.tsx` (integração premium)
+
+### 🎯 Impacto
+- ✅ Athera Flex agora tem paywall funcional
+- ✅ Preparado para monetização
+- ✅ UX profissional de upgrade
+- ✅ Foundation para Stripe integration
+
+### 🚀 Próximos Passos
+- [ ] Integrar com Stripe checkout
+- [ ] Implementar webhook de pagamento
+- [ ] Criar página /pricing dedicada
+- [ ] Adicionar lock em mais features (proactive, coach-chat)
+
+---
+
 ## [v4.0.9] - 03/DEZ/2025 15:00 UTC 💬 **AI CHAT UI - MELHORADO**
 
 ### ✨ Melhoria - FlexCoachChat Interface Profissional
