@@ -7,6 +7,49 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.4.3] - 03/DEZ/2025 12:16 UTC 🎯 **ATHERA FLEX - FINAL FEATURES**
+
+### ✨ Features Implementadas
+
+**1. Weather API** 🌤️
+- API `/api/weather` - Integração OpenWeatherMap
+- Suporta cache de 30 minutos
+- Dados: temperatura, sensação térmica, umidade, vento
+- Recomendações para treinos outdoor
+- Arquivo: `app/api/weather/route.ts`
+
+**2. Export PDF API** 📄
+- API `/api/athera-flex/export-pdf` - Gerar relatórios
+- Exporta ajustes, decisões, analytics
+- Período personalizável
+- Formato JSON estruturado (PDF real em v4.1)
+- Arquivo: `app/api/athera-flex/export-pdf/route.ts`
+
+#### Status do Roadmap Athera Flex
+- ✅ **Fase 1:** Foundation - 100% completo
+- ✅ **Fase 2:** Smart Suggestions - 100% completo
+- ✅ **Fase 3:** Auto-Adjustment - 100% completo
+- ✅ **Fase 4:** Intelligence++ - 100% completo
+  - ✅ Weather Widget
+  - ✅ Energy Dashboard
+  - ✅ Proactive Mode
+  - ✅ AI Coach Chat
+  - ✅ Export Reports
+
+#### Arquivos Criados
+1. `app/api/weather/route.ts` (65 linhas)
+2. `app/api/athera-flex/export-pdf/route.ts` (120 linhas)
+
+#### Variáveis de Ambiente Necessárias
+- `OPENWEATHER_API_KEY` - ✅ Configurado no Vercel
+- `CRON_SECRET` - ✅ Configurado no Vercel
+
+#### Status
+- ⏳ Build: Em andamento
+- ⏳ Deploy: Pendente
+
+---
+
 ## [v3.4.2] - 03/DEZ/2025 12:08 UTC 🗑️ **FEATURE REMOVAL**
 
 ### ❌ Removido - Google Calendar Integration
