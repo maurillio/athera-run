@@ -1,6 +1,6 @@
 /**
- * ATHERA FLEX v4.0.1 - Dashboard Principal
- * Versão simplificada sem componentes problemáticos
+ * ATHERA FLEX v4.0.3 - Dashboard Principal
+ * Com dados reais das APIs
  */
 
 'use client';
@@ -21,11 +21,19 @@ import {
   Sparkles,
   CheckCircle,
   Clock,
-  Target
+  Target,
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
+import { useFlexAnalytics } from '@/hooks/useFlexAnalytics';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
+  const { analytics, loading, error, refresh } = useFlexAnalytics({
+    period: '7d',
+    autoRefresh: true,
+    refreshInterval: 60000, // 1 min
+  });
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -48,53 +56,70 @@ export default function AtheraFlexDashboard() {
 
         {/* Status Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-          <Card className="border-l-4 border-l-green-500">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Status do Sistema</p>
-                  <p className="text-2xl font-bold text-green-600">Ativo</p>
-                </div>
-                <Activity className="h-8 w-8 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
+          {loading ? (
+            // Loading State
+            Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} className="border-l-4 border-l-gray-300">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <>
+              <Card className={`border-l-4 ${analytics?.status === 'active' ? 'border-l-green-500' : 'border-l-gray-500'}`}>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Status do Sistema</p>
+                      <p className={`text-2xl font-bold ${analytics?.status === 'active' ? 'text-green-600' : 'text-gray-600'}`}>
+                        {analytics?.status === 'active' ? 'Ativo' : 'Pausado'}
+                      </p>
+                    </div>
+                    <Activity className={`h-8 w-8 ${analytics?.status === 'active' ? 'text-green-600' : 'text-gray-600'}`} />
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border-l-4 border-l-blue-500">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Ajustes Hoje</p>
-                  <p className="text-2xl font-bold text-blue-600">3</p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="border-l-4 border-l-blue-500">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Ajustes Hoje</p>
+                      <p className="text-2xl font-bold text-blue-600">{analytics?.adjustmentsToday || 0}</p>
+                    </div>
+                    <TrendingUp className="h-8 w-8 text-blue-600" />
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border-l-4 border-l-purple-500">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Confiança ML</p>
-                  <p className="text-2xl font-bold text-purple-600">87%</p>
-                </div>
-                <Brain className="h-8 w-8 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="border-l-4 border-l-purple-500">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Confiança ML</p>
+                      <p className="text-2xl font-bold text-purple-600">{analytics?.mlConfidence || 0}%</p>
+                    </div>
+                    <Brain className="h-8 w-8 text-purple-600" />
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border-l-4 border-l-orange-500">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Sugestões Ativas</p>
-                  <p className="text-2xl font-bold text-orange-600">5</p>
-                </div>
-                <Sparkles className="h-8 w-8 text-orange-600" />
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="border-l-4 border-l-orange-500">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Sugestões Ativas</p>
+                      <p className="text-2xl font-bold text-orange-600">{analytics?.activeSuggestions || 0}</p>
+                    </div>
+                    <Sparkles className="h-8 w-8 text-orange-600" />
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </div>
 
@@ -190,31 +215,49 @@ export default function AtheraFlexDashboard() {
             {/* Analytics Quick */}
             <Card className="border-indigo-200">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-indigo-600" />
-                  Analytics Rápido
-                </CardTitle>
-                <CardDescription>Últimos 7 dias</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart3 className="h-5 w-5 text-indigo-600" />
+                      Analytics Rápido
+                    </CardTitle>
+                    <CardDescription>Últimos 7 dias</CardDescription>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    onClick={refresh}
+                    disabled={loading}
+                  >
+                    <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Ajustes Automáticos</span>
-                    <span className="text-lg font-bold text-indigo-600">12</span>
+                {loading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-indigo-600" />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Taxa de Aceitação</span>
-                    <span className="text-lg font-bold text-green-600">92%</span>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Ajustes Automáticos</span>
+                      <span className="text-lg font-bold text-indigo-600">{analytics?.adjustmentsWeek || 0}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Taxa de Aceitação</span>
+                      <span className="text-lg font-bold text-green-600">{analytics?.acceptanceRate || 0}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Tempo Economizado</span>
+                      <span className="text-lg font-bold text-purple-600">{analytics?.timeSaved || 0} min</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Padrões Detectados</span>
+                      <span className="text-lg font-bold text-orange-600">{analytics?.patternsDetected || 0}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Tempo Economizado</span>
-                    <span className="text-lg font-bold text-purple-600">45 min</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Padrões Detectados</span>
-                    <span className="text-lg font-bold text-orange-600">7</span>
-                  </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           </div>
