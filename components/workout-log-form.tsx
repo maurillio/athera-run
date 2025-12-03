@@ -46,7 +46,10 @@ export default function WorkoutLogForm({ athleteId, initialWorkout, onWorkoutSav
   // Set date only on client to avoid hydration mismatch
   useEffect(() => {
     if (!initialWorkout?.date) {
-      const today = new Date().toISOString().split('T')[0];
+      // Use helper that returns empty string on server
+      const today = typeof window !== 'undefined' 
+        ? new Date().toISOString().split('T')[0]
+        : '';
       setClientDate(today);
       setFormData(prev => ({ ...prev, date: today }));
     }

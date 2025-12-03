@@ -14,6 +14,7 @@ import { Loader2, Calendar, ChevronLeft, ChevronRight, CheckCircle2, Target, Dum
 import { formatLocalizedDate, formatShortDate } from '@/lib/utils/date-formatter';
 import { WorkoutDetails } from '@/components/workout-details';
 import { CalendarFlexIntegration } from '@/components/athera-flex';
+import { ClientOnly } from '@/components/client-only';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
@@ -808,7 +809,9 @@ export default function PlanoPage() {
       </div>
 
       {/* Athera Flex Integration */}
-      <CalendarFlexIntegration workouts={currentWeek?.workouts || []} />
+      <ClientOnly>
+        <CalendarFlexIntegration workouts={currentWeek?.workouts || []} />
+      </ClientOnly>
     </>
   );
 }

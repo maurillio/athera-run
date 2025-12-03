@@ -1,0 +1,27 @@
+/**
+ * ClientOnly Component
+ * Prevents SSR hydration mismatches by rendering children only on client
+ */
+
+'use client';
+
+import { useEffect, useState, ReactNode } from 'react';
+
+interface ClientOnlyProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return <>{fallback}</>;
+  }
+
+  return <>{children}</>;
+}
