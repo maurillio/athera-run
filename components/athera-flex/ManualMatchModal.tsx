@@ -46,8 +46,8 @@ export function ManualMatchModal({
   const fetchCompletedWorkouts = async () => {
     setLoading(true);
     try {
-      // Buscar treinos dos últimos 14 dias
-      const response = await fetch('/api/workouts/recent?days=14');
+      // Buscar APENAS corridas dos últimos 7 dias
+      const response = await fetch('/api/workouts/completed-runs?days=7');
       if (response.ok) {
         const data = await response.json();
         setCompletedWorkouts(data.workouts || []);
@@ -79,14 +79,17 @@ export function ManualMatchModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent 
+        className="sm:max-w-2xl max-h-[80vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5 text-purple-600" />
             Marcar Treino como Concluído
           </DialogTitle>
           <DialogDescription>
-            Selecione qual treino você fez para marcar como concluído
+            Selecione qual corrida você fez nos últimos 7 dias
           </DialogDescription>
         </DialogHeader>
 
@@ -120,7 +123,8 @@ export function ManualMatchModal({
           ) : completedWorkouts.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Activity className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>Nenhum treino completado encontrado nos últimos 14 dias</p>
+              <p>Nenhuma corrida encontrada nos últimos 7 dias</p>
+              <p className="text-xs mt-2">Apenas corridas são listadas aqui</p>
             </div>
           ) : (
             <div className="space-y-2 max-h-[300px] overflow-y-auto">
