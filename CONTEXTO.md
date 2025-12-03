@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.10 - Premium System (03/Dez/2025 17:25 UTC)  
-**Versão Atual:** v4.0.10 ✅ ATHERA FLEX FASE 5 INICIADA (Premium System)  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.11 - Hotfix Manual Match API (03/Dez/2025 20:42 UTC)  
+**Versão Atual:** v4.0.11 ✅ ATHERA FLEX MANUAL MATCH CORRIGIDO  
 **Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  

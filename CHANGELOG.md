@@ -7,6 +7,81 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.12] - 03/DEZ/2025 20:42 UTC 🚨 **HOTFIX: Manual Match API**
+
+### 🐛 Bug Corrigido - CRÍTICO
+
+**Problema:**  
+API `/api/workouts/manual-match` retornava erro 500:  
+```
+Cannot read properties of undefined (reading 'findUnique')
+```
+
+**Causa Raiz:**
+1. ❌ Import incorreto de prisma: `import { prisma } from '@/lib/db'`
+2. ❌ Tabela errada: `trainingPlanWorkout` (não existe)
+3. ❌ Campos incorretos no schema
+
+**Correções Implementadas:**
+
+1. **✅ Corrigido import do Prisma**
+   ```typescript
+   // Antes (errado)
+   import { prisma } from '@/lib/db';
+   
+   // Depois (correto)
+   import prisma from '@/lib/db';
+   ```
+
+2. **✅ Corrigida referência da tabela**
+   ```typescript
+   // Antes (errado)
+   await prisma.trainingPlanWorkout.findUnique(...)
+   
+   // Depois (correto)
+   await prisma.customWorkout.findUnique(...)
+   ```
+
+3. **✅ Atualizado schema do CompletedWorkout**
+   - Adicionado: `wasSubstitution: true` (treino feito em dia diferente)
+   - Preservado: `plannedWorkoutId`, `wasPlanned`, `plannedDate`
+
+4. **✅ Corrigido update do CustomWorkout**
+   ```typescript
+   // Antes (campos inexistentes)
+   status: 'COMPLETED'
+   completedAt: date
+   
+   // Depois (campos corretos)
+   isCompleted: true
+   completedWorkoutId: id
+   ```
+
+5. **✅ Adicionado WorkoutMatchDecision tracking**
+   - Registra match manual no histórico
+   - Campos corretos: `suggestedWorkoutId`, `action: 'accepted'`
+   - Inclui contexto: `dayOfWeek`, `weekOfPlan`
+
+### 📊 Arquivos Modificados
+- `app/api/workouts/manual-match/route.ts` (127 linhas)
+
+### ✅ Validação
+- ✅ Build passou sem erros
+- ✅ Deploy em produção concluído
+- ✅ Schema alinhado com Prisma
+
+### 📝 Documentação
+- Criado: `SESSAO_03DEZ2025_ATHERA_FLEX_CONTINUACAO.md`
+- Atualizado: `CONTEXTO.md` (v4.0.12)
+
+### 🎯 Impacto
+- ✅ Funcionalidade Manual Match agora 100% operacional
+- ✅ Usuários podem marcar treinos como concluídos
+- ✅ Sistema registra substituições corretamente
+- ✅ Tracking de decisões ativo
+
+---
+
 ## [v4.0.11] - 03/DEZ/2025 18:00 UTC 🎨 **UPGRADE BANNER CONTEXTUAL**
 
 ### ✨ Nova Feature - Banner para Usuários FREE
