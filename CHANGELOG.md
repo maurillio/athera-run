@@ -7,6 +7,40 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.4.2] - 03/DEZ/2025 12:08 UTC 🗑️ **FEATURE REMOVAL**
+
+### ❌ Removido - Google Calendar Integration
+
+**Decisão de Produto:** Remover completamente integração com Google Calendar
+
+**Motivo:**  
+Feature considerada intrusiva e desnecessária. Basear ajustes de treino na agenda pessoal adiciona complexidade sem valor real para o usuário.
+
+#### Arquivos Removidos
+- ❌ `lib/athera-flex/context/CalendarService.ts` (227 linhas)
+- ❌ `app/api/context/calendar/route.ts` (85 linhas)
+
+#### Arquivos Modificados
+1. **lib/athera-flex/context/ContextAwarenessEngine.ts**
+   - Removida importação `calendarService`
+   - Método `analyzeCalendar()` agora retorna `null`
+   - Comentário documentando desabilitação
+
+2. **lib/athera-flex/context/index.ts**
+   - Removido export `calendarService`
+
+#### Impacto
+- ✅ Zero breaking changes (feature nunca foi exposta ao usuário)
+- ✅ Simplifica Context Awareness Engine
+- ✅ Remove dependências futuras (Google Calendar API)
+- ✅ Foco mantido em: Weather, Energy, Recovery
+
+#### Status
+- ⏳ Build: Testando
+- ⏳ Deploy: Aguardando
+
+---
+
 ## [v3.4.1-hotfix] - 03/DEZ/2025 11:40 UTC 🐛 **HOTFIX - SSR HYDRATION DEFINITIVO**
 
 ### 🐛 Fix Crítico - React Hydration Errors

@@ -1,7 +1,6 @@
 // lib/athera-flex/context/ContextAwarenessEngine.ts
 import { prisma } from '@/lib/prisma';
 import { weatherService } from './WeatherService';
-import { calendarService } from './CalendarService';
 import { energyService } from './EnergyService';
 import { recoveryService } from './RecoveryService';
 
@@ -141,14 +140,15 @@ export class ContextAwarenessEngine {
 
   /**
    * Analisa conflitos de calendário
+   * REMOVIDO: Feature de Google Calendar desabilitada
    */
   private async analyzeCalendar(
     userId: number,
     date: Date,
     userContext: any
   ): Promise<CalendarContext | null> {
-    // Duração padrão: 60 minutos
-    return await calendarService.getCalendarContext(userId, date, 60);
+    // Google Calendar integration removed - feature disabled
+    return null;
   }
 
   /**
