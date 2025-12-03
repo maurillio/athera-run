@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useLocation } from '@/hooks/useLocation';
 import { Wind, Droplets, MapPin, Loader2, AlertCircle } from 'lucide-react';
 
@@ -13,14 +14,19 @@ interface WeatherData {
   icon: string;
 }
 
-export function WeatherWidget() {
+function WeatherWidgetInner() {
   const { location, loading: locationLoading } = useLocation();
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!location) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!location || !mounted) return;
 
     const fetchWeather = async () => {
       setWeatherLoading(true);
@@ -49,7 +55,16 @@ export function WeatherWidget() {
     };
 
     fetchWeather();
-  }, [location]);
+  }, [location, mounted]);
+
+  // Evita hidratação no servidor
+  if (!mounted) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   if (locationLoading || weatherLoading) {
     return (
@@ -174,3 +189,13 @@ export function WeatherWidget() {
     </div>
   );
 }
+
+// Export como cliente-somente (sem SSR)
+export const WeatherWidget = dynamic(() => Promise.resolve(WeatherWidgetInner), {
+  ssr: false,
+  loading: () => (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
+      <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+    </div>
+  ),
+});
