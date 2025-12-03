@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.4.1-hotfix - ATHERA FLEX FASE 4 + HOTFIXES (03/Dez/2025 12:00 UTC)  
-**Versão Atual:** v3.4.1-hotfix ✅ ATHERA FLEX 100% + HYDRATION FIXES  
-**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO (warnings de hidratação persistem mas não afetam funcionalidade)**  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.4.2 - Google Calendar Removal (03/Dez/2025 12:10 UTC)  
+**Versão Atual:** v3.4.2 ✅ ATHERA FLEX 100% (Google Calendar Removido)  
+**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
@@ -15,7 +15,7 @@
 
 ---
 
-## 🚀 ATHERA FLEX - Feature Completa (v3.4.0-WIP)
+## 🚀 ATHERA FLEX - Feature Completa (v3.4.2)
 
 ### ✅ Fase 3 Implementada (02/Dez/2025) - 100% COMPLETA
 
@@ -70,24 +70,26 @@ CRON_SECRET=xxxxx
 **Status:** ✅ **100% BACKEND + 100% FRONTEND**  
 **Roadmap:** `ATHERA_FLEX_FASE4_ROADMAP.md`
 
-#### **1. Context Awareness APIs (✅ 10/10 Endpoints REST)**
+#### **1. Context Awareness APIs (✅ 8/10 Endpoints REST - Calendar Removido)**
 
-**Context APIs (7):**
+**Context APIs (5 ativos):**
 - ✅ **POST /api/context/weather** - Análise de clima para outdoor
-- ✅ **GET /api/context/calendar** - Eventos e conflitos do dia  
-- ✅ **POST /api/context/calendar/sync** - Sincronizar Google Calendar
 - ✅ **GET /api/context/energy** - Score de energia/fadiga
 - ✅ **POST /api/context/energy/log** - Registrar sono/stress/dor
 - ✅ **GET /api/context/recovery** - Score de recuperação
 - ✅ **POST /api/context/recovery/score** - Salvar score de wearable
 - ✅ **POST /api/context/analyze** - Análise completa (orquestrador)
 
+**Removido (v3.4.2):**
+- ❌ **GET /api/context/calendar** - Feature removida
+- ❌ **POST /api/context/calendar/sync** - Feature removida
+
 **Proactive APIs (3):**
 - ✅ GET /api/athera-flex/proactive/suggestions
 - ✅ GET /api/athera-flex/proactive/best-days  
 - ✅ POST /api/athera-flex/proactive/apply-optimization
 
-#### **2. Context Services (✅ 7/7)**
+#### **2. Context Services (✅ 6/7 - Calendar Removido)**
 
 - ✅ **WeatherService** (220 linhas)
   - OpenWeather API integration
@@ -97,11 +99,10 @@ CRON_SECRET=xxxxx
   - Razões em português
   - Thresholds: <5°C ou >35°C = unsafe, chuva >5mm/h = unsafe, vento >40km/h = unsafe
   
-- ✅ **CalendarService** (200 linhas)
-  - Detecção de conflitos de agenda
-  - Eventos importantes (4h antes/depois do treino)
-  - Cálculo de slots disponíveis
-  - Mock preparado para Google Calendar API
+- ❌ **CalendarService** (REMOVIDO v3.4.2)
+  - Feature considerada intrusiva
+  - Google Calendar integration desabilitada
+  - Foco mantido em: Weather, Energy, Recovery
   
 - ✅ **EnergyService** (270 linhas)
   - Análise de fadiga via TSS acumulado (7 dias)
@@ -247,9 +248,9 @@ import {
 
 #### **Arquivos Criados - Fase 4 Total**
 
-**Context Awareness (5 arquivos):**
+**Context Awareness (4 arquivos - Calendar Removido v3.4.2):**
 - `lib/athera-flex/context/WeatherService.ts`
-- `lib/athera-flex/context/CalendarService.ts`
+- ❌ `lib/athera-flex/context/CalendarService.ts` (REMOVIDO)
 - `lib/athera-flex/context/EnergyService.ts`
 - `lib/athera-flex/context/RecoveryService.ts`
 - `lib/athera-flex/context/index.ts`
@@ -330,9 +331,14 @@ Migration já aplicada: `MIGRATION_ATHERA_FLEX_v4_0_0_CONTEXT_AWARENESS.sql`
 
 #### **Variáveis Necessárias - PRÓXIMA SESSÃO**
 ```bash
-OPENWEATHER_API_KEY=xxxxx          # OpenWeather API
-GOOGLE_CALENDAR_CLIENT_ID=xxxxx    # Google Calendar OAuth
-GOOGLE_CALENDAR_CLIENT_SECRET=xxxxx
+OPENWEATHER_API_KEY=xxxxx          # OpenWeather API (✅ Configurado)
+CRON_SECRET=xxxxx                  # Cron job security (✅ Configurado)
+```
+
+**Removido (v3.4.2):**
+```bash
+# ❌ GOOGLE_CALENDAR_CLIENT_ID=xxxxx    # Feature removida
+# ❌ GOOGLE_CALENDAR_CLIENT_SECRET=xxxxx
 ```
 
 #### **Migration Aplicada**
@@ -342,7 +348,7 @@ GOOGLE_CALENDAR_CLIENT_SECRET=xxxxx
 
 ---
 
-## 📋 Status Atual - 02/Dez/2025 18:33 UTC
+## 📋 Status Atual - 03/Dez/2025 12:10 UTC
 
 ### ✅ O Que Está Funcionando 100%
 
@@ -351,11 +357,12 @@ GOOGLE_CALENDAR_CLIENT_SECRET=xxxxx
 - ✅ Fase 2: UI Components (Match Cards, Settings, History)
 - ✅ Fase 3: ML + Notifications (4 modelos + multicanal)
 
-**Athera Flex - Fase 4 (Parcial):**
-- ✅ Context Awareness Services (5/5)
+**Athera Flex - Fase 4 (Parcial - Calendar Removido):**
+- ✅ Context Awareness Services (3/3 ativos: Weather, Energy, Recovery)
+- ❌ CalendarService removido (v3.4.2)
 - ✅ Proactive Mode Services (2/2)
 - ✅ Database Schema (5 tabelas)
-- ⏳ APIs REST (0/10 criadas)
+- ✅ APIs REST (8/10 criadas - 2 removidas)
 - ⏳ UI Components (0/4 criados)
 - ⏳ Premium Features (0/4 implementadas)
 
