@@ -265,8 +265,13 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
   const [showManualMatch, setShowManualMatch] = useState(false);
 
   const handleManualMatch = async (completedWorkoutId: number) => {
+    console.log('[SimpleWorkoutView] handleManualMatch called with:', { completedWorkoutId, workoutId: workout.id });
     if (onManualMatch) {
+      console.log('[SimpleWorkoutView] Calling parent onManualMatch...');
       await onManualMatch(completedWorkoutId);
+      console.log('[SimpleWorkoutView] Parent onManualMatch completed');
+    } else {
+      console.warn('[SimpleWorkoutView] No onManualMatch callback provided!');
     }
     setShowManualMatch(false);
   };

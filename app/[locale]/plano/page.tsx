@@ -158,6 +158,12 @@ export default function PlanoPage() {
     }
   };
 
+  const handleManualMatch = async (completedWorkoutId: number) => {
+    console.log('[PlanoPage] handleManualMatch called with completedWorkoutId:', completedWorkoutId);
+    // Recarrega o plano para refletir as mudanças
+    await fetchPlan();
+  };
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-slate-50 p-6 animate-fade-in">
@@ -731,6 +737,7 @@ export default function PlanoPage() {
                                         key={workout.id}
                                         workout={workout}
                                         isExpanded={true}
+                                        onManualMatch={handleManualMatch}
                                       />
                                     ))}
                                   </div>
