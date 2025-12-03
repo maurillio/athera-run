@@ -299,6 +299,10 @@ model AthleteProfile {
   stravaZones           Json?                @map("strava_zones") // v3.2.1 - Zonas de FC do Strava
   stravaStats           Json?                @map("strava_stats") // v3.2.1 - Estatísticas Strava
   stravaGear            Json?                @map("strava_gear") // v3.2.1 - Equipamentos Strava
+  city                  String? // v4.0.0 - Cidade do atleta (para weather)
+  latitude              Float? // v4.0.0 - Latitude (geolocation)
+  longitude             Float? // v4.0.0 - Longitude (geolocation)
+  lastLocationUpdate    DateTime? // v4.0.0 - Última atualização de localização
   aiAnalyses            AIAnalysis[]
   customPlan            CustomTrainingPlan? @relation(fields: [customPlanId], references: [id])
   user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)

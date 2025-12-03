@@ -1,295 +1,168 @@
-/**
- * ATHERA FLEX v3.4.0 - Weather Widget
- * Widget que mostra condições climáticas e segurança para treino outdoor
- */
-
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  Cloud, 
-  CloudRain, 
-  CloudSnow, 
-  Sun, 
-  Wind, 
-  Droplets,
-  Thermometer,
-  AlertTriangle,
-  CheckCircle,
-  Loader2,
-  RefreshCw
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-// ============================================================================
-// TYPES
-// ============================================================================
+import { useEffect, useState } from 'react';
+import { useLocation } from '@/hooks/useLocation';
+import { Wind, Droplets, MapPin, Loader2, AlertCircle } from 'lucide-react';
 
 interface WeatherData {
-  temperature: number;
-  condition: string;
-  description: string;
-  precipitation: number;
-  wind: number;
+  temp: number;
+  feels_like: number;
   humidity: number;
-  isOutdoorSafe: boolean;
-  reasons: string[];
+  wind_speed: number;
+  description: string;
+  icon: string;
 }
 
-interface WeatherWidgetProps {
-  location?: string;
-  workoutDate?: Date;
-  isOutdoor?: boolean;
-  compact?: boolean;
-  className?: string;
-}
-
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-export function WeatherWidget({
-  location = 'São Paulo',
-  workoutDate,
-  isOutdoor = true,
-  compact = false,
-  className,
-}: WeatherWidgetProps) {
+export function WeatherWidget() {
+  const { location, loading: locationLoading } = useLocation();
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [weatherLoading, setWeatherLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [date, setDate] = useState<Date>(workoutDate || new Date());
 
   useEffect(() => {
-    if (workoutDate) {
-      setDate(workoutDate);
-    } else {
-      setDate(new Date());
-    }
-  }, [workoutDate]);
+    if (!location) return;
 
-  const fetchWeather = async () => {
-    if (!isOutdoor) return;
+    const fetchWeather = async () => {
+      setWeatherLoading(true);
+      setError(null);
 
-    setLoading(true);
-    setError(null);
+      try {
+        const params = new URLSearchParams({
+          lat: location.latitude.toString(),
+          lon: location.longitude.toString(),
+        });
 
-    try {
-      const response = await fetch('/api/context/weather', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          location,
-          workoutDate: date.toISOString(),
-          isOutdoor,
-        }),
-      });
+        const response = await fetch(`/api/weather?${params}`);
+        
+        if (!response.ok) {
+          throw new Error('Erro ao buscar clima');
+        }
 
-      if (!response.ok) {
-        throw new Error('Erro ao buscar clima');
+        const data = await response.json();
+        setWeather(data);
+      } catch (err) {
+        console.error('[WeatherWidget] Error:', err);
+        setError('Não foi possível carregar o clima');
+      } finally {
+        setWeatherLoading(false);
       }
+    };
 
-      const data = await response.json();
-      setWeather(data);
-    } catch (err) {
-      console.error('Erro ao buscar clima:', err);
-      setError('Não foi possível carregar o clima');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
     fetchWeather();
-  }, [location, workoutDate, isOutdoor]);
+  }, [location]);
 
-  // Se não é outdoor, não mostrar
-  if (!isOutdoor) return null;
-
-  // Loading state
-  if (loading) {
+  if (locationLoading || weatherLoading) {
     return (
-      <Card className={cn('border-blue-200', className)}>
-        <CardContent className="flex items-center justify-center py-6">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-          <span className="ml-2 text-sm text-gray-600">Carregando clima...</span>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <Card className={cn('border-red-200', className)}>
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-red-600">
-              <AlertTriangle className="h-5 w-5 mr-2" />
-              <span className="text-sm">{error}</span>
-            </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={fetchWeather}
-              className="text-red-600 hover:text-red-700"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // No data
-  if (!weather) return null;
-
-  // Ícone de condição
-  const getWeatherIcon = () => {
-    const condition = weather.condition.toLowerCase();
-    if (condition.includes('rain')) return <CloudRain className="h-8 w-8" />;
-    if (condition.includes('snow')) return <CloudSnow className="h-8 w-8" />;
-    if (condition.includes('cloud')) return <Cloud className="h-8 w-8" />;
-    return <Sun className="h-8 w-8" />;
-  };
-
-  // Compact version (para calendário)
-  if (compact) {
-    return (
-      <div className={cn('flex items-center gap-2', className)}>
-        <div className={cn(
-          'flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium',
-          weather.isOutdoorSafe 
-            ? 'bg-green-100 text-green-700' 
-            : 'bg-red-100 text-red-700'
-        )}>
-          {weather.isOutdoorSafe ? (
-            <CheckCircle className="h-3 w-3" />
-          ) : (
-            <AlertTriangle className="h-3 w-3" />
-          )}
-          <span>{weather.temperature.toFixed(0)}°C</span>
-        </div>
-        {weather.precipitation > 0 && (
-          <Badge variant="outline" className="text-xs">
-            <CloudRain className="h-3 w-3 mr-1" />
-            {weather.precipitation.toFixed(0)}mm
-          </Badge>
-        )}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
       </div>
     );
   }
 
-  // Full version
+  if (error || !weather) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
+        <div className="text-center text-gray-500">
+          <AlertCircle className="h-6 w-6 mx-auto mb-2" />
+          <p className="text-sm">{error || 'Clima indisponível'}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const getWeatherAdvice = () => {
+    const temp = weather.temp;
+    const wind = weather.wind_speed;
+
+    if (temp > 30) {
+      return {
+        text: 'Calor intenso - hidrate-se bem',
+        color: 'text-red-600',
+      };
+    } else if (temp < 10) {
+      return {
+        text: 'Frio - use roupas adequadas',
+        color: 'text-blue-600',
+      };
+    } else if (wind > 30) {
+      return {
+        text: 'Vento forte - cuidado em trilhas',
+        color: 'text-orange-600',
+      };
+    } else {
+      return {
+        text: 'Condições ideais para treinar',
+        color: 'text-green-600',
+      };
+    }
+  };
+
+  const advice = getWeatherAdvice();
+
   return (
-    <Card className={cn(
-      'border-2',
-      weather.isOutdoorSafe ? 'border-green-200' : 'border-red-200',
-      className
-    )}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Condições do Clima</CardTitle>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={fetchWeather}
-            className="h-8 w-8 p-0"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </Button>
+    <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-md p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <MapPin className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {location?.city || 'Carregando...'}
+          </span>
+          <span className="text-xs text-gray-500">
+            ({location?.source === 'browser' ? '📍 GPS' : 
+              location?.source === 'ip' ? '🌐 IP' : 
+              location?.source === 'profile' ? '👤 Perfil' : '⚙️ Padrão'})
+          </span>
         </div>
-      </CardHeader>
+        <img
+          src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+          alt={weather.description}
+          className="w-12 h-12"
+        />
+      </div>
 
-      <CardContent className="space-y-4">
-        {/* Status principal */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className={cn(
-              'p-3 rounded-full',
-              weather.isOutdoorSafe ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
-            )}>
-              {getWeatherIcon()}
-            </div>
-            <div>
-              <p className="text-2xl font-bold">{weather.temperature.toFixed(0)}°C</p>
-              <p className="text-sm text-gray-600 capitalize">{weather.description}</p>
-            </div>
-          </div>
+      {/* Temperature */}
+      <div className="flex items-baseline gap-2 mb-2">
+        <span className="text-4xl font-bold text-gray-900 dark:text-white">
+          {Math.round(weather.temp)}°
+        </span>
+        <span className="text-sm text-gray-600 dark:text-gray-400">
+          Sensação {Math.round(weather.feels_like)}°
+        </span>
+      </div>
 
-          <Badge 
-            variant={weather.isOutdoorSafe ? 'default' : 'destructive'}
-            className="h-8 px-3"
-          >
-            {weather.isOutdoorSafe ? (
-              <>
-                <CheckCircle className="h-4 w-4 mr-1" />
-                Seguro
-              </>
-            ) : (
-              <>
-                <AlertTriangle className="h-4 w-4 mr-1" />
-                Cuidado
-              </>
-            )}
-          </Badge>
-        </div>
+      {/* Description */}
+      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 capitalize">
+        {weather.description}
+      </p>
 
-        {/* Métricas */}
-        <div className="grid grid-cols-3 gap-4 pt-2 border-t">
-          <div className="flex items-center gap-2">
-            <Droplets className="h-4 w-4 text-blue-500" />
-            <div>
-              <p className="text-xs text-gray-500">Chuva</p>
-              <p className="text-sm font-medium">{weather.precipitation.toFixed(1)}mm</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Wind className="h-4 w-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">Vento</p>
-              <p className="text-sm font-medium">{weather.wind.toFixed(0)}km/h</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Thermometer className="h-4 w-4 text-orange-500" />
-            <div>
-              <p className="text-xs text-gray-500">Umidade</p>
-              <p className="text-sm font-medium">{weather.humidity}%</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Avisos */}
-        {weather.reasons.length > 0 && (
-          <div className={cn(
-            'rounded-lg p-3 text-sm',
-            weather.isOutdoorSafe 
-              ? 'bg-green-50 border border-green-200 text-green-800'
-              : 'bg-red-50 border border-red-200 text-red-800'
-          )}>
-            <p className="font-medium mb-1">
-              {weather.isOutdoorSafe ? '✓ Condições favoráveis' : '⚠ Atenção'}
+      {/* Details */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <Wind className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+          <div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">Vento</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              {Math.round(weather.wind_speed)} km/h
             </p>
-            <ul className="space-y-1 text-xs">
-              {weather.reasons.map((reason, idx) => (
-                <li key={idx}>• {reason}</li>
-              ))}
-            </ul>
           </div>
-        )}
+        </div>
 
-        {/* Localização */}
-        <p className="text-xs text-gray-500 text-center pt-2 border-t">
-          📍 {location} • Atualizado agora
-        </p>
-      </CardContent>
-    </Card>
+        <div className="flex items-center gap-2">
+          <Droplets className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+          <div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">Umidade</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              {weather.humidity}%
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Advice */}
+      <div className={`text-sm font-medium ${advice.color} bg-white dark:bg-gray-800 rounded-md px-3 py-2 text-center`}>
+        {advice.text}
+      </div>
+    </div>
   );
 }

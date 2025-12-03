@@ -21,7 +21,9 @@ interface OpenWeatherResponse {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const city = searchParams.get('city') || 'São Paulo';
+    const city = searchParams.get('city');
+    const lat = searchParams.get('lat');
+    const lon = searchParams.get('lon');
     const apiKey = process.env.OPENWEATHER_API_KEY;
 
     if (!apiKey) {
@@ -32,7 +34,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)},BR&appid=${apiKey}&units=metric&lang=pt_br`;
+    // Prioriza lat/lon (mais preciso) ou usa cidade
+    let url: string;
+    if (lat && lon) {
+      url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`;
+    } else {
+      const cityName = city || 'São Paulo';
+      url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)},BR&appid=${apiKey}&units=metric&lang=pt_br`;
+    }
 
     const response = await fetch(url, {
       next: { revalidate: 1800 } // Cache por 30 minutos
