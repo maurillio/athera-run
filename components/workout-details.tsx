@@ -264,6 +264,13 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
 function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (id: number) => Promise<void> }) {
   const [showManualMatch, setShowManualMatch] = useState(false);
 
+  const handleManualMatch = async (completedWorkoutId: number) => {
+    if (onManualMatch) {
+      await onManualMatch(completedWorkoutId);
+    }
+    setShowManualMatch(false);
+  };
+
   return (
     <>
       <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 shadow-sm space-y-3">
