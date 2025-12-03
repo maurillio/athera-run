@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useFlexAnalytics } from '@/hooks/useFlexAnalytics';
 import { ProactiveWeekView } from '@/components/athera-flex/ProactiveWeekView';
+import { AnalyticsCharts } from '@/components/athera-flex/AnalyticsCharts';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -313,16 +314,10 @@ export default function AtheraFlexDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Analytics Detalhado</CardTitle>
-              <CardDescription>Análise completa dos últimos 30 dias</CardDescription>
+              <CardDescription>Análise completa dos últimos 7 dias</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12 text-gray-500">
-                <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium">Gráficos em desenvolvimento</p>
-                <p className="text-sm mt-2">
-                  Visualizações de tendências, padrões e insights serão adicionadas em breve
-                </p>
-              </div>
+              <AnalyticsCharts period="7d" />
             </CardContent>
           </Card>
         </TabsContent>
