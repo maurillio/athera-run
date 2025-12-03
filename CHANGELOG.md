@@ -7,6 +7,67 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.9] - 03/DEZ/2025 15:00 UTC 💬 **AI CHAT UI - MELHORADO**
+
+### ✨ Melhoria - FlexCoachChat Interface Profissional
+
+**Implementado:**
+
+1. **Textarea Multiline** 📝
+   - Substituído Input por Textarea
+   - Suporte Shift+Enter para nova linha
+   - Auto-resize (min 60px, max 120px)
+   - Enter envia mensagem
+
+2. **Typing Indicator Animado** ⏳
+   - 3 dots com animação bounce
+   - Timing escalonado (0ms, 150ms, 300ms)
+   - Avatar do bot durante typing
+   - Background cinza claro
+
+3. **Botões de Controle:**
+   - Refresh: Recarregar histórico
+   - Clear: Limpar conversa
+   - Confirmação antes de limpar
+   - Icons intuitivos
+
+4. **Melhorias UX:**
+   - Scroll automático para última mensagem
+   - Mensagem de boas-vindas contextual
+   - Error handling robusto
+   - Focus automático após enviar
+   - Loading state no botão Send
+
+5. **Design Moderno:**
+   - Avatar diferenciado (User: azul, Bot: gradient purple-pink)
+   - Bubbles com cantos arredondados
+   - Timestamp formatado (HH:mm)
+   - Max width 80% para mensagens
+   - Spacing otimizado
+
+### 🎨 Melhorias Visuais
+- Bubbles: `rounded-2xl` com canto apontando
+- User: `bg-blue-500 text-white rounded-tr-sm`
+- Bot: `bg-gray-100 text-gray-900 rounded-tl-sm`
+- Avatars: 8x8 círculos com ícones
+- Header: Border-bottom para separação clara
+
+### 🔧 Técnicas
+- useRef para scroll automático
+- useRef para focus do textarea
+- Estado local para messages
+- Async/await para API calls
+- Error boundaries implementados
+
+### 🎯 Benefícios
+- ✅ Interface estilo ChatGPT profissional
+- ✅ UX fluida e intuitiva
+- ✅ Suporte multiline
+- ✅ Typing indicator realista
+- ✅ Error recovery gracioso
+
+---
+
 ## [v4.0.8] - 03/DEZ/2025 15:10 UTC 🎛️ **FILTROS DE PERÍODO - DINÂMICOS**
 
 ### ✨ Nova Feature - Seletor de Período
