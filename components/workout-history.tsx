@@ -98,7 +98,10 @@ export default function WorkoutHistory({ athleteId }: WorkoutHistoryProps) {
 
   const getSubtypeLabel = (subtype: string | null, type: string) => {
     if (!subtype) return '';
-    const subtypeLabel = t(`subtypes.${subtype}` as any) || subtype;
+    
+    // Normalizar para lowercase
+    const normalizedSubtype = subtype.toLowerCase();
+    const subtypeLabel = t(`subtypes.${normalizedSubtype}` as any) || subtype;
     const typeLabel = t(`types.${type}` as any) || type;
     
     // Evitar duplicação quando tipo e subtipo são iguais
