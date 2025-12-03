@@ -2,10 +2,10 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.4.0-WIP - ATHERA FLEX FASE 4 COMPLETA (02/Dez/2025 20:00 UTC)  
-**Versão Atual:** v3.4.0-WIP 🚧 CONTEXT AWARENESS 100% COMPLETO (BACKEND + FRONTEND)  
-**Status:** ✅ **FASE 4 BACKEND + UI COMPLETOS - PRONTO PARA INTEGRAÇÃO**  
-**Build:** ✅ Passou sem erros | **Branch:** main  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v3.4.1-hotfix - ATHERA FLEX FASE 4 + HOTFIXES (03/Dez/2025 12:00 UTC)  
+**Versão Atual:** v3.4.1-hotfix ✅ ATHERA FLEX 100% + HYDRATION FIXES  
+**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO (warnings de hidratação persistem mas não afetam funcionalidade)**  
+**Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
