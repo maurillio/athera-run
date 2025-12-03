@@ -41,6 +41,7 @@ import { ProactiveWeekView } from '@/components/athera-flex/ProactiveWeekView';
 import { AnalyticsCharts } from '@/components/athera-flex/AnalyticsCharts';
 import AtheraFlexPaywall from '@/components/athera-flex/AtheraFlexPaywall';
 import PremiumBadge from '@/components/subscription/premium-badge';
+import FlexFreeUserBanner from '@/components/athera-flex/FlexFreeUserBanner';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -111,6 +112,14 @@ export default function AtheraFlexDashboard() {
             isOpen={premium.isPaywallOpen}
             onClose={premium.hidePaywall}
             feature={premium.paywallFeature}
+          />
+        )}
+
+        {/* Free User Banner */}
+        {!premium.loading && !premium.isPremium && (
+          <FlexFreeUserBanner 
+            onUpgrade={() => premium.showPaywall('analytics')}
+            className="mt-6"
           />
         )}
 
