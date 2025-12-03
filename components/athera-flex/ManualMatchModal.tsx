@@ -149,7 +149,7 @@ export function ManualMatchModal({
                       <CheckCircle2 className="h-5 w-5 text-purple-600" />
                     )}
                   </div>
-                  <p className="font-semibold text-gray-900">{workout.title || workout.type}</p>
+                  <p className="font-semibold text-gray-900">{workout.subtype || workout.type}</p>
                   <div className="flex gap-3 mt-2 text-sm text-gray-600">
                     <span>{workout.type}</span>
                     {workout.distance && <span>• {workout.distance}km</span>}
