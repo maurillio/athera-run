@@ -7,6 +7,41 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.4.1] - 03/DEZ/2025 11:10 UTC 🐛 **HOTFIX - HYDRATION + API**
+
+### 🐛 Fixes Críticos
+
+**1. API `/api/athera-flex/detect-matches` - 500 Error**
+- **Problema:** PrismaClientValidationError - Unknown argument `athleteId`
+- **Causa:** CustomTrainingPlan não tem campo athleteId direto
+- **Solução:** Query corrigida usando relação `athleteProfile: { id: profile.id }`
+- **Arquivo:** `app/api/athera-flex/detect-matches/route.ts`
+
+**2. React Hydration Warnings (#418, #423)**
+- **Problema:** Mismatch SSR/Cliente causando warnings no console
+- **Soluções aplicadas:**
+  - ✅ Criado `components/client-only.tsx` wrapper
+  - ✅ CalendarFlexIntegration agora roda só no cliente
+  - ✅ workout-log-form.tsx com `typeof window` check
+  - ✅ suppressHydrationWarning em layout.tsx (html + body)
+
+#### Arquivos Modificados
+```
+app/api/athera-flex/detect-matches/route.ts - Fix query Prisma
+app/layout.tsx - suppressHydrationWarning
+app/[locale]/plano/page.tsx - ClientOnly wrapper
+components/client-only.tsx - NOVO componente
+components/workout-log-form.tsx - typeof window check
+```
+
+#### Status
+- ✅ Build: Passou sem erros
+- ✅ Deploy: Completo
+- ✅ APIs: Funcionando
+- ✅ Hydration: Warnings resolvidos
+
+---
+
 ## [v3.4.0-WIP] - 02/DEZ/2025 20:00 UTC 🚧 **SESSÃO 4 - UI COMPONENTS COMPLETOS**
 
 ### 🎨 Feature: Context Awareness UI Components - Fase 4 Backend 100% COMPLETO
