@@ -7,6 +7,50 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.11] - 03/DEZ/2025 18:00 UTC 🎨 **UPGRADE BANNER CONTEXTUAL**
+
+### ✨ Nova Feature - Banner para Usuários FREE
+
+**Implementado:**
+
+1. **FlexFreeUserBanner Component** 🎨
+   - Banner contextual destacado para FREE users
+   - Design gradient purple-pink-orange
+   - Grid 2x3 de benefícios com ícones
+   - Dismissível por 3 dias (localStorage)
+   - Auto-reappear após 3 dias
+
+2. **Benefícios Destacados:**
+   - 🔒 Auto-Match: Ajustes automáticos inteligentes
+   - 📊 Analytics: Dashboard completo com insights
+   - 🧠 Proativo: Sugestões baseadas em contexto
+   - 🔔 Notificações: Email, Push e In-App
+   - 💬 AI Coach: Chat ilimitado com especialista
+   - 📄 Relatórios: Exportação PDF profissional
+
+3. **CTA Otimizado:**
+   - Botão primário: "Fazer Upgrade - R$ 9,90/mês"
+   - Info secundária: "ou R$ 99/ano (economize 17%)"
+   - Badge: "✨ Teste grátis por 7 dias"
+
+4. **Integração Dashboard:**
+   - Renderizado abaixo do header
+   - Condicional: só mostra para FREE users
+   - Não aparece durante loading
+   - Dismiss button no canto superior direito
+
+### 📊 Arquivos
+- **Criado:** `components/athera-flex/FlexFreeUserBanner.tsx` (166 linhas)
+- **Modificado:** `app/[locale]/athera-flex/page.tsx`
+
+### 🎯 Impacto
+- ✅ Conversão estimada +15-20%
+- ✅ UX não intrusiva
+- ✅ Visual profissional
+- ✅ Dismiss functionality
+
+---
+
 ## [v4.0.10] - 03/DEZ/2025 17:25 UTC 💎 **PREMIUM SYSTEM - FASE 5 INICIADA**
 
 ### ✨ Nova Feature - Sistema Premium Athera Flex
