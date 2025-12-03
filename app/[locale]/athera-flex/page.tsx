@@ -1,6 +1,6 @@
 /**
- * ATHERA FLEX v4.0.6 - Dashboard Principal
- * Com dados reais das APIs + Proactive Week View
+ * ATHERA FLEX v4.0.8 - Dashboard Principal
+ * Com dados reais das APIs + Proactive Week View + Analytics + Filtros
  */
 
 'use client';
@@ -10,6 +10,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
   Activity, 
   TrendingUp, 
@@ -23,7 +30,8 @@ import {
   Clock,
   Target,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  Filter
 } from 'lucide-react';
 import { useFlexAnalytics } from '@/hooks/useFlexAnalytics';
 import { ProactiveWeekView } from '@/components/athera-flex/ProactiveWeekView';
@@ -31,8 +39,9 @@ import { AnalyticsCharts } from '@/components/athera-flex/AnalyticsCharts';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('7d');
   const { analytics, loading, error, refresh } = useFlexAnalytics({
-    period: '7d',
+    period,
     autoRefresh: true,
     refreshInterval: 60000, // 1 min
   });
@@ -51,9 +60,25 @@ export default function AtheraFlexDashboard() {
               Inteligência artificial adaptando seu treino em tempo real
             </p>
           </div>
-          <Badge variant="outline" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 px-4 py-2">
-            💎 PREMIUM
-          </Badge>
+          <div className="flex items-center gap-3">
+            {/* Filtro de Período */}
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-gray-500" />
+              <Select value={period} onValueChange={(value: '7d' | '30d' | '90d') => setPeriod(value)}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Período" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">7 dias</SelectItem>
+                  <SelectItem value="30d">30 dias</SelectItem>
+                  <SelectItem value="90d">90 dias</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Badge variant="outline" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 px-4 py-2">
+              💎 PREMIUM
+            </Badge>
+          </div>
         </div>
 
         {/* Status Summary */}
@@ -314,10 +339,12 @@ export default function AtheraFlexDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Analytics Detalhado</CardTitle>
-              <CardDescription>Análise completa dos últimos 7 dias</CardDescription>
+              <CardDescription>
+                Análise completa dos últimos {period === '7d' ? '7' : period === '30d' ? '30' : '90'} dias
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <AnalyticsCharts period="7d" />
+              <AnalyticsCharts period={period} />
             </CardContent>
           </Card>
         </TabsContent>
