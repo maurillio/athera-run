@@ -73,25 +73,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('[MANUAL MATCH] Updating completed workout...');
-    // Atualizar o treino completado com o link ao planejado
-    const updated = await prisma.completedWorkout.update({
-      where: { id: completedWorkoutId },
-      data: {
-        plannedWorkoutId: plannedWorkoutId,
-        wasPlanned: true,
-        plannedDate: plannedWorkout.date,
-        wasSubstitution: true // Treino feito em dia diferente
-      }
-    });
-
     console.log('[MANUAL MATCH] Updating planned workout...');
-    // Atualizar o treino planejado como concluído
+    // Primeiro, atualizar o treino planejado como concluído (principal)
     await prisma.customWorkout.update({
       where: { id: plannedWorkoutId },
       data: {
         isCompleted: true,
         completedWorkoutId: completedWorkoutId
+      }
+    });
+
+    console.log('[MANUAL MATCH] Updating completed workout metadata...');
+    // Depois, atualizar apenas os metadados do treino completado (sem FK)
+    const updated = await prisma.completedWorkout.update({
+      where: { id: completedWorkoutId },
+      data: {
+        wasPlanned: true,
+        plannedDate: plannedWorkout.date,
+        wasSubstitution: true // Treino feito em dia diferente
       }
     });
 
