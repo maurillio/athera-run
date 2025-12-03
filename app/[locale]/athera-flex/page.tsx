@@ -1,6 +1,6 @@
 /**
- * ATHERA FLEX v4.0.8 - Dashboard Principal
- * Com dados reais das APIs + Proactive Week View + Analytics + Filtros
+ * ATHERA FLEX v4.0.10 - Dashboard Principal
+ * Com dados reais das APIs + Proactive Week View + Analytics + Filtros + Premium Paywall
  */
 
 'use client';
@@ -31,20 +31,28 @@ import {
   Target,
   Loader2,
   RefreshCw,
-  Filter
+  Filter,
+  Lock,
+  Crown
 } from 'lucide-react';
 import { useFlexAnalytics } from '@/hooks/useFlexAnalytics';
+import { useAtheraFlexPremium } from '@/hooks/useAtheraFlexPremium';
 import { ProactiveWeekView } from '@/components/athera-flex/ProactiveWeekView';
 import { AnalyticsCharts } from '@/components/athera-flex/AnalyticsCharts';
+import AtheraFlexPaywall from '@/components/athera-flex/AtheraFlexPaywall';
+import PremiumBadge from '@/components/subscription/premium-badge';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('7d');
+  
   const { analytics, loading, error, refresh } = useFlexAnalytics({
     period,
     autoRefresh: true,
     refreshInterval: 60000, // 1 min
   });
+
+  const premium = useAtheraFlexPremium();
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -75,11 +83,36 @@ export default function AtheraFlexDashboard() {
                 </SelectContent>
               </Select>
             </div>
-            <Badge variant="outline" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 px-4 py-2">
-              💎 PREMIUM
-            </Badge>
+            {/* Premium Badge Dinâmico */}
+            {premium.loading ? (
+              <Badge variant="outline" className="px-4 py-2">
+                <Loader2 className="h-3 w-3 animate-spin mr-2" />
+                Verificando...
+              </Badge>
+            ) : premium.isPremium ? (
+              <PremiumBadge status={premium.status} plan={premium.plan} className="px-4 py-2" />
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => premium.showPaywall('analytics')}
+                className="border-purple-200 hover:border-purple-400 hover:bg-purple-50"
+              >
+                <Crown className="h-4 w-4 mr-2 text-purple-600" />
+                Fazer Upgrade
+              </Button>
+            )}
           </div>
         </div>
+
+        {/* Paywall Modal */}
+        {premium.paywallFeature && (
+          <AtheraFlexPaywall
+            isOpen={premium.isPaywallOpen}
+            onClose={premium.hidePaywall}
+            feature={premium.paywallFeature}
+          />
+        )}
 
         {/* Status Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
@@ -154,12 +187,20 @@ export default function AtheraFlexDashboard() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 lg:w-auto">
           <TabsTrigger value="overview">
-            <BarChart3 className="h-4 w-4 mr-2" />
+            <Activity className="h-4 w-4 mr-2" />
             Visão Geral
           </TabsTrigger>
-          <TabsTrigger value="analytics">
-            <Target className="h-4 w-4 mr-2" />
+          <TabsTrigger 
+            value="analytics"
+            disabled={!premium.canUseFeature('analytics')}
+            onClick={() => !premium.canUseFeature('analytics') && premium.showPaywall('analytics')}
+            className="relative"
+          >
+            <BarChart3 className="h-4 w-4 mr-2" />
             Analytics
+            {!premium.canUseFeature('analytics') && (
+              <Lock className="h-3 w-3 ml-2 text-purple-600" />
+            )}
           </TabsTrigger>
           <TabsTrigger value="settings">
             <Settings className="h-4 w-4 mr-2" />
