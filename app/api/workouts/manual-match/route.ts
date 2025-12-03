@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/db';
+import prisma from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     console.log('[MANUAL MATCH] Fetching planned workout...');
     // Verificar se o treino planejado existe
-    const plannedWorkout = await prisma.trainingPlanWorkout.findUnique({
+    const plannedWorkout = await prisma.customWorkout.findUnique({
       where: { id: plannedWorkoutId }
     });
 
@@ -80,17 +80,32 @@ export async function POST(request: NextRequest) {
       data: {
         plannedWorkoutId: plannedWorkoutId,
         wasPlanned: true,
-        plannedDate: plannedWorkout.date
+        plannedDate: plannedWorkout.date,
+        wasSubstitution: true // Treino feito em dia diferente
       }
     });
 
     console.log('[MANUAL MATCH] Updating planned workout...');
     // Atualizar o treino planejado como concluído
-    await prisma.trainingPlanWorkout.update({
+    await prisma.customWorkout.update({
       where: { id: plannedWorkoutId },
       data: {
-        status: 'COMPLETED',
-        completedAt: completedWorkout.date
+        isCompleted: true,
+        completedWorkoutId: completedWorkoutId
+      }
+    });
+
+    console.log('[MANUAL MATCH] Creating match decision...');
+    // Registrar decisão de match para tracking
+    await prisma.workoutMatchDecision.create({
+      data: {
+        userId: user.id,
+        completedWorkoutId: completedWorkoutId,
+        suggestedWorkoutId: plannedWorkoutId,
+        confidence: 1.0,
+        action: 'accepted',
+        dayOfWeek: plannedWorkout.dayOfWeek,
+        weekOfPlan: new Date(plannedWorkout.date).getDay()
       }
     });
 
