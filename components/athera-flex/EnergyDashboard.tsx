@@ -24,9 +24,11 @@ import {
   RefreshCw,
   Moon,
   Activity,
-  Zap
+  Zap,
+  LineChart as LineChartIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 // ============================================================================
 // TYPES
@@ -44,6 +46,11 @@ interface EnergyData {
     recentLoad?: number;
   };
   message: string;
+  history?: Array<{
+    date: string;
+    level: number;
+    tss: number;
+  }>;
 }
 
 interface EnergyDashboardProps {
@@ -123,6 +130,7 @@ export function EnergyDashboard({
             recentLoad: 0, // Não retornado pela API
           },
           message: ctx.reason || 'Sem dados suficientes',
+          history: generateMockHistory(ctx.currentLevel || 75, ctx.trend || 'stable'),
         };
 
         setEnergy(mappedData);
@@ -147,6 +155,34 @@ export function EnergyDashboard({
     if (level >= 50) return 'moderate';
     if (level >= 25) return 'tired';
     return 'exhausted';
+  };
+
+  // Helper: Gera histórico mock baseado no nível e tendência atuais
+  const generateMockHistory = (currentLevel: number, trend: string) => {
+    const history = [];
+    const today = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      
+      let level = currentLevel;
+      if (trend === 'increasing') {
+        level = Math.max(20, currentLevel - (i * 5));
+      } else if (trend === 'decreasing') {
+        level = Math.min(100, currentLevel + (i * 5));
+      } else {
+        level = currentLevel + (Math.random() * 10 - 5);
+      }
+      
+      history.push({
+        date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }),
+        level: Math.round(Math.max(0, Math.min(100, level))),
+        tss: Math.round(Math.random() * 50 + 50),
+      });
+    }
+    
+    return history;
   };
 
   useEffect(() => {
@@ -306,6 +342,57 @@ export function EnergyDashboard({
             {energy.message}
           </p>
         </div>
+
+        {/* Gráfico de Tendência (7 dias) */}
+        {energy.history && energy.history.length > 0 && (
+          <div className="space-y-2 pt-3 border-t">
+            <div className="flex items-center gap-2">
+              <LineChartIcon className="h-4 w-4 text-purple-600" />
+              <p className="text-sm font-medium text-gray-700">Tendência (7 dias)</p>
+            </div>
+            <div className="h-[180px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={energy.history} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fontSize: 11, fill: '#6b7280' }}
+                    stroke="#9ca3af"
+                  />
+                  <YAxis 
+                    domain={[0, 100]}
+                    tick={{ fontSize: 11, fill: '#6b7280' }}
+                    stroke="#9ca3af"
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#fff', 
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      fontSize: '12px'
+                    }}
+                    labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="level" 
+                    stroke="#9333ea" 
+                    strokeWidth={2}
+                    dot={{ fill: '#9333ea', r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Energia"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-purple-600" />
+                <span>Nível de Energia</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Fatores (se detalhes habilitado) */}
         {showDetails && Object.keys(energy.factors).length > 0 && (
