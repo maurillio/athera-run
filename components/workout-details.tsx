@@ -69,7 +69,11 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => setShowManualMatch(true)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setShowManualMatch(true);
+                  }}
                   className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
                 >
                   <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -285,7 +289,11 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => setShowManualMatch(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setShowManualMatch(true);
+                }}
                 className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
               >
                 <CheckCircle2 className="h-3 w-3 mr-1" />
