@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
     // Buscar o usuário
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      include: { profile: true }
+      include: { athleteProfile: true }
     });
 
-    if (!user?.profile) {
+    if (!user?.athleteProfile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const completedWorkout = await prisma.completedWorkout.findFirst({
       where: {
         id: completedWorkoutId,
-        athleteId: user.profile.id
+        athleteId: user.athleteProfile.id
       }
     });
 
