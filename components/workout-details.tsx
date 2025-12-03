@@ -261,15 +261,8 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
   );
 }
 
-// Componente auxiliar para visualização simples (sem estrutura detalhada)
 function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (id: number) => Promise<void> }) {
   const [showManualMatch, setShowManualMatch] = useState(false);
-
-  const handleManualMatch = async (completedWorkoutId: number) => {
-    if (onManualMatch) {
-      await onManualMatch(completedWorkoutId);
-    }
-  };
 
   return (
     <>
