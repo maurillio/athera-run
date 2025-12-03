@@ -76,7 +76,7 @@ export async function GET(request: Request) {
         id: true,
         date: true,
         type: true,
-        title: true,
+        subtype: true,
         distance: true,
         duration: true,
         source: true,
