@@ -10,7 +10,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { plannedWorkoutId, completedWorkoutId } = await request.json();
+    const body = await request.json();
+    console.log('[MANUAL MATCH] Request body:', body);
+    
+    const { plannedWorkoutId, completedWorkoutId } = body;
 
     if (!plannedWorkoutId || !completedWorkoutId) {
       return NextResponse.json(
