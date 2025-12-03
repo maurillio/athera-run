@@ -7,6 +7,51 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v3.4.1-hotfix] - 03/DEZ/2025 11:40 UTC 🐛 **HOTFIX - SSR HYDRATION DEFINITIVO**
+
+### 🐛 Fix Crítico - React Hydration Errors
+
+**Problema:** React Error #418/#423 persistente causado por `new Date()` em default parameters
+
+**Causa Raiz:**  
+Componentes usando `new Date()` como default value em props são avaliados durante SSR e cliente em momentos diferentes, gerando timestamps distintos e causando mismatch.
+
+**Solução Aplicada:**
+Substituir todos default parameters `new Date()` por `useState` + `useEffect` pattern.
+
+#### Arquivos Corrigidos
+
+1. **app/[locale]/dashboard/page.tsx**
+   - Linha 181: `new Date()` → `Date.now()` (comparação mais rápida)
+   - Linha 183: Uso consistente de timestamps
+
+2. **components/athera-flex/WeatherWidget.tsx**
+   - Removido: `workoutDate = new Date()`
+   - Adicionado: `useState` + `useEffect` para data
+
+3. **components/athera-flex/ProactiveSuggestions.tsx**
+   - Removido: `weekStart = new Date()`, `weekEnd = new Date(...)`
+   - Adicionado: `dates` state com gestão via useEffect
+
+4. **components/athera-flex/EnergyDashboard.tsx**
+   - Removido: `date = new Date()`
+   - Renomeado prop: `date` → `propDate` (evitar shadowing)
+   - Adicionado: useState + useEffect
+
+5. **components/athera-flex/RecoveryScore.tsx**
+   - Mesmo pattern: prop rename + useState + useEffect
+
+6. **components/athera-flex/AdjustmentHistoryPanel.tsx**
+   - getDaysSince(): `new Date()` → `Date.now()`
+
+#### Status
+- ✅ Build: Passou sem erros
+- ✅ Deploy: Completo (commit f3703094)
+- ✅ Hydration: Corrigido na raiz
+- ⏳ Validação: Aguardando testes em produção
+
+---
+
 ## [v3.4.1] - 03/DEZ/2025 11:10 UTC 🐛 **HOTFIX - HYDRATION + API**
 
 ### 🐛 Fixes Críticos
