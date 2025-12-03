@@ -1,6 +1,6 @@
 /**
- * ATHERA FLEX v4.0.3 - Dashboard Principal
- * Com dados reais das APIs
+ * ATHERA FLEX v4.0.6 - Dashboard Principal
+ * Com dados reais das APIs + Proactive Week View
  */
 
 'use client';
@@ -26,6 +26,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useFlexAnalytics } from '@/hooks/useFlexAnalytics';
+import { ProactiveWeekView } from '@/components/athera-flex/ProactiveWeekView';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -261,6 +262,13 @@ export default function AtheraFlexDashboard() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Proactive Week View - NOVO */}
+          <ProactiveWeekView 
+            className="mt-6"
+            onAcceptSuggestion={(id) => console.log('Aceita sugestão:', id)}
+            onRejectSuggestion={(id) => console.log('Rejeitada sugestão:', id)}
+          />
 
           {/* Contexto Card */}
           <Card>
