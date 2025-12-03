@@ -56,7 +56,11 @@ export async function POST(req: Request) {
 
     // Buscar plano ativo
     const plan = await prisma.customTrainingPlan.findFirst({
-      where: { athleteId: profile.id },
+      where: { 
+        athleteProfile: {
+          id: profile.id
+        }
+      },
       orderBy: { createdAt: 'desc' },
     });
 
