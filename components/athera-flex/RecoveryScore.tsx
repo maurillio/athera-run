@@ -71,11 +71,24 @@ export function RecoveryScore({
   const [recovery, setRecovery] = useState<RecoveryData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [date, setDate] = useState<Date>(propDate || new Date());
+  const [date, setDate] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     setDate(propDate || new Date());
   }, [propDate]);
+
+  // Prevent hydration errors
+  if (!mounted || !date) {
+    return (
+      <Card className={cn('border-blue-200', className)}>
+        <CardContent className="flex items-center justify-center py-6">
+          <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const fetchRecovery = async () => {
     setLoading(true);

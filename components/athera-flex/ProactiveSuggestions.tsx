@@ -79,17 +79,30 @@ export function ProactiveSuggestions({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [applying, setApplying] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [dates, setDates] = useState({
-    start: weekStart || new Date(),
-    end: weekEnd || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    start: null as Date | null,
+    end: null as Date | null
   });
 
   useEffect(() => {
+    setMounted(true);
     setDates({
       start: weekStart || new Date(),
       end: weekEnd || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     });
   }, [weekStart, weekEnd]);
+
+  // Prevent hydration errors
+  if (!mounted || !dates.start || !dates.end) {
+    return (
+      <Card className={cn('border-indigo-200', className)}>
+        <CardContent className="flex items-center justify-center py-6">
+          <Loader2 className="h-6 w-6 animate-spin text-indigo-500" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const fetchSuggestions = async () => {
     setLoading(true);
