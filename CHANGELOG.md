@@ -7,6 +7,99 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.8] - 03/DEZ/2025 15:10 UTC 🎛️ **FILTROS DE PERÍODO - DINÂMICOS**
+
+### ✨ Nova Feature - Seletor de Período
+
+**Implementado:**
+
+1. **Select Component no Header** 🎛️
+   - Componente shadcn/ui Select
+   - Ícone Filter para indicar funcionalidade
+   - Posicionamento no header principal
+   - Design consistente com tema
+
+2. **Opções de Período:**
+   - 7 dias (padrão)
+   - 30 dias
+   - 90 dias
+
+3. **Sincronização Completa:**
+   - Estado `period` compartilhado
+   - Hook `useFlexAnalytics` atualiza automaticamente
+   - Analytics Charts reagemao período selecionado
+   - Description dinâmica no Analytics Card
+
+4. **UX Profissional:**
+   - Mudança instantânea sem reload
+   - Visual feedback claro
+   - Responsive design
+   - Acessível (keyboard navigation)
+
+### 🎯 Benefícios
+- ✅ Análise flexível de diferentes períodos
+- ✅ Comparação temporal facilitada
+- ✅ UX intuitiva e rápida
+- ✅ Dados sempre atualizados
+
+---
+
+## [v4.0.7] - 03/DEZ/2025 15:00 UTC 📊 **ANALYTICS CHARTS - MÚLTIPLOS GRÁFICOS**
+
+### ✨ Nova Feature - Dashboard de Analytics Completo
+
+**Implementado:**
+
+1. **Componente AnalyticsCharts** 📊
+   - Arquivo: `components/athera-flex/AnalyticsCharts.tsx` (400+ linhas)
+   - 4 gráficos profissionais com recharts
+   - Grid responsivo 2x2
+
+2. **Gráfico 1: Ajustes ao Longo do Tempo** (AreaChart)
+   - Visualização de tendência
+   - Gradiente azul (#3b82f6)
+   - Dados acumulados por dia
+   - Tooltip interativo
+
+3. **Gráfico 2: Taxa de Aceitação** (LineChart)
+   - Percentual de sugestões aceitas
+   - Linha verde (#22c55e)
+   - Domain 0-100%
+   - Dots em cada ponto
+
+4. **Gráfico 3: Padrões Detectados** (BarChart)
+   - Quantidade de padrões por dia
+   - Barras laranja (#f97316)
+   - Cantos arredondados
+   - Hover effect
+
+5. **Gráfico 4: Confiança ML** (AreaChart)
+   - Score médio de confiança
+   - Gradiente roxo (#9333ea)
+   - Domain 0-100%
+   - Área preenchida
+
+6. **Cards de Insights:**
+   - Média de Ajustes/Dia
+   - Taxa Aceitação Média
+   - Confiança ML Média
+   - Cores temáticas por métrica
+
+### 📊 Customização
+- CartesianGrid com strokeDasharray
+- Eixos personalizados (fontSize, colors)
+- Tooltips com border radius
+- Gradientes lineares (SVG defs)
+- Responsive containers
+
+### 🎯 Benefícios
+- ✅ Visualização rica de dados
+- ✅ Análise de tendências clara
+- ✅ Insights calculados automaticamente
+- ✅ UX profissional e moderna
+
+---
+
 ## [v4.0.6] - 03/DEZ/2025 14:30 UTC 📅 **PROACTIVE WEEK VIEW - COMPLETE**
 
 ### ✨ Nova Feature - Visualização Semanal Proativa
