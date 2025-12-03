@@ -165,7 +165,7 @@ export default function PlanoPage() {
       const res = await fetch('/api/workouts/manual-match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ completedWorkoutId, workoutId })
+        body: JSON.stringify({ completedWorkoutId, plannedWorkoutId: workoutId })
       });
 
       if (!res.ok) {
