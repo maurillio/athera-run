@@ -7,6 +7,37 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.0-hotfix] - 03/DEZ/2025 13:05 UTC 🔧 **BUGFIX CRÍTICO - Weather + Energy**
+
+### 🐛 Bugs Corrigidos
+
+**1. EnergyDashboard - API Mapping** ⚡
+- **Problema:** Componente esperava estrutura diferente da API
+- **Causa:** API retorna `{ success, context: {...} }`, componente esperava dados flat
+- **Solução:** Mapeamento correto da resposta da API
+- **Impacto:** Dashboard de energia voltou a funcionar
+- **Arquivo:** `components/athera-flex/EnergyDashboard.tsx` (+30 linhas)
+
+**2. WeatherWidget - Validação Defensiva** 🌤️
+- **Problema:** Crash ao acessar `weather.icon` quando undefined
+- **Causa:** API pode retornar erro sem estrutura completa
+- **Solução:** Validação separada para `weather` e `weather.icon`
+- **Impacto:** Widget de clima não quebra mais página
+- **Arquivo:** `components/athera-flex/WeatherWidget.tsx` (+7 linhas)
+
+### 📊 Status do Sistema
+- ✅ Build: Passou sem erros
+- ✅ EnergyService: Corrigido
+- ✅ WeatherWidget: Validado
+- 🎯 Próximo: Deploy + Validação em produção
+
+### 🔄 Referências
+- Rollback anterior: `8bb0b35c` (reverteu features quebradas)
+- Commit corrigido: Este hotfix
+- Documentação: `RESUMO_SESSAO_03DEZ2025_STATUS_ATUAL.md`
+
+---
+
 ## [v3.4.3] - 03/DEZ/2025 12:16 UTC 🎯 **ATHERA FLEX - FINAL FEATURES**
 
 ### ✨ Features Implementadas

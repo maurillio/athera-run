@@ -59,12 +59,23 @@ export function WeatherWidget() {
     );
   }
 
-  if (error || !weather) {
+  if (error) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
         <div className="text-center text-gray-500">
           <AlertCircle className="h-6 w-6 mx-auto mb-2" />
-          <p className="text-sm">{error || 'Clima indisponível'}</p>
+          <p className="text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!weather || !weather.icon) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-center h-32">
+        <div className="text-center text-gray-500">
+          <AlertCircle className="h-6 w-6 mx-auto mb-2" />
+          <p className="text-sm">Clima indisponível</p>
         </div>
       </div>
     );

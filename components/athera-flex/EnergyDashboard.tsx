@@ -87,11 +87,38 @@ export function EnergyDashboard({
         throw new Error('Erro ao buscar energia');
       }
 
-      const data = await response.json();
-      setEnergy(data);
+      const apiResponse = await response.json();
+      
+      // API retorna: { success: true, context: { currentLevel, trend, ... } }
+      // Componente espera: { level, status, trend, tssLoad, recommendation, factors, message }
+      if (apiResponse.success && apiResponse.context) {
+        const ctx = apiResponse.context;
+        
+        // Mapear estrutura da API para estrutura do componente
+        const mappedData: EnergyData = {
+          level: ctx.currentLevel || 75,
+          status: getStatusFromLevel(ctx.currentLevel || 75),
+          trend: ctx.trend === 'increasing' ? 'improving' : 
+                 ctx.trend === 'decreasing' ? 'declining' : 'stable',
+          tssLoad: 0, // Calculado no backend, não retornado
+          recommendation: ctx.recommendation || 'full',
+          factors: {
+            sleep: ctx.sleepQuality === 'excellent' ? 9 : 
+                   ctx.sleepQuality === 'good' ? 7 :
+                   ctx.sleepQuality === 'fair' ? 5 : 3,
+            stress: ctx.stressLevel || 5,
+            recentLoad: 0, // Não retornado pela API
+          },
+          message: ctx.reason || 'Sem dados suficientes',
+        };
 
-      if (onRecommendation) {
-        onRecommendation(data.recommendation);
+        setEnergy(mappedData);
+
+        if (onRecommendation) {
+          onRecommendation(mappedData.recommendation);
+        }
+      } else {
+        throw new Error('Resposta da API inválida');
       }
     } catch (err) {
       console.error('Erro ao buscar energia:', err);
@@ -99,6 +126,14 @@ export function EnergyDashboard({
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper: Converte nível numérico em status
+  const getStatusFromLevel = (level: number): 'fresh' | 'moderate' | 'tired' | 'exhausted' => {
+    if (level >= 75) return 'fresh';
+    if (level >= 50) return 'moderate';
+    if (level >= 25) return 'tired';
+    return 'exhausted';
   };
 
   useEffect(() => {
