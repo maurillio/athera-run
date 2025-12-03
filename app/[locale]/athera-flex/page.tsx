@@ -1,11 +1,11 @@
 /**
- * ATHERA FLEX v4.0.10 - Dashboard Principal
- * Com dados reais das APIs + Proactive Week View + Analytics + Filtros + Premium Paywall
+ * ATHERA FLEX - Dashboard Principal
+ * Feature integrada ao Athera Run com subscription GLOBAL
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -36,16 +36,19 @@ import {
   Crown
 } from 'lucide-react';
 import { useFlexAnalytics } from '@/hooks/useFlexAnalytics';
-import { useAtheraFlexPremium } from '@/hooks/useAtheraFlexPremium';
 import { ProactiveWeekView } from '@/components/athera-flex/ProactiveWeekView';
 import { AnalyticsCharts } from '@/components/athera-flex/AnalyticsCharts';
-import AtheraFlexPaywall from '@/components/athera-flex/AtheraFlexPaywall';
+import PaywallModal from '@/components/subscription/paywall-modal';
 import PremiumBadge from '@/components/subscription/premium-badge';
-import FlexFreeUserBanner from '@/components/athera-flex/FlexFreeUserBanner';
+import UpgradeBanner from '@/components/subscription/upgrade-banner';
 
 export default function AtheraFlexDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('7d');
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState('');
+  const [subscription, setSubscription] = useState<any>(null);
+  const [loadingSub, setLoadingSub] = useState(true);
   
   const { analytics, loading, error, refresh } = useFlexAnalytics({
     period,
@@ -53,7 +56,25 @@ export default function AtheraFlexDashboard() {
     refreshInterval: 60000, // 1 min
   });
 
-  const premium = useAtheraFlexPremium();
+  // Buscar status de subscription GLOBAL
+  useEffect(() => {
+    fetch('/api/subscription/status')
+      .then(res => res.json())
+      .then(data => {
+        setSubscription(data.subscription);
+        setLoadingSub(false);
+      })
+      .catch(() => setLoadingSub(false));
+  }, []);
+
+  const isPremium = subscription?.status === 'ACTIVE' || subscription?.status === 'TRIAL';
+  
+  const handleFeatureClick = (feature: string) => {
+    if (!isPremium) {
+      setPaywallFeature(feature);
+      setShowPaywall(true);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -84,19 +105,19 @@ export default function AtheraFlexDashboard() {
                 </SelectContent>
               </Select>
             </div>
-            {/* Premium Badge Dinâmico */}
-            {premium.loading ? (
+            {/* Premium Badge Dinâmico - GLOBAL */}
+            {loadingSub ? (
               <Badge variant="outline" className="px-4 py-2">
                 <Loader2 className="h-3 w-3 animate-spin mr-2" />
                 Verificando...
               </Badge>
-            ) : premium.isPremium ? (
-              <PremiumBadge status={premium.status} plan={premium.plan} className="px-4 py-2" />
+            ) : isPremium ? (
+              <PremiumBadge status={subscription?.status} plan={subscription?.plan} className="px-4 py-2" />
             ) : (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => premium.showPaywall('analytics')}
+                onClick={() => window.location.href = '/pricing'}
                 className="border-purple-200 hover:border-purple-400 hover:bg-purple-50"
               >
                 <Crown className="h-4 w-4 mr-2 text-purple-600" />
@@ -106,19 +127,17 @@ export default function AtheraFlexDashboard() {
           </div>
         </div>
 
-        {/* Paywall Modal */}
-        {premium.paywallFeature && (
-          <AtheraFlexPaywall
-            isOpen={premium.isPaywallOpen}
-            onClose={premium.hidePaywall}
-            feature={premium.paywallFeature}
-          />
-        )}
+        {/* Paywall Modal GLOBAL */}
+        <PaywallModal
+          isOpen={showPaywall}
+          onClose={() => setShowPaywall(false)}
+          feature={paywallFeature}
+        />
 
-        {/* Free User Banner */}
-        {!premium.loading && !premium.isPremium && (
-          <FlexFreeUserBanner 
-            onUpgrade={() => premium.showPaywall('analytics')}
+        {/* Upgrade Banner GLOBAL */}
+        {!loadingSub && !isPremium && (
+          <UpgradeBanner 
+            feature="Athera Flex"
             className="mt-6"
           />
         )}
@@ -201,13 +220,13 @@ export default function AtheraFlexDashboard() {
           </TabsTrigger>
           <TabsTrigger 
             value="analytics"
-            disabled={!premium.canUseFeature('analytics')}
-            onClick={() => !premium.canUseFeature('analytics') && premium.showPaywall('analytics')}
+            disabled={!isPremium}
+            onClick={() => !isPremium && handleFeatureClick('Analytics Avançado')}
             className="relative"
           >
             <BarChart3 className="h-4 w-4 mr-2" />
             Analytics
-            {!premium.canUseFeature('analytics') && (
+            {!isPremium && (
               <Lock className="h-3 w-3 ml-2 text-purple-600" />
             )}
           </TabsTrigger>
