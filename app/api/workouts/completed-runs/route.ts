@@ -37,6 +37,19 @@ export async function GET(request: Request) {
       );
     }
 
+    // Buscar athleteProfile do user
+    const profile = await prisma.athleteProfile.findUnique({
+      where: { userId: user.id },
+      select: { id: true },
+    });
+
+    if (!profile) {
+      return NextResponse.json(
+        { error: 'Profile not found' },
+        { status: 404 }
+      );
+    }
+
     // Data de corte (últimos N dias)
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -45,7 +58,7 @@ export async function GET(request: Request) {
     // Filtrar APENAS corridas (type = 'run' ou 'running')
     const workouts = await prisma.completedWorkout.findMany({
       where: {
-        userId: user.id,
+        athleteId: profile.id, // Usar athleteId, não userId!
         date: {
           gte: cutoffDate,
         },
@@ -67,7 +80,7 @@ export async function GET(request: Request) {
         distance: true,
         duration: true,
         source: true,
-        stravaId: true,
+        stravaActivityId: true,
       },
     });
 
