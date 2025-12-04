@@ -7,6 +7,48 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.18] - 03/DEZ/2025 20:00 UTC 🔄 **ROLLBACK: v5.0.x → v4.0.18 (ESTÁVEL)**
+
+### 🔄 Rollback Completo
+
+Todas as versões v5.0.x foram revertidas devido a **erros críticos em produção**:
+
+**Versões removidas:**
+- v5.0.0 → v5.0.4
+- v5.1.0 → v5.1.1
+
+**Motivo do rollback:**
+- ❌ Erro React #418/#423 quebrou frontend
+- ❌ Schema Prisma desatualizado
+- ❌ Migration incompleta no banco
+- ❌ Tipos TypeScript incompatíveis
+
+### ✅ Sistema Voltou para Estado Estável
+
+**v4.0.18** é a última versão 100% funcional:
+- ✅ Athera Flex operacional
+- ✅ Match manual funcionando
+- ✅ Badges de substituição
+- ✅ Volume semanal correto
+- ✅ Progresso dos treinos
+- ✅ Zero erros em produção
+
+### 📋 Referências
+
+- **Resumo completo:** `RESUMO_SESSAO_03DEZ2025_FINAL.md`
+- **Script melhorado:** `PROMPT_INICIAL_MELHORADO.md`
+- **Commit estável:** `2cc0aa8a`
+
+### 🎯 Próxima Sessão
+
+Features v5.0.0 serão reimplementadas COM PREPARAÇÃO ADEQUADA:
+1. Migration completa ANTES de código
+2. Testes locais obrigatórios
+3. Deploy incremental COM validação
+4. Rollback sempre identificado
+
+---
+
 ## [v4.0.14] - 04/DEZ/2025 17:20 UTC ✨ **FEAT: UX Improvements - Volume e Badges**
 
 ### ✨ Melhorias de UX Implementadas
