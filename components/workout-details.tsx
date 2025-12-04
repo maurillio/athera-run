@@ -89,6 +89,16 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
               )}
             </div>
           
+          {/* Mensagem de Substituição */}
+          {workout.isCompleted && workout.completedWorkoutId && (
+            <div className="flex items-start gap-2 mt-2 p-2 bg-purple-50 rounded border border-purple-200">
+              <Activity className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-purple-900">
+                <span className="font-medium">Treino executado em dia diferente.</span> Este treino foi marcado como concluído usando uma atividade realizada em outra data.
+              </p>
+            </div>
+          )}
+          
           {workout.objective && (
             <div className="flex items-start gap-2 mt-2 p-2 bg-blue-50 rounded border border-blue-200">
               <Target className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -320,6 +330,16 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
               </Button>
             )}
           </div>
+          
+          {/* Mensagem de Substituição */}
+          {workout.isCompleted && workout.completedWorkoutId && (
+            <div className="flex items-start gap-2 p-2 bg-purple-50 rounded border border-purple-200 mb-2">
+              <Activity className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-purple-900">
+                <span className="font-medium">Executado em dia diferente.</span> Marcado usando atividade de outra data.
+              </p>
+            </div>
+          )}
           
           {workout.description && (
             <p className="text-sm text-gray-600 leading-relaxed mt-2">

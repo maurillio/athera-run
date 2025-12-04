@@ -729,16 +729,23 @@ export default function PlanoPage() {
                                   // COMPACTO - Resumo em uma linha
                                   <div className="text-sm text-gray-700">
                                     {dayWorkouts.length === 1 ? (
-                                      <div className="flex items-center justify-between relative">
+                                      <div className="flex items-center justify-between relative gap-2">
                                         <span className="font-medium inline-flex items-center gap-2">
                                           {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
                                           {firstWorkout.title}
                                         </span>
-                                        {firstWorkout.distance && (
-                                          <Badge variant="secondary" className="text-xs">
-                                            {firstWorkout.distance} km
-                                          </Badge>
-                                        )}
+                                        <div className="flex items-center gap-1">
+                                          {firstWorkout.distance && (
+                                            <Badge variant="secondary" className="text-xs">
+                                              {firstWorkout.distance} km
+                                            </Badge>
+                                          )}
+                                          {firstWorkout.isCompleted && firstWorkout.completedWorkoutId && (
+                                            <Badge className="bg-purple-500 text-white text-xs">
+                                              🔄
+                                            </Badge>
+                                          )}
+                                        </div>
                                         {/* Athera Flex Badge */}
                                         <ClientOnly>
                                           <WorkoutFlexBadge workoutId={firstWorkout.id} />
