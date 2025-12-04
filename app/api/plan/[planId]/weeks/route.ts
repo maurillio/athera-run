@@ -67,8 +67,8 @@ export async function GET(
           wasSubstitution: w.wasSubstitution || false,
           // Manter executedWorkout se existir (treino real)
           executedWorkout: w.executedWorkout || undefined,
-          // Não expor completedWorkout inteiro (já temos isCompleted)
-          completedWorkout: undefined
+          // Manter completedWorkout para exibir dados do treino executado
+          completedWorkout: w.completedWorkout || undefined
         }))
       };
     });
