@@ -62,7 +62,9 @@ export async function GET(
         executedDistance: executedVolume,
         workouts: week.workouts.map(w => ({
           ...w,
-          // Não expor completedWorkout inteiro (já tem isCompleted)
+          // Adicionar flag de substituição do CompletedWorkout
+          wasSubstitution: w.completedWorkout?.wasSubstitution || false,
+          // Não expor completedWorkout inteiro
           completedWorkout: undefined
         }))
       };

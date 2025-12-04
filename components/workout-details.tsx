@@ -66,7 +66,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Concluído
                   </Badge>
-                  {workout.completedWorkoutId && workout.date && (
+                  {workout.wasSubstitution && (
                     <Badge className="bg-purple-500 text-white text-xs">
                       🔄 Substituição
                     </Badge>
@@ -90,7 +90,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
             </div>
           
           {/* Mensagem de Substituição */}
-          {workout.isCompleted && workout.completedWorkoutId && (
+          {workout.isCompleted && workout.wasSubstitution && (
             <div className="flex items-start gap-2 mt-2 p-2 bg-purple-50 rounded border border-purple-200">
               <Activity className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-purple-900">
@@ -308,7 +308,7 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
                   <CheckCircle2 className="h-3 w-3 mr-1" />
                   Concluído
                 </Badge>
-                {workout.completedWorkoutId && workout.date && (
+                {workout.wasSubstitution && (
                   <Badge className="bg-purple-500 text-white text-xs">
                     🔄 Substituição
                   </Badge>
@@ -332,7 +332,7 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
           </div>
           
           {/* Mensagem de Substituição */}
-          {workout.isCompleted && workout.completedWorkoutId && (
+          {workout.isCompleted && workout.wasSubstitution && (
             <div className="flex items-start gap-2 p-2 bg-purple-50 rounded border border-purple-200 mb-2">
               <Activity className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-purple-900">

@@ -740,7 +740,7 @@ export default function PlanoPage() {
                                               {firstWorkout.distance} km
                                             </Badge>
                                           )}
-                                          {firstWorkout.isCompleted && firstWorkout.completedWorkoutId && (
+                                          {firstWorkout.isCompleted && firstWorkout.wasSubstitution && (
                                             <Badge className="bg-purple-500 text-white text-xs">
                                               🔄
                                             </Badge>
