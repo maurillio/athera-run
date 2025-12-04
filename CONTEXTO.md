@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.14 - UX Improvements (04/Dez/2025 17:20 UTC)  
-**Versão Atual:** v4.0.14 ✅ ATHERA FLEX MANUAL MATCH + UX MELHORADO  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.17 - Filtro Inteligente Modal (04/Dez/2025 17:40 UTC)  
+**Versão Atual:** v4.0.17 ✅ ATHERA FLEX MANUAL MATCH COMPLETO  
 **Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
