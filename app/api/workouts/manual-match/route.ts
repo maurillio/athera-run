@@ -79,7 +79,9 @@ export async function POST(request: NextRequest) {
       where: { id: plannedWorkoutId },
       data: {
         isCompleted: true,
-        completedWorkoutId: completedWorkoutId
+        completedWorkoutId: completedWorkoutId,
+        executedWorkoutId: completedWorkoutId,
+        wasSubstitution: true
       }
     });
 

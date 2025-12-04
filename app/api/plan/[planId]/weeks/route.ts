@@ -44,6 +44,22 @@ export async function GET(
       return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
     }
 
+    // Buscar treinos órfãos (executados em dias diferentes do planejado)
+    // Treinos com customWorkout mas executedWorkoutId diferente de completedWorkoutId
+    const orphanWorkouts = await prisma.completedWorkout.findMany({
+      where: {
+        athleteId: plan.athleteProfile.id,
+        wasPlanned: true,
+        wasSubstitution: true,
+        // Buscar entre datas do plano
+        date: {
+          gte: plan.startDate,
+        }
+      }
+    });
+
+    console.log('[WEEKS API] Found orphan workouts:', orphanWorkouts.length);
+
     // Recalcular volume e progresso para cada semana
     const weeksWithRecalculated = plan.weeks.map(week => {
       const completedCount = week.workouts.filter(w => w.isCompleted).length;
@@ -56,11 +72,18 @@ export async function GET(
         return sum;
       }, 0);
 
+      // Adicionar treinos órfãos executados nesta semana
+      const orphansInWeek = orphanWorkouts.filter(o => {
+        const date = new Date(o.date);
+        return date >= new Date(week.startDate) && date <= new Date(week.endDate);
+      });
+
       return {
         ...week,
         completedWorkouts: completedCount,
         // Manter totalDistance planejado, mas adicionar campo executedDistance
         executedDistance: executedVolume,
+        orphanWorkouts: orphansInWeek, // NOVO: treinos órfãos
         workouts: week.workouts.map(w => ({
           ...w,
           // Adicionar flag de substituição

@@ -69,7 +69,9 @@ export async function GET(request: Request) {
           { type: 'Running' },
         ],
         // NÃO mostrar treinos que já foram usados em matches
+        // Verificar TANTO plannedWorkoutId (antigo) quanto customWorkout (novo)
         plannedWorkoutId: null,
+        customWorkout: null,
       },
       orderBy: {
         date: 'desc',
