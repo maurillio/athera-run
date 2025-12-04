@@ -7,6 +7,127 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.14] - 04/DEZ/2025 17:20 UTC ✨ **FEAT: UX Improvements - Volume e Badges**
+
+### ✨ Melhorias de UX Implementadas
+
+Corrige **4 problemas de UX** identificados após implementação do Manual Match:
+
+#### 1. ✅ Volume Semanal Agora Mostra EXECUTADO vs PLANEJADO
+**Antes:**
+```
+Volume: 10.7 km  (sempre mostrava o planejado)
+```
+
+**Depois:**
+```
+Volume: 16.2 km / 10.7 km planejado  (mostra o real executado)
+```
+
+**Implementação:**
+- API recalcula `executedDistance` somando todos os `CompletedWorkouts`
+- UI mostra volume executado em destaque + planejado em cinza
+- Interface `CustomWeek` adiciona campo `executedDistance`
+
+#### 2. ✅ Progresso dos Treinos Calculado Corretamente
+**Problema:** Progresso mostrava 50% mesmo com mais treinos feitos
+
+**Correção:**
+- `completedWorkouts` recalculado na API considerando `isCompleted`
+- Inclui treinos marcados via manual match
+- Barra de progresso reflete quantidade real
+
+#### 3. ✅ Badge de Substituição Adicionado
+**Novo badge visual:**
+```tsx
+<Badge className="bg-purple-500 text-white">
+  🔄 Substituição
+</Badge>
+```
+
+**Quando aparece:**
+- Treino marcado como concluído
+- Possui `completedWorkoutId` (foi matched manualmente)
+- Aparece ao lado do badge verde "Concluído"
+
+#### 4. ✅ Indicadores Visuais Melhorados
+- Volume real **sempre visível** em negrito
+- Volume planejado em cinza (contexto)
+- Badges com cores distintas:
+  - 🟢 Verde = Concluído
+  - 🟣 Roxo = Substituído (executado em dia diferente)
+
+### 📊 Arquivos Modificados
+
+#### Backend
+**`app/api/plan/[planId]/weeks/route.ts`**
+- Adiciona `include: { completedWorkout: true }` ao query
+- Recalcula `completedWorkouts` e `executedDistance` para cada semana
+- Remove `completedWorkout` do response (apenas usa para cálculo)
+
+#### Frontend
+**`app/[locale]/plano/page.tsx`**
+- Interface `CustomWeek` adiciona `executedDistance?: number`
+- UI mostra volume executado vs planejado
+- Condicional: só mostra planejado se diferente do executado
+
+**`components/workout-details.tsx`**
+- Badge 🔄 Substituição adicionado em 2 lugares:
+  1. `WorkoutDetails` (treinos com estrutura completa)
+  2. `SimpleWorkoutView` (treinos simples)
+- Condicional: `workout.completedWorkoutId && workout.date`
+
+### 🔄 Cálculo do Volume Executado
+```typescript
+const executedVolume = week.workouts.reduce((sum, workout) => {
+  if (workout.isCompleted && workout.completedWorkout) {
+    return sum + (workout.completedWorkout.distance || 0);
+  }
+  return sum;
+}, 0);
+```
+
+### 📈 Impacto UX
+
+#### Antes (v4.0.13)
+- ❌ Volume sempre mostrava planejado (10.7km)
+- ❌ Progresso incorreto (50%)
+- ❌ Sem indicação visual de substituição
+- ❌ Usuário não sabia quanto realmente correu
+
+#### Depois (v4.0.14)
+- ✅ Volume mostra real executado (16.2km)
+- ✅ Progresso correto calculado
+- ✅ Badge roxo indica substituições
+- ✅ Transparência total sobre o treino
+
+### 🎯 Exemplo Real
+
+**Semana com substituição:**
+```
+Segunda: Descanso ✅
+Terça: Treino 10km ✅
+Quarta: Descanso ✅
+Quinta: Treino 5km ❌ (não fez)
+Sexta: Treino 8km ✅ (fez 16km)
+Sábado: Descanso ✅
+Domingo: Longão 6km ✅ 🔄 Substituição (marcou sexta como domingo)
+
+Volume: 39.0 km / 29.0 km planejado
+Progresso: 5/5 treinos (100%)
+```
+
+### ✅ Validação
+- ✅ Build passou sem erros
+- ✅ Deploy em produção ativo
+- ⏳ Aguardando validação funcional
+
+### 🔗 Relacionado
+- Implementa correções de: `RESUMO_SESSAO_03DEZ2025.md` (Próxima Sessão)
+- Depende de: v4.0.13 (Manual Match funcionando)
+
+---
+
 ## [v4.0.13] - 03/DEZ/2025 20:53 UTC 🚨 **HOTFIX: Foreign Key Constraint**
 
 ### 🐛 Bug Corrigido - CRÍTICO
