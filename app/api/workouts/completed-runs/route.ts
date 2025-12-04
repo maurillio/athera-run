@@ -54,48 +54,6 @@ export async function GET(request: Request) {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
-    // Buscar plano ativo do atleta para verificar dias com treinos planejados
-    const activePlan = await prisma.customTrainingPlan.findFirst({
-      where: {
-        athleteProfileId: profile.id,
-        status: 'ACTIVE',
-      },
-      select: {
-        id: true,
-        weeks: {
-          select: {
-            workouts: {
-              where: {
-                date: {
-                  gte: cutoffDate,
-                },
-                OR: [
-                  { type: 'run' },
-                  { type: 'running' },
-                  { type: 'Run' },
-                  { type: 'Running' },
-                ],
-              },
-              select: {
-                date: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    // Extrair datas que tinham treinos de corrida planejados
-    const datesWithPlannedRuns = new Set<string>();
-    if (activePlan) {
-      activePlan.weeks.forEach(week => {
-        week.workouts.forEach(workout => {
-          const dateStr = new Date(workout.date).toISOString().split('T')[0];
-          datesWithPlannedRuns.add(dateStr);
-        });
-      });
-    }
-
     // Buscar treinos completados
     // Filtrar APENAS corridas (type = 'run' ou 'running')
     const workouts = await prisma.completedWorkout.findMany({
@@ -128,16 +86,10 @@ export async function GET(request: Request) {
       },
     });
 
-    // Filtrar treinos executados em dias SEM treino planejado
-    const availableWorkouts = workouts.filter(workout => {
-      const workoutDateStr = new Date(workout.date).toISOString().split('T')[0];
-      return !datesWithPlannedRuns.has(workoutDateStr);
-    });
-
     return NextResponse.json({
       success: true,
-      workouts: availableWorkouts,
-      count: availableWorkouts.length,
+      workouts: workouts,
+      count: workouts.length,
     });
   } catch (error) {
     console.error('[API] Error fetching completed runs:', error);
