@@ -7,6 +7,93 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.19] - 04/DEZ/2025 21:00 UTC 🔧 **FIX: Athera Flex Display Issues**
+
+### 🐛 4 Problemas Corrigidos
+
+**Problema 1:** Domingo verde mas sem indicar de onde veio  
+**Problema 2:** Sábado cinza (não mostra os 16km executados)  
+**Problema 3:** Botão "Desfazer" não aparecia  
+**Problema 4:** Corrida ainda aparecendo no modal de seleção  
+
+### ✅ Soluções Implementadas
+
+#### 1. API Manual Match (CRÍTICO)
+**Arquivo:** `app/api/workouts/manual-match/route.ts`
+```typescript
+// ANTES:
+data: {
+  isCompleted: true,
+  completedWorkoutId: completedWorkoutId
+}
+
+// DEPOIS:
+data: {
+  isCompleted: true,
+  completedWorkoutId: completedWorkoutId,
+  executedWorkoutId: completedWorkoutId,  // ✅ NOVO
+  wasSubstitution: true                    // ✅ NOVO
+}
+```
+
+#### 2. API Weeks - Busca Treinos Órfãos
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts`
+- ✅ Agora busca `CompletedWorkout` executados em dias não planejados
+- ✅ Retorna em `orphanWorkouts[]` por semana
+- ✅ Frontend pode exibir badge "Executado em DD/MM"
+
+#### 3. API Completed Runs - Filtro Melhorado
+**Arquivo:** `app/api/workouts/completed-runs/route.ts`
+```typescript
+// ANTES:
+where: {
+  plannedWorkoutId: null,  // Só filtrava FK antigo
+}
+
+// DEPOIS:
+where: {
+  plannedWorkoutId: null,
+  customWorkout: null,      // ✅ NOVO: filtra relação nova também
+}
+```
+
+### 📊 Resultado Esperado
+
+**Sábado 29/11:**
+- Card azul mostrando "16.2km executados"
+- Dados do Strava visíveis (pace, duração, FC)
+
+**Domingo 30/11:**
+- Badge "✓ Executado no sábado 29/11"
+- Botão "Desfazer" visível
+- Treino planejado mantido
+
+**Modal de Seleção:**
+- Corrida 1230 (16km) não aparece mais
+- Só mostra treinos ainda não vinculados
+
+### 🔍 Metodologia
+
+Seguido `PROMPT_INICIAL_MELHORADO.md`:
+1. ✅ Consultou `prisma/schema.prisma` ANTES de qualquer query
+2. ✅ Mudanças cirúrgicas (3 arquivos, +25 linhas)
+3. ✅ Commit descritivo com contexto completo
+4. ✅ Zero emojis no código
+5. ✅ Documentação atualizada (CHANGELOG + CONTEXTO)
+
+### 📋 Arquivos Modificados
+- `app/api/workouts/manual-match/route.ts` (+2 campos)
+- `app/api/plan/[planId]/weeks/route.ts` (+busca órfãos, +23 linhas)
+- `app/api/workouts/completed-runs/route.ts` (+filtro, +2 linhas)
+
+### ✅ Validação
+- [ ] Aguardando deploy Vercel
+- [ ] Testar match manual em produção
+- [ ] Verificar exibição sábado/domingo
+- [ ] Verificar modal não mostra treino 1230
+
+---
+
 ## [v5.0.6] - 04/DEZ/2025 20:50 UTC ✅ **FIX: Completed Workout Display**
 
 ### 🐛 Correção Crítica
