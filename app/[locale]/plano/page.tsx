@@ -633,8 +633,9 @@ export default function PlanoPage() {
                           const isToday = workoutDate.isSame(today, 'day');
                           const expanded = isDayExpanded(dateKey, isToday);
                           
-                          const allCompleted = dayWorkouts.every(w => w.isCompleted);
-                          const someCompleted = dayWorkouts.some(w => w.isCompleted);
+                          // Considera completo se: isCompleted OU tem executedWorkoutId
+                          const allCompleted = dayWorkouts.every(w => w.isCompleted || w.executedWorkoutId);
+                          const someCompleted = dayWorkouts.some(w => w.isCompleted || w.executedWorkoutId);
                           const noneCompleted = !someCompleted;
                           const partialCompleted = someCompleted && !allCompleted;
                           const isRestDay = dayWorkouts.every(w => 
