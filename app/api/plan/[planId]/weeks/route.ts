@@ -25,7 +25,8 @@ export async function GET(
           include: {
             workouts: {
               include: {
-                completedWorkout: true // ← Incluir completed workout para recalcular
+                completedWorkout: true, // Treino planejado que foi completado
+                executedWorkout: true   // Treino real executado (pode ser diferente)
               },
               orderBy: {
                 date: 'asc'
@@ -62,9 +63,11 @@ export async function GET(
         executedDistance: executedVolume,
         workouts: week.workouts.map(w => ({
           ...w,
-          // Adicionar flag de substituição do CompletedWorkout
-          wasSubstitution: w.completedWorkout?.wasSubstitution || false,
-          // Não expor completedWorkout inteiro
+          // Adicionar flag de substituição
+          wasSubstitution: w.wasSubstitution || false,
+          // Manter executedWorkout se existir (treino real)
+          executedWorkout: w.executedWorkout || undefined,
+          // Não expor completedWorkout inteiro (já temos isCompleted)
           completedWorkout: undefined
         }))
       };
