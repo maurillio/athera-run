@@ -210,7 +210,7 @@ Issues:
 
 ### Depois (Neon Cloud)
 ```
-Host: ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech
+Host: ep-xxx-pooler.us-east-1.aws.neon.tech
 Database: maratona
 Benefícios:
   ✓ Credenciais seguras (variáveis de ambiente)

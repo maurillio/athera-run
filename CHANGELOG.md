@@ -4378,7 +4378,7 @@ weight: parseFloat(weight) || 0,     // Fallback seguro
 
 #### Changed
 - **Database Migration:** PostgreSQL self-hosted → Neon Database
-  - Nova conexão: `ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech`
+  - Nova conexão: `ep-xxx-pooler.us-east-1.aws.neon.tech`
   - Região: us-east-1 (mesmo que Vercel - menor latência)
   - SSL obrigatório + channel binding + connection pooling
   - Backups automáticos point-in-time
@@ -4441,7 +4441,7 @@ model CustomTrainingPlan {
 #### Migrado
 - **[INFRAESTRUTURA]** PostgreSQL migrado para Neon (Database as a Service)
   - De: Servidor próprio (45.232.21.67:5432)
-  - Para: Neon (ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech)
+  - Para: Neon (ep-xxx-pooler.us-east-1.aws.neon.tech)
   - Região: US East (N. Virginia) - mesma da Vercel
   - PostgreSQL: 16.9
   - Pooler: Habilitado

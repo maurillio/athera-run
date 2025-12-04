@@ -168,7 +168,7 @@ Thumbs.db
 
 **Configuração Vercel:**
 ```bash
-DATABASE_URL="postgresql://neondb_owner:npg_21eKGlSgaPkz@ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require&channel_binding=require"
+DATABASE_URL="postgresql://neondb_owner:***@ep-xxx-pooler.us-east-1.aws.neon.tech/maratona?sslmode=require&channel_binding=require"
 ```
 
 ---

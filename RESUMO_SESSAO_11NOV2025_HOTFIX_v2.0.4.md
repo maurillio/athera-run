@@ -64,7 +64,7 @@ O Vercel **NÃO** executa `prisma migrate deploy` automaticamente durante o buil
 
 ### Passo 1: Resolver Migration Falhada
 ```bash
-export DATABASE_URL="postgresql://neondb_owner:npg_*****@ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require&channel_binding=require"
+export DATABASE_URL="postgresql://neondb_owner:***@ep-xxx-pooler.us-east-1.aws.neon.tech/maratona?sslmode=require&channel_binding=require"
 
 npx prisma migrate resolve --rolled-back 20251103200800_add_comprehensive_athlete_data_v1_3_0
 # ✅ Migration 20251103200800 marked as rolled back.

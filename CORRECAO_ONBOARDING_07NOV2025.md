@@ -258,7 +258,7 @@ if (goalDistance && targetRaceDate) {
 
 3. **Neon Database (Produção)**
    ```bash
-   # Conexão: ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech
+   # Conexão: ep-xxx-pooler.us-east-1.aws.neon.tech
    # Migration executada automaticamente pelo Vercel
    ```
 

@@ -144,7 +144,7 @@ Pushed date: November 7th 2025
 1. ✅ **Database migrado para Neon Cloud**
    - Provider: Neon (PostgreSQL 16.9)
    - Region: US East (Virginia)
-   - Connection: ep-hidden-resonance-adhktxy0-pooler
+   - Connection: ep-xxx-pooler
 
 2. ✅ **Credentials antigas revogadas**
    - String de conexão do servidor 45.232.21.67 desativada

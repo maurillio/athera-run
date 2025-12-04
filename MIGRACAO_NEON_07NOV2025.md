@@ -37,7 +37,7 @@ Migrar o banco de dados PostgreSQL de servidor próprio (45.232.21.67) para Neon
 - **Database:** maratona
 - **PostgreSQL:** 16.9
 - **Connection:** Pooler habilitado
-- **Host:** ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech
+- **Host:** ep-xxx-pooler.us-east-1.aws.neon.tech
 
 ---
 
@@ -69,7 +69,7 @@ pg_dump --data-only maratona > data_only_20251107.sql (906 KB)
 ### Fase 3: Importação dos Dados ✅
 
 ```bash
-psql -h ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech \
+psql -h ep-xxx-pooler.us-east-1.aws.neon.tech \
      -U neondb_owner -d maratona \
      -f maratona_backup_20251107_103700.sql
 ```
@@ -101,7 +101,7 @@ node test_connection.js
 
 **Novo valor:**
 ```
-postgresql://neondb_owner:npg_21eKGlSgaPkz@ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require
+postgresql://neondb_owner:***@ep-xxx-pooler.us-east-1.aws.neon.tech/maratona?sslmode=require
 ```
 
 **Aplicada em:**
@@ -184,10 +184,10 @@ npx prisma migrate diff
 
 ```bash
 # Production (Neon com Pooler)
-DATABASE_URL="postgresql://neondb_owner:npg_21eKGlSgaPkz@ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require"
+DATABASE_URL="postgresql://neondb_owner:***@ep-xxx-pooler.us-east-1.aws.neon.tech/maratona?sslmode=require"
 
 # Direct Connection (sem pooler - para migrations)
-DIRECT_URL="postgresql://neondb_owner:npg_21eKGlSgaPkz@ep-hidden-resonance-adhktxy0.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require"
+DIRECT_URL="postgresql://neondb_owner:***@ep-xxx.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require"
 ```
 
 ### Acesso ao Dashboard Neon

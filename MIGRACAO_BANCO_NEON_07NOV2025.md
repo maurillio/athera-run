@@ -31,7 +31,7 @@ Database: maratona
 
 ### Novo Banco (Neon)
 ```
-Host: ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech
+Host: ep-xxx-pooler.us-east-1.aws.neon.tech
 Database: maratona
 Region: US East 1 (próximo ao Vercel)
 Connection Pooling: Habilitado
@@ -43,7 +43,7 @@ Connection Pooling: Habilitado
 
 ```bash
 # ❌ NUNCA COMMITEI
-DATABASE_URL="postgresql://neondb_owner:npg_21eKGlSgaPkz@..."
+DATABASE_URL="postgresql://neondb_owner:***@..."
 
 # ✅ .gitignore configurado para proteger
 .env
@@ -65,7 +65,7 @@ credentials.json
 npx neonctl@latest init
 
 # String de conexão (adicionada no .env)
-postgresql://neondb_owner:npg_21eKGlSgaPkz@ep-hidden-resonance-adhktxy0-pooler.c-2.us-east-1.aws.neon.tech/maratona?sslmode=require&channel_binding=require
+postgresql://neondb_owner:***@ep-xxx-pooler.us-east-1.aws.neon.tech/maratona?sslmode=require&channel_binding=require
 ```
 
 ### 2. Atualização das Variáveis de Ambiente
