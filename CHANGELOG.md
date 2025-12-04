@@ -7,6 +7,43 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.6] - 04/DEZ/2025 20:50 UTC ✅ **FIX: Completed Workout Display**
+
+### 🐛 Correção Crítica
+
+**Problema:**
+- Treinos concluídos não mostravam dados do treino executado
+- Botão "Desfazer" não aparecia
+- Sábado não mostrava treino de 16km executado
+- Domingo mostrava apenas "Concluído" sem detalhes
+
+**Causa Raiz:**
+- API `/api/plan/[planId]/weeks` estava removendo `completedWorkout` data
+- Linha 71: `completedWorkout: undefined` impedia frontend de acessar dados
+
+**Solução:**
+- ✅ Corrigido API para retornar `completedWorkout` completo
+- ✅ Frontend agora recebe todos dados necessários
+- ✅ Botão "Desfazer" funcionará quando executedWorkout existir
+- ✅ Detalhes do treino executado serão exibidos
+
+### 📋 Arquivos Modificados
+- `app/api/plan/[planId]/weeks/route.ts` - Removido `undefined` assignment
+
+### 🔍 Debug Process
+- Consultado `prisma/schema.prisma` para estrutura
+- Verificado dados no banco via Prisma Client
+- Identificado ID 18229 como treino correto (Athera Flex)
+- Encontrado API removendo dados necessários
+
+### ✅ Validação
+- [ ] Aguardando deploy Vercel
+- [ ] Testar em https://atherarun.com
+- [ ] Verificar se botão "Desfazer" aparece
+- [ ] Verificar detalhes do treino executado
+
+---
+
 ## [v4.0.18] - 03/DEZ/2025 20:00 UTC 🔄 **ROLLBACK: v5.0.x → v4.0.18 (ESTÁVEL)**
 
 ### 🔄 Rollback Completo
