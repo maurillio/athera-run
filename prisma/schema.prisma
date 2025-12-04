@@ -460,6 +460,7 @@ model CustomWorkout {
   rescheduledBy      String?   @map("rescheduled_by")
   rescheduledReason  String?   @map("rescheduled_reason")
   executedWorkoutId  Int?      @unique @map("executed_workout_id")
+  wasSubstitution    Boolean   @default(false) @map("was_substitution")
 
   athleteFeedback     AthleteFeedback[]
   completedWorkout    CompletedWorkout?    @relation("PlannedWorkout", fields: [completedWorkoutId], references: [id])
