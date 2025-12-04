@@ -61,10 +61,17 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                 {workout.title}
               </h3>
               {workout.isCompleted ? (
-                <Badge className="bg-green-500 text-white text-xs">
-                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                  Concluído
-                </Badge>
+                <>
+                  <Badge className="bg-green-500 text-white text-xs">
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    Concluído
+                  </Badge>
+                  {workout.completedWorkoutId && workout.date && (
+                    <Badge className="bg-purple-500 text-white text-xs">
+                      🔄 Substituição
+                    </Badge>
+                  )}
+                </>
               ) : (
                 <Button
                   size="sm"
@@ -286,10 +293,17 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
               {workout.title}
             </h3>
             {workout.isCompleted ? (
-              <Badge className="bg-green-500 text-white text-xs">
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Concluído
-              </Badge>
+              <>
+                <Badge className="bg-green-500 text-white text-xs">
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Concluído
+                </Badge>
+                {workout.completedWorkoutId && workout.date && (
+                  <Badge className="bg-purple-500 text-white text-xs">
+                    🔄 Substituição
+                  </Badge>
+                )}
+              </>
             ) : (
               <Button
                 size="sm"

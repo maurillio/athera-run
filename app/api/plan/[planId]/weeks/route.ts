@@ -24,8 +24,11 @@ export async function GET(
         weeks: {
           include: {
             workouts: {
+              include: {
+                completedWorkout: true // ← Incluir completed workout para recalcular
+              },
               orderBy: {
-                date: 'asc'  // ← CRÍTICO: Ordenar workouts por data!
+                date: 'asc'
               }
             }
           },
@@ -40,7 +43,32 @@ export async function GET(
       return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
     }
 
-    return NextResponse.json({ weeks: plan.weeks });
+    // Recalcular volume e progresso para cada semana
+    const weeksWithRecalculated = plan.weeks.map(week => {
+      const completedCount = week.workouts.filter(w => w.isCompleted).length;
+      
+      // Calcular volume executado (soma dos treinos completados)
+      const executedVolume = week.workouts.reduce((sum, workout) => {
+        if (workout.isCompleted && workout.completedWorkout) {
+          return sum + (workout.completedWorkout.distance || 0);
+        }
+        return sum;
+      }, 0);
+
+      return {
+        ...week,
+        completedWorkouts: completedCount,
+        // Manter totalDistance planejado, mas adicionar campo executedDistance
+        executedDistance: executedVolume,
+        workouts: week.workouts.map(w => ({
+          ...w,
+          // Não expor completedWorkout inteiro (já tem isCompleted)
+          completedWorkout: undefined
+        }))
+      };
+    });
+
+    return NextResponse.json({ weeks: weeksWithRecalculated });
   } catch (error) {
     console.error('Error fetching weeks:', error);
     return NextResponse.json({ error: 'Erro ao buscar semanas' }, { status: 500 });

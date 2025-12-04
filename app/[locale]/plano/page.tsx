@@ -84,6 +84,7 @@ interface CustomWeek {
   startDate: string;
   endDate: string;
   totalDistance: number;
+  executedDistance?: number; // Volume executado (calculado)
   totalWorkouts: number;
   completedWorkouts: number;
   phase: string;
@@ -592,7 +593,15 @@ export default function PlanoPage() {
                     <div className="flex justify-between items-center text-sm text-slate-600">
                       <span className="flex items-center gap-1.5">
                         <Activity className="h-4 w-4 text-brand-primary" />
-                        {t('weekNavigation.volume')}: {currentWeek.totalDistance.toFixed(1)} km
+                        {t('weekNavigation.volume')}: 
+                        <span className="font-semibold">
+                          {(currentWeek.executedDistance || 0).toFixed(1)} km
+                        </span>
+                        {currentWeek.executedDistance !== currentWeek.totalDistance && (
+                          <span className="text-xs text-slate-500">
+                            / {currentWeek.totalDistance.toFixed(1)} km planejado
+                          </span>
+                        )}
                       </span>
                       <span className="font-semibold">
                         {Math.round((currentWeek.completedWorkouts / currentWeek.totalWorkouts) * 100)}% {t('weekNavigation.completed')}
