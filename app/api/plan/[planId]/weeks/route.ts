@@ -58,6 +58,9 @@ export async function GET(
 
     console.log('[WEEKS API] Found completed workouts:', allCompletedWorkouts.length);
 
+    // Array para coletar treinos auto-matched
+    const allAutoMatchedIds: number[] = [];
+
     // Recalcular volume e progresso para cada semana
     const weeksWithRecalculated = plan.weeks.map(week => {
       const completedCount = week.workouts.filter(w => w.isCompleted).length;
@@ -99,17 +102,40 @@ export async function GET(
       }, 0);
       const totalExecutedVolume = executedVolume + orphansVolume;
 
-      // Processar workouts: mesclar órfãos com planejados correspondentes
+      // Processar workouts: vincular treinos executados no mesmo dia
       const processedWorkouts = week.workouts.map(w => {
-        // Verificar se existe órfão para este dia planejado
+        const workoutDate = new Date(w.date).toISOString().split('T')[0];
+        
+        // PRIORIDADE 1: Buscar treino executado NO MESMO DIA (auto-match)
+        const sameDay = allCompletedWorkouts.find(completed => {
+          const completedDate = new Date(completed.date).toISOString().split('T')[0];
+          // Mesmo dia E tipo compatível E não vinculado a outro workout
+          return completedDate === workoutDate && 
+                 completed.type === w.type &&
+                 !completed.wasPlanned; // Ainda não vinculado
+        });
+
+        if (sameDay) {
+          // Vincular automaticamente (auto-match)
+          return {
+            ...w,
+            isCompleted: true,
+            completedWorkoutId: sameDay.id,
+            executedWorkoutId: sameDay.id,
+            wasSubstitution: false, // Mesmo dia = não é substituição
+            completedWorkout: sameDay,
+            executedWorkout: sameDay,
+          };
+        }
+
+        // PRIORIDADE 2: Verificar se existe órfão (outro dia) para este planejado
         const orphan = orphansInWeek.find(o => {
           if (!o.plannedDate) return false;
           const orphanPlannedDate = new Date(o.plannedDate).toISOString().split('T')[0];
-          const workoutDate = new Date(w.date).toISOString().split('T')[0];
           return orphanPlannedDate === workoutDate;
         });
 
-        // Se existe órfão, mesclar dados
+        // Se existe órfão, mesclar dados (substituição)
         if (orphan) {
           return {
             ...w,
@@ -122,9 +148,16 @@ export async function GET(
           };
         }
 
-        // Senão, retornar workout original
+        // Senão, retornar workout original (não executado)
         return { ...w };
       });
+
+      // Coletar IDs dos treinos auto-matched para atualizar depois
+      const autoMatchedIds = processedWorkouts
+        .filter(w => w.completedWorkoutId && !w.wasSubstitution)
+        .map(w => w.completedWorkoutId!);
+      
+      allAutoMatchedIds.push(...autoMatchedIds);
 
       // Adicionar órfãos no dia de EXECUÇÃO (para mostrar no sábado também)
       // TODOS os órfãos devem aparecer no dia que foram executados
@@ -243,6 +276,15 @@ export async function GET(
         workouts: allWorkouts // INCLUIR ÓRFÃOS MESCLADOS
       };
     });
+
+    // Atualizar banco: marcar treinos auto-matched como wasPlanned=true
+    if (allAutoMatchedIds.length > 0) {
+      await prisma.completedWorkout.updateMany({
+        where: { id: { in: allAutoMatchedIds } },
+        data: { wasPlanned: true }
+      });
+      console.log('[WEEKS API] Auto-matched', allAutoMatchedIds.length, 'workouts');
+    }
 
     return NextResponse.json({ weeks: weeksWithRecalculated });
   } catch (error) {
