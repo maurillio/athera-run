@@ -63,12 +63,14 @@ export function useWorkoutMatcher(
       return;
     }
 
-    // Throttle: no máximo 1 check a cada 30 segundos
+    // Throttle: no máximo 1 check a cada 10 segundos (para testes rápidos)
     const now = Date.now();
-    if (now - lastCheck < 30000) {
+    if (now - lastCheck < 10000) {
+      console.log('[useWorkoutMatcher] Throttled, aguardando...', Math.round((10000 - (now - lastCheck)) / 1000), 's');
       return;
     }
 
+    console.log('[useWorkoutMatcher] Checking for matches...');
     setLoading(true);
     setError(null);
 

@@ -98,7 +98,11 @@ export async function POST(req: Request) {
       take: 20, // Máximo 20 treinos para analisar
     });
 
+    console.log('[detect-matches] Found completed workouts:', completedWorkouts.length);
+    console.log('[detect-matches] Completed IDs:', completedWorkouts.map(w => ({ id: w.id, date: w.date, type: w.type, wasPlanned: w.wasPlanned })));
+
     if (completedWorkouts.length === 0) {
+      console.log('[detect-matches] No completed workouts found');
       return NextResponse.json({
         success: true,
         suggestions: [],
