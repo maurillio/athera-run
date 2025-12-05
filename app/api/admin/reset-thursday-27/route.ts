@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { Pool } from '@neondatabase/serverless';
+import { prisma } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,29 +10,28 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-
     // Resetar quinta 27/11/2025 (running planejado bugado)
-    const result = await pool.query(`
-      UPDATE "CustomWorkout"
-      SET 
-        "isCompleted" = false,
-        "executedWorkoutId" = NULL,
-        "completedWorkoutId" = NULL,
-        "wasSubstitution" = false
-      WHERE date::date = '2025-11-27'
-        AND type = 'running'
-        AND "isCompleted" = true
-      RETURNING id, type, date;
-    `);
-
-    await pool.end();
+    const result = await prisma.customWorkout.updateMany({
+      where: {
+        date: {
+          gte: new Date('2025-11-27T00:00:00.000Z'),
+          lt: new Date('2025-11-28T00:00:00.000Z'),
+        },
+        type: 'running',
+        isCompleted: true,
+      },
+      data: {
+        isCompleted: false,
+        executedWorkoutId: null,
+        completedWorkoutId: null,
+        wasSubstitution: false,
+      },
+    });
 
     return NextResponse.json({
       status: 'success',
       message: 'Quinta 27 (running) resetada!',
-      updated: result.rowCount,
-      workouts: result.rows
+      updated: result.count,
     });
   } catch (error: any) {
     console.error('[Reset Thursday 27] Error:', error);
