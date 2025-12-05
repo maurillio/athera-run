@@ -68,10 +68,9 @@ export async function GET(request: Request) {
           { type: 'Run' },
           { type: 'Running' },
         ],
-        // NÃO mostrar treinos que já foram usados em matches
-        // Verificar TANTO plannedWorkoutId (antigo) quanto customWorkout (novo)
-        plannedWorkoutId: null,
-        customWorkout: null,
+        // NÃO mostrar treinos que já estão vinculados a algum workout planejado
+        // Usar wasPlanned=false para pegar apenas treinos ainda não vinculados
+        wasPlanned: false,
       },
       orderBy: {
         date: 'desc',
