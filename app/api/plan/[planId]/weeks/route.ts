@@ -132,16 +132,36 @@ export async function GET(
         // Verificar se órfão tem match com workout planejado (wasPlanned=true)
         const hasMatch = orphan.wasPlanned === true;
         
-        // Buscar workout planejado próximo (±3 dias) para sugerir match
+        // Buscar workout planejado MAIS PRÓXIMO (±3 dias) para sugerir match
         const orphanDate = new Date(orphan.date);
-        const nearbyPlanned = week.workouts.find(w => {
-          if (w.isCompleted) return false; // Já concluído
-          if (w.type === 'rest') return false; // Descanso
+        
+        // Filtrar candidatos (não concluídos, não descanso, dentro da janela)
+        const candidates = week.workouts.filter(w => {
+          if (w.isCompleted) return false;
+          if (w.type === 'rest') return false;
           
           const wDate = new Date(w.date);
           const daysDiff = Math.abs((wDate.getTime() - orphanDate.getTime()) / (1000 * 60 * 60 * 24));
-          return daysDiff <= 3; // Dentro da janela
+          return daysDiff <= 3;
         });
+
+        // Ordenar por proximidade de data E distância
+        const nearbyPlanned = candidates.sort((a, b) => {
+          const aDate = new Date(a.date);
+          const bDate = new Date(b.date);
+          const aDaysDiff = Math.abs((aDate.getTime() - orphanDate.getTime()) / (1000 * 60 * 60 * 24));
+          const bDaysDiff = Math.abs((bDate.getTime() - orphanDate.getTime()) / (1000 * 60 * 60 * 24));
+          
+          // Se mesma distância de dias, comparar por similaridade de distância
+          if (aDaysDiff === bDaysDiff) {
+            const aDistDiff = Math.abs((a.distance || 0) - (orphan.distance || 0));
+            const bDistDiff = Math.abs((b.distance || 0) - (orphan.distance || 0));
+            return aDistDiff - bDistDiff;
+          }
+          
+          // Senão, mais próximo por data
+          return aDaysDiff - bDaysDiff;
+        })[0]; // Pegar o primeiro (mais próximo)
 
         return {
           id: -orphan.id,

@@ -734,28 +734,46 @@ export default function PlanoPage() {
                                   // COMPACTO - Resumo em uma linha
                                   <div className="text-sm text-gray-700">
                                     {dayWorkouts.length === 1 ? (
-                                      <div className="flex items-center justify-between relative gap-2">
-                                        <span className="font-medium inline-flex items-center gap-2">
-                                          {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
-                                          {firstWorkout.title}
-                                        </span>
-                                        <div className="flex items-center gap-1">
-                                          {firstWorkout.distance && (
-                                            <Badge variant="secondary" className="text-xs">
-                                              {firstWorkout.distance} km
-                                            </Badge>
-                                          )}
-                                          {firstWorkout.isCompleted && firstWorkout.wasSubstitution && (
-                                            <Badge className="bg-purple-500 text-white text-xs">
-                                              🔄
-                                            </Badge>
-                                          )}
+                                      <>
+                                        <div className="flex items-center justify-between relative gap-2">
+                                          <span className="font-medium inline-flex items-center gap-2">
+                                            {getWorkoutIcon(firstWorkout.type, firstWorkout.title)}
+                                            {firstWorkout.title}
+                                          </span>
+                                          <div className="flex items-center gap-1">
+                                            {firstWorkout.distance && (
+                                              <Badge variant="secondary" className="text-xs">
+                                                {firstWorkout.distance} km
+                                              </Badge>
+                                            )}
+                                            {firstWorkout.isCompleted && firstWorkout.wasSubstitution && (
+                                              <Badge className="bg-purple-500 text-white text-xs">
+                                                🔄
+                                              </Badge>
+                                            )}
+                                          </div>
+                                          {/* Athera Flex Badge */}
+                                          <ClientOnly>
+                                            <WorkoutFlexBadge workoutId={firstWorkout.id} />
+                                          </ClientOnly>
                                         </div>
-                                        {/* Athera Flex Badge */}
-                                        <ClientOnly>
-                                          <WorkoutFlexBadge workoutId={firstWorkout.id} />
-                                        </ClientOnly>
-                                      </div>
+                                        
+                                        {/* Mensagem órfão sem match */}
+                                        {firstWorkout.isOrphan && !firstWorkout.hasMatch && firstWorkout.suggestedMatch && (
+                                          <div className="mt-2 text-xs text-blue-700 bg-blue-50 p-2 rounded border border-blue-200">
+                                            📋 Executado fora do planejamento.{' '}
+                                            <button 
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleDay(dateKey);
+                                              }}
+                                              className="underline hover:text-blue-900 font-medium"
+                                            >
+                                              Ver detalhes
+                                            </button>
+                                          </div>
+                                        )}
+                                      </>
                                     ) : (
                                       <div className="font-medium text-slate-700">
                                         {dayWorkouts.map((w, idx) => {
