@@ -59,6 +59,16 @@ export async function GET(
     });
 
     console.log('[WEEKS API] Found orphan workouts:', orphanWorkouts.length);
+    if (orphanWorkouts.length > 0) {
+      console.log('[WEEKS API] Orphan details:', orphanWorkouts.map(o => ({
+        id: o.id,
+        date: o.date.toISOString().split('T')[0],
+        plannedDate: o.plannedDate?.toISOString().split('T')[0],
+        distance: o.distance,
+        wasPlanned: o.wasPlanned,
+        wasSubstitution: o.wasSubstitution
+      })));
+    }
 
     // Recalcular volume e progresso para cada semana
     const weeksWithRecalculated = plan.weeks.map(week => {
@@ -162,7 +172,8 @@ export async function GET(
         ...week,
         completedWorkouts: completedCount + orphansInWeek.length, // Incluir órfãos na contagem
         // Manter totalDistance planejado, mas adicionar campo executedDistance
-        executedDistance: executedVolume + orphansInWeek.reduce((sum, o) => sum + (o.distance || 0), 0),
+        // NÃO somar órfãos aqui porque já foram mesclados nos processedWorkouts!
+        executedDistance: executedVolume,
         orphanWorkouts: orphansInWeek, // MANTIDO para debug/referência
         workouts: allWorkouts // INCLUIR ÓRFÃOS MESCLADOS
       };
