@@ -3,18 +3,20 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get('email');
+    
+    if (!email) {
+      return NextResponse.json({ error: 'Email required: ?email=seu@email.com' }, { status: 400 });
     }
 
     const workouts = await prisma.customWorkout.findMany({
       where: {
         week: {
           is: {
-            userId: session.user.email
+            userId: email
           }
         },
         date: {
