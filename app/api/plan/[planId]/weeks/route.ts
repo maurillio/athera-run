@@ -89,8 +89,14 @@ export async function GET(
         return !hasPlannedSameDay;
       });
 
-      // Somar volume dos órfãos ao executedVolume
-      const orphansVolume = orphansInWeek.reduce((sum, o) => sum + (o.distance || 0), 0);
+      // Somar volume dos órfãos APENAS se NÃO têm match
+      // Se órfão tem match, já está contado no executedVolume do workout planejado
+      const orphansVolume = orphansInWeek.reduce((sum, o) => {
+        // Se órfão tem match (wasPlanned=true), não somar (já contado)
+        if (o.wasPlanned) return sum;
+        // Se órfão SEM match, somar
+        return sum + (o.distance || 0);
+      }, 0);
       const totalExecutedVolume = executedVolume + orphansVolume;
 
       // Processar workouts: mesclar órfãos com planejados correspondentes
