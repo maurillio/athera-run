@@ -131,7 +131,11 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={handleUndoMatch}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      handleUndoMatch();
+                    }}
                     disabled={undoingMatch}
                     className="text-xs h-7 border-red-200 hover:border-red-400 hover:bg-red-50"
                   >
@@ -438,7 +442,11 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={handleUndoMatch}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      handleUndoMatch();
+                    }}
                     disabled={undoingMatch}
                     className="text-xs h-6 border-red-200 hover:border-red-400 hover:bg-red-50"
                   >

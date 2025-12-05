@@ -105,10 +105,47 @@ export async function GET(
         return { ...w };
       });
 
-      // Ordenar por data
-      const allWorkouts = processedWorkouts.sort((a, b) => 
-        new Date(a.date).getTime() - new Date(b.date).getTime()
-      );
+      // Adicionar órfãos no dia de EXECUÇÃO (para mostrar no sábado também)
+      const orphansNotMatched = orphansInWeek.filter(o => {
+        if (!o.plannedDate) return true; // Órfão sem data planejada
+        
+        // Verificar se já foi mesclado com algum workout planejado
+        const wasMatched = processedWorkouts.some(w => {
+          const workoutDate = new Date(w.date).toISOString().split('T')[0];
+          const orphanPlannedDate = new Date(o.plannedDate).toISOString().split('T')[0];
+          return workoutDate === orphanPlannedDate && w.executedWorkoutId === o.id;
+        });
+        
+        return !wasMatched;
+      });
+
+      // Converter órfãos não mesclados em workouts para dia de execução
+      const orphansAsWorkouts = orphansNotMatched.map(orphan => ({
+        id: -orphan.id,
+        weekId: week.id,
+        dayOfWeek: new Date(orphan.date).getDay(),
+        date: orphan.date, // Data de EXECUÇÃO (sábado)
+        type: orphan.type,
+        subtype: orphan.subtype,
+        title: `${orphan.type} (Executado)`,
+        description: orphan.notes || 'Treino executado',
+        distance: orphan.distance,
+        duration: orphan.duration,
+        targetPace: orphan.pace,
+        isCompleted: true,
+        completedWorkoutId: orphan.id,
+        executedWorkoutId: orphan.id,
+        wasSubstitution: false, // NÃO é substituição no dia de execução
+        completedWorkout: orphan,
+        executedWorkout: orphan,
+        isOrphan: true
+      }));
+
+      // Mesclar workouts planejados processados + órfãos no dia de execução
+      const allWorkouts = [
+        ...processedWorkouts,
+        ...orphansAsWorkouts
+      ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
       return {
         ...week,
