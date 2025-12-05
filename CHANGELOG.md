@@ -7,6 +7,60 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.22] - 05/DEZ/2025 11:20 UTC 🐛 **FIX CRÍTICO: Órfãos na Data Correta**
+
+### 🎯 Problema Relatado (pós v4.0.21)
+
+**Sábado 29:** Mostrando treino executado órfão  
+**Domingo 30:** Mostrando apenas "Longão - 6km" (planejado vazio)
+
+**Esperado:**
+- Sábado 29: Vazio (sem treino planejado)
+- Domingo 30: Badge roxo + "16.2km executados" (órfão mesclado)
+
+### 🔍 Diagnóstico
+
+**Causa:** API weeks usava `orphan.date` (data de EXECUÇÃO) para posicionar órfão
+- Treino executado no **sábado 29** (data real)
+- Mas planejado para **domingo 30**
+- Frontend agrupa por `workout.date`, então órfão aparecia no sábado
+
+### ✅ Solução Implementada
+
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts` linha 86
+
+```typescript
+// ANTES:
+date: orphan.date,  // ❌ Data de execução (sábado 29)
+
+// DEPOIS:
+date: orphan.plannedDate || orphan.date,  // ✅ Data planejada (domingo 30)
+```
+
+### 📊 Resultado
+
+**ANTES (v4.0.21):**
+- Sábado 29: Card com órfão (errado)
+- Domingo 30: Vazio (errado)
+
+**DEPOIS (v4.0.22):**
+- ✅ Sábado 29: Vazio (correto)
+- ✅ Domingo 30: Badge roxo + "16.2km, 6:18/km" (correto)
+
+### 📁 Arquivos Modificados
+
+- `app/api/plan/[planId]/weeks/route.ts` (linhas 85-86)
+  - Órfãos usam `plannedDate` em vez de `date`
+
+### 🧪 Validação
+
+**Checklist em produção (aguardar deploy ~2-3 min):**
+- [ ] Sábado 29 vazio?
+- [ ] Domingo 30 mostra badge roxo + dados reais?
+- [ ] Data "Executado em: 29/11" aparece no domingo?
+
+---
+
 ## [v4.0.21] - 05/DEZ/2025 11:15 UTC 🔧 **FIX: Dados Executados + Botão Desfazer**
 
 ### 🎯 Problema Relatado (pós v4.0.20)
