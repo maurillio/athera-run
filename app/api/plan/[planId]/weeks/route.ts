@@ -116,32 +116,8 @@ export async function GET(
       });
 
       // Adicionar órfãos no dia de EXECUÇÃO (para mostrar no sábado também)
-      const orphansNotMatched = orphansInWeek.filter(o => {
-        if (!o.plannedDate) return true; // Órfão sem data planejada
-        
-        // Verificar se já foi mesclado com algum workout planejado
-        const wasMatched = processedWorkouts.some(w => {
-          const workoutDate = new Date(w.date).toISOString().split('T')[0];
-          const orphanPlannedDate = new Date(o.plannedDate).toISOString().split('T')[0];
-          return workoutDate === orphanPlannedDate && w.executedWorkoutId === o.id;
-        });
-        
-        return !wasMatched;
-      });
-
-      console.log('[WEEKS API] Week', week.weekNumber, '- Orphans in week:', orphansInWeek.length);
-      console.log('[WEEKS API] Week', week.weekNumber, '- Orphans not matched:', orphansNotMatched.length);
-      if (orphansNotMatched.length > 0) {
-        console.log('[WEEKS API] Orphans details:', orphansNotMatched.map(o => ({
-          id: o.id,
-          date: o.date,
-          plannedDate: o.plannedDate,
-          distance: o.distance
-        })));
-      }
-
-      // Converter órfãos não mesclados em workouts para dia de execução
-      const orphansAsWorkouts = orphansNotMatched.map(orphan => ({
+      // TODOS os órfãos devem aparecer no dia que foram executados
+      const orphansAsWorkouts = orphansInWeek.map(orphan => ({
         id: -orphan.id,
         weekId: week.id,
         dayOfWeek: new Date(orphan.date).getDay(),
@@ -161,6 +137,16 @@ export async function GET(
         executedWorkout: orphan,
         isOrphan: true
       }));
+
+      console.log('[WEEKS API] Week', week.weekNumber, '- Orphans in week:', orphansInWeek.length);
+      console.log('[WEEKS API] Week', week.weekNumber, '- Orphans as workouts:', orphansAsWorkouts.length);
+      if (orphansAsWorkouts.length > 0) {
+        console.log('[WEEKS API] Orphans details:', orphansAsWorkouts.map(o => ({
+          id: o.id,
+          date: o.date,
+          distance: o.distance
+        })));
+      }
 
       // Mesclar workouts planejados processados + órfãos no dia de execução
       const allWorkouts = [
