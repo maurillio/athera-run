@@ -7,6 +7,106 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.20] - 05/DEZ/2025 10:50 UTC 🐛 **HOTFIX: Exibição Athera Flex (órfãos + badges)**
+
+### 🎯 Problema Relatado
+
+Usuário reportou:
+- Domingo não mostra qual corrida foi selecionada (badge substituição ausente)
+- Sábado continua cinza (não exibe treino executado de 16km)
+
+### 🔍 Diagnóstico
+
+**Causa 1:** API weeks sobrescrevia campos do banco
+```typescript
+// ERRADO (linha 90):
+wasSubstitution: w.wasSubstitution || false,  // ❌ Apaga true!
+```
+
+**Causa 2:** Treinos órfãos em array separado não renderizados
+- API retornava `orphanWorkouts[]` mas frontend não renderizava
+- Treinos executados em dias diferentes ficavam invisíveis
+
+### ✅ Solução Implementada
+
+#### 1. Preservar Campos do Banco
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts`
+
+**ANTES:**
+```typescript
+workouts: week.workouts.map(w => ({
+  ...w,
+  wasSubstitution: w.wasSubstitution || false,  // ❌ Apaga true
+  executedWorkout: w.executedWorkout || undefined,
+  completedWorkout: w.completedWorkout || undefined
+}))
+```
+
+**DEPOIS:**
+```typescript
+workouts: week.workouts.map(w => ({
+  ...w,
+  // ✅ Preserva TODOS campos do banco (não sobrescreve)
+}))
+```
+
+#### 2. Mesclar Órfãos no Array de Workouts
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts`
+
+- ✅ Converte `CompletedWorkout` órfãos em formato `CustomWorkout`
+- ✅ Adiciona flag `isOrphan: true`
+- ✅ Mescla com workouts planejados, ordena por data
+- ✅ Frontend renderiza automaticamente (já tinha lógica pronta)
+
+**Novo código:**
+```typescript
+// Converter órfãos em formato de CustomWorkout
+const orphansAsWorkouts = orphansInWeek.map(orphan => ({
+  id: -orphan.id, // ID negativo para diferenciar
+  date: orphan.date,
+  type: orphan.type,
+  title: `${orphan.type} (Executado)`,
+  isCompleted: true,
+  wasSubstitution: true,
+  completedWorkout: orphan,
+  isOrphan: true
+}));
+
+// Mesclar e ordenar
+const allWorkouts = [
+  ...week.workouts,
+  ...orphansAsWorkouts
+].sort((a, b) => new Date(a.date) - new Date(b.date));
+```
+
+### 📊 Impacto
+
+**ANTES:**
+- Domingo verde mas sem badge "🔄 Substituição"
+- Sábado cinza (órfão invisível)
+
+**DEPOIS:**
+- ✅ Domingo mostra badge roxo "🔄 Substituição"
+- ✅ Sábado mostra card verde "16.2km executados"
+- ✅ Mensagem "Executado em dia diferente" aparece
+- ✅ Volume semanal correto (inclui órfãos)
+
+### 📁 Arquivos Modificados
+
+- `app/api/plan/[planId]/weeks/route.ts` (linhas 75-113)
+  - Removido sobrescrita de campos
+  - Adicionado lógica de mesclagem de órfãos
+
+### 🧪 Validação
+
+**Checklist em produção (aguardar deploy ~2-3 min):**
+- [ ] Domingo mostra badge "🔄 Substituição"?
+- [ ] Sábado mostra card verde com dados do treino?
+- [ ] Volume semanal correto (inclui órfão)?
+- [ ] Botão "Desfazer" visível?
+
+---
+
 ## [v4.0.19] - 04/DEZ/2025 21:00 UTC 🔧 **FIX: Athera Flex Display Issues**
 
 ### 🐛 4 Problemas Corrigidos
