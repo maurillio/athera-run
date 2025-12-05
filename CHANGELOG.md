@@ -7,6 +7,57 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.8] - 05/DEZ/2025 20:00 UTC
+
+### [Fix] - Reduzir Threshold de Confidence (70% → 60%)
+
+**Problema Identificado:**
+- Pop-up não aparece para match de 16.2km executado vs 6km planejado
+- Diferença de volume: +170% (muito grande)
+- Hook usa `minConfidence: 70%` mas matching calcula <70% para este caso
+- Resultado: Sugestão rejeitada antes de chegar no pop-up
+
+**Análise do Caso Real:**
+- **29/Nov (SAB):** Executou 16.231km (órfão - "fora do planejamento")
+- **30/Nov (DOM):** Planejado 6km (Longão)
+- **Diferença:** +170% de volume, 1 dia de distância
+- **Scores estimados:**
+  - Date Score: ~95% (1 dia de diferença = excelente)
+  - Type Score: 100% (running = running)
+  - Volume Score: ~30% (170% de diferença = péssimo)
+  - **Confidence final:** ~60-65% (média ponderada)
+
+**Por que 70% era muito alto:**
+- Treinos com grande diferença de volume são comuns
+- Atleta pode ter feito substitution intencional
+- 60% ainda é razoável para sugestão (não auto-apply)
+
+**Solução Implementada:**
+```typescript
+// ANTES
+minConfidence: 70
+
+// DEPOIS
+minConfidence: 60
+```
+
+**Impacto:**
+- ✅ Permite matches com diferença de volume até ~150-200%
+- ✅ Ainda mantém qualidade (60% é razoável)
+- ✅ Pop-up deve aparecer para casos como 16km vs 6km
+- ⚠️ Pode gerar mais sugestões (mas atleta decide aceitar ou rejeitar)
+
+**Arquivos Modificados:**
+- `components/athera-flex/CalendarFlexIntegration.tsx` (linha 55)
+
+**Validação:**
+- ✅ Commit: fdc7d618
+- ✅ Push: concluído
+- ⏳ Deploy Vercel: em andamento
+- ⏳ Testar com cenário real: aguardando
+
+---
+
 ## [v5.0.7] - 05/DEZ/2025 19:45 UTC
 
 ### [Debug] - Logs Detalhados API Detect-Matches
