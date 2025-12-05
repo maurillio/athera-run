@@ -7,6 +7,94 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.21] - 05/DEZ/2025 11:15 UTC 🔧 **FIX: Dados Executados + Botão Desfazer**
+
+### 🎯 Problema Relatado (pós v4.0.20)
+
+Após hotfix anterior, ainda havia 2 problemas:
+- **Domingo:** Mostrava como concluído mas sem volume real (dados do planejado, não executado)
+- **Sábado:** Mostrava corretamente badge roxo + detalhes, mas faltava botão "Desfazer"
+
+### 🔍 Diagnóstico
+
+**Causa:** Componente `WorkoutDetails.tsx` sempre usava `workout.distance` (planejado)
+- Para substituições, deveria usar `workout.executedWorkout.distance`
+- Botão "Desfazer Match" não existia no componente
+
+### ✅ Solução Implementada
+
+#### 1. Lógica de Display Inteligente
+**Arquivo:** `components/workout-details.tsx`
+
+```typescript
+// Determinar qual workout mostrar (planejado ou executado)
+const displayWorkout = workout.wasSubstitution && workout.executedWorkout 
+  ? workout.executedWorkout  // ✅ Usa dados do executado
+  : workout;                  // ✅ Usa dados do planejado
+```
+
+#### 2. Badges Mostram Dados Reais
+```typescript
+// ANTES:
+{workout.distance} km  // ❌ Sempre planejado
+
+// DEPOIS:
+{displayWorkout.distance} km  // ✅ Executado se substituição
+```
+
+#### 3. Botão "Desfazer Match"
+```typescript
+const handleUndoMatch = async () => {
+  if (!workout.executedWorkoutId) return;
+  
+  await fetch(`/api/athera-flex/undo/${workout.executedWorkoutId}`, {
+    method: 'POST'
+  });
+  
+  window.location.reload();
+};
+```
+
+#### 4. Mostra Data de Execução Real
+```typescript
+{workout.executedWorkout?.date && (
+  <span className="block mt-1 text-xs">
+    Executado em: {new Date(workout.executedWorkout.date).toLocaleDateString('pt-BR')}
+  </span>
+)}
+```
+
+### 📊 Resultado
+
+**ANTES (v4.0.20):**
+- Domingo: Badge verde + roxo, mas sem volume/pace real
+- Sábado: Dados corretos mas sem botão desfazer
+
+**DEPOIS (v4.0.21):**
+- ✅ Domingo: Badge roxo + "16.2km, 6:18/km" (dados reais)
+- ✅ Sábado: Botão "Desfazer Match" visível
+- ✅ Data de execução real exibida
+- ✅ Aplicado em WorkoutDetails E SimpleWorkoutView
+
+### 📁 Arquivos Modificados
+
+- `components/workout-details.tsx` (linhas 34-41, 93-130, 346-398)
+  - Adicionado lógica `displayWorkout`
+  - Adicionado `handleUndoMatch`
+  - Badges usam dados executados
+  - Aplicado em ambos os componentes (WorkoutDetails + SimpleWorkoutView)
+
+### 🧪 Validação
+
+**Checklist em produção (aguardar deploy ~2-3 min):**
+- [ ] Domingo mostra volume/pace REAL (16.2km, 6:18/km)?
+- [ ] Domingo mostra data "Executado em: DD/MM"?
+- [ ] Domingo tem botão "Desfazer Match"?
+- [ ] Sábado continua mostrando dados corretos?
+- [ ] Botão "Desfazer" realmente desfaz match?
+
+---
+
 ## [v4.0.20] - 05/DEZ/2025 10:50 UTC 🐛 **HOTFIX: Exibição Athera Flex (órfãos + badges)**
 
 ### 🎯 Problema Relatado

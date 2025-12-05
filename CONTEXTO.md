@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.20 - Hotfix Athera Flex Display (05/Dez/2025 10:50 UTC)  
-**Versão Atual:** v4.0.20 ✅ ATHERA FLEX ÓRFÃOS + BADGES CORRIGIDOS  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.21 - Dados Executados + Botão Desfazer (05/Dez/2025 11:15 UTC)  
+**Versão Atual:** v4.0.21 ✅ ATHERA FLEX DISPLAY 100% CORRETO  
 **Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
