@@ -78,21 +78,44 @@ export async function GET(
         return date >= new Date(week.startDate) && date <= new Date(week.endDate);
       });
 
+      // Converter órfãos em formato de CustomWorkout para o frontend renderizar
+      const orphansAsWorkouts = orphansInWeek.map(orphan => ({
+        id: -orphan.id, // ID negativo para diferenciar de workouts planejados
+        weekId: week.id,
+        dayOfWeek: new Date(orphan.date).getDay(),
+        date: orphan.date,
+        type: orphan.type,
+        subtype: orphan.subtype,
+        title: `${orphan.type} (Executado)`,
+        description: orphan.notes || 'Treino executado sem planejamento prévio',
+        distance: orphan.distance,
+        duration: orphan.duration,
+        targetPace: orphan.pace,
+        isCompleted: true,
+        completedWorkoutId: orphan.id,
+        executedWorkoutId: orphan.id,
+        wasSubstitution: true,
+        createdAt: orphan.createdAt,
+        updatedAt: orphan.updatedAt,
+        completedWorkout: orphan, // Dados completos do treino executado
+        executedWorkout: orphan,
+        // Flag especial para indicar que é órfão
+        isOrphan: true
+      }));
+
+      // Mesclar workouts planejados + órfãos, ordenar por data
+      const allWorkouts = [
+        ...week.workouts.map(w => ({ ...w })),
+        ...orphansAsWorkouts
+      ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
       return {
         ...week,
-        completedWorkouts: completedCount,
+        completedWorkouts: completedCount + orphansInWeek.length, // Incluir órfãos na contagem
         // Manter totalDistance planejado, mas adicionar campo executedDistance
-        executedDistance: executedVolume,
-        orphanWorkouts: orphansInWeek, // NOVO: treinos órfãos
-        workouts: week.workouts.map(w => ({
-          ...w,
-          // Adicionar flag de substituição
-          wasSubstitution: w.wasSubstitution || false,
-          // Manter executedWorkout se existir (treino real)
-          executedWorkout: w.executedWorkout || undefined,
-          // Manter completedWorkout para exibir dados do treino executado
-          completedWorkout: w.completedWorkout || undefined
-        }))
+        executedDistance: executedVolume + orphansInWeek.reduce((sum, o) => sum + (o.distance || 0), 0),
+        orphanWorkouts: orphansInWeek, // MANTIDO para debug/referência
+        workouts: allWorkouts // INCLUIR ÓRFÃOS MESCLADOS
       };
     });
 
