@@ -7,6 +7,90 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v4.0.23] - 05/DEZ/2025 11:25 UTC 🎯 **FIX FINAL: Mesclar Órfãos (não duplicar)**
+
+### 🎯 Problema Relatado (pós v4.0.22)
+
+**Domingo 30 com 2 treinos:**
+1. Longão 6km (planejado, vazio)
+2. running (Executado) 16.2km (órfão)
+
+**Esperado:** APENAS 1 treino mostrando dados reais
+
+### 🔍 Diagnóstico
+
+**Causa:** API weeks **adicionava** órfão ao array em vez de **mesclar** com planejado
+- `allWorkouts = [...planejados, ...órfãos]` → Duplicação
+- Órfão deveria **substituir** o planejado correspondente
+
+### ✅ Solução Implementada
+
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts` linhas 82-106
+
+```typescript
+// ANTES: Adicionava órfão ao array (duplicação)
+const allWorkouts = [
+  ...week.workouts,
+  ...orphansAsWorkouts  // ❌ Cria duplicata
+];
+
+// DEPOIS: Mescla órfão com planejado correspondente
+const processedWorkouts = week.workouts.map(w => {
+  // Buscar órfão para este dia planejado
+  const orphan = orphansInWeek.find(o => {
+    const orphanPlannedDate = new Date(o.plannedDate).toISOString().split('T')[0];
+    const workoutDate = new Date(w.date).toISOString().split('T')[0];
+    return orphanPlannedDate === workoutDate;
+  });
+
+  // Se existe órfão, mesclar dados
+  if (orphan) {
+    return {
+      ...w,  // ✅ Mantém workout planejado
+      isCompleted: true,
+      completedWorkoutId: orphan.id,
+      executedWorkoutId: orphan.id,
+      wasSubstitution: true,
+      completedWorkout: orphan,  // ✅ Dados reais
+      executedWorkout: orphan
+    };
+  }
+
+  return { ...w };  // Sem órfão, retorna planejado original
+});
+```
+
+### 📊 Resultado Final
+
+**ANTES (v4.0.22):**
+- Domingo 30: **2 treinos** (planejado + órfão)
+- Sábado 29: Vazio
+
+**DEPOIS (v4.0.23):**
+- ✅ Domingo 30: **1 treino** (Longão 6km com badge roxo + "16.2km executados")
+- ✅ Sábado 29: Descanso (vazio)
+- ✅ Badge "Executado em: 29/11"
+- ✅ Botão "Desfazer Match"
+
+### 📁 Arquivos Modificados
+
+- `app/api/plan/[planId]/weeks/route.ts` (linhas 82-112)
+  - Substituído lógica de adição por mesclagem
+  - Busca órfão por `plannedDate`
+  - Mescla dados no workout correspondente
+
+### 🧪 Validação
+
+**Checklist em produção (aguardar deploy ~2-3 min):**
+- [ ] Domingo 30 tem APENAS 1 treino?
+- [ ] Treino mostra "Longão 6km" (título planejado)?
+- [ ] Badge roxo + "16.2km, 6:18/km" (dados reais)?
+- [ ] Mostra "Executado em: 29/11"?
+- [ ] Botão "Desfazer Match" presente?
+- [ ] Sábado 29 continua vazio (descanso)?
+
+---
+
 ## [v4.0.22] - 05/DEZ/2025 11:20 UTC 🐛 **FIX CRÍTICO: Órfãos na Data Correta**
 
 ### 🎯 Problema Relatado (pós v4.0.21)

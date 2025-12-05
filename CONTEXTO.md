@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.22 - Órfãos na Data Correta (05/Dez/2025 11:20 UTC)  
-**Versão Atual:** v4.0.22 ✅ ATHERA FLEX 100% FUNCIONAL  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v4.0.23 - Mesclar Órfãos Corretamente (05/Dez/2025 11:25 UTC)  
+**Versão Atual:** v4.0.23 ✅ ATHERA FLEX PERFEITO  
 **Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
