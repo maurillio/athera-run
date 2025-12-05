@@ -235,7 +235,7 @@ export async function GET(
 
       return {
         ...week,
-        completedWorkouts: completedCount + orphansInWeek.length, // Incluir órfãos na contagem
+        completedWorkouts: completedCount + orphansInWeek.filter(o => !o.wasPlanned).length, // Incluir apenas órfãos SEM match
         // Manter totalDistance planejado, mas adicionar campo executedDistance
         // NÃO somar órfãos aqui porque já foram mesclados nos processedWorkouts!
         executedDistance: totalExecutedVolume,
