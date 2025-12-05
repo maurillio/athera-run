@@ -243,11 +243,3 @@ export async function POST(req: Request) {
     );
   }
 }
-  } catch (error: any) {
-    console.error('[Apply Adjustment] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
-      { status: 500 }
-    );
-  }
-}
