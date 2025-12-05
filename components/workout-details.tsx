@@ -52,19 +52,26 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
   };
 
   const handleUndoMatch = async () => {
-    if (!workout.executedWorkoutId) return;
+    if (!workout.id) return;
     
     setUndoingMatch(true);
     try {
-      const response = await fetch(`/api/athera-flex/undo/${workout.executedWorkoutId}`, {
-        method: 'POST'
+      const response = await fetch('/api/workouts/undo-match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plannedWorkoutId: workout.id })
       });
       
       if (response.ok) {
         window.location.reload();
+      } else {
+        const error = await response.json();
+        console.error('Erro ao desfazer match:', error);
+        alert('Erro ao desfazer match. Tente novamente.');
       }
     } catch (error) {
       console.error('Erro ao desfazer match:', error);
+      alert('Erro ao desfazer match. Tente novamente.');
     } finally {
       setUndoingMatch(false);
     }
@@ -364,19 +371,26 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
   };
 
   const handleUndoMatch = async () => {
-    if (!workout.executedWorkoutId) return;
+    if (!workout.id) return;
     
     setUndoingMatch(true);
     try {
-      const response = await fetch(`/api/athera-flex/undo/${workout.executedWorkoutId}`, {
-        method: 'POST'
+      const response = await fetch('/api/workouts/undo-match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plannedWorkoutId: workout.id })
       });
       
       if (response.ok) {
         window.location.reload();
+      } else {
+        const error = await response.json();
+        console.error('Erro ao desfazer match:', error);
+        alert('Erro ao desfazer match. Tente novamente.');
       }
     } catch (error) {
       console.error('Erro ao desfazer match:', error);
+      alert('Erro ao desfazer match. Tente novamente.');
     } finally {
       setUndoingMatch(false);
     }
