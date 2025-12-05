@@ -775,6 +775,7 @@ export default function PlanoPage() {
                                         workout={workout}
                                         isExpanded={true}
                                         onManualMatch={handleManualMatch}
+                                        onUpdate={fetchPlan}
                                       />
                                     ))}
                                   </div>

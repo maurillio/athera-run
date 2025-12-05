@@ -13,6 +13,7 @@ interface WorkoutDetailsProps {
   isExpanded?: boolean;
   onToggle?: () => void;
   onManualMatch?: (completedWorkoutId: number, workoutId: number) => Promise<void>;
+  onUpdate?: () => Promise<void>;
 }
 
 const intensityColors = {
@@ -31,14 +32,14 @@ const intensityIcons = {
   'very-hard': Flame,
 };
 
-export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManualMatch }: WorkoutDetailsProps) {
+export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManualMatch, onUpdate }: WorkoutDetailsProps) {
   const [showManualMatch, setShowManualMatch] = useState(false);
   const [undoingMatch, setUndoingMatch] = useState(false);
   const hasStructuredData = !!(workout.warmUpStructure || workout.mainWorkoutStruct || workout.coolDownStructure);
   
   // Se não tem estrutura detalhada, mostrar visualização simples
   if (!hasStructuredData) {
-    return <SimpleWorkoutView workout={workout} onManualMatch={onManualMatch} />;
+    return <SimpleWorkoutView workout={workout} onManualMatch={onManualMatch} onUpdate={onUpdate} />;
   }
 
   const intensityStyle = workout.intensityLevel 
@@ -63,7 +64,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
       });
       
       if (response.ok) {
-        window.location.reload();
+        if (onUpdate) { await onUpdate(); } else { window.location.reload(); };
       } else {
         const error = await response.json();
         console.error('Erro ao desfazer match:', error);
@@ -354,7 +355,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
   );
 }
 
-function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (completedId: number, workoutId: number) => Promise<void> }) {
+function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: EnhancedWorkout; onManualMatch?: (completedId: number, workoutId: number) => Promise<void>; onUpdate?: () => Promise<void> }) {
   const [showManualMatch, setShowManualMatch] = useState(false);
   const [undoingMatch, setUndoingMatch] = useState(false);
 
@@ -382,7 +383,7 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
       });
       
       if (response.ok) {
-        window.location.reload();
+        if (onUpdate) { await onUpdate(); } else { window.location.reload(); };
       } else {
         const error = await response.json();
         console.error('Erro ao desfazer match:', error);
