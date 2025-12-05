@@ -120,7 +120,7 @@ export async function POST(req: Request) {
           include: {
             plan: {
               include: {
-                athlete: {
+                athleteProfile: {  // CORRIGIDO: athleteProfile ao invés de athlete
                   select: { userId: true },
                 },
               },
@@ -137,7 +137,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (plannedWorkout.week.plan.athlete.userId !== user.id) {
+    if (plannedWorkout.week.plan.athleteProfile.userId !== user.id) {
       return NextResponse.json(
         { error: 'Unauthorized: planned workout does not belong to user' },
         { status: 403 }
