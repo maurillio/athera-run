@@ -104,11 +104,12 @@ export async function GET(
         const workoutDate = new Date(w.date).toISOString().split('T')[0];
         
         // AUTO-MATCH: Vincular automaticamente APENAS se mesma data + mesmo tipo
+        // E que NÃO esteja já vinculado a ESTE workout
         const sameDay = allCompletedWorkouts.find(completed => {
           const completedDate = new Date(completed.date).toISOString().split('T')[0];
           return completedDate === workoutDate && 
-                 completed.type === w.type && 
-                 !completed.wasPlanned; // Não vincular se já vinculado
+                 completed.type === w.type &&
+                 w.completedWorkoutId !== completed.id; // Evitar duplicar match
         });
 
         if (sameDay) {
