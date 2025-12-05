@@ -59,7 +59,7 @@ export async function GET(
     console.log('[WEEKS API] Found completed workouts:', allCompletedWorkouts.length);
 
     // Recalcular volume e progresso para cada semana
-    const weeksWithRecalculated = plan.weeks.map(week => {
+    const weeksWithRecalculated = await Promise.all(plan.weeks.map(async (week) => {
       const completedCount = week.workouts.filter(w => w.isCompleted).length;
       
       // Calcular volume executado (soma dos treinos completados + órfãos)
