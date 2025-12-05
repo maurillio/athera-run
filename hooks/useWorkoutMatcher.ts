@@ -89,14 +89,14 @@ export function useWorkoutMatcher(
         await autoApplyHighConfidenceMatches(data.suggestions);
       }
 
-      setLastCheck(now);
+      // setLastCheck(now); // Removido: não precisamos de lastCheck sem throttle
     } catch (err: any) {
       console.error('[useWorkoutMatcher] Error:', err);
       setError(err.message || 'Erro ao detectar matches');
     } finally {
       setLoading(false);
     }
-  }, [enabled, status, session, minConfidence, lastCheck]);
+  }, [enabled, status, session, minConfidence]);
 
   /**
    * Aplica sugestão de match
