@@ -275,9 +275,9 @@ export async function GET(
         // NÃO somar órfãos aqui porque já foram mesclados nos processedWorkouts!
         executedDistance: totalExecutedVolume,
         orphanWorkouts: orphansInWeek, // MANTIDO para debug/referência
-        workouts: allWorkouts, // INCLUIR ÓRFÃOS MESCLADOS
+        workouts: allWorkouts // INCLUIR ÓRFÃOS MESCLADOS
       };
-    });
+    }));
 
     // AUTO-MATCH DESABILITADO COMPLETAMENTE
     // Usar APENAS match manual via API /manual-match
