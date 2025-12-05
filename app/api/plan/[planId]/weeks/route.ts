@@ -296,24 +296,31 @@ export async function GET(
       };
     });
 
-    // TODO: Re-implementar auto-match corretamente em próxima versão
-    // DESABILITADO TEMPORARIAMENTE - estava causando bugs (v4.0.44)
-    // - planned_date sendo setado incorretamente
-    // - Órfãos aparecendo duplicados
-    // Por enquanto: match manual apenas via modal
-    
-    // if (allAutoMatchedIds.length > 0) {
-    //   for (const { id, plannedDate } of allAutoMatchedIds) {
-    //     await prisma.completedWorkout.update({
-    //       where: { id },
-    //       data: { 
-    //         wasPlanned: true,
-    //         plannedDate: new Date(plannedDate)
-    //       }
-    //     });
-    //   }
-    //   console.log('[WEEKS API] Auto-matched', allAutoMatchedIds.length, 'workouts');
-    // }
+    // Auto-match SOMENTE para treinos no MESMO DIA (não é substituição!)
+    // Exemplo: Planejado 5km no dia X, executou 6km no dia X → AUTO-MATCH
+    if (allAutoMatchedIds.length > 0) {
+      const sameDayMatches = allAutoMatchedIds.filter(({ id, plannedDate }) => {
+        const completed = allCompletedWorkouts.find(c => c.id === id);
+        if (!completed) return false;
+        
+        const completedDate = new Date(completed.date).toISOString().split('T')[0];
+        const plannedDateStr = new Date(plannedDate).toISOString().split('T')[0];
+        
+        // SOMENTE auto-match se MESMO DIA (não é substituição)
+        return completedDate === plannedDateStr;
+      });
+
+      for (const { id, plannedDate } of sameDayMatches) {
+        await prisma.completedWorkout.update({
+          where: { id },
+          data: { 
+            wasPlanned: true,
+            plannedDate: new Date(plannedDate) // Mesmo dia = plannedDate = data execução
+          }
+        });
+      }
+      console.log('[WEEKS API] Auto-matched (same day)', sameDayMatches.length, 'workouts');
+    }
 
     return NextResponse.json({ weeks: weeksWithRecalculated });
   } catch (error) {
