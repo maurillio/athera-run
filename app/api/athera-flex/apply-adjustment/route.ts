@@ -17,16 +17,23 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
+    console.log('[apply-adjustment] ========== REQUEST RECEIVED ==========');
+    
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
+      console.log('[apply-adjustment] ❌ Unauthorized: No session');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
+    console.log('[apply-adjustment] User email:', session.user.email);
+
     const body = await req.json();
+    console.log('[apply-adjustment] Request body:', body);
+    
     const {
       completedWorkoutId,
       plannedWorkoutId,
@@ -41,11 +48,18 @@ export async function POST(req: Request) {
 
     // Validações
     if (!completedWorkoutId || !plannedWorkoutId) {
+      console.log('[apply-adjustment] ❌ Missing fields');
       return NextResponse.json(
         { error: 'Missing required fields: completedWorkoutId, plannedWorkoutId' },
         { status: 400 }
       );
     }
+
+    console.log('[apply-adjustment] Applying match:');
+    console.log(`  - Completed Workout ID: ${completedWorkoutId}`);
+    console.log(`  - Planned Workout ID: ${plannedWorkoutId}`);
+    console.log(`  - Confidence: ${confidence}%`);
+    console.log(`  - Triggered by: ${triggeredBy}`);
 
     if (confidence < 0 || confidence > 100) {
       return NextResponse.json(
@@ -150,6 +164,8 @@ export async function POST(req: Request) {
     }
 
     // Aplicar ajuste usando o engine
+    console.log('[apply-adjustment] Calling adjustmentEngine.applyAdjustment...');
+    
     const result = await adjustmentEngine.applyAdjustment({
       userId: user.id,
       completedWorkoutId,
@@ -164,12 +180,17 @@ export async function POST(req: Request) {
       autoApplied: triggeredBy === 'ai_auto',
     });
 
+    console.log('[apply-adjustment] Engine result:', result);
+
     if (!result.success) {
+      console.log('[apply-adjustment] ❌ Engine failed:', result.message);
       return NextResponse.json(
         { error: result.message },
         { status: 400 }
       );
     }
+
+    console.log('[apply-adjustment] ✅ Engine succeeded, fetching updated data...');
 
     // Buscar dados atualizados para resposta
     const updatedPlanned = await prisma.customWorkout.findUnique({
