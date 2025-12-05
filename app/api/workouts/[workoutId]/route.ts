@@ -121,7 +121,21 @@ export async function DELETE(
 
     }
 
-
+    // ANTES de deletar, limpar vínculos em CustomWorkout
+    await prisma.customWorkout.updateMany({
+      where: {
+        OR: [
+          { completedWorkoutId: workoutId },
+          { executedWorkoutId: workoutId }
+        ]
+      },
+      data: {
+        isCompleted: false,
+        completedWorkoutId: null,
+        executedWorkoutId: null,
+        wasSubstitution: false
+      }
+    });
 
     await prisma.completedWorkout.delete({
 

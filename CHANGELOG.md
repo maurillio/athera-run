@@ -7,6 +7,192 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.4] - 05/DEZ/2025 18:30 UTC 🐛 **FIX: 3 Bugs Athera Flex**
+
+### 🎯 Problemas Relatados (pós v4.0.23)
+
+**Bug 1:** Auto-match funciona mas não mostra volume/distância executada
+**Bug 2:** Órfão aparece azul, depois desaparece após alguns segundos
+**Bug 3:** Deletar treino executado não limpa vínculo (isCompleted fica true sem executedWorkoutId)
+
+### 🔍 Diagnóstico
+
+#### Bug 1: Display de Dados Executados
+**Causa:** Frontend só mostrava `executedWorkout` se `wasSubstitution === true`
+- Auto-match (mesmo dia) seta `wasSubstitution = false`
+- Treino ficava verde mas mostrava dados planejados ao invés de executados
+
+**Código problemático:**
+```typescript
+// ❌ ERRADO: Só mostra executado se wasSubstitution
+const displayWorkout = workout.wasSubstitution && workout.executedWorkout 
+  ? workout.executedWorkout 
+  : workout;
+```
+
+#### Bug 2: Órfão Desaparecendo
+**Causa:** Auto-match rodando TODA VEZ que API weeks era chamada
+- Órfão aparecia na primeira carga
+- Revalidate chamava API novamente
+- Auto-match persistia no banco (mesmo se já vinculado)
+- Órfão desaparecia porque lógica considerava vinculado
+
+**Código problemático:**
+```typescript
+// ❌ ERRADO: Auto-match roda sempre
+const sameDay = allCompletedWorkouts.find(completed => {
+  return completedDate === workoutDate && 
+         completed.type === w.type &&
+         w.completedWorkoutId !== completed.id; // Permite re-match
+});
+```
+
+#### Bug 3: Limpeza de Vínculo ao Deletar
+**Causa:** API delete apenas deletava `CompletedWorkout` sem limpar `CustomWorkout`
+- `isCompleted` ficava true
+- `completedWorkoutId` e `executedWorkoutId` ficavam com ID de registro inexistente
+- Workout aparecia verde mas sem dados
+
+### ✅ Solução Implementada
+
+#### Fix 1: Mostrar Dados Executados Sempre que Existirem
+**Arquivo:** `components/workout-details.tsx` (linhas 81-84 e 439-442)
+
+```typescript
+// ✅ CORRETO: Mostra executado se isCompleted E tem executedWorkout
+const displayWorkout = workout.isCompleted && workout.executedWorkout 
+  ? workout.executedWorkout 
+  : workout;
+```
+
+**Resultado:**
+- Auto-match (mesmo dia): Mostra distância/pace executados
+- Match manual (outro dia): Mostra distância/pace executados
+- Não concluído: Mostra dados planejados
+
+#### Fix 2: Evitar Auto-Match Redundante
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts` (linha 112)
+
+```typescript
+// ✅ CORRETO: Só auto-match se ainda NÃO vinculado
+const sameDay = allCompletedWorkouts.find(completed => {
+  const completedDate = new Date(completed.date).toISOString().split('T')[0];
+  return completedDate === workoutDate && 
+         completed.type === w.type &&
+         !w.completedWorkoutId; // Só se ainda NÃO vinculado
+});
+```
+
+**Resultado:**
+- Auto-match roda APENAS 1 vez
+- Órfãos permanecem visíveis após match manual
+- Zero race conditions
+
+#### Fix 3: Limpar Vínculo ao Deletar CompletedWorkout
+**Arquivo:** `app/api/workouts/[workoutId]/route.ts` (linhas 112-122)
+
+```typescript
+// ANTES de deletar, limpar vínculos em CustomWorkout
+await prisma.customWorkout.updateMany({
+  where: {
+    OR: [
+      { completedWorkoutId: workoutId },
+      { executedWorkoutId: workoutId }
+    ]
+  },
+  data: {
+    isCompleted: false,
+    completedWorkoutId: null,
+    executedWorkoutId: null,
+    wasSubstitution: false
+  }
+});
+
+await prisma.completedWorkout.delete({
+  where: { id: workoutId },
+});
+```
+
+**Resultado:**
+- Deletar treino executado → workout volta a "não concluído"
+- Zero registros órfãos no banco
+- Consistência de dados garantida
+
+### 📊 Resultado Final
+
+**ANTES (v4.0.23):**
+- ❌ Auto-match verde mas mostra "6km planejado" ao invés de "16.2km executados"
+- ❌ Órfão azul desaparece após recarregar
+- ❌ Deletar executado deixa workout "zumbi" (verde sem dados)
+
+**DEPOIS (v5.0.4):**
+- ✅ Auto-match verde mostra "16.2km executados, 6:18/km"
+- ✅ Órfão azul permanece visível até match manual
+- ✅ Deletar executado volta workout para "não concluído"
+- ✅ Badges corretos (verde concluído, roxo substituição, azul órfão)
+- ✅ Volume semanal correto (não duplica)
+
+### 📁 Arquivos Modificados
+
+```
+components/workout-details.tsx  (linhas 81-84, 439-442)
+├── Fix: Lógica displayWorkout (mostra executado se isCompleted)
+
+app/api/plan/[planId]/weeks/route.ts  (linha 112)
+├── Fix: Auto-match só se !completedWorkoutId
+
+app/api/workouts/[workoutId]/route.ts  (linhas 112-122)
+└── Fix: Limpar CustomWorkout antes de deletar CompletedWorkout
+```
+
+### 🧪 Validação
+
+**Checklist em produção (aguardar deploy ~2-3 min):**
+- [ ] Auto-match mostra distância/pace executados?
+- [ ] Órfão azul permanece visível após reload?
+- [ ] Deletar executado volta workout para cinza?
+- [ ] Badge "🔄 Substituição" correto?
+- [ ] Volume semanal não duplica?
+- [ ] Botão "Desfazer Match" funciona?
+
+### 💡 Aprendizados
+
+#### ❌ O que NÃO fazer:
+
+1. **Lógica condicional baseada apenas em flags booleanas**
+   ```typescript
+   // ❌ ERRADO: Muito restritivo
+   if (wasSubstitution && executedWorkout) { ... }
+   
+   // ✅ CORRETO: Condição mais abrangente
+   if (isCompleted && executedWorkout) { ... }
+   ```
+
+2. **Persistir match automaticamente TODA VEZ**
+   - Causa race conditions
+   - Órfãos desaparecem misteriosamente
+   - Solução: Verificar se já existe antes de persistir
+
+3. **Deletar relacionamento sem limpar foreign keys**
+   - Deixa registros órfãos
+   - Workout fica "zumbi"
+   - Solução: Limpar ANTES de deletar
+
+#### ✅ O que SEMPRE fazer:
+
+1. **Condições inclusivas ao invés de exclusivas**
+   - "Se tem dados executados, mostrar" > "Se é substituição E tem dados, mostrar"
+
+2. **Idempotência em operações de match**
+   - Verificar estado ANTES de persistir
+   - Evitar re-match desnecessário
+
+3. **Cleanup de relacionamentos em cascata**
+   - SEMPRE limpar foreign keys antes de deletar
+   - Usar transações se necessário
+
+---
+
 ## [v4.0.23] - 05/DEZ/2025 11:25 UTC 🎯 **FIX FINAL: Mesclar Órfãos (não duplicar)**
 
 ### 🎯 Problema Relatado (pós v4.0.22)

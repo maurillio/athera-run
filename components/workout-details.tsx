@@ -79,7 +79,8 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
   };
 
   // Determinar qual workout mostrar (planejado ou executado)
-  const displayWorkout = workout.wasSubstitution && workout.executedWorkout 
+  // Se isCompleted E tem executedWorkout, mostrar executado (independente de wasSubstitution)
+  const displayWorkout = workout.isCompleted && workout.executedWorkout 
     ? workout.executedWorkout 
     : workout;
 
@@ -437,7 +438,8 @@ function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: Enha
   };
 
   // Determinar qual workout mostrar (planejado ou executado)
-  const displayWorkout = workout.wasSubstitution && workout.executedWorkout 
+  // Se isCompleted E tem executedWorkout, mostrar executado (independente de wasSubstitution)
+  const displayWorkout = workout.isCompleted && workout.executedWorkout 
     ? workout.executedWorkout 
     : workout;
 
