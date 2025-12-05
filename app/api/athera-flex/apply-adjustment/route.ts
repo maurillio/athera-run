@@ -235,19 +235,14 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: result.message,
-      adjustmentId: result.adjustmentId,
-      confidence: result.confidence,
-      triggeredBy,
-      plannedWorkout: updatedPlanned,
-      completedWorkout: updatedCompleted,
-      timestamp: new Date().toISOString(),
-    });
+  } catch (error: any) {
+    console.error('[Apply Adjustment] Error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error.message },
+      { status: 500 }
+    );
+  }
+}
   } catch (error: any) {
     console.error('[Apply Adjustment] Error:', error);
     return NextResponse.json(
