@@ -106,19 +106,28 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                   )}
                 </>
               ) : (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setShowManualMatch(true);
-                  }}
-                  className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
-                >
-                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                  Marcar como Concluído
-                </Button>
+                <>
+                  {/* Badge Não Concluído se passou a data */}
+                  {new Date(workout.date) < new Date(new Date().setHours(0,0,0,0)) && (
+                    <Badge className="bg-red-500 text-white text-xs">
+                      <XCircle className="h-3 w-3 mr-1" />
+                      Não Concluído
+                    </Badge>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setShowManualMatch(true);
+                    }}
+                    className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
+                  >
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    Marcar como Concluído
+                  </Button>
+                </>
               )}
             </div>
           
