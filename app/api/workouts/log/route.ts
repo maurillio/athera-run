@@ -52,7 +52,9 @@ export async function POST(request: NextRequest) {
         avgHeartRate,
         perceivedEffort,
         feeling,
-        notes
+        notes,
+        wasPlanned: false, // Manual = não estava planejado (órfão por padrão)
+        plannedDate: null
       }
     });
 
