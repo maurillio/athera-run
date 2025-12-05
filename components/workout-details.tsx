@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Activity, Heart, Clock, Target, Zap, Wind, TrendingUp, AlertCircle, CheckCircle2, Flame, Brain, Award } from 'lucide-react';
+import { Activity, Heart, Clock, Target, Zap, Wind, TrendingUp, AlertCircle, CheckCircle2, Flame, Brain, Award, XCircle } from 'lucide-react';
 import type { EnhancedWorkout, WorkoutPhase, IntervalStructure } from '@/lib/types/workout-structure';
 import { isIntervalWorkout } from '@/lib/types/workout-structure';
 import { ManualMatchModal } from '@/components/athera-flex';
@@ -33,6 +33,7 @@ const intensityIcons = {
 
 export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManualMatch }: WorkoutDetailsProps) {
   const [showManualMatch, setShowManualMatch] = useState(false);
+  const [undoingMatch, setUndoingMatch] = useState(false);
   const hasStructuredData = !!(workout.warmUpStructure || workout.mainWorkoutStruct || workout.coolDownStructure);
   
   // Se não tem estrutura detalhada, mostrar visualização simples
@@ -49,6 +50,30 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
       await onManualMatch(completedWorkoutId, workout.id);
     }
   };
+
+  const handleUndoMatch = async () => {
+    if (!workout.executedWorkoutId) return;
+    
+    setUndoingMatch(true);
+    try {
+      const response = await fetch(`/api/athera-flex/undo/${workout.executedWorkoutId}`, {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Erro ao desfazer match:', error);
+    } finally {
+      setUndoingMatch(false);
+    }
+  };
+
+  // Determinar qual workout mostrar (planejado ou executado)
+  const displayWorkout = workout.wasSubstitution && workout.executedWorkout 
+    ? workout.executedWorkout 
+    : workout;
 
   return (
     <>
@@ -89,13 +114,41 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
               )}
             </div>
           
-          {/* Mensagem de Substituição */}
+          {/* Mensagem de Substituição + Botão Desfazer */}
           {workout.isCompleted && workout.wasSubstitution && (
             <div className="flex items-start gap-2 mt-2 p-2 bg-purple-50 rounded border border-purple-200">
               <Activity className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-purple-900">
-                <span className="font-medium">Treino executado em dia diferente.</span> Este treino foi marcado como concluído usando uma atividade realizada em outra data.
-              </p>
+              <div className="flex-1">
+                <p className="text-sm text-purple-900 mb-2">
+                  <span className="font-medium">Treino executado em dia diferente.</span> Este treino foi marcado como concluído usando uma atividade realizada em outra data.
+                  {workout.executedWorkout?.date && (
+                    <span className="block mt-1 text-xs">
+                      Executado em: {new Date(workout.executedWorkout.date).toLocaleDateString('pt-BR')}
+                    </span>
+                  )}
+                </p>
+                {workout.executedWorkoutId && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleUndoMatch}
+                    disabled={undoingMatch}
+                    className="text-xs h-7 border-red-200 hover:border-red-400 hover:bg-red-50"
+                  >
+                    {undoingMatch ? (
+                      <>
+                        <Activity className="h-3 w-3 mr-1 animate-spin" />
+                        Desfazendo...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-3 w-3 mr-1" />
+                        Desfazer Match
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
             </div>
           )}
           
@@ -116,21 +169,33 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
         )}
       </div>
 
-      {/* Resumo Geral */}
+      {/* Resumo Geral - Mostrar dados do executado se for substituição */}
       <div className="flex flex-wrap gap-2 pb-3 border-b border-gray-200">
-        {workout.distance && (
+        {displayWorkout.distance && (
           <Badge variant="secondary" className="text-xs">
             <Target className="h-3 w-3 mr-1" />
-            {workout.distance} km
+            {displayWorkout.distance} km
           </Badge>
         )}
-        {workout.expectedDuration && (
+        {displayWorkout.duration && (
+          <Badge variant="secondary" className="text-xs">
+            <Clock className="h-3 w-3 mr-1" />
+            {displayWorkout.duration} min
+          </Badge>
+        )}
+        {displayWorkout.pace && (
+          <Badge variant="secondary" className="text-xs">
+            <Zap className="h-3 w-3 mr-1" />
+            {displayWorkout.pace.includes('min/km') ? displayWorkout.pace : `${displayWorkout.pace} min/km`}
+          </Badge>
+        )}
+        {workout.expectedDuration && !displayWorkout.duration && (
           <Badge variant="secondary" className="text-xs">
             <Clock className="h-3 w-3 mr-1" />
             ~{workout.expectedDuration} min
           </Badge>
         )}
-        {workout.targetPace && (
+        {workout.targetPace && !displayWorkout.pace && (
           <Badge variant="secondary" className="text-xs">
             <Zap className="h-3 w-3 mr-1" />
             {workout.targetPace.includes('min/km') ? workout.targetPace : `${workout.targetPace} min/km`}
@@ -280,6 +345,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
 
 function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkout; onManualMatch?: (completedId: number, workoutId: number) => Promise<void> }) {
   const [showManualMatch, setShowManualMatch] = useState(false);
+  const [undoingMatch, setUndoingMatch] = useState(false);
 
   const handleManualMatch = async (completedWorkoutId: number) => {
     console.log('[SimpleWorkoutView] handleManualMatch called with:', { completedWorkoutId, workoutId: workout.id });
@@ -292,6 +358,30 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
     }
     setShowManualMatch(false);
   };
+
+  const handleUndoMatch = async () => {
+    if (!workout.executedWorkoutId) return;
+    
+    setUndoingMatch(true);
+    try {
+      const response = await fetch(`/api/athera-flex/undo/${workout.executedWorkoutId}`, {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Erro ao desfazer match:', error);
+    } finally {
+      setUndoingMatch(false);
+    }
+  };
+
+  // Determinar qual workout mostrar (planejado ou executado)
+  const displayWorkout = workout.wasSubstitution && workout.executedWorkout 
+    ? workout.executedWorkout 
+    : workout;
 
   return (
     <>
@@ -331,13 +421,41 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
             )}
           </div>
           
-          {/* Mensagem de Substituição */}
+          {/* Mensagem de Substituição + Botão Desfazer */}
           {workout.isCompleted && workout.wasSubstitution && (
             <div className="flex items-start gap-2 p-2 bg-purple-50 rounded border border-purple-200 mb-2">
               <Activity className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-purple-900">
-                <span className="font-medium">Executado em dia diferente.</span> Marcado usando atividade de outra data.
-              </p>
+              <div className="flex-1">
+                <p className="text-xs text-purple-900 mb-2">
+                  <span className="font-medium">Executado em dia diferente.</span> Marcado usando atividade de outra data.
+                  {workout.executedWorkout?.date && (
+                    <span className="block mt-1">
+                      Executado em: {new Date(workout.executedWorkout.date).toLocaleDateString('pt-BR')}
+                    </span>
+                  )}
+                </p>
+                {workout.executedWorkoutId && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleUndoMatch}
+                    disabled={undoingMatch}
+                    className="text-xs h-6 border-red-200 hover:border-red-400 hover:bg-red-50"
+                  >
+                    {undoingMatch ? (
+                      <>
+                        <Activity className="h-3 w-3 mr-1 animate-spin" />
+                        Desfazendo...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-3 w-3 mr-1" />
+                        Desfazer
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
             </div>
           )}
           
@@ -350,19 +468,24 @@ function SimpleWorkoutView({ workout, onManualMatch }: { workout: EnhancedWorkou
       </div>
       
       <div className="flex flex-wrap gap-2">
-        {workout.distance && (
+        {displayWorkout.distance && (
           <Badge variant="secondary" className="text-xs">
-            📏 {workout.distance} km
+            📏 {displayWorkout.distance} km
           </Badge>
         )}
-        {workout.targetPace && (
+        {displayWorkout.pace && (
+          <Badge variant="secondary" className="text-xs">
+            ⚡ {displayWorkout.pace.includes('min/km') ? displayWorkout.pace : `${displayWorkout.pace} min/km`}
+          </Badge>
+        )}
+        {displayWorkout.duration && (
+          <Badge variant="secondary" className="text-xs">
+            ⏱️ {displayWorkout.duration} min
+          </Badge>
+        )}
+        {workout.targetPace && !displayWorkout.pace && (
           <Badge variant="secondary" className="text-xs">
             ⚡ {workout.targetPace.includes('min/km') ? workout.targetPace : `${workout.targetPace} min/km`}
-          </Badge>
-        )}
-        {workout.duration && !workout.distance && (
-          <Badge variant="secondary" className="text-xs">
-            ⏱️ {workout.duration} min
           </Badge>
         )}
       </div>
