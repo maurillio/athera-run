@@ -163,6 +163,36 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
               </div>
             </div>
           )}
+
+          {/* Mensagem para Órfãos: Treino executado fora do planejado */}
+          {workout.isOrphan && !workout.hasMatch && workout.suggestedMatch && (
+            <div className="flex items-start gap-2 mt-2 p-2 bg-blue-50 rounded border border-blue-200">
+              <Activity className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-blue-900 mb-2">
+                  <span className="font-medium">Treino executado fora do planejamento.</span> Este treino foi importado automaticamente do Strava, mas foi realizado em um dia não planejado.
+                </p>
+                <p className="text-xs text-blue-800 mb-2">
+                  📅 Treino planejado próximo: <span className="font-medium">{workout.suggestedMatch.title}</span> em {new Date(workout.suggestedMatch.date).toLocaleDateString('pt-BR')}
+                </p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (onManualMatch) {
+                      onManualMatch(workout.completedWorkoutId!, workout.suggestedMatch!.id);
+                    }
+                  }}
+                  className="text-xs h-7 border-blue-300 hover:border-blue-500 hover:bg-blue-100"
+                >
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Marcar como Substituição
+                </Button>
+              </div>
+            </div>
+          )}
           
           {workout.objective && (
             <div className="flex items-start gap-2 mt-2 p-2 bg-blue-50 rounded border border-blue-200">
@@ -478,6 +508,36 @@ function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: Enha
                     )}
                   </Button>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Mensagem para Órfãos: Treino executado fora do planejado */}
+          {workout.isOrphan && !workout.hasMatch && workout.suggestedMatch && (
+            <div className="flex items-start gap-2 p-2 bg-blue-50 rounded border border-blue-200 mb-2">
+              <Activity className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-xs text-blue-900 mb-2">
+                  <span className="font-medium">Executado fora do planejamento.</span> Importado automaticamente, mas realizado em dia não planejado.
+                </p>
+                <p className="text-xs text-blue-800 mb-2">
+                  📅 Planejado próximo: <span className="font-medium">{workout.suggestedMatch.title}</span> ({new Date(workout.suggestedMatch.date).toLocaleDateString('pt-BR')})
+                </p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (onManualMatch) {
+                      onManualMatch(workout.completedWorkoutId!, workout.suggestedMatch!.id);
+                    }
+                  }}
+                  className="text-xs h-6 border-blue-300 hover:border-blue-500 hover:bg-blue-100"
+                >
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Marcar Substituição
+                </Button>
               </div>
             </div>
           )}
