@@ -78,36 +78,37 @@ export async function GET(
         return date >= new Date(week.startDate) && date <= new Date(week.endDate);
       });
 
-      // Converter órfãos em formato de CustomWorkout para o frontend renderizar
-      const orphansAsWorkouts = orphansInWeek.map(orphan => ({
-        id: -orphan.id, // ID negativo para diferenciar de workouts planejados
-        weekId: week.id,
-        dayOfWeek: orphan.plannedDate ? new Date(orphan.plannedDate).getDay() : new Date(orphan.date).getDay(),
-        date: orphan.plannedDate || orphan.date, // ✅ USA DATA PLANEJADA (domingo), não executada (sábado)
-        type: orphan.type,
-        subtype: orphan.subtype,
-        title: `${orphan.type} (Executado)`,
-        description: orphan.notes || 'Treino executado sem planejamento prévio',
-        distance: orphan.distance,
-        duration: orphan.duration,
-        targetPace: orphan.pace,
-        isCompleted: true,
-        completedWorkoutId: orphan.id,
-        executedWorkoutId: orphan.id,
-        wasSubstitution: true,
-        createdAt: orphan.createdAt,
-        updatedAt: orphan.updatedAt,
-        completedWorkout: orphan, // Dados completos do treino executado
-        executedWorkout: orphan,
-        // Flag especial para indicar que é órfão
-        isOrphan: true
-      }));
+      // Processar workouts: mesclar órfãos com planejados correspondentes
+      const processedWorkouts = week.workouts.map(w => {
+        // Verificar se existe órfão para este dia planejado
+        const orphan = orphansInWeek.find(o => {
+          if (!o.plannedDate) return false;
+          const orphanPlannedDate = new Date(o.plannedDate).toISOString().split('T')[0];
+          const workoutDate = new Date(w.date).toISOString().split('T')[0];
+          return orphanPlannedDate === workoutDate;
+        });
 
-      // Mesclar workouts planejados + órfãos, ordenar por data
-      const allWorkouts = [
-        ...week.workouts.map(w => ({ ...w })),
-        ...orphansAsWorkouts
-      ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        // Se existe órfão, mesclar dados
+        if (orphan) {
+          return {
+            ...w,
+            isCompleted: true,
+            completedWorkoutId: orphan.id,
+            executedWorkoutId: orphan.id,
+            wasSubstitution: true,
+            completedWorkout: orphan,
+            executedWorkout: orphan,
+          };
+        }
+
+        // Senão, retornar workout original
+        return { ...w };
+      });
+
+      // Ordenar por data
+      const allWorkouts = processedWorkouts.sort((a, b) => 
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
 
       return {
         ...week,
