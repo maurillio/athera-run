@@ -59,7 +59,7 @@ export async function GET(
     console.log('[WEEKS API] Found completed workouts:', allCompletedWorkouts.length);
 
     // Array para coletar treinos auto-matched
-    const allAutoMatchedIds: Array<{ id: number, plannedDate: Date }> = [];
+    const allAutoMatchedIds: Array<{ id: number, plannedDate: Date, plannedWorkoutId: number }> = [];
 
     // Recalcular volume e progresso para cada semana
     const weeksWithRecalculated = plan.weeks.map(week => {
@@ -173,7 +173,8 @@ export async function GET(
         .filter(w => w.completedWorkoutId && !w.wasSubstitution)
         .map(w => ({
           id: w.completedWorkoutId!,
-          plannedDate: w.date
+          plannedDate: w.date,
+          plannedWorkoutId: w.id // Incluir ID do workout planejado
         }));
       
       allAutoMatchedIds.push(...autoMatchedData);
@@ -310,12 +311,23 @@ export async function GET(
         return completedDate === plannedDateStr;
       });
 
-      for (const { id, plannedDate } of sameDayMatches) {
+      for (const { id, plannedDate, plannedWorkoutId } of sameDayMatches) {
+        // Atualizar CompletedWorkout
         await prisma.completedWorkout.update({
           where: { id },
           data: { 
             wasPlanned: true,
             plannedDate: new Date(plannedDate) // Mesmo dia = plannedDate = data execução
+          }
+        });
+
+        // Atualizar CustomWorkout (planejado) para vincular ao executado
+        await prisma.customWorkout.update({
+          where: { id: plannedWorkoutId },
+          data: {
+            completedWorkoutId: id,
+            executedWorkoutId: id,
+            wasSubstitution: false
           }
         });
       }
