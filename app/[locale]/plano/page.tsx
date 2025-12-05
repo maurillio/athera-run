@@ -643,6 +643,8 @@ export default function PlanoPage() {
                             w.title.toLowerCase().includes('descanso') || 
                             w.title.toLowerCase().includes('rest')
                           );
+                          // Verificar se dia tem APENAS órfão sem match
+                          const hasOrphanOnly = dayWorkouts.length === 1 && dayWorkouts[0].isOrphan && !dayWorkouts[0].hasMatch;
                           const isPastPartial = workoutDate.isBefore(today, 'day') && partialCompleted && !isRestDay;
                           const isPastUncompleted = workoutDate.isBefore(today, 'day') && noneCompleted && !isRestDay;
                           const hasRaceDay = dayWorkouts.some(w => 
@@ -657,17 +659,19 @@ export default function PlanoPage() {
                               onClick={() => !isToday && toggleDay(dateKey)}
                               className={`
                                 relative rounded-lg border-2 transition-all cursor-pointer
-                                ${allCompleted
-                                  ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
-                                  : isRestDay
-                                    ? 'bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300 hover:border-gray-400 hover:shadow-md'
-                                    : isPastPartial
-                                      ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300 hover:border-yellow-400 hover:shadow-md'
-                                      : isPastUncompleted
-                                        ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
-                                        : isToday
-                                          ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
-                                        : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
+                                ${hasOrphanOnly
+                                  ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-300 hover:border-blue-400 hover:shadow-md'
+                                  : allCompleted
+                                    ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'
+                                    : isRestDay
+                                      ? 'bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300 hover:border-gray-400 hover:shadow-md'
+                                      : isPastPartial
+                                        ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300 hover:border-yellow-400 hover:shadow-md'
+                                        : isPastUncompleted
+                                          ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-300 hover:border-red-400 hover:shadow-md'
+                                          : isToday
+                                            ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-400 ring-2 ring-orange-300'
+                                          : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
                                 }
                               `}
                             >
