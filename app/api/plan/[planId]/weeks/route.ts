@@ -44,13 +44,11 @@ export async function GET(
       return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
     }
 
-    // Buscar treinos órfãos (executados em dias diferentes do planejado)
-    // Treinos com customWorkout mas executedWorkoutId diferente de completedWorkoutId
-    const orphanWorkouts = await prisma.completedWorkout.findMany({
+    // Buscar TODOS treinos executados no período do plano
+    // Incluir tanto órfãos com match quanto sem match
+    const allCompletedWorkouts = await prisma.completedWorkout.findMany({
       where: {
         athleteId: plan.athleteProfile.id,
-        wasPlanned: true,
-        wasSubstitution: true,
         // Buscar entre datas do plano
         date: {
           gte: plan.startDate,
@@ -58,17 +56,7 @@ export async function GET(
       }
     });
 
-    console.log('[WEEKS API] Found orphan workouts:', orphanWorkouts.length);
-    if (orphanWorkouts.length > 0) {
-      console.log('[WEEKS API] Orphan details:', orphanWorkouts.map(o => ({
-        id: o.id,
-        date: o.date.toISOString().split('T')[0],
-        plannedDate: o.plannedDate?.toISOString().split('T')[0],
-        distance: o.distance,
-        wasPlanned: o.wasPlanned,
-        wasSubstitution: o.wasSubstitution
-      })));
-    }
+    console.log('[WEEKS API] Found completed workouts:', allCompletedWorkouts.length);
 
     // Recalcular volume e progresso para cada semana
     const weeksWithRecalculated = plan.weeks.map(week => {
@@ -82,10 +70,23 @@ export async function GET(
         return sum;
       }, 0);
 
-      // Adicionar treinos órfãos executados nesta semana
-      const orphansInWeek = orphanWorkouts.filter(o => {
-        const date = new Date(o.date);
-        return date >= new Date(week.startDate) && date <= new Date(week.endDate);
+      // Identificar órfãos nesta semana (treinos executados fora do planejado)
+      const orphansInWeek = allCompletedWorkouts.filter(completed => {
+        const completedDate = new Date(completed.date);
+        const inWeekRange = completedDate >= new Date(week.startDate) && 
+                           completedDate <= new Date(week.endDate);
+        
+        if (!inWeekRange) return false;
+
+        // Verificar se este treino executado está vinculado a algum workout planejado no MESMO DIA
+        const completedDateStr = completedDate.toISOString().split('T')[0];
+        const hasPlannedSameDay = week.workouts.some(w => {
+          const workoutDate = new Date(w.date).toISOString().split('T')[0];
+          return workoutDate === completedDateStr && w.completedWorkoutId === completed.id;
+        });
+
+        // Órfão = executado na semana MAS não vinculado a workout planejado no mesmo dia
+        return !hasPlannedSameDay;
       });
 
       // Processar workouts: mesclar órfãos com planejados correspondentes
@@ -117,26 +118,44 @@ export async function GET(
 
       // Adicionar órfãos no dia de EXECUÇÃO (para mostrar no sábado também)
       // TODOS os órfãos devem aparecer no dia que foram executados
-      const orphansAsWorkouts = orphansInWeek.map(orphan => ({
-        id: -orphan.id,
-        weekId: week.id,
-        dayOfWeek: new Date(orphan.date).getDay(),
-        date: orphan.date, // Data de EXECUÇÃO (sábado)
-        type: orphan.type,
-        subtype: orphan.subtype,
-        title: `${orphan.type} (Executado)`,
-        description: orphan.notes || 'Treino executado',
-        distance: orphan.distance,
-        duration: orphan.duration,
-        targetPace: orphan.pace,
-        isCompleted: true,
-        completedWorkoutId: orphan.id,
-        executedWorkoutId: orphan.id,
-        wasSubstitution: false, // NÃO é substituição no dia de execução
-        completedWorkout: orphan,
-        executedWorkout: orphan,
-        isOrphan: true
-      }));
+      const orphansAsWorkouts = orphansInWeek.map(orphan => {
+        // Verificar se órfão tem match com workout planejado (wasPlanned=true)
+        const hasMatch = orphan.wasPlanned === true;
+        
+        // Buscar workout planejado próximo (±3 dias) para sugerir match
+        const orphanDate = new Date(orphan.date);
+        const nearbyPlanned = week.workouts.find(w => {
+          if (w.isCompleted) return false; // Já concluído
+          if (w.type === 'rest') return false; // Descanso
+          
+          const wDate = new Date(w.date);
+          const daysDiff = Math.abs((wDate.getTime() - orphanDate.getTime()) / (1000 * 60 * 60 * 24));
+          return daysDiff <= 3; // Dentro da janela
+        });
+
+        return {
+          id: -orphan.id,
+          weekId: week.id,
+          dayOfWeek: new Date(orphan.date).getDay(),
+          date: orphan.date, // Data de EXECUÇÃO (sábado)
+          type: orphan.type,
+          subtype: orphan.subtype,
+          title: `${orphan.type} (Executado)`,
+          description: orphan.notes || 'Treino executado',
+          distance: orphan.distance,
+          duration: orphan.duration,
+          targetPace: orphan.pace,
+          isCompleted: true,
+          completedWorkoutId: orphan.id,
+          executedWorkoutId: orphan.id,
+          wasSubstitution: false, // NÃO é substituição no dia de execução
+          completedWorkout: orphan,
+          executedWorkout: orphan,
+          isOrphan: true,
+          hasMatch, // Se tem match manual feito
+          suggestedMatch: nearbyPlanned ? { id: nearbyPlanned.id, title: nearbyPlanned.title, date: nearbyPlanned.date } : null
+        };
+      });
 
       console.log('[WEEKS API] Week', week.weekNumber, '- Orphans in week:', orphansInWeek.length);
       console.log('[WEEKS API] Week', week.weekNumber, '- Orphans as workouts:', orphansAsWorkouts.length);
