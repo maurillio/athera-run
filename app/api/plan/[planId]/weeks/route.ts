@@ -82,8 +82,8 @@ export async function GET(
       const orphansAsWorkouts = orphansInWeek.map(orphan => ({
         id: -orphan.id, // ID negativo para diferenciar de workouts planejados
         weekId: week.id,
-        dayOfWeek: new Date(orphan.date).getDay(),
-        date: orphan.date,
+        dayOfWeek: orphan.plannedDate ? new Date(orphan.plannedDate).getDay() : new Date(orphan.date).getDay(),
+        date: orphan.plannedDate || orphan.date, // ✅ USA DATA PLANEJADA (domingo), não executada (sábado)
         type: orphan.type,
         subtype: orphan.subtype,
         title: `${orphan.type} (Executado)`,
