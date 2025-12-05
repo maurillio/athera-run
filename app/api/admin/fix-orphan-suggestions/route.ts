@@ -13,7 +13,9 @@ export async function GET() {
     const workouts = await prisma.customWorkout.findMany({
       where: {
         week: {
-          userId: session.user.email
+          is: {
+            userId: session.user.email
+          }
         },
         date: {
           gte: new Date('2025-11-27T00:00:00.000Z'),
