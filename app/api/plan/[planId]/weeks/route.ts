@@ -103,9 +103,26 @@ export async function GET(
       const processedWorkouts = week.workouts.map(w => {
         const workoutDate = new Date(w.date).toISOString().split('T')[0];
         
-        // AUTO-MATCH DESABILITADO: Causa bugs, usar apenas match manual
-        // const sameDay = allCompletedWorkouts.find(completed => {...});
-        // if (sameDay) { vincular automaticamente }
+        // AUTO-MATCH: Vincular automaticamente APENAS se mesma data + mesmo tipo
+        const sameDay = allCompletedWorkouts.find(completed => {
+          const completedDate = new Date(completed.date).toISOString().split('T')[0];
+          return completedDate === workoutDate && 
+                 completed.type === w.type && 
+                 !completed.wasPlanned; // Não vincular se já vinculado
+        });
+
+        if (sameDay) {
+          // Match automático encontrado!
+          return {
+            ...w,
+            isCompleted: true,
+            completedWorkoutId: sameDay.id,
+            executedWorkoutId: sameDay.id,
+            wasSubstitution: false, // Não é substituição (mesmo dia)
+            completedWorkout: sameDay,
+            executedWorkout: sameDay,
+          };
+        }
 
         // PRIORIDADE 2: Verificar se existe órfão (outro dia) para este planejado
         const orphan = orphansInWeek.find(o => {
