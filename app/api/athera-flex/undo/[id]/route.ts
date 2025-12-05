@@ -37,8 +37,14 @@ export async function POST(
       );
     }
 
-    const body = await req.json();
-    const { reason } = body;
+    // Tentar ler body (pode estar vazio)
+    let reason = 'Desfazer via API';
+    try {
+      const body = await req.json();
+      if (body.reason) reason = body.reason;
+    } catch (e) {
+      // Body vazio, usar reason padrão
+    }
 
     // Buscar user
     const user = await prisma.user.findUnique({
@@ -57,7 +63,7 @@ export async function POST(
     const result = await adjustmentEngine.undoAdjustment({
       adjustmentId,
       userId: user.id,
-      reason: reason || 'Desfazer via API',
+      reason,
     });
 
     if (!result.success) {

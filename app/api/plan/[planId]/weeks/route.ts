@@ -119,6 +119,17 @@ export async function GET(
         return !wasMatched;
       });
 
+      console.log('[WEEKS API] Week', week.weekNumber, '- Orphans in week:', orphansInWeek.length);
+      console.log('[WEEKS API] Week', week.weekNumber, '- Orphans not matched:', orphansNotMatched.length);
+      if (orphansNotMatched.length > 0) {
+        console.log('[WEEKS API] Orphans details:', orphansNotMatched.map(o => ({
+          id: o.id,
+          date: o.date,
+          plannedDate: o.plannedDate,
+          distance: o.distance
+        })));
+      }
+
       // Converter órfãos não mesclados em workouts para dia de execução
       const orphansAsWorkouts = orphansNotMatched.map(orphan => ({
         id: -orphan.id,
