@@ -296,20 +296,24 @@ export async function GET(
       };
     });
 
-    // Atualizar banco: marcar treinos auto-matched com plannedDate
-    if (allAutoMatchedIds.length > 0) {
-      // Atualizar cada treino individualmente para setar plannedDate correto
-      for (const { id, plannedDate } of allAutoMatchedIds) {
-        await prisma.completedWorkout.update({
-          where: { id },
-          data: { 
-            wasPlanned: true,
-            plannedDate: new Date(plannedDate)
-          }
-        });
-      }
-      console.log('[WEEKS API] Auto-matched', allAutoMatchedIds.length, 'workouts');
-    }
+    // TODO: Re-implementar auto-match corretamente em próxima versão
+    // DESABILITADO TEMPORARIAMENTE - estava causando bugs (v4.0.44)
+    // - planned_date sendo setado incorretamente
+    // - Órfãos aparecendo duplicados
+    // Por enquanto: match manual apenas via modal
+    
+    // if (allAutoMatchedIds.length > 0) {
+    //   for (const { id, plannedDate } of allAutoMatchedIds) {
+    //     await prisma.completedWorkout.update({
+    //       where: { id },
+    //       data: { 
+    //         wasPlanned: true,
+    //         plannedDate: new Date(plannedDate)
+    //       }
+    //     });
+    //   }
+    //   console.log('[WEEKS API] Auto-matched', allAutoMatchedIds.length, 'workouts');
+    // }
 
     return NextResponse.json({ weeks: weeksWithRecalculated });
   } catch (error) {

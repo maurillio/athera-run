@@ -111,7 +111,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       status: 'success',
-      message: 'Cleanup concluído com sucesso!',
+      message: 'Cleanup concluído! RECARREGUE A PÁGINA (Ctrl+Shift+R) para ver mudanças.',
       bugsBefore: countBefore,
       bugsAfter: countAfter,
       cleaned: result,
@@ -119,7 +119,8 @@ export async function POST(request: Request) {
         before: 'planned_date = data execução (bug auto-match)',
         after: 'planned_date = NULL (treino executado no dia correto)',
         substitutions: 'planned_date != NULL mantido para substituições reais'
-      }
+      },
+      note: 'IMPORTANTE: Faça hard refresh (Ctrl+Shift+R ou Cmd+Shift+R) para limpar cache!'
     });
 
   } catch (error) {
