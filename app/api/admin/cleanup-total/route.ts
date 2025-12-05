@@ -3,7 +3,15 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 
+export async function GET(req: NextRequest) {
+  return handleCleanup(req);
+}
+
 export async function POST(req: NextRequest) {
+  return handleCleanup(req);
+}
+
+async function handleCleanup(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
