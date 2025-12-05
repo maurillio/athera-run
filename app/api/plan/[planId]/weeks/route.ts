@@ -149,10 +149,40 @@ export async function GET(
       }
 
       // Mesclar workouts planejados processados + órfãos no dia de execução
-      const allWorkouts = [
+      let allWorkouts = [
         ...processedWorkouts,
         ...orphansAsWorkouts
-      ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      ];
+
+      // Filtrar "descanso" se há órfão no mesmo dia
+      // Descanso não é uma "atividade", só um marcador
+      const workoutsByDate = allWorkouts.reduce((acc, w) => {
+        const dateKey = new Date(w.date).toISOString().split('T')[0];
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(w);
+        return acc;
+      }, {} as Record<string, typeof allWorkouts>);
+
+      // Para cada dia, se tem órfão + descanso, remover descanso
+      allWorkouts = allWorkouts.filter(w => {
+        const dateKey = new Date(w.date).toISOString().split('T')[0];
+        const workoutsInDay = workoutsByDate[dateKey];
+        
+        const isRest = w.type === 'rest' || 
+                       w.title?.toLowerCase().includes('descanso') || 
+                       w.title?.toLowerCase().includes('rest');
+        const hasOrphan = workoutsInDay.some(wo => wo.isOrphan);
+        
+        // Se é descanso E tem órfão no mesmo dia, remover descanso
+        if (isRest && hasOrphan) {
+          return false;
+        }
+        
+        return true;
+      });
+
+      // Ordenar por data
+      allWorkouts.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
       return {
         ...week,
