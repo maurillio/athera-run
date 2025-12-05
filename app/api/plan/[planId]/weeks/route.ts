@@ -103,12 +103,15 @@ export async function GET(
       const processedWorkouts = await Promise.all(week.workouts.map(async (w) => {
         const workoutDate = new Date(w.date).toISOString().split('T')[0];
         
-        // AUTO-MATCH: Vincular automaticamente APENAS se mesma data + mesmo tipo
-        // E que NÃO esteja já vinculado
+        // AUTO-MATCH: Vincular automaticamente APENAS se:
+        // - Mesma data + mesmo tipo
+        // - NÃO esteja já vinculado
+        // - APENAS para corridas (running)
         const sameDay = allCompletedWorkouts.find(completed => {
           const completedDate = new Date(completed.date).toISOString().split('T')[0];
           return completedDate === workoutDate && 
                  completed.type === w.type &&
+                 completed.type === 'running' && // 🏃 APENAS CORRIDAS
                  !w.completedWorkoutId; // Só auto-match se ainda NÃO vinculado
         });
 

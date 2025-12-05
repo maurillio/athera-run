@@ -7,6 +7,152 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.6] - 05/DEZ/2025 19:12 UTC 🏃 **Athera Flex APENAS para Corridas**
+
+### 🎯 Problema Relatado
+
+**Pop-up "Match Detectado" aparecendo para treinos auxiliares (musculação, força, etc)**
+
+Usuário reportou:
+- ❌ Pop-up de match para musculação (strength)
+- ❌ Sugestão de vincular musculação a treino planejado
+- ❌ Auto-match para treinos não-running
+
+**Expectativa:**
+- ✅ **Corrida é o CORE** - único tipo que deve ter Athera Flex completo
+- ✅ Treinos auxiliares (musculação, força, bike) são **complementares**
+- ✅ Treinos auxiliares devem aparecer como órfãos azuis NO CALENDÁRIO
+- ❌ Treinos auxiliares **NÃO devem ter pop-up ou sugestões de match**
+
+### 🔍 Diagnóstico
+
+**Athera Flex estava ativo para TODOS os tipos de treino:**
+- API detect-matches buscava qualquer tipo
+- Auto-match acontecia para qualquer tipo
+- Pop-up de sugestão aparecia para qualquer tipo
+
+**Problema:** Treinos auxiliares não são "órfãos a corrigir", são **extras planejados pelo atleta**.
+
+### ✅ Solução Implementada
+
+#### Fix 1: Filtrar Detect Matches (API)
+**Arquivo:** `app/api/athera-flex/detect-matches/route.ts` (linha 92)
+
+```typescript
+// ANTES: Buscava qualquer tipo
+const completedWorkouts = await prisma.completedWorkout.findMany({
+  where: {
+    athleteId: profile.id,
+    wasPlanned: false,
+  }
+});
+
+// DEPOIS: Busca APENAS corridas
+const completedWorkouts = await prisma.completedWorkout.findMany({
+  where: {
+    athleteId: profile.id,
+    wasPlanned: false,
+    type: 'running', // 🏃 APENAS CORRIDAS
+  }
+});
+```
+
+#### Fix 2: Filtrar Planned Workouts (API)
+**Arquivo:** `app/api/athera-flex/detect-matches/route.ts` (linha 116)
+
+```typescript
+// Buscar apenas treinos planejados de corrida
+const plannedWorkouts = await prisma.customWorkout.findMany({
+  where: {
+    week: { planId: plan.id },
+    isCompleted: false,
+    isFlexible: true,
+    type: 'running', // 🏃 APENAS CORRIDAS
+  }
+});
+```
+
+#### Fix 3: Filtrar Auto-Match (API weeks)
+**Arquivo:** `app/api/plan/[planId]/weeks/route.ts` (linha 112)
+
+```typescript
+// ANTES: Auto-match para qualquer tipo
+const sameDay = allCompletedWorkouts.find(completed => {
+  return completedDate === workoutDate && 
+         completed.type === w.type &&
+         !w.completedWorkoutId;
+});
+
+// DEPOIS: Auto-match APENAS corridas
+const sameDay = allCompletedWorkouts.find(completed => {
+  return completedDate === workoutDate && 
+         completed.type === w.type &&
+         completed.type === 'running' && // 🏃 APENAS CORRIDAS
+         !w.completedWorkoutId;
+});
+```
+
+### 📊 Resultado Final
+
+**ANTES (v5.0.5):**
+```
+❌ Musculação executada → Pop-up "Match Detectado!"
+❌ Auto-match musculação → Vincula automaticamente
+❌ Sugestão de match para força, bike, etc
+```
+
+**DEPOIS (v5.0.6):**
+```
+✅ Corrida executada → Pop-up "Match Detectado!" ✅
+✅ Auto-match corrida (mesmo dia) ✅
+✅ Sugestão match corrida (outro dia) ✅
+
+✅ Musculação executada → Aparece azul no calendário
+❌ Musculação → SEM pop-up
+❌ Musculação → SEM auto-match
+❌ Musculação → SEM sugestão
+
+✅ Força/bike/etc executados → Aparecem azuis no calendário
+❌ Força/bike/etc → SEM pop-up
+❌ Força/bike/etc → SEM auto-match
+❌ Força/bike/etc → SEM sugestão
+```
+
+### 🎯 Lógica do Sistema
+
+**Corridas (running):**
+- ✅ Core do treinamento
+- ✅ Athera Flex completo (auto-match, sugestões, pop-ups)
+- ✅ Sistema inteligente de flexibilidade
+
+**Treinos Auxiliares (strength, bike, etc):**
+- ✅ Aparecem no calendário (órfãos azuis)
+- ✅ Visíveis para tracking
+- ❌ SEM Athera Flex (não são "erros" a corrigir)
+- ❌ Atleta executa conforme sua rotina
+
+### 📁 Arquivos Modificados
+
+```
+app/api/athera-flex/detect-matches/route.ts  (linhas 92, 116)
+├── Filtro: type === 'running' em completedWorkouts
+└── Filtro: type === 'running' em plannedWorkouts
+
+app/api/plan/[planId]/weeks/route.ts  (linha 112)
+└── Filtro: completed.type === 'running' em auto-match
+```
+
+### 🧪 Validação
+
+**Testar em produção:**
+- [ ] Corrida órfã → Pop-up aparece?
+- [ ] Musculação órfã → Pop-up NÃO aparece?
+- [ ] Musculação aparece azul no calendário?
+- [ ] Auto-match corrida (mesmo dia) funciona?
+- [ ] Auto-match musculação NÃO acontece?
+
+---
+
 ## [v5.0.5] - 05/DEZ/2025 18:52 UTC 🎨 **UX: Título Híbrido em Workouts Executados**
 
 ### 🎯 Melhoria Solicitada

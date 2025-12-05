@@ -2,8 +2,8 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v5.0.5 - Título Híbrido em Workouts (05/Dez/2025 18:52 UTC)  
-**Versão Atual:** v5.0.5 ✅ ATHERA FLEX + UX PERFEITA  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v5.0.6 - Athera Flex APENAS Corridas (05/Dez/2025 19:12 UTC)  
+**Versão Atual:** v5.0.6 ✅ ATHERA FLEX CORE: RUNNING ONLY  
 **Status:** ✅ **FUNCIONANDO EM PRODUÇÃO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  

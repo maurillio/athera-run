@@ -81,6 +81,7 @@ export async function POST(req: Request) {
     const matcher = createMatcherFromUserSettings(settings);
 
     // Buscar treinos completados nos últimos N dias SEM match ainda
+    // APENAS CORRIDAS (running) devem ter sugestões de match
     const startDate = dayjs().subtract(daysBack, 'day').toDate();
     const completedWorkouts = await prisma.completedWorkout.findMany({
       where: {
@@ -89,6 +90,7 @@ export async function POST(req: Request) {
           gte: startDate,
         },
         wasPlanned: false, // Ainda não foi vinculado a um planejado
+        type: 'running', // 🏃 APENAS CORRIDAS
       },
       orderBy: {
         date: 'desc',
@@ -105,6 +107,7 @@ export async function POST(req: Request) {
     }
 
     // Buscar treinos planejados NÃO completados
+    // APENAS CORRIDAS (running) devem ter sugestões de match
     const plannedWorkouts = await prisma.customWorkout.findMany({
       where: {
         week: {
@@ -112,6 +115,7 @@ export async function POST(req: Request) {
         },
         isCompleted: false,
         isFlexible: true,
+        type: 'running', // 🏃 APENAS CORRIDAS
         date: {
           gte: dayjs().subtract(14, 'day').toDate(), // Últimos 14 dias
           lte: dayjs().add(7, 'day').toDate(), // Próximos 7 dias
