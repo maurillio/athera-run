@@ -643,8 +643,8 @@ export default function PlanoPage() {
                             w.title.toLowerCase().includes('descanso') || 
                             w.title.toLowerCase().includes('rest')
                           );
-                          // Verificar se dia tem APENAS órfão sem match
-                          const hasOrphanOnly = dayWorkouts.length === 1 && dayWorkouts[0].isOrphan && !dayWorkouts[0].hasMatch;
+                          // Verificar se dia tem órfão (com ou sem match)
+                          const hasOrphan = dayWorkouts.some(w => w.isOrphan);
                           const isPastPartial = workoutDate.isBefore(today, 'day') && partialCompleted && !isRestDay;
                           const isPastUncompleted = workoutDate.isBefore(today, 'day') && noneCompleted && !isRestDay;
                           const hasRaceDay = dayWorkouts.some(w => 
@@ -659,7 +659,7 @@ export default function PlanoPage() {
                               onClick={() => !isToday && toggleDay(dateKey)}
                               className={`
                                 relative rounded-lg border-2 transition-all cursor-pointer
-                                ${hasOrphanOnly
+                                ${hasOrphan
                                   ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-300 hover:border-blue-400 hover:shadow-md'
                                   : allCompleted
                                     ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-300 hover:border-green-400 hover:shadow-md'

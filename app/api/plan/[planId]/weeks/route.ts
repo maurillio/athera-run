@@ -62,7 +62,7 @@ export async function GET(
     const weeksWithRecalculated = plan.weeks.map(week => {
       const completedCount = week.workouts.filter(w => w.isCompleted).length;
       
-      // Calcular volume executado (soma dos treinos completados)
+      // Calcular volume executado (soma dos treinos completados + órfãos)
       const executedVolume = week.workouts.reduce((sum, workout) => {
         if (workout.isCompleted && workout.completedWorkout) {
           return sum + (workout.completedWorkout.distance || 0);
@@ -88,6 +88,10 @@ export async function GET(
         // Órfão = executado na semana MAS não vinculado a workout planejado no mesmo dia
         return !hasPlannedSameDay;
       });
+
+      // Somar volume dos órfãos ao executedVolume
+      const orphansVolume = orphansInWeek.reduce((sum, o) => sum + (o.distance || 0), 0);
+      const totalExecutedVolume = executedVolume + orphansVolume;
 
       // Processar workouts: mesclar órfãos com planejados correspondentes
       const processedWorkouts = week.workouts.map(w => {
@@ -208,7 +212,7 @@ export async function GET(
         completedWorkouts: completedCount + orphansInWeek.length, // Incluir órfãos na contagem
         // Manter totalDistance planejado, mas adicionar campo executedDistance
         // NÃO somar órfãos aqui porque já foram mesclados nos processedWorkouts!
-        executedDistance: executedVolume,
+        executedDistance: totalExecutedVolume,
         orphanWorkouts: orphansInWeek, // MANTIDO para debug/referência
         workouts: allWorkouts // INCLUIR ÓRFÃOS MESCLADOS
       };
