@@ -58,9 +58,6 @@ export async function GET(
 
     console.log('[WEEKS API] Found completed workouts:', allCompletedWorkouts.length);
 
-    // Array para coletar treinos auto-matched
-    const allAutoMatchedIds: Array<{ id: number, plannedDate: Date, plannedWorkoutId: number }> = [];
-
     // Recalcular volume e progresso para cada semana
     const weeksWithRecalculated = plan.weeks.map(week => {
       const completedCount = week.workouts.filter(w => w.isCompleted).length;
@@ -106,43 +103,9 @@ export async function GET(
       const processedWorkouts = week.workouts.map(w => {
         const workoutDate = new Date(w.date).toISOString().split('T')[0];
         
-        // PRIORIDADE 1: Buscar treino executado NO MESMO DIA (auto-match)
-        const sameDay = allCompletedWorkouts.find(completed => {
-          const completedDate = new Date(completed.date).toISOString().split('T')[0];
-          
-          // Log detalhado para debug
-          if (completedDate === workoutDate) {
-            console.log('[AUTO-MATCH] Candidato:', {
-              plannedId: w.id,
-              plannedType: w.type,
-              completedId: completed.id,
-              completedType: completed.type,
-              wasPlanned: completed.wasPlanned,
-              plannedDate: completed.plannedDate,
-              match: completedDate === workoutDate && completed.type === w.type && !completed.plannedDate
-            });
-          }
-          
-          // Mesmo dia E tipo compatível E não vinculado via plannedDate
-          // wasPlanned pode ser true (manual ou Strava), mas se plannedDate é null, não está vinculado
-          return completedDate === workoutDate && 
-                 completed.type === w.type &&
-                 !completed.plannedDate; // Não vinculado a workout específico
-        });
-
-        if (sameDay) {
-          console.log('[AUTO-MATCH] Match encontrado! Planned:', w.id, '→ Completed:', sameDay.id);
-          // Vincular automaticamente (auto-match)
-          return {
-            ...w,
-            isCompleted: true,
-            completedWorkoutId: sameDay.id,
-            executedWorkoutId: sameDay.id,
-            wasSubstitution: false, // Mesmo dia = não é substituição
-            completedWorkout: sameDay,
-            executedWorkout: sameDay,
-          };
-        }
+        // AUTO-MATCH DESABILITADO: Causa bugs, usar apenas match manual
+        // const sameDay = allCompletedWorkouts.find(completed => {...});
+        // if (sameDay) { vincular automaticamente }
 
         // PRIORIDADE 2: Verificar se existe órfão (outro dia) para este planejado
         const orphan = orphansInWeek.find(o => {
@@ -167,17 +130,6 @@ export async function GET(
         // Senão, retornar workout original (não executado)
         return { ...w };
       });
-
-      // Coletar IDs e datas dos treinos auto-matched para atualizar depois
-      const autoMatchedData = processedWorkouts
-        .filter(w => w.completedWorkoutId && !w.wasSubstitution)
-        .map(w => ({
-          id: w.completedWorkoutId!,
-          plannedDate: w.date,
-          plannedWorkoutId: w.id // Incluir ID do workout planejado
-        }));
-      
-      allAutoMatchedIds.push(...autoMatchedData);
 
       // Adicionar órfãos no dia de EXECUÇÃO (para mostrar no sábado também)
       // TODOS os órfãos devem aparecer no dia que foram executados
@@ -297,42 +249,9 @@ export async function GET(
       };
     });
 
-    // Auto-match SOMENTE para treinos no MESMO DIA (não é substituição!)
-    // Exemplo: Planejado 5km no dia X, executou 6km no dia X → AUTO-MATCH
-    if (allAutoMatchedIds.length > 0) {
-      const sameDayMatches = allAutoMatchedIds.filter(({ id, plannedDate }) => {
-        const completed = allCompletedWorkouts.find(c => c.id === id);
-        if (!completed) return false;
-        
-        const completedDate = new Date(completed.date).toISOString().split('T')[0];
-        const plannedDateStr = new Date(plannedDate).toISOString().split('T')[0];
-        
-        // SOMENTE auto-match se MESMO DIA (não é substituição)
-        return completedDate === plannedDateStr;
-      });
-
-      for (const { id, plannedDate, plannedWorkoutId } of sameDayMatches) {
-        // Atualizar CompletedWorkout
-        await prisma.completedWorkout.update({
-          where: { id },
-          data: { 
-            wasPlanned: true,
-            plannedDate: new Date(plannedDate) // Mesmo dia = plannedDate = data execução
-          }
-        });
-
-        // Atualizar CustomWorkout (planejado) para vincular ao executado
-        await prisma.customWorkout.update({
-          where: { id: plannedWorkoutId },
-          data: {
-            completedWorkoutId: id,
-            executedWorkoutId: id,
-            wasSubstitution: false
-          }
-        });
-      }
-      console.log('[WEEKS API] Auto-matched (same day)', sameDayMatches.length, 'workouts');
-    }
+    // AUTO-MATCH DESABILITADO COMPLETAMENTE
+    // Usar APENAS match manual via API /manual-match
+    // if (allAutoMatchedIds.length > 0) { ... }
 
     return NextResponse.json({ weeks: weeksWithRecalculated });
   } catch (error) {
