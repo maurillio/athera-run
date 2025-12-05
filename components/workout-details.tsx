@@ -93,7 +93,7 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               <h3 className="text-base font-semibold text-gray-900">
                 {workout.isCompleted && workout.executedWorkout 
-                  ? `${workout.title} - ${displayWorkout.distance}km executados`
+                  ? `${workout.title.replace(/\s*-\s*[\d.]+km.*$/, '')} - ${displayWorkout.distance}km executados`
                   : workout.title
                 }
               </h3>
@@ -462,7 +462,7 @@ function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: Enha
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <h3 className="text-base font-semibold text-gray-900">
               {workout.isCompleted && workout.executedWorkout 
-                ? `${workout.title} - ${displayWorkout.distance}km executados`
+                ? `${workout.title.replace(/\s*-\s*[\d.]+km.*$/, '')} - ${displayWorkout.distance}km executados`
                 : workout.title
               }
             </h3>
