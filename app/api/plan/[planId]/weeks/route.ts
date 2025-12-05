@@ -100,7 +100,7 @@ export async function GET(
       const totalExecutedVolume = executedVolume + orphansVolume;
 
       // Processar workouts: vincular treinos executados no mesmo dia
-      const processedWorkouts = week.workouts.map(w => {
+      const processedWorkouts = await Promise.all(week.workouts.map(async (w) => {
         const workoutDate = new Date(w.date).toISOString().split('T')[0];
         
         // AUTO-MATCH: Vincular automaticamente APENAS se mesma data + mesmo tipo
@@ -113,13 +113,25 @@ export async function GET(
         });
 
         if (sameDay) {
-          // Match automático encontrado!
+          // Match automático encontrado! PERSISTIR NO BANCO
+          await prisma.customWorkout.update({
+            where: { id: w.id },
+            data: {
+              isCompleted: true,
+              completedWorkoutId: sameDay.id,
+              executedWorkoutId: sameDay.id,
+              wasSubstitution: false,
+            }
+          });
+
+          console.log(`[AUTO-MATCH] Vinculado workout ${w.id} com completed ${sameDay.id}`);
+
           return {
             ...w,
             isCompleted: true,
             completedWorkoutId: sameDay.id,
             executedWorkoutId: sameDay.id,
-            wasSubstitution: false, // Não é substituição (mesmo dia)
+            wasSubstitution: false,
             completedWorkout: sameDay,
             executedWorkout: sameDay,
           };
@@ -147,7 +159,7 @@ export async function GET(
 
         // Senão, retornar workout original (não executado)
         return { ...w };
-      });
+      }));
 
       // Adicionar órfãos no dia de EXECUÇÃO (para mostrar no sábado também)
       // TODOS os órfãos devem aparecer no dia que foram executados
