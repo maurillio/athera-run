@@ -52,7 +52,7 @@ export function CalendarFlexIntegration({ workouts }: CalendarFlexIntegrationPro
   } = useWorkoutMatcher({
     enabled: true,
     autoDetect: true,
-    minConfidence: 70,
+    minConfidence: 60, // Reduzido de 70 para 60 para aceitar matches com maior diferença de volume
   });
 
   // Notificar quando houver múltiplos matches
