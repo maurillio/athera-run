@@ -23,6 +23,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '7');
+    const plannedDateStr = searchParams.get('plannedDate'); // Data do treino planejado
 
     // Buscar user
     const user = await prisma.user.findUnique({
@@ -50,18 +51,34 @@ export async function GET(request: Request) {
       );
     }
 
-    // Data de corte (últimos N dias)
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - days);
+    // Se passou plannedDate, filtrar ±3 dias dessa data
+    // Senão, usar últimos N dias (comportamento antigo)
+    let dateFilter: any;
+    
+    if (plannedDateStr) {
+      const plannedDate = new Date(plannedDateStr);
+      const minDate = new Date(plannedDate);
+      minDate.setDate(minDate.getDate() - 3); // 3 dias antes
+      const maxDate = new Date(plannedDate);
+      maxDate.setDate(maxDate.getDate() + 3); // 3 dias depois
+      
+      dateFilter = {
+        gte: minDate,
+        lte: maxDate,
+      };
+    } else {
+      // Fallback: últimos N dias
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+      dateFilter = { gte: cutoffDate };
+    }
 
     // Buscar treinos completados
     // Filtrar APENAS corridas (type = 'run' ou 'running')
     const workouts = await prisma.completedWorkout.findMany({
       where: {
         athleteId: profile.id,
-        date: {
-          gte: cutoffDate,
-        },
+        date: dateFilter, // Usar filtro de data calculado
         OR: [
           { type: 'run' },
           { type: 'running' },

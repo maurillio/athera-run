@@ -46,8 +46,12 @@ export function ManualMatchModal({
   const fetchCompletedWorkouts = async () => {
     setLoading(true);
     try {
-      // Buscar APENAS corridas dos últimos 7 dias
-      const response = await fetch('/api/workouts/completed-runs?days=7');
+      // Buscar corridas ±3 dias da data planejada
+      const plannedDateStr = plannedWorkout?.date 
+        ? new Date(plannedWorkout.date).toISOString().split('T')[0]
+        : '';
+      
+      const response = await fetch(`/api/workouts/completed-runs?plannedDate=${plannedDateStr}`);
       if (response.ok) {
         const data = await response.json();
         setCompletedWorkouts(data.workouts || []);
