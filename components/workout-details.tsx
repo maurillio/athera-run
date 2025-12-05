@@ -92,7 +92,10 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               <h3 className="text-base font-semibold text-gray-900">
-                {workout.title}
+                {workout.isCompleted && workout.executedWorkout 
+                  ? `${workout.title} - ${displayWorkout.distance}km executados`
+                  : workout.title
+                }
               </h3>
               {workout.isCompleted ? (
                 <>
@@ -131,6 +134,14 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                 </>
               )}
             </div>
+            
+            {/* Linha mostrando planejado (se foi executado diferente) */}
+            {workout.isCompleted && workout.executedWorkout && workout.distance && (
+              <div className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+                📋 Planejado: {workout.distance}km
+                {workout.targetPace && `, ${workout.targetPace.includes('min/km') ? workout.targetPace : `${workout.targetPace} min/km`}`}
+              </div>
+            )}
           
           {/* Mensagem de Substituição + Botão Desfazer */}
           {workout.isCompleted && workout.wasSubstitution && (
@@ -450,7 +461,10 @@ function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: Enha
           <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <h3 className="text-base font-semibold text-gray-900">
-              {workout.title}
+              {workout.isCompleted && workout.executedWorkout 
+                ? `${workout.title} - ${displayWorkout.distance}km executados`
+                : workout.title
+              }
             </h3>
             {workout.isCompleted ? (
               <>
@@ -480,6 +494,14 @@ function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: Enha
               </Button>
             )}
           </div>
+          
+          {/* Linha mostrando planejado (se foi executado diferente) */}
+          {workout.isCompleted && workout.executedWorkout && workout.distance && (
+            <div className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+              📋 Planejado: {workout.distance}km
+              {workout.targetPace && `, ${workout.targetPace.includes('min/km') ? workout.targetPace : `${workout.targetPace} min/km`}`}
+            </div>
+          )}
           
           {/* Mensagem de Substituição + Botão Desfazer */}
           {workout.isCompleted && workout.wasSubstitution && (

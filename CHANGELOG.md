@@ -7,6 +7,91 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.5] - 05/DEZ/2025 18:52 UTC 🎨 **UX: Título Híbrido em Workouts Executados**
+
+### 🎯 Melhoria Solicitada
+
+**Problema UX:** Quando treino é executado (auto-match ou manual), título mostra apenas dados planejados, causando confusão.
+
+**Exemplo:**
+```
+ANTES:
+📗 Treino Fácil - 4.7km    ← Planejado
+   ✅ Concluído
+   
+   5km | 30min | 6:00/km   ← Executado (sem contexto)
+```
+
+**Esperado:** Título deve refletir o que foi **realmente executado**, mantendo contexto do planejado.
+
+### ✅ Solução Implementada: Título Híbrido
+
+**Arquivo:** `components/workout-details.tsx` (2 funções: linhas ~94-96 e ~463-469)
+
+```typescript
+// Título híbrido: tipo planejado + distância executada
+<h3>
+  {workout.isCompleted && workout.executedWorkout 
+    ? `${workout.title} - ${displayWorkout.distance}km executados`
+    : workout.title
+  }
+</h3>
+
+// Logo abaixo: linha com planejado (referência)
+{workout.isCompleted && workout.executedWorkout && workout.distance && (
+  <div className="text-xs text-slate-600 mt-1">
+    📋 Planejado: {workout.distance}km, {workout.targetPace}
+  </div>
+)}
+```
+
+### 📊 Resultado Visual
+
+**ANTES (v5.0.4):**
+```
+📗 Treino Fácil - 4.7km
+   ✅ Concluído
+   Objetivo: Recuperação ativa...
+   
+   5km | 30min | 6:00/km
+```
+❌ Confuso: título mostra 4.7km mas executado foi 5km
+
+**DEPOIS (v5.0.5):**
+```
+📗 Treino Fácil - 5km executados
+   ✅ Concluído
+   📋 Planejado: 4.7km, 6:22/km
+   
+   5km | 30min | 6:00/km | RPE 3/10
+```
+✅ Claro: título mostra 5km executados + referência do planejado
+
+### 🎯 Benefícios
+
+1. **Clareza imediata:** Usuário vê o que fez sem ler detalhes
+2. **Contexto preservado:** Tipo de treino planejado mantido
+3. **Comparação fácil:** Linha "Planejado" mostra referência
+4. **Honestidade:** Título reflete a realidade (executado)
+
+### 📁 Arquivos Modificados
+
+```
+components/workout-details.tsx  (linhas 94-96, 137-143, 463-469, 496-502)
+├── WorkoutDetails: Título híbrido + linha planejado
+└── SimpleWorkoutView: Título híbrido + linha planejado
+```
+
+### 🧪 Validação
+
+**Testar em produção:**
+- [ ] Auto-match: Título mostra distância executada?
+- [ ] Match manual: Título mostra distância executada?
+- [ ] Linha "Planejado" aparece abaixo do título?
+- [ ] Não executado: Título permanece inalterado?
+
+---
+
 ## [v5.0.4] - 05/DEZ/2025 18:30 UTC 🐛 **FIX: 3 Bugs Athera Flex**
 
 ### 🎯 Problemas Relatados (pós v4.0.23)
