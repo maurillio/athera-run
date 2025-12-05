@@ -163,62 +163,78 @@ export async function POST(req: Request) {
       );
     }
 
-    // Aplicar ajuste usando o engine
-    console.log('[apply-adjustment] Calling adjustmentEngine.applyAdjustment...');
+    // HOTFIX: Aplicar match direto sem engine (engine está com erro)
+    console.log('[apply-adjustment] HOTFIX: Aplicando match direto...');
     
-    const result = await adjustmentEngine.applyAdjustment({
-      userId: user.id,
-      completedWorkoutId,
-      plannedWorkoutId,
-      confidence,
-      dateScore: dateScore || 0,
-      typeScore: typeScore || 0,
-      volumeScore: volumeScore || 0,
-      intensityScore: intensityScore || 0,
-      triggeredBy,
-      reason,
-      autoApplied: triggeredBy === 'ai_auto',
-    });
+    try {
+      // 1. Atualizar treino planejado
+      await prisma.customWorkout.update({
+        where: { id: plannedWorkoutId },
+        data: {
+          isCompleted: true,
+          completedWorkoutId,
+          executedWorkoutId: completedWorkoutId,
+          wasSubstitution: true, // Marca como substituição (dia diferente)
+          completedAt: new Date(),
+        },
+      });
 
-    console.log('[apply-adjustment] Engine result:', result);
+      console.log('[apply-adjustment] ✅ Treino planejado atualizado');
 
-    if (!result.success) {
-      console.log('[apply-adjustment] ❌ Engine failed:', result.message);
+      // 2. Atualizar treino completado
+      await prisma.completedWorkout.update({
+        where: { id: completedWorkoutId },
+        data: {
+          wasPlanned: true,
+          plannedDate: plannedWorkout.date,
+        },
+      });
+
+      console.log('[apply-adjustment] ✅ Treino completado atualizado');
+
+      // 3. Registrar decisão
+      await prisma.workoutMatchDecision.create({
+        data: {
+          userId: user.id,
+          completedWorkoutId,
+          plannedWorkoutId,
+          confidence,
+          accepted: true,
+          triggeredBy,
+          appliedAt: new Date(),
+        },
+      });
+
+      console.log('[apply-adjustment] ✅ Decisão registrada');
+
+      // Buscar dados atualizados
+      const updatedPlanned = await prisma.customWorkout.findUnique({
+        where: { id: plannedWorkoutId },
+        include: {
+          completedWorkout: true,
+          executedWorkout: true,
+        },
+      });
+
+      const updatedCompleted = await prisma.completedWorkout.findUnique({
+        where: { id: completedWorkoutId },
+      });
+
+      console.log('[apply-adjustment] ✅ Match aplicado com sucesso!');
+
+      return NextResponse.json({
+        success: true,
+        message: 'Match aplicado com sucesso',
+        plannedWorkout: updatedPlanned,
+        completedWorkout: updatedCompleted,
+      });
+    } catch (engineError: any) {
+      console.error('[apply-adjustment] ❌ HOTFIX failed:', engineError);
       return NextResponse.json(
-        { error: result.message },
-        { status: 400 }
+        { error: 'Erro ao aplicar match', details: engineError.message },
+        { status: 500 }
       );
     }
-
-    console.log('[apply-adjustment] ✅ Engine succeeded, fetching updated data...');
-
-    // Buscar dados atualizados para resposta
-    const updatedPlanned = await prisma.customWorkout.findUnique({
-      where: { id: plannedWorkoutId },
-      select: {
-        id: true,
-        title: true,
-        date: true,
-        type: true,
-        distance: true,
-        isCompleted: true,
-        wasRescheduled: true,
-        originalDate: true,
-        rescheduledBy: true,
-        rescheduledReason: true,
-      },
-    });
-
-    const updatedCompleted = await prisma.completedWorkout.findUnique({
-      where: { id: completedWorkoutId },
-      select: {
-        id: true,
-        date: true,
-        type: true,
-        distance: true,
-        wasPlanned: true,
-        plannedDate: true,
-        volumeVariance: true,
       },
     });
 
