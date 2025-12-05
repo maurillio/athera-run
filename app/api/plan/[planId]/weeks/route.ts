@@ -109,6 +109,19 @@ export async function GET(
         // PRIORIDADE 1: Buscar treino executado NO MESMO DIA (auto-match)
         const sameDay = allCompletedWorkouts.find(completed => {
           const completedDate = new Date(completed.date).toISOString().split('T')[0];
+          
+          // Log detalhado para debug
+          if (completedDate === workoutDate) {
+            console.log('[AUTO-MATCH] Candidato:', {
+              plannedId: w.id,
+              plannedType: w.type,
+              completedId: completed.id,
+              completedType: completed.type,
+              wasPlanned: completed.wasPlanned,
+              match: completedDate === workoutDate && completed.type === w.type && !completed.wasPlanned
+            });
+          }
+          
           // Mesmo dia E tipo compatível E não vinculado a outro workout
           return completedDate === workoutDate && 
                  completed.type === w.type &&
@@ -116,6 +129,7 @@ export async function GET(
         });
 
         if (sameDay) {
+          console.log('[AUTO-MATCH] Match encontrado! Planned:', w.id, '→ Completed:', sameDay.id);
           // Vincular automaticamente (auto-match)
           return {
             ...w,
