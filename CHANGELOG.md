@@ -7,6 +7,66 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.7] - 05/DEZ/2025 19:45 UTC
+
+### [Debug] - Logs Detalhados API Detect-Matches
+
+**Problema:**
+- Pop-up de sugestão de match não aparece para corridas em dias diferentes
+- Hook `useWorkoutMatcher` roda mas não encontra matches
+- Suspeita: filtros muito restritivos ou dados não disponíveis
+
+**Solução Implementada:**
+1. **Logs completos de treinos completados:**
+   - User ID, Profile ID, Plan ID
+   - Data de início da busca
+   - Todos treinos encontrados (ID, data, tipo, distância, wasPlanned)
+   - Debug adicional: mostra treinos com `wasPlanned=true` também
+
+2. **Logs completos de treinos planejados:**
+   - Todos workouts elegíveis encontrados
+   - Data, título, tipo, distância
+   - Flags importantes: `isCompleted`, `isFlexible`, `flexibilityWindow`
+   - Debug adicional: mostra todos treinos planejados (sem filtros)
+
+3. **Logs do processo de matching:**
+   - Para cada treino completado, mostra quantos matches foram encontrados
+   - Score detalhado (confidence, dateScore, typeScore, volumeScore, intensityScore)
+   - Indica se match foi aceito ou rejeitado (e por quê)
+   - Mostra threshold de confiança usado
+
+4. **Logs de resultados finais:**
+   - Total de sugestões geradas
+   - Detalhes de cada sugestão (IDs, confidence, auto-apply)
+
+**Arquivos Modificados:**
+- `app/api/athera-flex/detect-matches/route.ts` - Logs detalhados em todo fluxo
+- `debug-popup-running.ts` - Script de diagnóstico local (não usado em prod)
+
+**Como Usar:**
+1. Acesse https://atherarun.com e faça login
+2. Navegue até /plano
+3. Abra DevTools → Console
+4. Procure por `[detect-matches]` nos logs
+5. Analise dados para identificar problema
+
+**Próximos Passos:**
+- Ver logs em produção
+- Identificar se problema é:
+  - wasPlanned=true (já vinculados)
+  - isFlexible=false (não flexíveis)
+  - Confidence < threshold
+  - Data fora da janela
+- Aplicar correção baseada nos logs
+
+**Validação:**
+- ✅ Commit: 61ec4ed8
+- ✅ Push: concluído
+- ⏳ Deploy Vercel: em andamento
+- ⏳ Logs em produção: aguardando
+
+---
+
 ## [v5.0.6] - 05/DEZ/2025 19:12 UTC 🏃 **Athera Flex APENAS para Corridas**
 
 ### 🎯 Problema Relatado
