@@ -142,25 +142,53 @@ export async function POST(req: Request) {
       });
     }
 
-    // Buscar treinos planejados NÃO completados
+    // Buscar treinos planejados elegíveis para match
     // APENAS CORRIDAS (running) devem ter sugestões de match
-    const plannedWorkouts = await prisma.customWorkout.findMany({
+    // 
+    // Estratégia SEGURA (2 queries separadas):
+    // 1. Treinos passados NÃO completados
+    // 2. Treino de AMANHÃ (proativo)
+    const today = dayjs().endOf('day').toDate();
+    const tomorrow = dayjs().add(1, 'day').startOf('day').toDate();
+    const tomorrowEnd = dayjs().add(1, 'day').endOf('day').toDate();
+
+    // Query 1: Treinos passados/hoje NÃO completados
+    const pastWorkouts = await prisma.customWorkout.findMany({
       where: {
-        week: {
-          planId: plan.id,
-        },
+        week: { planId: plan.id },
         isCompleted: false,
         isFlexible: true,
-        type: 'running', // 🏃 APENAS CORRIDAS
+        type: 'running',
         date: {
-          gte: dayjs().subtract(14, 'day').toDate(), // Últimos 14 dias
-          lte: dayjs().add(7, 'day').toDate(), // Próximos 7 dias
+          gte: dayjs().subtract(14, 'day').toDate(),
+          lte: today,
         },
       },
-      include: {
-        week: true,
-      },
+      include: { week: true },
     });
+
+    // Query 2: Treino de AMANHÃ (mesmo se não marcado como não feito ainda)
+    const tomorrowWorkouts = await prisma.customWorkout.findMany({
+      where: {
+        week: { planId: plan.id },
+        isFlexible: true,
+        type: 'running',
+        date: {
+          gte: tomorrow,
+          lte: tomorrowEnd,
+        },
+      },
+      include: { week: true },
+    });
+
+    // Combinar resultados (evita duplicados por ID)
+    const plannedWorkoutsMap = new Map();
+    [...pastWorkouts, ...tomorrowWorkouts].forEach(w => {
+      if (!plannedWorkoutsMap.has(w.id)) {
+        plannedWorkoutsMap.set(w.id, w);
+      }
+    });
+    const plannedWorkouts = Array.from(plannedWorkoutsMap.values());
 
     console.log('[detect-matches] Found planned workouts:', plannedWorkouts.length);
     
