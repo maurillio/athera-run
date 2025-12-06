@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useLocale, useTranslations } from '@/lib/i18n/hooks';
 import Header from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -126,18 +126,7 @@ export default function PlanoPage() {
     dayjs.locale(dayjsLocale);
   }, [locale]);
 
-  // Listen for plan updates (from Athera Flex adjustments)
-  useEffect(() => {
-    const handlePlanUpdated = () => {
-      console.log('[PlanoPage] Plan updated event received, reloading data...');
-      fetchPlan();
-    };
-
-    window.addEventListener('athera:plan:updated', handlePlanUpdated);
-    return () => window.removeEventListener('athera:plan:updated', handlePlanUpdated);
-  }, [session]);
-
-  const fetchPlan = async () => {
+  const fetchPlan = useCallback(async () => {
     try {
       const response = await fetch('/api/plan/current');
       if (response.ok) {
@@ -168,7 +157,18 @@ export default function PlanoPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [hasInitializedWeek]);
+
+  // Listen for plan updates (from Athera Flex adjustments)
+  useEffect(() => {
+    const handlePlanUpdated = () => {
+      console.log('[PlanoPage] Plan updated event received, reloading data...');
+      fetchPlan();
+    };
+
+    window.addEventListener('athera:plan:updated', handlePlanUpdated);
+    return () => window.removeEventListener('athera:plan:updated', handlePlanUpdated);
+  }, [fetchPlan]);
 
   const handleManualMatch = async (completedWorkoutId: number, workoutId: number) => {
     console.log('[PlanoPage] handleManualMatch called with:', { completedWorkoutId, workoutId });
