@@ -176,7 +176,6 @@ export async function POST(req: Request) {
             connect: { id: completedWorkoutId }
           },
           wasSubstitution: true,
-          completedAt: new Date(),
         },
       });
 
