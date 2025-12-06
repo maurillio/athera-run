@@ -2,9 +2,9 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v5.0.7 - Debug Logs Pop-up (05/Dez/2025 19:45 UTC)  
-**Versão Atual:** v5.0.7 - Logs detalhados Athera Flex  
-**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO** + 🔍 DEBUG ATIVO  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v5.0.16 - Fix Substitution Flag (06/Dez/2025 18:45 UTC)  
+**Versão Atual:** v5.0.16 - Hotfix wasSubstitution flag  
+**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO** + 🔧 **HOTFIX DEPLOYADO**  
 **Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
