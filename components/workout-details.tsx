@@ -118,19 +118,22 @@ export function WorkoutDetails({ workout, isExpanded = false, onToggle, onManual
                       Não Concluído
                     </Badge>
                   )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setShowManualMatch(true);
-                    }}
-                    className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
-                  >
-                    <CheckCircle2 className="h-3 w-3 mr-1" />
-                    Marcar como Concluído
-                  </Button>
+                  {/* Ocultar botão "Concluir" para descansos (rest days) */}
+                  {workout.type !== 'rest' && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setShowManualMatch(true);
+                      }}
+                      className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
+                    >
+                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                      Marcar como Concluído
+                    </Button>
+                  )}
                 </>
               )}
             </div>
@@ -479,19 +482,23 @@ function SimpleWorkoutView({ workout, onManualMatch, onUpdate }: { workout: Enha
                 )}
               </>
             ) : (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setShowManualMatch(true);
-                }}
-                className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
-              >
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Marcar como Concluído
-              </Button>
+              // Ocultar botão "Concluir" para descansos (rest days)
+              // Rest days não precisam ser marcados como concluídos
+              workout.type !== 'rest' && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setShowManualMatch(true);
+                  }}
+                  className="text-xs h-7 border-purple-200 hover:border-purple-400 hover:bg-purple-50"
+                >
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Marcar como Concluído
+                </Button>
+              )
             )}
           </div>
           
