@@ -43,21 +43,22 @@ export async function POST(request: Request) {
       );
     }
 
-    // Remover o match (limpar campos)
+    // Remover o match (usar disconnect ao invés de null direto)
     await prisma.customWorkout.update({
       where: { id: plannedWorkoutId },
       data: {
         isCompleted: false,
-        completedWorkoutId: null,
-        executedWorkoutId: null,
+        executedWorkout: {
+          disconnect: true
+        },
         wasSubstitution: false
       }
     });
 
-    // Se tinha completedWorkout vinculado, limpar também
-    if (plannedWorkout.completedWorkoutId) {
+    // Se tinha executedWorkout vinculado, limpar também
+    if (plannedWorkout.executedWorkoutId) {
       await prisma.completedWorkout.update({
-        where: { id: plannedWorkout.completedWorkoutId },
+        where: { id: plannedWorkout.executedWorkoutId },
         data: {
           wasPlanned: false,
           plannedDate: null,
