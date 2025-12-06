@@ -611,7 +611,9 @@ export default function DashboardPage() {
                           <div
                             key={workout.id}
                             className={`rounded-lg border-2 transition-all ${
-                              workout.isCompleted
+                              (workout as any).completedWorkoutId
+                                ? 'bg-gradient-to-br from-purple-100 to-purple-50 border-purple-500'
+                                : workout.isCompleted
                                 ? 'bg-gradient-to-br from-green-100 to-green-50 border-green-500'
                                 : isMissed
                                   ? 'bg-gradient-to-br from-red-100 to-red-50 border-red-500'
@@ -626,7 +628,9 @@ export default function DashboardPage() {
                                     {isToday && <Zap className="h-3 w-3" />}
                                     {isToday ? t('upcomingWorkouts.today') : t('upcomingWorkouts.tomorrow')}
                                   </Badge>
-                                  {workout.isCompleted ? (
+                                  {(workout as any).completedWorkoutId ? (
+                                    <CheckCircle2 className="h-5 w-5 text-purple-600" />
+                                  ) : workout.isCompleted ? (
                                     <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                                   ) : isMissed ? (
                                     <XCircle className="h-5 w-5 text-red-600" />

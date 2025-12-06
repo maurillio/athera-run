@@ -174,7 +174,11 @@ export async function GET(request: NextRequest) {
       
       const currentWeekDistance = validCurrentWeekWorkouts
         .filter((w: any) => w.type === 'running' || w.type === 'race')
-        .reduce((sum: number, w: any) => sum + (w.distance || 0), 0);
+        .reduce((sum: number, w: any) => {
+          // ✅ Se tem completedWorkout, usar a distância dele (mais precisa)
+          const distance = w.completedWorkout?.distance || w.distance || 0;
+          return sum + distance;
+        }, 0);
       
       const currentWeekCompleted = validCurrentWeekWorkouts.filter((w: any) => w.isCompleted).length;
       
