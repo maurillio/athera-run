@@ -172,12 +172,13 @@ export async function POST(req: Request) {
         UPDATE custom_workouts 
         SET 
           "isCompleted" = true,
+          "completedWorkoutId" = ${completedWorkoutId},
           "executedWorkoutId" = ${completedWorkoutId},
           "wasSubstitution" = true
         WHERE id = ${plannedWorkoutId}
       `;
 
-      console.log('[apply-adjustment] ✅ Treino planejado atualizado');
+      console.log('[apply-adjustment] ✅ Treino planejado atualizado (completedWorkoutId + executedWorkoutId)');
       
       // 1.1 Validar se o campo foi realmente atualizado
       const validationCheck = await prisma.customWorkout.findUnique({
