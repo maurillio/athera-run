@@ -167,14 +167,15 @@ export async function POST(req: Request) {
     console.log('[apply-adjustment] HOTFIX: Aplicando match direto...');
     
     try {
-      // 1. Atualizar treino planejado
+      // 1. Atualizar treino planejado (usar nested connect)
       await prisma.customWorkout.update({
         where: { id: plannedWorkoutId },
         data: {
           isCompleted: true,
-          completedWorkoutId,
-          executedWorkoutId: completedWorkoutId,
-          wasSubstitution: true, // Marca como substituição (dia diferente)
+          executedWorkout: {
+            connect: { id: completedWorkoutId }
+          },
+          wasSubstitution: true,
           completedAt: new Date(),
         },
       });
