@@ -108,24 +108,6 @@ export default function PlanoPage() {
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
   const [hasInitializedWeek, setHasInitializedWeek] = useState(false);
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace(`/${locale}/login`);
-    }
-  }, [status, router, locale]);
-
-  useEffect(() => {
-    if (session?.user) {
-      fetchPlan();
-    }
-  }, [session]);
-
-  // Set dayjs locale based on user's selected locale
-  useEffect(() => {
-    const dayjsLocale = locale === 'pt-BR' ? 'pt-br' : locale === 'es' ? 'es' : 'en';
-    dayjs.locale(dayjsLocale);
-  }, [locale]);
-
   const fetchPlan = useCallback(async () => {
     try {
       const response = await fetch('/api/plan/current');
@@ -140,7 +122,6 @@ export default function PlanoPage() {
         setPlan(data.plan);
         setCurrentWeekNum(data.plan.currentWeek);
         
-        // ✅ Só reseta viewingWeek na primeira carga, não em re-fetches
         if (!hasInitializedWeek) {
           setViewingWeek(data.plan.currentWeek);
           setHasInitializedWeek(true);
@@ -159,7 +140,23 @@ export default function PlanoPage() {
     }
   }, [hasInitializedWeek]);
 
-  // Listen for plan updates (from Athera Flex adjustments)
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace(`/${locale}/login`);
+    }
+  }, [status, router, locale]);
+
+  useEffect(() => {
+    if (session?.user) {
+      fetchPlan();
+    }
+  }, [session, fetchPlan]);
+
+  useEffect(() => {
+    const dayjsLocale = locale === 'pt-BR' ? 'pt-br' : locale === 'es' ? 'es' : 'en';
+    dayjs.locale(dayjsLocale);
+  }, [locale]);
+
   useEffect(() => {
     const handlePlanUpdated = () => {
       console.log('[PlanoPage] Plan updated event received, reloading data...');
