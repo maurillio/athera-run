@@ -198,9 +198,9 @@ export async function POST(req: Request) {
         data: {
           userId: user.id,
           completedWorkoutId,
-          suggestedWorkoutId: plannedWorkoutId, // Schema usa suggestedWorkoutId
+          suggestedWorkoutId: plannedWorkoutId,
           confidence,
-          accepted: true,
+          action: 'accepted',
           triggeredBy,
           appliedAt: new Date(),
         },
