@@ -178,6 +178,18 @@ export async function POST(req: Request) {
       `;
 
       console.log('[apply-adjustment] ✅ Treino planejado atualizado');
+      
+      // 1.1 Validar se o campo foi realmente atualizado
+      const updatedPlanned = await prisma.customWorkout.findUnique({
+        where: { id: plannedWorkoutId },
+        select: { executedWorkoutId: true, wasSubstitution: true, isCompleted: true }
+      });
+      
+      console.log('[apply-adjustment] Validando update:', updatedPlanned);
+      
+      if (updatedPlanned?.executedWorkoutId !== completedWorkoutId) {
+        throw new Error(`executedWorkoutId não foi salvo! Expected: ${completedWorkoutId}, Got: ${updatedPlanned?.executedWorkoutId}`);
+      }
 
       // 2. Atualizar treino completado
       await prisma.completedWorkout.update({
