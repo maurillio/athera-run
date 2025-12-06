@@ -173,7 +173,7 @@ export async function POST(req: Request) {
         SET 
           "isCompleted" = true,
           "completedWorkoutId" = ${completedWorkoutId},
-          "executedWorkoutId" = ${completedWorkoutId},
+          executed_workout_id = ${completedWorkoutId},
           "wasSubstitution" = true
         WHERE id = ${plannedWorkoutId}
       `;
