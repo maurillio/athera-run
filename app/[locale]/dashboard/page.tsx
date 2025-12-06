@@ -582,9 +582,12 @@ export default function DashboardPage() {
                       const tomorrow = today.add(1, 'day');
                       const dayAfterTomorrow = today.add(2, 'day');
                       
+                      // ✅ Incluir treinos de hoje e amanhã (incluindo os completados com substituição)
                       const todayAndTomorrow = currentWeek.workouts.filter((w: Workout) => {
                         const workoutDate = dayjs(w.date).tz(appTimezone).startOf('day');
-                        return workoutDate.isSameOrAfter(today) && workoutDate.isBefore(dayAfterTomorrow);
+                        // Incluir se está no período OU se foi substituído de outra data
+                        const isInPeriod = workoutDate.isSameOrAfter(today) && workoutDate.isBefore(dayAfterTomorrow);
+                        return isInPeriod;
                       }).sort((a: Workout, b: Workout) => 
                         dayjs(a.date).tz(appTimezone).startOf('day').valueOf() - dayjs(b.date).tz(appTimezone).startOf('day').valueOf()
                       );
