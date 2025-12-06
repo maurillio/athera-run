@@ -153,6 +153,7 @@ export async function GET(request: NextRequest) {
             date: formatDateForAPI(workout.date),
             createdAt: workout.createdAt?.toISOString(),
             updatedAt: workout.updatedAt?.toISOString(),
+            completedWorkoutId: workout.completedWorkoutId, // ✅ Incluir para dashboard detectar substituições
             completedWorkout: workout.completedWorkout ? {
               ...workout.completedWorkout,
               date: workout.completedWorkout.date?.toISOString(),
@@ -194,6 +195,7 @@ export async function GET(request: NextRequest) {
           date: formatDateForAPI(workout.date),
           createdAt: workout.createdAt?.toISOString(),
           updatedAt: workout.updatedAt?.toISOString(),
+          completedWorkoutId: workout.completedWorkoutId, // ✅ Incluir para dashboard detectar substituições
           completedWorkout: workout.completedWorkout ? {
             ...workout.completedWorkout,
             date: workout.completedWorkout.date?.toISOString(),
