@@ -7,6 +7,53 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.0.16] - 06/DEZ/2025 18:40 UTC
+
+### [Fix] - wasSubstitution Flag Missing in Apply Adjustment
+
+**Problema Identificado:**
+- Match via pop-up (apply-adjustment) não funcionava o undo
+- Flag `wasSubstitution` não era setado no CompletedWorkout
+- Paridade incorreta com manual-match (que setava o flag corretamente)
+
+**Análise:**
+- **Match Manual:** Seta `wasSubstitution: true` em AMBOS (CustomWorkout + CompletedWorkout)
+- **Match via Pop-up:** Setava apenas no CustomWorkout, esquecia o CompletedWorkout
+- **Resultado:** Undo não conseguia identificar substituição corretamente
+
+**Solução Implementada:**
+```typescript
+// app/api/athera-flex/apply-adjustment/route.ts (linha 199)
+await prisma.completedWorkout.update({
+  where: { id: completedWorkoutId },
+  data: {
+    wasPlanned: true,
+    plannedDate: plannedWorkout.date,
+    wasSubstitution: true, // ✅ ADICIONADO
+  },
+});
+```
+
+**Arquivos Modificados:**
+- `app/api/athera-flex/apply-adjustment/route.ts` - Adicionado wasSubstitution flag
+- `app/api/debug/clean-tomorrow/route.ts` - Nova API de limpeza de emergência
+- `ANALISE_BUG_SUBSTITUICAO.md` - Análise completa do bug
+
+**API de Limpeza Criada:**
+```bash
+# Resetar treinos futuros marcados incorretamente
+POST /api/debug/clean-tomorrow
+```
+
+**Validação:**
+- [x] Flag wasSubstitution agora é setado corretamente
+- [x] Paridade com manual-match restaurada
+- [x] API de limpeza funcionando
+- [ ] Testar undo após match via pop-up (aguardando deploy)
+- [ ] Limpar treino de amanhã via API debug
+
+---
+
 ## [v5.0.8] - 05/DEZ/2025 20:00 UTC
 
 ### [Fix] - Reduzir Threshold de Confidence (70% → 60%)
