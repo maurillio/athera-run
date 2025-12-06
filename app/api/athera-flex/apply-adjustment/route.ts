@@ -198,6 +198,7 @@ export async function POST(req: Request) {
         data: {
           wasPlanned: true,
           plannedDate: plannedWorkout.date,
+          wasSubstitution: true,
         },
       });
 
