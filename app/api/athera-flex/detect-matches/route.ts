@@ -142,40 +142,20 @@ export async function POST(req: Request) {
       });
     }
 
-    // Buscar treinos planejados elegíveis para match
+    // Buscar treinos planejados NÃO completados
     // APENAS CORRIDAS (running) devem ter sugestões de match
-    // 
-    // Lógica: 
-    // 1. Treinos passados NÃO completados (podem ter sido perdidos)
-    // 2. Treino de AMANHÃ (proativo - fez hoje? Quer usar pra amanhã?)
-    const today = dayjs().endOf('day');
-    const tomorrow = dayjs().add(1, 'day').startOf('day');
-    const tomorrowEnd = tomorrow.endOf('day');
-
     const plannedWorkouts = await prisma.customWorkout.findMany({
       where: {
         week: {
           planId: plan.id,
         },
+        isCompleted: false,
         isFlexible: true,
         type: 'running', // 🏃 APENAS CORRIDAS
-        OR: [
-          // Caso 1: Treinos passados/hoje NÃO completados
-          {
-            isCompleted: false,
-            date: {
-              gte: dayjs().subtract(14, 'day').toDate(), // Últimos 14 dias
-              lte: today.toDate(), // Até hoje
-            },
-          },
-          // Caso 2: Treino de AMANHÃ (mesmo se não marcado como não feito ainda)
-          {
-            date: {
-              gte: tomorrow.toDate(),
-              lte: tomorrowEnd.toDate(),
-            },
-          },
-        ],
+        date: {
+          gte: dayjs().subtract(14, 'day').toDate(), // Últimos 14 dias
+          lte: dayjs().add(7, 'day').toDate(), // Próximos 7 dias
+        },
       },
       include: {
         week: true,
