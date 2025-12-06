@@ -207,12 +207,11 @@ export async function POST(req: Request) {
 
       console.log('[apply-adjustment] ✅ Decisão registrada');
 
-      // Buscar dados atualizados
+      // Buscar dados atualizados (sem include duplicado)
       const updatedPlanned = await prisma.customWorkout.findUnique({
         where: { id: plannedWorkoutId },
         include: {
-          completedWorkout: true,
-          executedWorkout: true,
+          executedWorkout: true, // Apenas executedWorkout
         },
       });
 
