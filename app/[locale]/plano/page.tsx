@@ -126,6 +126,17 @@ export default function PlanoPage() {
     dayjs.locale(dayjsLocale);
   }, [locale]);
 
+  // Listen for plan updates (from Athera Flex adjustments)
+  useEffect(() => {
+    const handlePlanUpdated = () => {
+      console.log('[PlanoPage] Plan updated event received, reloading data...');
+      fetchPlan();
+    };
+
+    window.addEventListener('athera:plan:updated', handlePlanUpdated);
+    return () => window.removeEventListener('athera:plan:updated', handlePlanUpdated);
+  }, [session]);
+
   const fetchPlan = async () => {
     try {
       const response = await fetch('/api/plan/current');

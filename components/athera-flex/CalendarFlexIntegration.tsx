@@ -75,20 +75,20 @@ export function CalendarFlexIntegration({ workouts }: CalendarFlexIntegrationPro
     if (selectedSuggestionIndex === null) return;
 
     try {
-      await applySuggestion(selectedSuggestionIndex);
+      const success = await applySuggestion(selectedSuggestionIndex);
       
-      const suggestion = suggestions[selectedSuggestionIndex];
-      flexNotifications.adjustmentApplied(
-        suggestion.plannedWorkout?.title || 'Treino',
-        suggestion.bestMatch.confidence
-      );
-      
-      setSelectedSuggestionIndex(null);
-      
-      // Recarregar página após 2s para mostrar mudanças
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      if (success) {
+        const suggestion = suggestions[selectedSuggestionIndex];
+        flexNotifications.adjustmentApplied(
+          suggestion.plannedWorkout?.title || 'Treino',
+          suggestion.bestMatch.confidence
+        );
+        
+        setSelectedSuggestionIndex(null);
+        
+        // Disparar evento para recarregar dados (sem refresh da página)
+        window.dispatchEvent(new CustomEvent('athera:plan:updated'));
+      }
     } catch (error) {
       console.error('[FlexIntegration] Apply error:', error);
     }
