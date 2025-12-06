@@ -200,9 +200,11 @@ export async function POST(req: Request) {
           completedWorkoutId,
           suggestedWorkoutId: plannedWorkoutId,
           confidence,
+          dateScore,
+          typeScore,
+          volumeScore,
+          intensityScore,
           action: 'accepted',
-          triggeredBy,
-          appliedAt: new Date(),
         },
       });
 
