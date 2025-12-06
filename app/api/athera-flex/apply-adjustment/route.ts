@@ -167,30 +167,19 @@ export async function POST(req: Request) {
     console.log('[apply-adjustment] HOTFIX: Aplicando match direto...');
     
     try {
-      // 1. Atualizar treino planejado (SQL direto - mais confiável)
-      await prisma.$executeRaw`
-        UPDATE custom_workouts 
-        SET 
-          "isCompleted" = true,
-          "completedWorkoutId" = ${completedWorkoutId},
-          "executedWorkoutId" = ${completedWorkoutId},
-          "wasSubstitution" = true
-        WHERE id = ${plannedWorkoutId}
-      `;
-
-      console.log('[apply-adjustment] ✅ Treino planejado atualizado (completedWorkoutId + executedWorkoutId)');
-      
-      // 1.1 Validar se o campo foi realmente atualizado
-      const validationCheck = await prisma.customWorkout.findUnique({
+      // 1. Atualizar treino planejado usando Prisma Client (não SQL direto)
+      await prisma.customWorkout.update({
         where: { id: plannedWorkoutId },
-        select: { executedWorkoutId: true, wasSubstitution: true, isCompleted: true }
+        data: {
+          isCompleted: true,
+          wasSubstitution: true,
+          executedWorkout: {
+            connect: { id: completedWorkoutId }
+          }
+        }
       });
-      
-      console.log('[apply-adjustment] Validando update:', validationCheck);
-      
-      if (validationCheck?.executedWorkoutId !== completedWorkoutId) {
-        throw new Error(`executedWorkoutId não foi salvo! Expected: ${completedWorkoutId}, Got: ${validationCheck?.executedWorkoutId}`);
-      }
+
+      console.log('[apply-adjustment] ✅ Treino planejado atualizado com Prisma Client');
 
       // 2. Atualizar treino completado
       await prisma.completedWorkout.update({
