@@ -2,9 +2,9 @@
 
 > Planejamento de features, melhorias e evolução da plataforma
 
-**Última atualização:** 24 de Novembro de 2025  
-**Versão Atual:** 2.8.0  
-**Próxima Versão:** 3.1.0 (Convergência Total de Dados)
+**Última atualização:** 09 de Dezembro de 2025  
+**Versão Atual:** 5.0.16  
+**Próxima Versão:** 5.1.0 (Sistema Limpo)
 
 ---
 
