@@ -18,11 +18,11 @@
 
 ## 🎯 CURTO PRAZO - ESTA SEMANA
 
-**Objetivo:** Documentação técnica + Marketing inicial  
-**Esforço Total:** ~4 horas  
-**Impacto:** Alto (comunicação + evidências)
+**Objetivo:** Documentação técnica  
+**Esforço Total:** ~2h50  
+**Impacto:** Alto (evidências + manutenção)
 
-### Segunda-feira (50 min)
+### Tarefas de Documentação
 ```
 □ Task 1.1: Lighthouse Audit Detalhado (5 min)
   Prioridade: ⭐⭐☆☆☆
@@ -56,42 +56,8 @@
   - Manutenção e updates
   
   Entrega: Guia técnico completo
-```
 
-### Terça-feira (1h30)
-```
-□ Task 2.1: Posts Redes Sociais (30 min)
-  Prioridade: ⭐⭐⭐⭐⭐
-  
-  Twitter/X:
-  - Anunciar PWA
-  - Destacar benefícios (offline, instalável)
-  - Link: atherarun.com
-  - Hashtags: #PWA #AtheraRun #Running
-  
-  LinkedIn:
-  - Post técnico sobre PWA
-  - Tecnologias usadas
-  - Impacto no negócio
-  
-  Instagram Story (opcional):
-  - Vídeo 15s instalando no iPhone
-  - Mostrar app funcionando offline
-  - CTA: "Instale agora"
-  
-  Entrega: Posts agendados/publicados
-  
-□ Task 2.2: Email Marketing (1h)
-  Prioridade: ⭐⭐⭐⭐☆
-  
-  NOTA: Remover do roadmap (você não quer ainda)
-  
-  Entrega: N/A
-```
-
-### Quarta-feira (2h)
-```
-□ Task 3.1: Finalizar PWA_DEVELOPER_GUIDE.md (2h)
+□ Task 1.3: Finalizar PWA_DEVELOPER_GUIDE.md (2h)
   Prioridade: ⭐⭐⭐☆☆
   
   Adicionar:
@@ -107,8 +73,6 @@
 **✅ Resultado Semana 1:**
 - Lighthouse audit documentado
 - PWA_DEVELOPER_GUIDE.md completo
-- Posts redes sociais publicados
-- Marketing inicial feito
 
 ---
 
@@ -581,17 +545,14 @@ CREATE INDEX idx_ab_test_variant ON ab_test_events(variant);
 
 ### 🔥 FAZER AGORA (Esta Semana)
 ```
-1. Posts redes sociais (30 min) ⭐⭐⭐⭐⭐
-   → Marketing gratuito, alto impacto
-   
-2. Lighthouse audit (5 min) ⭐⭐☆☆☆
+1. Lighthouse audit (5 min) ⭐⭐☆☆☆
    → Evidência qualidade, baixo esforço
    
-3. PWA_DEVELOPER_GUIDE.md (2h) ⭐⭐⭐☆☆
+2. PWA_DEVELOPER_GUIDE.md (2h) ⭐⭐⭐☆☆
    → Manutenção futura, documentação crítica
 ```
 
-**Total: ~2h30 min | Impacto: Alto**
+**Total: ~2h50 min | Impacto: Alto**
 
 ### ⏰ FAZER MÊS QUE VEM
 ```
@@ -620,6 +581,7 @@ CREATE INDEX idx_ab_test_variant ON ab_test_events(variant);
 
 ### ❌ NÃO FAZER (Removido a pedido)
 ```
+- Posts redes sociais (removido 11/Dez/2025)
 - Email usuários (você não quer ainda)
 - PWA_INSTALL_GUIDE_USERS.md (você não quer ainda)
 ```
@@ -631,10 +593,9 @@ CREATE INDEX idx_ab_test_variant ON ab_test_events(variant);
 ### Curto Prazo (Esta Semana)
 ```
 [ ] Lighthouse audit (5 min)
-[ ] PWA_DEVELOPER_GUIDE.md (2h)
-[ ] Posts redes sociais (30 min)
+[ ] PWA_DEVELOPER_GUIDE.md (2h50)
 ────────────────────────────────
-0/3 completo
+0/2 completo
 ```
 
 ### Médio Prazo (Próximo Mês)
