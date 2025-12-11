@@ -49,7 +49,7 @@ export default function Logo({
   // Usar logo completa quando showText = true
   if (logoVariant === 'complete' || (showText && !variant)) {
     return (
-      <div className={cn('relative flex items-center', sizes.container, className)} style={{ width: '12rem', aspectRatio: '200/80' }}>
+      <div className={cn('relative flex items-center', sizes.container, className)}>
         <Image
           src="/logo-complete.png"
           alt="Athera Run"
@@ -57,7 +57,6 @@ export default function Logo({
           height={80}
           className={cn('object-contain', sizes.complete)}
           priority
-          fetchPriority="high"
         />
       </div>
     );
@@ -66,7 +65,7 @@ export default function Logo({
   // Logo apenas nome
   if (logoVariant === 'name') {
     return (
-      <div className={cn('relative flex items-center', sizes.container, className)} style={{ width: '9rem', aspectRatio: '150/60' }}>
+      <div className={cn('relative flex items-center', sizes.container, className)}>
         <Image
           src="/logo-name.png"
           alt="Athera Run"
@@ -74,7 +73,6 @@ export default function Logo({
           height={60}
           className={cn('object-contain', sizes.name)}
           priority
-          fetchPriority="high"
         />
       </div>
     );
@@ -89,7 +87,6 @@ export default function Logo({
         fill
         className="object-contain"
         priority
-        fetchPriority="high"
       />
     </div>
   );
