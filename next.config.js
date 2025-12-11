@@ -18,6 +18,15 @@ const nextConfig = {
     };
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: '/:locale/manifest.json',
+        destination: '/manifest.json',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
