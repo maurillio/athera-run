@@ -7,6 +7,52 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.1.1] - 11/DEZ/2025 17:15-17:20 UTC - ❌ ROLLBACK
+
+### [Performance] - Dashboard Optimization **[FALHOU - REVERTIDO]**
+
+**Status:** ❌ **ROLLBACK COMPLETO** (Commit c1e939a4 às 17:20 UTC)
+
+**Tentativa de Otimização:**
+4 fixes implementados visando melhorar Performance Score de 56 para 70-75.
+
+**Resultado Real: REGRESSÃO**
+
+| Métrica | v5.1.0 | v5.1.1 | Variação |
+|---------|--------|--------|----------|
+| Performance | 56 | **47** | **-9 pts** 🔴 |
+| LCP | 5.1s | **5.3s** | **+0.2s** 🔴 |
+| CLS | 0.328 | **0.35** | **+0.022** 🔴 |
+| Speed Index | 6.9s | **9.1s** | **+2.2s** 🔴 |
+| TBT | 150ms | **350ms** | **+200ms** 🔴 |
+
+**Causa Raiz:**
+1. Preload duplicado do logo (download 2x)
+2. Inline styles aumentando overhead de parsing
+3. Skeleton heights não correspondiam ao conteúdo real
+4. Promise.all sem await causando timing issues
+
+**Lições Aprendidas:**
+- ❌ Múltiplos fixes simultâneos (impossível isolar causa)
+- ❌ Não testado isoladamente
+- ❌ Single run do Lighthouse (deveria ser 3+ runs)
+- ❌ Testado logo após deploy (cache não propagado)
+
+**Ação Tomada:**
+```bash
+git revert 9c52684a
+git push origin main
+```
+
+**Documentação:**
+- `ROLLBACK_v5_1_1_POSTMORTEM.md` - Análise completa
+- `PERFORMANCE_REGRESSION_ANALYSIS.md` - Causa raiz
+
+**Status Atual:**
+Sistema voltou para v5.1.0 (estável, Performance 56)
+
+---
+
 ## [v5.1.0] - 11/DEZ/2025 15:10 UTC
 
 ### [Feature] - PWA Migration COMPLETA! 🎉
