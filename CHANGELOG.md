@@ -7,6 +7,68 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.1.1] - 11/DEZ/2025 17:15 UTC
+
+### [Performance] - Dashboard Performance Optimization (Fase 1)
+
+**Contexto:**
+Lighthouse audit da v5.1.0 identificou problemas críticos de performance no dashboard:
+- Performance Score: 56 (target: 90+)
+- LCP: 5.1s (target: < 2.5s)
+- CLS: 0.328 (target: < 0.1)
+- Speed Index: 6.9s (target: < 3.4s)
+
+**Fixes Aplicados:**
+
+#### Fix #1: Logo com Dimensões Fixas (CLS -0.15)
+- Adicionado `width: 12rem` e `aspectRatio: 200/80` nos containers do logo
+- Adicionado `fetchPriority="high"` em todas as variantes de imagem
+- Elimina layout shift do header ao carregar logo
+- **Arquivo:** `components/ui/logo.tsx`
+
+#### Fix #2: Skeleton com Alturas Fixas (CLS -0.10)
+- Header skeleton: `h-12` fixo
+- Stats grid: `h-[140px]` fixo
+- Main content: `h-[520px]` fixo
+- Elimina layout shift quando conteúdo real carrega
+- **Arquivo:** `app/[locale]/dashboard/page.tsx`
+
+#### Fix #3: Fetches Paralelos (Speed Index -1.5s)
+- Mudou de fetches sequenciais para `Promise.all()`
+- `fetchPlan()` e `syncStravaWorkouts()` executam em paralelo
+- Reduz tempo total de carregamento de dados
+- **Arquivo:** `app/[locale]/dashboard/page.tsx`
+
+#### Fix #4: Preload de Logo (LCP -0.5s)
+- Adicionado `<link rel="preload">` para `/logo-complete.png`
+- Browser baixa logo crítico antes de executar JS
+- Melhora First Contentful Paint
+- **Arquivo:** `app/layout.tsx`
+
+**Resultado Esperado:**
+- Performance Score: **70-75** (+14-19 pontos vs 56)
+- LCP: **3.0-3.5s** (-1.6s a -2.1s vs 5.1s)
+- CLS: **0.05-0.08** (-0.248 a -0.278 vs 0.328)
+- Speed Index: **4.4-5.0s** (-1.9s a -2.5s vs 6.9s)
+
+**Documentação:**
+- `PERFORMANCE_FIX_v5_1_1.md` - Detalhes completos dos fixes
+- `LIGHTHOUSE_INVESTIGATION_DASHBOARD.md` - Investigação profunda
+- `LIGHTHOUSE_AUDIT_ANALYSIS.md` - Análise e plano de ação
+
+**Próximos Passos (Fase 2):**
+- Aplicar mesmos fixes em outras páginas (/plano, /tracking, /perfil)
+- Code splitting de componentes pesados
+- Otimização de acessibilidade (89 → 95)
+- Otimização de best practices (75 → 95)
+
+**Validação:**
+- Build passou sem erros
+- Zero breaking changes
+- Rollback simples: `git revert HEAD`
+
+---
+
 ## [v5.1.0] - 11/DEZ/2025 15:10 UTC
 
 ### [Feature] - PWA Migration COMPLETA! 🎉
