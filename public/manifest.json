@@ -83,7 +83,36 @@
       ]
     }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dashboard - Acompanhe seus treinos da semana"
+    },
+    {
+      "src": "/screenshots/plano.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Plano de Treinos - Visualize seu plano completo"
+    },
+    {
+      "src": "/screenshots/perfil.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Perfil do Atleta - Gerencie seu perfil e estatísticas"
+    },
+    {
+      "src": "/screenshots/onboarding.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Bem-vindo - Configure seu plano personalizado"
+    }
+  ],
   "prefer_related_applications": false,
   "lang": "pt-BR",
   "dir": "ltr"
