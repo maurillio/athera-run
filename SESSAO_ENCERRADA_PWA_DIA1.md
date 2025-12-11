@@ -235,39 +235,37 @@ Meta:    PWA 100% | Performance 95+ (Fase 5)
 
 **Resultado:** Fase 1 → 100%
 
-### Opção B: Iniciar Fase 2 (Service Worker) - RECOMENDADO ⚡
+### Opção B: Iniciar Fase 2 (Service Worker) - ❌ NÃO FAZER AGORA
 ```
-🔥 Task 2.1 - Criar /public/sw.js (2h)
-   - Service Worker base
-   - Cache name versioning
-   - Install/Activate/Fetch events
+❌ ERRO: Não pular para Fase 2 com Fase 1 incompleta!
 
-🔥 Task 2.2 - Estratégias de Cache (2h)
-   - Cache-first: _next/static/*
-   - Network-first: /api/*
-   - Stale-while-revalidate: páginas
+⚠️ REGRA: SEMPRE completar 100% da fase atual antes de avançar
 
-🔥 Task 2.3 - Offline Fallback (1h)
-   - Página /offline
-   - UI amigável
-   - Lista funcionalidades offline
+Motivo: Deixar partes para trás gera:
+- Confusão mental (qual fase estou?)
+- Débito técnico (lembrar de voltar)
+- Checklist incompleto (insatisfação)
+- Risco de esquecer tasks pendentes
 ```
 
-**Resultado:** PWA funcional offline (~40%)
+**NÃO FAZER:** Pular para Fase 2 agora
 
 ---
 
-## 🎯 RECOMENDAÇÃO
+## 🎯 RECOMENDAÇÃO (CORRIGIDA)
 
-### ⚡ PULAR PARA FASE 2 (Service Worker)
+### ✅ COMPLETAR FASE 1 → 100% ANTES DE PROSSEGUIR
+
+**SEMPRE FECHAR A FASE ATUAL!** ⚠️
 
 **Por quê:**
-1. **Tasks 1.9-1.10 são opcionais** (polish, não core)
-2. **Service Worker é CRÍTICO** (core PWA)
-3. **85% Fase 1 já está excelente** (manifest validado)
-4. **Tempo melhor investido** (funcionalidade > visual)
+1. **Organização mental** - "Fase 1 fechada" traz clareza
+2. **Apenas 2 horas** - Tasks 1.9-1.10 são rápidas
+3. **Evita débito técnico** - Não deixar partes para trás
+4. **Checklist completo** - Satisfação de ver 100%
+5. **Splash screens melhoram UX** iOS significativamente
 
-**Splash screens e screenshots podem ser adicionados depois!**
+**NUNCA pular para próxima fase com pendências!**
 
 ---
 
@@ -358,8 +356,10 @@ Meta:    PWA 100% | Performance 95+ (Fase 5)
 - ✅ Documentação impecável
 
 **Próxima sessão:**
-- 🔥 **RECOMENDADO:** Fase 2 - Service Worker
-- ⚪ Alternativa: Completar Fase 1 (opcional)
+- ✅ **OBRIGATÓRIO:** Completar Fase 1 → 100% (Tasks 1.9-1.10)
+- ❌ **NÃO FAZER:** Pular para Fase 2 com Fase 1 incompleta
+
+**Regra de Ouro:** SEMPRE fechar fase atual antes de avançar!
 
 **Status:** 🟢 **EXCELENTE!** Sem bloqueios, tudo funcionando.
 

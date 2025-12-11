@@ -310,20 +310,30 @@ M  .gitignore                  (+/public/_original/)
 
 ## 🚀 PRÓXIMA SESSÃO
 
-### Objetivos
-**Completar Fase 1 (Tasks 1.5 - 1.14)**
+### ⚠️ REGRA DE OURO: SEMPRE FECHAR FASE ATUAL!
 
-**Tempo estimado:** 1-2 horas
+**Objetivo:** Completar Fase 1 → 100% (Tasks 1.9-1.10)
 
-**Prioridade:**
-1. 🔥 **Task 1.8** - Testar manifest (30min) - PRÓXIMO
-2. ⚪ **Task 1.9** - Splash screens iOS (1h) - Dia 2
-3. ⚪ **Task 1.10** - Screenshots PWA (1h) - Dia 2
+**Tempo estimado:** 2 horas
+
+**Tasks Pendentes (15% restantes):**
+
+1. 🔥 **Task 1.9** - Splash Screens iOS (1h) - PRÓXIMO
+   - 5 tamanhos principais (iPhone + iPad)
+   - Adicionar ao app/layout.tsx
+   - Testar em Safari iOS
+
+2. 🔥 **Task 1.10** - Screenshots PWA (1h)
+   - 4-6 screenshots reais (Dashboard, Plano, Perfil)
+   - Otimizar com pngquant
+   - Adicionar ao manifest.json
 
 **Resultado esperado:**
-- Fase 1 completa: 90-100%
-- Manifest validado sem erros
-- Pronto para Fase 2 (Service Worker)
+- ✅ Fase 1 completa: 100%
+- ✅ Checklist totalmente fechado
+- ✅ DEPOIS partir para Fase 2 (Service Worker)
+
+**❌ NÃO FAZER:** Pular para Fase 2 com pendências!
 
 ---
 
