@@ -15,6 +15,13 @@ export const metadata: Metadata = {
     maximumScale: 5,
     userScalable: true,
   },
+  manifest: '/manifest.json',
+  themeColor: '#E64A19',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Athera Run',
+  },
   openGraph: {
     title: 'Athera Run - Treinamento de Corrida com IA',
     description: 'Planos de treinamento personalizados com IA para corrida de todos os níveis',
