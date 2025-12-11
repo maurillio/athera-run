@@ -5,6 +5,8 @@ import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'sonner';
 import { useEffect } from 'react';
 import { registerServiceWorker } from '@/lib/pwa/sw-register';
+import { UpdatePrompt } from '@/components/pwa/update-prompt';
+import { OfflineIndicator } from '@/components/pwa/offline-indicator';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -16,6 +18,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       {children}
+      <UpdatePrompt />
+      <OfflineIndicator />
       <Toaster 
         position="top-right" 
         richColors 

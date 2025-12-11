@@ -19,16 +19,35 @@ const STATIC_ASSETS = [
   '/logo-icon.png',
 ];
 
+const CRITICAL_PAGES = [
+  '/pt-BR/offline',
+  '/pt-BR/dashboard',
+  '/pt-BR/plano',
+  '/pt-BR/perfil',
+];
+
+const CRITICAL_APIS = [
+  '/api/plan/current',
+  '/api/workouts/weekly',
+  '/api/profile',
+];
+
 const OFFLINE_PAGE = '/pt-BR/offline';
 
 self.addEventListener('install', (event) => {
   console.log('[SW] Install event - version:', CACHE_VERSION);
   
   event.waitUntil(
-    caches.open(CACHE_STATIC).then((cache) => {
-      console.log('[SW] Caching static assets');
-      return cache.addAll(STATIC_ASSETS);
-    }).catch((error) => {
+    Promise.all([
+      caches.open(CACHE_STATIC).then((cache) => {
+        console.log('[SW] Caching static assets');
+        return cache.addAll(STATIC_ASSETS);
+      }),
+      caches.open(CACHE_DYNAMIC).then((cache) => {
+        console.log('[SW] Precaching critical pages');
+        return cache.addAll(CRITICAL_PAGES);
+      })
+    ]).catch((error) => {
       console.error('[SW] Cache install failed:', error);
     })
   );
@@ -73,6 +92,11 @@ self.addEventListener('fetch', (event) => {
   
   if (url.pathname.match(/\.(png|jpg|jpeg|svg|gif|webp|ico)$/)) {
     event.respondWith(cacheFirst(request, CACHE_IMAGES));
+    return;
+  }
+  
+  if (CRITICAL_APIS.includes(url.pathname)) {
+    event.respondWith(networkFirstWithTimeout(request, CACHE_DYNAMIC, 3000));
     return;
   }
   
@@ -165,6 +189,34 @@ async function staleWhileRevalidate(request, cacheName) {
   });
   
   return cached || fetchPromise;
+}
+
+async function networkFirstWithTimeout(request, cacheName, timeout = 3000) {
+  try {
+    const response = await Promise.race([
+      fetch(request),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error(`Network timeout after ${timeout}ms`)), timeout)
+      )
+    ]);
+    
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    
+    return response;
+  } catch (error) {
+    console.log('[SW] Network-first-timeout failed, trying cache:', error.message);
+    const cached = await caches.match(request);
+    if (cached) {
+      console.log('[SW] Returning cached response for:', request.url);
+      return cached;
+    }
+    
+    console.error('[SW] No cache available for:', request.url);
+    throw error;
+  }
 }
 
 self.addEventListener('message', (event) => {
