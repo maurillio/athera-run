@@ -6,6 +6,8 @@ const CACHE_VERSION = 'athera-pwa-v1.0.0';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const CACHE_IMAGES = `${CACHE_VERSION}-images`;
+const MAX_CACHE_AGE = 7 * 24 * 60 * 60 * 1000; // 7 dias
+const MAX_CACHE_SIZE = 50 * 1024 * 1024; // 50MB (iOS limit)
 
 const STATIC_ASSETS = [
   '/manifest.json',
@@ -59,19 +61,22 @@ self.addEventListener('activate', (event) => {
   console.log('[SW] Activate event - version:', CACHE_VERSION);
   
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName.startsWith('athera-pwa-') && 
-              cacheName !== CACHE_STATIC && 
-              cacheName !== CACHE_DYNAMIC && 
-              cacheName !== CACHE_IMAGES) {
-            console.log('[SW] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName.startsWith('athera-pwa-') && 
+                cacheName !== CACHE_STATIC && 
+                cacheName !== CACHE_DYNAMIC && 
+                cacheName !== CACHE_IMAGES) {
+              console.log('[SW] Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      cleanupExpiredCache()
+    ])
   );
   
   return self.clients.claim();
@@ -124,7 +129,15 @@ async function cacheFirst(request, cacheName) {
     
     if (response.ok) {
       const cache = await caches.open(cacheName);
-      cache.put(request, response.clone());
+      const responseWithTimestamp = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: new Headers({
+          ...Object.fromEntries(response.headers),
+          'sw-cache-time': Date.now().toString()
+        })
+      });
+      cache.put(request, responseWithTimestamp);
     }
     
     return response;
@@ -231,4 +244,41 @@ self.addEventListener('message', (event) => {
       })
     );
   }
+  
+  if (event.data && event.data.type === 'CLEAR_EXPIRED') {
+    event.waitUntil(cleanupExpiredCache());
+  }
 });
+
+async function cleanupExpiredCache() {
+  console.log('[SW] Cleaning up expired cache...');
+  
+  const cacheNames = await caches.keys();
+  const atheraoCaches = cacheNames.filter(name => name.startsWith('athera-pwa-'));
+
+  for (const cacheName of atheraoCaches) {
+    const cache = await caches.open(cacheName);
+    const requests = await cache.keys();
+
+    for (const request of requests) {
+      const response = await cache.match(request);
+      if (!response) continue;
+
+      const cacheTime = response.headers.get('sw-cache-time');
+      if (cacheTime) {
+        const age = Date.now() - parseInt(cacheTime);
+        if (age > MAX_CACHE_AGE) {
+          await cache.delete(request);
+          console.log('[SW] Deleted expired:', request.url);
+        }
+      }
+    }
+  }
+
+  console.log('[SW] Expired cache cleanup complete');
+}
+
+setInterval(() => {
+  cleanupExpiredCache();
+}, 60 * 60 * 1000); // Limpar cache a cada 1 hora
+
