@@ -7,7 +7,10 @@
     "dev": "next dev",
     "build": "npx prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:health": "tsx tests/e2e/health-check.ts",
+    "test:convergence": "tsx tests/e2e/convergence-validator.ts",
+    "test:all": "npm run test:health && npm run test:convergence"
   },
   "prisma": {
     "seed": "tsx --require dotenv/config scripts/seed.ts",
@@ -84,6 +87,7 @@
     "formik": "2.4.5",
     "framer-motion": "10.18.0",
     "gray-matter": "4.0.3",
+    "idb": "^8.0.3",
     "input-otp": "1.2.4",
     "jotai": "2.6.0",
     "jsonwebtoken": "9.0.2",

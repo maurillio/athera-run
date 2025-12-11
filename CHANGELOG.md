@@ -7,6 +7,54 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [v5.1.0-beta] - 11/DEZ/2025 12:40 UTC
+
+### [Feature] - PWA Migration - FASE 1 Iniciada (40% completo)
+
+**Objetivo:** Transformar Athera Run em PWA instalável (iOS + Android)
+
+**Implementado (Fase 1 - Tasks 1.1-1.4):**
+
+#### 1. Manifest PWA Completo
+- ✅ Renomeado: `site.webmanifest` → `manifest.json`
+- ✅ Corrigido icon paths (removido espaços)
+- ✅ `start_url` e `scope` adaptados para `/pt-BR/` (locale)
+- ✅ Adicionado `orientation`: "portrait"
+- ✅ Adicionado `categories`: ["health", "lifestyle", "sports"]
+- ✅ Adicionado `display_override` para melhor controle
+- ✅ Shortcuts criados: Dashboard, Plano, Perfil
+
+#### 2. Meta Tags PWA
+**Arquivo:** `app/layout.tsx`
+- ✅ `manifest: '/manifest.json'`
+- ✅ `themeColor: '#E64A19'` (cor da marca)
+- ✅ `appleWebApp`: Safari mode + status bar style
+
+**Arquivos Modificados:**
+- `app/layout.tsx` - Meta tags PWA adicionadas
+- `public/manifest.json` - Criado (completo e válido)
+- `public/site.webmanifest` - Removido (renomeado)
+
+**Validação:**
+- [x] Build: ✅ Passou sem erros críticos (67/67 páginas)
+- [x] TypeScript: ✅ Zero erros relacionados ao PWA
+- [x] Manifest: ✅ JSON válido e completo
+
+**Próximo:**
+- [ ] Task 1.5: Otimizar imagens (logo-icon.png 499KB → <100KB)
+- [ ] Task 1.6: Criar ícones maskable (192x192, 512x512)
+- [ ] Task 1.8: Testar manifest no Chrome DevTools
+- [ ] Fase 2: Service Worker (cache strategies)
+
+**Documentação:**
+- `PWA_MIGRATION_MASTER_CHECKLIST.md` - Checklist completo 10 dias
+- `ANALISE_PROFUNDA_PWA_MIGRATION.md` - Análise técnica
+- `PWA_PROGRESS_11DEZ2025.md` - Progresso da sessão
+
+**Progresso Total:** 8% (Fase 1: 40%)
+
+---
+
 ## [v5.0.16] - 06/DEZ/2025 18:40 UTC
 
 ### [Fix] - wasSubstitution Flag Missing in Apply Adjustment
