@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { registerServiceWorker } from '@/lib/pwa/sw-register';
 import { UpdatePrompt } from '@/components/pwa/update-prompt';
 import { OfflineIndicator } from '@/components/pwa/offline-indicator';
+import { SyncIndicator } from '@/components/pwa/sync-indicator';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -20,6 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       {children}
       <UpdatePrompt />
       <OfflineIndicator />
+      <SyncIndicator />
       <Toaster 
         position="top-right" 
         richColors 
