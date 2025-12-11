@@ -2,16 +2,67 @@
 
 > **ARQUIVO PRINCIPAL DE CONTEXTO** - Leia apenas este arquivo para entender tudo sobre o projeto
 
-**🚨 ÚLTIMA ATUALIZAÇÃO:** v5.0.16 - Fix Substitution Flag (06/Dez/2025 18:45 UTC)  
-**Versão Atual:** v5.0.16 - Hotfix wasSubstitution flag  
-**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO** + 🔧 **HOTFIX DEPLOYADO**  
-**Build:** ✅ Passou sem erros | **Branch:** main | **Deploy:** Ativo  
+**🚨 ÚLTIMA ATUALIZAÇÃO:** v5.1.0-beta - PWA Migration Iniciada (11/Dez/2025 12:40 UTC)  
+**Versão Atual:** v5.1.0-beta - Migração PWA em andamento (Fase 1: 40%)  
+**Status:** ✅ **FUNCIONANDO EM PRODUÇÃO** + 🚧 **PWA EM DESENVOLVIMENTO**  
+**Branch PWA:** `feat/pwa-implementation` (em desenvolvimento)  
+**Build:** ✅ Passou sem erros | **Branch Principal:** main | **Deploy:** Ativo  
 **Database:** 🌩️ **Neon (PostgreSQL 16.9) + pgBouncer** - US East (Virginia) - ✅ **POOLING ATIVO**  
 **Connection:** `POSTGRES_PRISMA_URL` (pooled) + `POSTGRES_URL_NON_POOLING` (direct)  
 **LLM Provider:** 🤖 **OpenAI (gpt-4o)** - System Prompt v3.0.0 Ativo  
 **Idioma:** 🇧🇷 **pt-BR ONLY** - Sistema métrico fixo (km, kg, °C)  
 **URL Produção:** 🌐 **https://atherarun.com** (SEM hífen)  
 **URL Development:** 🚧 **Pronto para configurar** - Ver `PLANO_AMBIENTES_DEV_PROD.md`
+
+---
+
+## 📱 MIGRAÇÃO PWA - EM ANDAMENTO (11/Dez/2025)
+
+### 🎯 Objetivo
+Transformar Athera Run em **Progressive Web App instalável** em iOS e Android.
+
+### 📊 Status Atual
+**Progresso Total:** 8% (Dia 1 de 10)
+
+**Fase 1 - Fundação PWA:** [████████░░░░░░░░] 40% completo
+- ✅ **Task 1.1-1.4:** Manifest + Meta tags implementados
+- ⏳ **Task 1.5-1.14:** Otimização de imagens + maskable icons pendente
+
+**Fases Futuras:**
+- **Fase 2:** Service Worker (cache strategies) - 0%
+- **Fase 3:** Offline Support (IndexedDB) - 0%
+- **Fase 4:** Mobile Optimizations (safe-area, gestures) - 0%
+- **Fase 5:** Testing & Polish (Lighthouse 90+) - 0%
+
+### ✅ Implementado Hoje
+1. **Manifest PWA Completo** (`/public/manifest.json`)
+   - start_url e scope: `/pt-BR/` (locale correto)
+   - Icons: android-chrome, apple-touch-icon
+   - Shortcuts: Dashboard, Plano, Perfil
+   - Categories: health, lifestyle, sports
+
+2. **Meta Tags PWA** (`app/layout.tsx`)
+   - manifest link
+   - themeColor: #E64A19
+   - appleWebApp config (iOS)
+
+3. **Build Validado**
+   - ✅ 67/67 páginas compiladas
+   - ✅ Zero erros TypeScript
+   - ✅ Manifest JSON válido
+
+### 📚 Documentação PWA
+- `PWA_MIGRATION_MASTER_CHECKLIST.md` - Checklist completo 10 dias
+- `ANALISE_PROFUNDA_PWA_MIGRATION.md` - Análise técnica detalhada
+- `PWA_PROGRESS_11DEZ2025.md` - Progresso da sessão
+
+### ⏳ Próximos Passos
+1. Otimizar imagens (logo-icon.png 499KB → <100KB)
+2. Criar ícones maskable (192x192, 512x512)
+3. Testar manifest no Chrome DevTools
+4. Implementar Service Worker (Fase 2)
+
+**ETA Conclusão:** 20-21 de Dezembro de 2025
 
 ---
 
