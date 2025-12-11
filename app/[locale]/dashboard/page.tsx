@@ -41,17 +41,40 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import TrainingLogDialog from '@/components/training-log-dialog';
-import AIAnalysisSection from '@/components/ai-analysis-section';
 import AutoAdjustCard from '@/components/auto-adjust-card';
-import TrainingChat from '@/components/training-chat';
 import UpgradeBanner from '@/components/subscription/upgrade-banner';
 import ProgressAnalysisBanner from '@/components/progress-analysis-banner';
 import WorkoutLogDialog from '@/components/dashboard/workout-log-dialog';
 import { WorkoutDetails } from '@/components/workout-details';
-import DashboardStravaWidget from '@/components/dashboard/strava-widget';
 import AIFieldIcon from '@/components/ai-transparency/AIFieldIcon';
 import AIFieldStatus from '@/components/ai-transparency/AIFieldStatus';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
+import dynamicImport from 'next/dynamic';
+
+// Dynamic imports for heavy components (Performance optimization)
+const TrainingChat = dynamicImport(() => import('@/components/training-chat'), {
+  ssr: false,
+  loading: () => null
+});
+
+const AIAnalysisSection = dynamicImport(() => import('@/components/ai-analysis-section'), {
+  ssr: false,
+  loading: () => (
+    <div className="border border-slate-200 rounded-lg p-6 bg-white shadow-elevation-2 h-32 animate-pulse">
+      <div className="h-6 w-32 bg-slate-200 rounded mb-4" />
+      <div className="h-4 w-full bg-slate-200 rounded" />
+    </div>
+  )
+});
+
+const DashboardStravaWidget = dynamicImport(() => import('@/components/dashboard/strava-widget'), {
+  ssr: false,
+  loading: () => (
+    <div className="border border-slate-200 rounded-lg p-6 bg-white shadow-elevation-2 h-24 animate-pulse">
+      <div className="h-6 w-24 bg-slate-200 rounded" />
+    </div>
+  )
+});
 
 interface CustomPlan {
   id: number;
