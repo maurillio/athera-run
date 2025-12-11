@@ -96,8 +96,33 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior-y: contain;
+  }
+  
+  /* PWA Fase 4: Safe-area-insets for iOS notch/Dynamic Island */
+  @supports (padding: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .header,
+    header {
+      padding-top: calc(1rem + env(safe-area-inset-top));
+    }
+    
+    .footer,
+    footer {
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
   }
 }
 
@@ -121,14 +146,28 @@
     min-width: 44px;
   }
   
-  /* Prevent zoom on input focus (iOS) */
+  /* PWA Fase 4: Prevent zoom on input focus (iOS) */
   input[type="text"],
   input[type="email"],
   input[type="password"],
   input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
   textarea,
   select {
     font-size: 16px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  /* PWA Fase 4: Touch-friendly inputs */
+  input,
+  button,
+  textarea,
+  select {
+    touch-action: manipulation;
   }
   
   /* Mobile-friendly scrolling */
